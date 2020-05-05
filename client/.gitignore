@@ -1,0 +1,5 @@
+node_modules
+dist_electron
+#Electron-builder output
+/dist_electron
+src/credentials.js

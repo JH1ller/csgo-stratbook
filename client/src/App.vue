@@ -1,0 +1,63 @@
+<template>
+  <div id="app">
+    <loader></loader>
+    <view-title ref="ViewTitle"></view-title>
+    <transition name="fade" mode="out-in">
+      <router-view class="router-view"></router-view>
+    </transition>
+  </div>
+</template>
+
+<script>
+import { Component, Vue } from "vue-property-decorator";
+import ViewTitle from "@/components/@core/view-title/view-title.vue";
+import Loader from "@/components/@shared/loader/loader.vue";
+
+@Component({
+  components: {
+    ViewTitle,
+    Loader
+  }
+})
+export default class App extends Vue {}
+</script>
+
+<style lang="scss">
+#app {
+  font-family: Open Sans, Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+  background-color: $color--light;
+}
+
+.main-menu {
+  z-index: 10;
+}
+
+.view-wrapper {
+  background-color: $color--light;
+  //margin-left: 70px;
+  //margin-right: 70px;
+  margin-top: 73px;
+  padding-top: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
+  /* width: 100%;
+  height: 100%; */
+  height: 100vh;
+  padding-bottom: 30px;
+  max-height: calc(100vh - 70px);
+  overflow-y: scroll;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+  //transform: translateY(20px);
+}
+</style>

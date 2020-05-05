@@ -1,0 +1,12 @@
+@mixin hover($pressed: true, $activeClass: '') {
+    body & {
+      &:hover {
+        @content;
+      }
+    }
+  
+    &:active {
+      @content;
+    }
+  }
+  

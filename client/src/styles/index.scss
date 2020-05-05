@@ -1,0 +1,28 @@
+@import '_mixins';
+@import '_vars';
+@import '_responsive';
+@import '_reset';
+@import '_fonts';
+
+
+html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+svg:not(:root) {
+    overflow: visible;
+}
+
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    * {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+}
