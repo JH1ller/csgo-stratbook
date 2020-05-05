@@ -17,7 +17,7 @@ protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: tru
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 800, height: 600, 'minHeight': 400, 'minWidth': 580, title: 'EO Tools', webPreferences: {
+    width: 1280, height: 720, minHeight: 505, minWidth: 612, title: 'CSGO Stratbook', useContentSize: true, webPreferences: {
       nodeIntegration: true
     }
   });

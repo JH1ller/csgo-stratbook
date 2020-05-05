@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Player = require('../models/player');
-const { getPlayer } = require('./utils/utils');
+const { getPlayer } = require('./utils/getters');
 
 // * Get all
 router.get('/', async (req, res) => {
@@ -66,6 +66,7 @@ router.delete('/:player_id/delete', getPlayer, async (req, res) => {
 router.delete('/deleteAll', async (req, res) => {
     try {
         await Player.deleteMany({});
+        await Player.collection.dropIndexes();
         res.json({ message: 'Deleted all players' });
     } catch (error) {
         res.status(500).json({ message: error });

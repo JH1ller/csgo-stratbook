@@ -14,7 +14,7 @@ const mapSchema = new mongoose.Schema({
     },
 
     image: {
-        type: string
+        type: String
     },
 
 });

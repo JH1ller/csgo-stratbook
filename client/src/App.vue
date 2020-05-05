@@ -2,6 +2,7 @@
   <div id="app">
     <loader></loader>
     <view-title ref="ViewTitle"></view-title>
+    <main-menu />
     <transition name="fade" mode="out-in">
       <router-view class="router-view"></router-view>
     </transition>
@@ -12,11 +13,13 @@
 import { Component, Vue } from "vue-property-decorator";
 import ViewTitle from "@/components/@core/view-title/view-title.vue";
 import Loader from "@/components/@shared/loader/loader.vue";
+import MainMenu from "@/components/@core/menus/main-menu/main-menu.vue";
 
 @Component({
   components: {
     ViewTitle,
-    Loader
+    Loader,
+    MainMenu
   }
 })
 export default class App extends Vue {}
@@ -37,17 +40,17 @@ export default class App extends Vue {}
 
 .view-wrapper {
   background-color: $color--light;
-  //margin-left: 70px;
-  //margin-right: 70px;
-  margin-top: 73px;
+  margin-left: 70px;
+  margin-right: 70px;
+  margin-top: 50px;
   padding-top: 30px;
   padding-left: 30px;
   padding-right: 30px;
-  /* width: 100%;
-  height: 100%; */
+  width: calc(100% - 70px);
+  height: 100%;
   height: 100vh;
   padding-bottom: 30px;
-  max-height: calc(100vh - 70px);
+  max-height: calc(100vh - 50px);
   overflow-y: scroll;
 }
 

@@ -6,7 +6,7 @@ import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
 })
 export default class ViewTitle extends Vue {
 
-    private title: any = 'Home';
+    private title: any = 'EsportBERG'; // TODO: replace with team name
 
     private mounted() {
         this.title = this.$route.name;
