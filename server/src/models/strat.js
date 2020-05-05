@@ -12,7 +12,8 @@ const stratSchema = new mongoose.Schema({
 
     map: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'maps'
+        ref: 'maps',
+        required: true
     },
 
     side: {
@@ -29,7 +30,6 @@ const stratSchema = new mongoose.Schema({
 
     active: {
         type: Boolean,
-        required: true,
         default: true
     },
 

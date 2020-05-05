@@ -20,6 +20,7 @@
 		"axios": "^0.19.2",
 		"core-js": "^3.6.4",
 		"directory-tree": "^2.2.4",
+		"url-join": "^4.0.1",
 		"vue": "^2.6.11",
 		"vue-class-component": "^7.2.2",
 		"vue-property-decorator": "^8.3.0",
@@ -28,6 +29,7 @@
 	},
 	"devDependencies": {
 		"@fortawesome/fontawesome-free": "^5.12.1",
+		"@types/url-join": "^4.0.0",
 		"@typescript-eslint/eslint-plugin": "^2.18.0",
 		"@typescript-eslint/parser": "^2.18.0",
 		"@vue/cli-plugin-babel": "~4.2.0",

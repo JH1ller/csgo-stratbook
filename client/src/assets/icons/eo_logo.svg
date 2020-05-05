@@ -1,8 +1,0 @@
-<svg class="eo__logo header__logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 6.84 5.64">
-  <g fill="#FFFFFF">
-    <path id="eo__logo--line-top" d="M2.6,1.94.4,3.24H.3L0,2.74v-.1l2.2-1.2h.1Z"></path>
-    <path id="eo__logo--line-bottom" d="M4.1,4.24h0L1.8,5.64H1.7l-.3-.5V5l2.3-1.3h.1Z"></path>
-    <path id="eo__logo--line-center" d="M3,3.34,1.1,4.44H1l-.3-.5v-.1l1.9-1.1h.1Z"></path>
-    <path id="eo__logo--line-circle" d="M4.1.24a1.82,1.82,0,0,0-.7,2.5,1.82,1.82,0,0,0,2.5.7A1.82,1.82,0,0,0,6.6.94,1.82,1.82,0,0,0,4.1.24Zm1.5,2.6A1.23,1.23,0,0,1,4,2.44,1.25,1.25,0,0,1,4.4.84a1.25,1.25,0,0,1,1.6.4A1.25,1.25,0,0,1,5.6,2.84Z"></path>
-  </g>
-</svg>

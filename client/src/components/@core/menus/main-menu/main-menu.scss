@@ -1,11 +1,11 @@
 .main-menu {
-width: 70px;
-height: 100vh;
-position: absolute;
-transition: width $transition--speed ease;
-left: 0;
-top: 0;
-box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    width: 70px;
+    height: 100vh;
+    position: absolute;
+    transition: width $transition--speed ease;
+    left: 0;
+    top: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 
     &:hover {
         width: 220px;
@@ -29,8 +29,9 @@ box-shadow: 0 0 10px rgba(0,0,0,0.2);
             cursor: pointer;
 
             &:first-of-type {
-                padding-left: 12px;
+                padding-left: 16px;
                 background: $color-bg-secondary;
+
                 .main-menu__list-item-label {
                     color: white;
                     font-weight: bold;
@@ -41,7 +42,7 @@ box-shadow: 0 0 10px rgba(0,0,0,0.2);
             &:hover {
                 background: $color-bg-secondary;
             }
-            
+
             &-link {
                 display: flex;
                 justify-content: flex-start;
@@ -58,17 +59,24 @@ box-shadow: 0 0 10px rgba(0,0,0,0.2);
                 color: $color-text-primary;
                 transform: translateX(-20px);
                 transition: all 0.5s ease-out;
+
+                &.-logo {
+                    margin-left: 16px;
+                }
             }
 
             &-icon {
                 width: 30px;
                 height: 30px;
+
                 & path {
                     fill: $color-text-primary;
                 }
+
                 &.-logo {
                     width: 40px;
-                    height: auto;
+                    height: 40px;
+                    object-fit: contain;
                 }
             }
         }

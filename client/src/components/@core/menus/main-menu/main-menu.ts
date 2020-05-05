@@ -1,12 +1,12 @@
 import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
-import { faTools, faUtensils, faBoxes, faNewspaper } from '@fortawesome/free-solid-svg-icons';
+import { faTools, faUtensils, faBoxes, faUsers, faChess } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 const remote = require('electron').remote;
 const { app } = remote;
 
 config.autoAddCss = false;
-library.add(faTools, faUtensils, faBoxes, faNewspaper);
+library.add(faTools, faUtensils, faBoxes, faUsers, faChess);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 @Component({
@@ -15,26 +15,23 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 })
 export default class MainMenu extends Vue {
 
+    private appName: string = 'CSGO Stratbook' //TODO: dynamic
+
     private menuItems = [
         {
-            label: 'Tools',
+            label: 'Strats',
+            icon: 'chess',
+            link: '/strats'
+        },
+        {
+            label: 'Team',
+            icon: 'users',
+            link: '/team'
+        },
+        {
+            label: 'Settings',
             icon: 'tools',
-            link: '/tools'
-        },
-        {
-            label: 'Lunch',
-            icon: 'utensils',
-            link: '/lunch'
-        },
-        {
-            label: 'Extensions',
-            icon: 'boxes',
-            link: '/extensions'
-        },
-        {
-            label: 'News',
-            icon: 'newspaper',
-            link: '/news'
+            link: '/settings'
         }
     ]
 
