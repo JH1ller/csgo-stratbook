@@ -57,6 +57,21 @@ class APIService {
             console.error(error);
         }
     }
+
+    static async getStepsOfStrat(stratId: string) {
+        const target = urljoin(url, Endpoints.STEPS);
+        try {
+            const res = await axios.get(target, {
+                params: {
+                    strat: stratId
+                }
+            });
+            const data = res.data;
+            return data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
 }
 
 export default APIService;

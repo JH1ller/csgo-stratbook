@@ -3,14 +3,24 @@ import Vuex from 'vuex';
 import { Map, Strat, Step, Player } from '@/services/models';
 import APIService from '@/services/APIService';
 
-const getInitialState = () => {
+export interface AppState {
+	ui: {
+		showLoader: boolean,
+		loaderText: string
+	},
+	maps: Map[],
+	currentMap: string | null,
+	currentStrats: Strat[]
+}
+
+const getInitialState = (): AppState => {
 	return {
 		ui: {
 			showLoader: false,
 			loaderText: ''
 		},
 		maps: [],
-		currentMap: '',
+		currentMap: null,
 		currentStrats: []
 	};
 };
@@ -37,6 +47,9 @@ export default new Vuex.Store({
 		},
 		setCurrentStrats(state, payload) {
 			state.currentStrats = payload;
+		},
+		setStepsOfStrat(state, { strat, steps }) {
+			strat.steps = steps;
 		}
 	},
 	actions: {
@@ -65,15 +78,26 @@ export default new Vuex.Store({
 			commit('setCurrentMap', payload);
 			dispatch('updateCurrentStrats');
 		},
-		async updateCurrentStrats({ commit }, payload) {
+		async updateCurrentStrats({ commit, dispatch }, payload) {
 			if (!this.state.currentMap) return;
 			try {
 				const strats = await APIService.getStratsOfMap(this.state.currentMap);
-				console.log(strats);
 				commit('setCurrentStrats', strats);
+				await dispatch('updateStepsOfCurrentStrats');
 			} catch (error) {
 				console.error(error);
 			}
+		},
+		async updateStepsOfCurrentStrats({ commit }) {
+			this.state.currentStrats.forEach(async (strat) => {
+				try {
+					const steps = await APIService.getStepsOfStrat(strat._id);
+					console.log(steps);
+					commit('setStepsOfStrat', { strat, steps });
+				} catch (error) {
+					console.error(error);
+				}
+			});
 		},
 	},
 	getters: {},

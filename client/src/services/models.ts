@@ -24,12 +24,14 @@ export enum Roles {
 }
 
 export interface Map {
+    _id: string,
     name: string,
     active: boolean,
     image?: string
 }
 
 export interface Strat {
+    _id: string,
     name: string,
     type: StratTypes,
     map: string,
@@ -40,10 +42,12 @@ export interface Strat {
     createdBy: string,
     createdAt: Date,
     modifiedBy: string,
-    modifiedAt: Date
+    modifiedAt: Date,
+    steps?: Step[]
 }
 
 export interface Step {
+    _id: string,
     player: string,
     strat: string,
     grenades?: NadeTypes[],
@@ -52,6 +56,7 @@ export interface Step {
 }
 
 export interface Player {
+    _id: string,
     name: string,
     role: Roles,
     avatar?: string

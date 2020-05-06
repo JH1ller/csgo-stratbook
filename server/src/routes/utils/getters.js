@@ -18,6 +18,21 @@ async function getStrat(req, res, next) {
     next();
 }
 
+async function getStep(req, res, next) {
+    let step;
+    try {
+        step = await Step.findById(req.params.step_id)
+        if (!step) {
+            return res.status(404).json({ message: 'Cannot find step' });
+        }
+    } catch (error) {
+        return res.status(500).json({ message: error.message })
+    }
+
+    res.step = step;
+    next();
+}
+
 async function getMap(req, res, next) {
     let map;
     try {
@@ -50,4 +65,5 @@ async function getPlayer(req, res, next) {
 
 exports.getMap = getMap;
 exports.getStrat = getStrat;
+exports.getStep = getStep;
 exports.getPlayer = getPlayer;
