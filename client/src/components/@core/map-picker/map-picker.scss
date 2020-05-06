@@ -19,20 +19,19 @@
       padding: 15px;
       border-radius: 10px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
+      margin: 0 5px;
 
       &:hover {
         background: $color--light-active;
 
         .map-picker__map-image {
-          //border: 5px solid darken($color--light-active, 15%);
           transform: scale3d(1.05, 1.05, 1.05);
-          //transform: scale(1.05);
         }
       }
 
-      &:not(:first-of-type) {
-        margin-left: 10px;
+      &.-current {
+        background: $color--light-active;
       }
     }
 

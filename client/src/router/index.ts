@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
+import StratsView from '../views/StratsView.vue';
 import Map from '../views/Map.vue';
 import { mapsResolver } from '@/resolvers/index';
 
@@ -10,7 +10,12 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home,
+    redirect: { name: 'Strats' },
+  },
+  {
+    path: '/strats',
+    name: 'Strats',
+    component: StratsView,
     beforeEnter: mapsResolver
   },
   {

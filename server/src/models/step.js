@@ -1,15 +1,21 @@
 const mongoose = require('mongoose');
-const playerSchema = require('./player').schema;
 
 const stepSchema = new mongoose.Schema({
 
     player: {
-        type: playerSchema,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'players',
+        required: true
+    },
+
+    strat: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'strats',
         required: true
     },
 
     grenades: {
-        type: String,
+        type: [String],
         enum: ['GRENADE', 'FLASHBANG', 'MOLOTOV', 'SMOKE']
     },
 

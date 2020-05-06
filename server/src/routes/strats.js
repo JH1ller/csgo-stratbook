@@ -7,8 +7,8 @@ const { getStrat } = require('./utils/getters');
 router.get('/', async (req, res) => {
 
     try {
-        const strats = req.params.map
-            ? await Strat.find({ map: req.params.map })
+        const strats = req.query.map
+            ? await Strat.find({ map: req.query.map })
             : await Strat.find();
 
         res.json(strats)

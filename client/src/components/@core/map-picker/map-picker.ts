@@ -6,15 +6,20 @@ import { Map, Strat, Step, Player } from '@/services/models';
 @Component({
   components: {
   },
-  computed: mapState(['maps', 'currentStrats'])
+  computed: mapState(['maps', 'currentMap'])
 })
 export default class MapPicker extends Vue {
 
-  maps!: Map[];
-  currentStrats!: Strat[];
+  private maps!: Map[];
+  private currentMap!: string;
 
-  mapClicked(mapId: string) {
-    this.$store.dispatch('updateCurrentMap', mapId);
+  @Emit()
+  private mapClicked(mapId: string) {
+    return mapId;
+  }
+
+  private isCurrentMap(mapId: string) {
+    return mapId === this.currentMap;
   }
 }
 

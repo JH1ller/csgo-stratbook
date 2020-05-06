@@ -9,6 +9,7 @@
 - name: string
 - type: Pistol | Force | Buyround
 - map: Map
+- team: Team
 - side: CT | T
 - active: boolean
 - videoLink?: string | URL
@@ -31,5 +32,10 @@
 
 ### Player
 - name: string
+- team: Team
 - role: "AWP" | "IGL" | "Entry" | "Support" | "Rifle"
 - avatar?: string | URL
+
+### Team
+- name: string
+- avatar: string

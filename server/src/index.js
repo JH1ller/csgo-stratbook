@@ -28,4 +28,7 @@ app.use('/players', playersRouter);
 const stratsRouter = require('./routes/strats');
 app.use('/strats', stratsRouter);
 
-app.listen(3000, () => console.log('Server started'))
+const stepsRouter = require('./routes/steps');
+app.use('/steps', stepsRouter);
+
+app.listen(3000, () => console.log('Server started on port 3000'))
