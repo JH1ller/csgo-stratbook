@@ -1,1 +1,98 @@
-.strat-item {}
+.strat-item {
+  &__container {
+    background-color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border: 2px solid $color-navy-blue-50;
+    min-height: 132px;
+
+    &.-inactive {
+      border: 2px dashed $color-navy-blue-50;
+      opacity: 0.8;
+      .strat-item__field-title {
+        text-decoration: line-through;
+      }
+    }
+  }
+
+  &__field {
+    &-title {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    &-label {
+      font-style: italic;
+      font-size: 0.9em;
+    }
+
+    &-value {
+      font-size: 1.05em;
+      font-weight: bold;
+      text-transform: capitalize;
+    }
+
+    &:not(:first-of-type) {
+      margin-top: 8px;
+    }
+  }
+
+  &__side-badge {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    width: 64px;
+    height: 64px;
+    opacity: 0.6;
+  }
+
+  &__deletion {
+    margin-left: 12px;
+    display: flex;
+    align-items: center;
+  }
+
+  &__btn-wrapper {
+    position: absolute;
+    bottom: 4px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+
+    &.-deleting {
+      .strat-item__btn-delete {
+        margin-left: 0;
+        & > path {
+          fill: #8b0000;
+        }
+      }
+    }
+  }
+
+  &__btn-cancel {
+    margin-left: 8px;
+  }
+
+  &__btn-edit,
+  &__btn-delete,
+  &__btn-cancel {
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    padding: 4px;
+    transition: transform 0.2s ease;
+    &:hover {
+      transform: translateY(-2px);
+      & > path {
+        fill: lighten($color-navy-blue, 15%);
+      }
+    }
+  }
+
+  &__btn-delete {
+    margin-left: 8px;
+  }
+}
