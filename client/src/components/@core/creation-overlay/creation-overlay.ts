@@ -19,6 +19,7 @@ export default class CreationOverlay extends Vue {
   private side: Sides = Sides.T;
   private note: string = '';
   private videoLink: string = '';
+  private triedSubmitting: boolean = false;
 
   private mounted() {
     if (this.strat && this.isEdit) {
@@ -26,22 +27,36 @@ export default class CreationOverlay extends Vue {
     }
   }
 
-  @Emit()
+  get isInvalid() {
+    return !this.isValid() && this.triedSubmitting;
+  }
+
   private submitClicked() {
-    return {
-      isEdit: this.isEdit,
-      strat: {
-        name: this.name,
-        type: this.type,
-        side: this.side,
-        note: this.note,
-        videoLink: this.videoLink,
-      },
-    };
+    if (this.isValid()) {
+      this.$emit('submit-clicked', {
+        isEdit: this.isEdit,
+        strat: {
+          name: this.name,
+          type: this.type,
+          side: this.side,
+          note: this.note,
+          videoLink: this.videoLink,
+        },
+      });
+    } else {
+      this.triedSubmitting = true;
+    }
   }
 
   @Emit()
   private cancelClicked() {}
+
+  private isValid(): boolean {
+    let valid = true;
+    if (this.name === '' || this.name === undefined) valid = false;
+
+    return valid;
+  }
 
   private mapToFields() {
     this.name = this.strat.name;
