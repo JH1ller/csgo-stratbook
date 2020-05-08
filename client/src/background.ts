@@ -12,14 +12,22 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 let win: BrowserWindow | null;
 
 // Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
+protocol.registerSchemesAsPrivileged([
+  { scheme: 'app', privileges: { secure: true, standard: true } },
+]);
 
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 1280, height: 720, minHeight: 505, minWidth: 612, title: 'CSGO Stratbook', useContentSize: true, webPreferences: {
-      nodeIntegration: true
-    }
+    width: 1280,
+    height: 720,
+    minHeight: 670,
+    minWidth: 770,
+    title: 'CSGO Stratbook',
+    useContentSize: true,
+    webPreferences: {
+      nodeIntegration: true,
+    },
   });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -75,7 +83,6 @@ app.on('ready', async () => {
     // } catch (e) {
     //   console.error('Vue Devtools failed to install:', e.toString())
     // }
-
   }
   createWindow();
 });
@@ -83,7 +90,7 @@ app.on('ready', async () => {
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
   if (process.platform === 'win32') {
-    process.on('message', (data) => {
+    process.on('message', data => {
       if (data === 'graceful-exit') {
         app.quit();
       }
@@ -94,4 +101,3 @@ if (isDevelopment) {
     });
   }
 }
-

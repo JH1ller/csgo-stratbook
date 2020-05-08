@@ -1,14 +1,18 @@
-import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
-import { mapState } from "vuex";
-const { remote } = require("electron");
-import { Map, Strat, Step, Player, Sides } from "@/services/models";
-import { library, config } from "@fortawesome/fontawesome-svg-core";
-import { faEdit, faTrashAlt, faBan } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
+const { shell } = require('electron').remote;
+import { Map, Strat, Step, Player, Sides } from '@/services/models';
+import { library, config } from '@fortawesome/fontawesome-svg-core';
+import {
+  faEdit,
+  faTrashAlt,
+  faBan,
+  faFilm,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 config.autoAddCss = false;
-library.add(faEdit, faTrashAlt, faBan);
-Vue.component("font-awesome-icon", FontAwesomeIcon);
+library.add(faEdit, faTrashAlt, faBan, faFilm);
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 @Component({
   components: {},
@@ -36,5 +40,14 @@ export default class StratItem extends Vue {
 
   private cancelDeletion() {
     this.inDeletionQuestion = false;
+  }
+
+  private openVideo() {
+    shell.openExternal(this.strat.videoLink);
+  }
+
+  @Emit()
+  private toggleActive() {
+    return { stratId: this.strat._id, active: !this.strat.active };
   }
 }

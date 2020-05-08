@@ -1,6 +1,6 @@
 <template>
   <div class="strat-item">
-    <div class="strat-item__container" :class="{'-inactive': !isActive()}">
+    <div class="strat-item__container" :class="{'-inactive': !isActive()}" @dblclick="toggleActive">
       <img
         v-if="isCtSide()"
         src="@/assets/icons/ct_badge.png"
@@ -9,6 +9,12 @@
       />
       <img v-else src="@/assets/icons/t_badge.png" class="strat-item__side-badge" draggable="false" />
       <div class="strat-item__btn-wrapper" :class="{'-deleting': inDeletionQuestion}">
+        <font-awesome-icon
+          icon="film"
+          class="strat-item__btn-youtube"
+          v-if="strat.videoLink"
+          @click="openVideo"
+        />
         <font-awesome-icon icon="edit" class="strat-item__btn-edit" />
         <div class="strat-item__deletion" v-if="inDeletionQuestion">
           <span class="strat-item__deletion-question">Are you sure?</span>

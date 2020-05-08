@@ -1,7 +1,7 @@
 <template>
   <div class="view-wrapper">
     <map-picker @map-clicked="updateCurrentMap" />
-    <strat-list @delete-clicked="deleteStrat" />
+    <strat-list @delete-clicked="deleteStrat" @toggle-active="toggleStratActive" />
     <transition name="fade">
       <floating-add @on-click="showCreationOverlay" v-if="currentMap" />
     </transition>
@@ -61,6 +61,10 @@ export default class Home extends Vue {
 
   private hideCreationOverlay() {
     this.creationOverlayOpen = false;
+  }
+
+  private toggleStratActive({ stratId, active }) {
+    this.$store.dispatch('updateStrat', { stratId, changeObj: { active } });
   }
 }
 </script>

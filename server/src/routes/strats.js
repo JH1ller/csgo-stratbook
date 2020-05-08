@@ -46,35 +46,35 @@ router.post('/create', async (req, res) => {
 // * Update One
 router.patch('/:strat_id/update', getStrat, async (req, res) => {
     let modified = false;
-    if (req.body.name) {
+    if (req.body.name !== null && req.body.name !== undefined) {
         res.strat.name = req.body.name;
         modified = true;
     }
-    if (req.body.type) {
+    if (req.body.type !== null && req.body.type !== undefined) {
         res.strat.type = req.body.type;
         modified = true;
     }
-    if (req.body.map) {
+    if (req.body.map !== null && req.body.map !== undefined) {
         res.strat.map = req.body.map;
         modified = true;
     }
-    if (req.body.side) {
+    if (req.body.side !== null && req.body.side !== undefined) {
         res.strat.side = req.body.side;
         modified = true;
     }
-    if (req.body.active) {
+    if (req.body.active !== null && req.body.active !== undefined) {
         res.strat.active = req.body.active;
         modified = true;
     }
-    if (req.body.videoLink) {
+    if (req.body.videoLink !== null && req.body.videoLink !== undefined) {
         res.strat.videoLink = req.body.videoLink;
         modified = true;
     }
-    if (req.body.note) {
+    if (req.body.note !== null && req.body.note !== undefined) {
         res.strat.note = req.body.note;
         modified = true;
     }
-    if (req.body.createdBy) {
+    if (req.body.createdBy !== null && req.body.createdBy !== undefined) {
         res.strat.createdBy = req.body.createdBy;
         modified = true;
     }

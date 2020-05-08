@@ -122,6 +122,14 @@ export default new Vuex.Store({
         console.error(error);
       }
     },
+    async updateStrat({ dispatch }, { stratId, changeObj }) {
+      try {
+        const res = await APIService.updateStrat(stratId, changeObj);
+        dispatch('updateCurrentStrats');
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
   getters: {},
   modules: {},

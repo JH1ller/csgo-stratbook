@@ -3,13 +3,18 @@
     <div class="creation-overlay__wrapper">
       <div class="creation-overlay__form-container">
         <fieldset class="creation-overlay__form-fieldset">
-          <label class="creation-overlay__form-label" for="name">Name</label>
+          <label
+            class="creation-overlay__form-label"
+            :class="{'-invalid': isInvalid}"
+            for="name"
+          >Name</label>
           <input
             class="creation-overlay__form-input"
             type="text"
             name="name"
             v-model="name"
             required
+            :class="{'-invalid': isInvalid}"
           />
         </fieldset>
         <fieldset class="creation-overlay__form-fieldset">

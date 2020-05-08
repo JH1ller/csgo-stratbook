@@ -4,9 +4,6 @@ import { Map, Strat, Step, Player } from '@/services/models';
 
 const url = 'http://localhost:3000/'; //TODO: put in .env
 
-const ytOembedUrl =
-  'https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3DM3r2XDceM6A&format=json';
-
 enum Endpoints {
   MAPS = 'maps',
   STRATS = 'strats',
@@ -75,6 +72,18 @@ class APIService {
     const target = urljoin(url, Endpoints.STRATS, Actions.CREATE);
     try {
       return await axios.post(target, newStrat);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  static async updateStrat(stratId: string, changeObj: any) {
+    const target = urljoin(url, Endpoints.STRATS, stratId, Actions.UPDATE);
+    try {
+      const res = await axios.patch(target, changeObj);
+      const data = res.data;
+      console.log(data);
+      return data;
     } catch (error) {
       console.error(error);
     }

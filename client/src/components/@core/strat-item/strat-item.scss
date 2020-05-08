@@ -32,7 +32,6 @@
     &-value {
       font-size: 1.05em;
       font-weight: bold;
-      text-transform: capitalize;
     }
 
     &:not(:first-of-type) {
@@ -53,6 +52,7 @@
     margin-left: 12px;
     display: flex;
     align-items: center;
+    margin-right: 4px;
   }
 
   &__btn-wrapper {
@@ -61,6 +61,10 @@
     right: 16px;
     display: flex;
     align-items: center;
+
+    :not(:first-child) {
+      margin-left: 8px;
+    }
 
     &.-deleting {
       .strat-item__btn-delete {
@@ -72,20 +76,18 @@
     }
   }
 
-  &__btn-cancel {
-    margin-left: 8px;
-  }
-
   &__btn-edit,
   &__btn-delete,
+  &__btn-youtube,
   &__btn-cancel {
     cursor: pointer;
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     padding: 4px;
     transition: transform 0.2s ease;
+    background-color: lighten($color-navy-blue-50, 15%);
+    border-radius: 4px;
     &:hover {
-      transform: translateY(-2px);
       & > path {
         fill: lighten($color-navy-blue, 15%);
       }
