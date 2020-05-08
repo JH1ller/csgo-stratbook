@@ -1,0 +1,120 @@
+.creation-overlay {
+  &__wrapper {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 70px;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  &__side-wrapper {
+    margin-top: 8px;
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+  &__side-badge {
+    width: 64px;
+    height: 64px;
+    opacity: 0.4;
+    cursor: pointer;
+    border-radius: 50%;
+
+    &.-selected {
+      opacity: 1;
+    }
+  }
+
+  &__btn-submit,
+  &__btn-cancel {
+    text-transform: uppercase;
+    color: white;
+    border-radius: 2px;
+    padding: 4px 8px;
+    letter-spacing: 1px;
+    font-size: 0.9em;
+    width: 64px;
+    height: 32px;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+  }
+
+  &__btn-wrapper {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+    transform: translateY(10px);
+  }
+
+  &__btn-submit {
+    background-color: $color--success-border;
+    margin-left: 12px;
+    &:hover {
+      background-color: darken($color--success-border, 10%);
+    }
+  }
+  &__btn-cancel {
+    background-color: $color--error;
+    &:hover {
+      background-color: darken($color--error, 15%);
+    }
+  }
+
+  &__form {
+    &-container {
+      border-radius: 10px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 32px;
+      background-color: white;
+    }
+
+    &-fieldset {
+      padding: 16px;
+      border: 2px dashed $color-navy-blue-50;
+
+      &:not(:first-of-type) {
+        margin-top: 12px;
+      }
+
+      border-radius: 8px;
+    }
+    &-label {
+      font-size: 1em;
+      display: block;
+      &:not(:first-of-type) {
+        margin-top: 12px;
+      }
+    }
+
+    &-radio-label {
+      font-size: 0.9em;
+      font-style: italic;
+      margin-left: 4px;
+      cursor: pointer;
+    }
+
+    &-radio-wrapper {
+      margin-top: 6px;
+    }
+
+    &-input {
+      font-size: 1em;
+      padding: 8px;
+      border: 3px solid $color-navy-blue-50;
+      border-radius: 8px;
+      margin-top: 6px;
+      width: 300px;
+    }
+
+    &-radio {
+      cursor: pointer;
+      &:not(:first-of-type) {
+        margin-left: 12px;
+      }
+    }
+  }
+}

@@ -53,14 +53,4 @@ export default class App extends Vue {}
   max-height: calc(100vh - 50px);
   overflow-y: scroll;
 }
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.5s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-  //transform: translateY(20px);
-}
 </style>
