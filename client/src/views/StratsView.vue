@@ -63,7 +63,13 @@ export default class Home extends Vue {
     this.creationOverlayOpen = false;
   }
 
-  private toggleStratActive({ stratId, active }) {
+  private toggleStratActive({
+    stratId,
+    active,
+  }: {
+    stratId: string;
+    active: boolean;
+  }) {
     this.$store.dispatch('updateStrat', { stratId, changeObj: { active } });
   }
 }

@@ -10,15 +10,15 @@ module.exports = {
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
-        productName: "Hiller Website Tools",
-        appId: "Hiller.Tools",
+        productName: "CSGO-Stratbook",
+        appId: "CSGO.Stratbook",
         win: {
           target: "portable",
           publisherName: 'Hiller',
           icon: './icon.png'
         },
         portable: {
-          artifactName: "HillerWebsiteTool.exe"
+          artifactName: "CSGO-Stratbook.exe"
         },
         directories: {
           output: "dist_electron/release"
