@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const stratSchema = require('./strat').schema;
 
 const mapSchema = new mongoose.Schema({
 

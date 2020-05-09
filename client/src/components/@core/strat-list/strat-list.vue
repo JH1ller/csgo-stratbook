@@ -3,8 +3,8 @@
     <div class="strat-list__map-container">
       <transition-group name="fade">
         <strat-item
-          v-for="(strat) in currentStrats"
-          :key="strat.name"
+          v-for="(strat, index) in currentStrats"
+          :key="'strat' + index"
           :strat="strat"
           @delete-clicked="deleteClicked"
           @toggle-active="toggleActive"

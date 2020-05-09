@@ -50,6 +50,7 @@ export default new Vuex.Store({
     },
     setStepsOfStrat(state, { strat, steps }) {
       strat.steps = steps;
+      console.log(strat, steps);
     },
   },
   actions: {
@@ -92,7 +93,6 @@ export default new Vuex.Store({
       this.state.currentStrats.forEach(async strat => {
         try {
           const steps = await APIService.getStepsOfStrat(strat._id);
-          console.log(steps);
           commit('setStepsOfStrat', { strat, steps });
         } catch (error) {
           console.error(error);
@@ -102,7 +102,6 @@ export default new Vuex.Store({
     async deleteStrat({ dispatch }, payload) {
       try {
         const res = await APIService.deleteStrat(payload);
-        console.log(res);
         dispatch('updateCurrentStrats');
       } catch (error) {
         console.error(error);
@@ -115,7 +114,6 @@ export default new Vuex.Store({
             payload,
             this.state.currentMap as string
           );
-          console.log(res);
           dispatch('updateCurrentStrats');
         }
       } catch (error) {

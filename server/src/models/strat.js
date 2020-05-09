@@ -1,7 +1,4 @@
 const mongoose = require('mongoose');
-const playerSchema = require('./player').schema;
-const stepSchema = require('./step').schema;
-const Map = require('./map');
 
 const stratSchema = new mongoose.Schema({
 

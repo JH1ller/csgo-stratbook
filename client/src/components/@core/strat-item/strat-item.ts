@@ -9,16 +9,18 @@ import {
   faFilm,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import StepItem from '@/components/@core/step-item/step-item.vue';
 
 config.autoAddCss = false;
 library.add(faEdit, faTrashAlt, faBan, faFilm);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 @Component({
-  components: {},
+  components: { StepItem },
 })
 export default class StratItem extends Vue {
   @Prop() private strat!: Strat;
+
   private inDeletionQuestion: boolean = false;
 
   private isCtSide(): boolean {
