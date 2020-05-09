@@ -24,19 +24,18 @@
       </div>
       <div class="strat-item__field-wrapper">
         <div class="strat-item__field">
-          <p class="strat-item__field-title">{{strat.name}}</p>
-        </div>
-        <div class="strat-item__field">
-          <p class="strat-item__field-label">Type</p>
-          <p class="strat-item__field-value">{{strat.type}}</p>
+          <span class="strat-item__field-title">{{strat.name}}</span>
+          <span
+            class="strat-item__field-type"
+            :class="[strat.type === 'BUYROUND' ? '-buyround' : strat.type === 'PISTOL' ? '-pistol' : '-force']"
+          >{{strat.type}}</span>
         </div>
         <div class="strat-item__field" v-if="strat.note">
           <p class="strat-item__field-label">Note</p>
           <p class="strat-item__field-value">{{strat.note}}</p>
         </div>
-        <div class="strat-item__field" v-if="strat.videoLink">
-          <p class="strat-item__field-label">Videolink</p>
-          <p class="strat-item__field-value">{{strat.videoLink}}</p>
+        <div class="strat-item__field" v-if="strat.note">
+          <step-item v-for="(step, index) in strat.steps" :step="step" :key="'step' + index" />
         </div>
       </div>
     </div>

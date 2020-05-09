@@ -49,16 +49,16 @@
   }
 
   &__btn-submit {
-    background-color: $color--success-border;
+    background-color: $color--green;
     margin-left: 12px;
     &:hover {
-      background-color: darken($color--success-border, 10%);
+      background-color: darken($color--green, 10%);
     }
   }
   &__btn-cancel {
-    background-color: $color--error;
+    background-color: $color--red;
     &:hover {
-      background-color: darken($color--error, 15%);
+      background-color: darken($color--red, 15%);
     }
   }
 
@@ -75,7 +75,7 @@
 
     &-fieldset {
       padding: 16px;
-      border: 2px dashed $color-navy-blue-50;
+      border: 2px dashed $color--navyblue-50;
 
       &:not(:first-of-type) {
         margin-top: 12px;
@@ -91,7 +91,7 @@
       }
       transition: color 0.2s ease;
       &.-invalid {
-        color: $color--error;
+        color: $color--red;
       }
     }
 
@@ -109,13 +109,13 @@
     &-input {
       font-size: 1em;
       padding: 8px;
-      border: 3px solid $color-navy-blue-50;
+      border: 3px solid $color--navyblue-50;
       border-radius: 8px;
       margin-top: 6px;
       width: 300px;
       transition: border 0.2s ease;
       &.-invalid {
-        border: 3px solid $color--error;
+        border: 3px solid $color--red;
       }
     }
 

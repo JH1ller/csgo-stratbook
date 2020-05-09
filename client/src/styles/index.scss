@@ -1,9 +1,10 @@
-@import "_mixins";
-@import "_vars";
-@import "_responsive";
-@import "_reset";
-@import "_fonts";
-@import "_transitions";
+@import '_mixins';
+@import '_colors';
+@import '_responsive';
+@import '_reset';
+@import '_fonts';
+@import '_transitions';
+@import '_font-faces';
 
 html {
   width: 100%;
