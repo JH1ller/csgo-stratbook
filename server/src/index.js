@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
+const port = process.env.PORT || 3000;
 
 mongoose.connect(
     process.env.NODE_ENV === 'production'
@@ -38,4 +39,4 @@ app.use('/strats', stratsRouter);
 const stepsRouter = require('./routes/steps');
 app.use('/steps', stepsRouter);
 
-app.listen(3000, () => console.log('Server started on port 3000'))
+app.listen(port, () => console.log(`Server started on port ${port}`))
