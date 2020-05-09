@@ -2,7 +2,10 @@ import axios from 'axios';
 import urljoin from 'url-join';
 import { Map, Strat, Step, Player } from '@/services/models';
 
-const url = 'https://fast-depths-75284.herokuapp.com/'; //TODO: put in .env
+const url =
+  process.env.NODE_ENV === 'production'
+    ? 'https://fast-depths-75284.herokuapp.com/'
+    : 'http://localhost:3000/';
 
 enum Endpoints {
   MAPS = 'maps',
