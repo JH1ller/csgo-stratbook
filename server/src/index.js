@@ -19,6 +19,13 @@ db.once('open', () => console.log('Connected to database'));
 app.use(express.json());
 app.use(cors());
 
+/**
+ * Prevent crash on default route
+ */
+app.get('/', (req, res) => {
+    res.send('Nothing to see here');
+})
+
 const mapsRouter = require('./routes/maps');
 app.use('/maps', mapsRouter);
 
