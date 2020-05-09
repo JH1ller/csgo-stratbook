@@ -39,8 +39,14 @@ export default class MainMenu extends Vue {
   ];
 
   private mounted() {
-    /* const win = remote.getCurrentWindow();
-    win?.setMinimumSize(660, this.calculateMinHeight()); */
+    const win = remote.getCurrentWindow();
+    // win?.setMinimumSize(660, this.calculateMinHeight());
+    document.addEventListener('keydown', e => {
+      if (e.key === 'd' && e.ctrlKey) {
+        win.openDevTools();
+        console.log(process.env.NODE_ENV, process.env.API_ENDPOINT);
+      }
+    });
   }
 
   private calculateMinHeight() {
