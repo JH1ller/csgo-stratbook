@@ -1,5 +1,4 @@
 'use strict';
-require('dotenv').config();
 import { app, protocol, BrowserWindow } from 'electron';
 import {
   createProtocol,

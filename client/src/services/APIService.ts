@@ -4,7 +4,7 @@ import { Map, Strat, Step, Player } from '@/services/models';
 
 const url =
   process.env.NODE_ENV === 'production'
-    ? 'https://fast-depths-75284.herokuapp.com/'
+    ? 'https://csgo-stratbook.herokuapp.com/'
     : 'http://localhost:3000/';
 
 enum Endpoints {

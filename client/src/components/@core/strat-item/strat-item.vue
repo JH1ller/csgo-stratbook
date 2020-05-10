@@ -34,7 +34,7 @@
           <p class="strat-item__field-label">Note</p>
           <p class="strat-item__field-value">{{strat.note}}</p>
         </div>
-        <div class="strat-item__field" v-if="strat.note">
+        <div class="strat-item__field" v-if="strat.steps">
           <step-item v-for="(step, index) in strat.steps" :step="step" :key="'step' + index" />
         </div>
       </div>
