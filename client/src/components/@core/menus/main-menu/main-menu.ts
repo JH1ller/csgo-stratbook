@@ -44,7 +44,6 @@ export default class MainMenu extends Vue {
     document.addEventListener('keydown', e => {
       if (e.key === 'd' && e.ctrlKey) {
         win.openDevTools();
-        console.log(process.env.NODE_ENV, process.env.API_ENDPOINT);
       }
     });
   }

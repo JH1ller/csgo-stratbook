@@ -30,12 +30,22 @@ export default class StratItem extends Vue {
   private isActive(): boolean {
     return this.strat.active;
   }
+  /* 
+  mounted() {
+    this.$forceUpdate();
+    document.addEventListener('keydown', e => {
+      if (e.key === 'u' && e.ctrlKey) {
+        this.$forceUpdate();
+      }
+    });
+  } */
 
   @Emit()
   private deleteClicked() {
     if (!this.inDeletionQuestion) {
       this.inDeletionQuestion = true;
     } else {
+      this.inDeletionQuestion = false;
       return this.strat._id;
     }
   }

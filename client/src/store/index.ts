@@ -48,9 +48,11 @@ export default new Vuex.Store({
     setCurrentStrats(state, payload) {
       state.currentStrats = payload;
     },
-    setStepsOfStrat(state, { strat, steps }) {
-      strat.steps = steps;
-      console.log(strat, steps);
+    setStepsOfStrat(state, { strat, steps }: { strat: Strat; steps: Step[] }) {
+      const stateObj = state.currentStrats.find(
+        targetStrat => targetStrat._id === strat._id
+      ) as Strat;
+      Vue.set(stateObj, 'steps', steps);
     },
   },
   actions: {
