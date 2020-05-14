@@ -15,7 +15,7 @@
           v-if="strat.videoLink"
           @click="openVideo"
         />
-        <font-awesome-icon icon="edit" class="strat-item__btn-edit" />
+        <font-awesome-icon icon="edit" class="strat-item__btn-edit" @click="editStrat" />
         <div class="strat-item__deletion" v-if="inDeletionQuestion">
           <span class="strat-item__deletion-question">Are you sure?</span>
           <font-awesome-icon icon="ban" class="strat-item__btn-cancel" @click="cancelDeletion" />

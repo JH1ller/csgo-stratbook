@@ -3,6 +3,7 @@
     <map-picker @map-clicked="updateCurrentMap" />
     <strat-list
       @delete-clicked="deleteStrat"
+      @edit-strat="showCreationOverlay"
       @toggle-active="toggleStratActive"
       @update-step="updateStep"
     />
@@ -13,6 +14,7 @@
       <creation-overlay
         v-if="creationOverlayOpen"
         :isEdit="creationOverlayEditMode"
+        :strat="editStrat"
         @submit-clicked="creationOverlaySubmitted"
         @cancel-clicked="hideCreationOverlay"
       />

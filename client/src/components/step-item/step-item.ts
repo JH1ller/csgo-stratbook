@@ -35,7 +35,6 @@ export default class StepItem extends Vue implements IStepItem {
   }
 
   get activeGrenades() {
-    console.log('hi');
     return {
       grenade: this.step.grenades?.includes(NadeTypes.GRENADE),
       smoke: this.step.grenades?.includes(NadeTypes.SMOKE),
@@ -45,6 +44,18 @@ export default class StepItem extends Vue implements IStepItem {
         this.countOccurences(this.step.grenades, NadeTypes.FLASHBANG) > 1,
       molotov: this.step.grenades?.includes(NadeTypes.MOLOTOV),
     };
+  }
+
+  get activeGrenadesArray() {
+    let grenadeArray: NadeTypes[] = [];
+    if (this.activeGrenadesCopy.grenade) grenadeArray.push(NadeTypes.GRENADE);
+    if (this.activeGrenadesCopy.smoke) grenadeArray.push(NadeTypes.SMOKE);
+    if (this.activeGrenadesCopy.flashbang)
+      grenadeArray.push(NadeTypes.FLASHBANG);
+    if (this.activeGrenadesCopy.flashbangTwo)
+      grenadeArray.push(NadeTypes.FLASHBANG);
+    if (this.activeGrenadesCopy.molotov) grenadeArray.push(NadeTypes.MOLOTOV);
+    return grenadeArray;
   }
 
   public cancelEdit() {
@@ -98,6 +109,7 @@ export default class StepItem extends Vue implements IStepItem {
           this.$emit('update-step', {
             stepId: this.step._id,
             description: this.descriptionCopy,
+            grenades: this.activeGrenadesArray,
           });
           this.editMode = false;
           break;

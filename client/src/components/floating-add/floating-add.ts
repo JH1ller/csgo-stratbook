@@ -13,6 +13,6 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 export default class FloatingAdd extends Vue {
   @Emit()
   private onClick() {
-    return false; // isEditMode = false
+    return;
   }
 }

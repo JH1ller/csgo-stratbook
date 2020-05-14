@@ -13,8 +13,11 @@
     &.-edit {
       border-color: $color--navyblue;
       border-left-width: 3px;
+
+      .step-item__description {
+        cursor: text;
+      }
     }
-    
   }
 
   &__description {
@@ -22,6 +25,7 @@
     height: 100%;
     border-right: 1px solid $color--navyblue-50;
     padding: 7px;
+    cursor: default;
   }
 
   &__grenade {

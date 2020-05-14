@@ -56,6 +56,11 @@ export default class StratItem extends Vue {
   }
 
   @Emit()
+  private editStrat() {
+    return this.strat;
+  }
+
+  @Emit()
   private toggleActive() {
     return { stratId: this.strat._id, active: !this.strat.active };
   }
