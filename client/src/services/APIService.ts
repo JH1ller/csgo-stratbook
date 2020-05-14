@@ -22,6 +22,11 @@ enum Actions {
 }
 
 class APIService {
+
+  /**
+   * MAPS
+   */
+
   static async getAllMaps() {
     const target = urljoin(url, Endpoints.MAPS);
     console.log(target);
@@ -42,6 +47,10 @@ class APIService {
       console.error(error);
     }
   }
+
+  /**
+   * STRATS
+   */
 
   static async getStratsOfMap(mapId: string) {
     const target = urljoin(url, Endpoints.STRATS);
@@ -92,6 +101,10 @@ class APIService {
     }
   }
 
+  /**
+   * STEPS
+   */
+
   static async getStepsOfStrat(stratId: string) {
     const target = urljoin(url, Endpoints.STEPS);
     try {
@@ -100,8 +113,18 @@ class APIService {
           strat: stratId,
         },
       });
-      const data = res.data;
-      return data;
+      return res.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  static async updateStep(stepId: string, changeObj: any) {
+    const target = urljoin(url, Endpoints.STEPS, stepId, Actions.UPDATE);
+    try {
+      const res = await axios.patch(target, changeObj);
+      console.log(res.data);
+      return res.data;
     } catch (error) {
       console.error(error);
     }

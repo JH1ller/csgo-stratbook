@@ -130,6 +130,14 @@ export default new Vuex.Store({
         console.error(error);
       }
     },
+    async updateStep({ dispatch }, { stepId, changeObj }) {
+      try {
+        const res = await APIService.updateStep(stepId, changeObj);
+        dispatch('updateStepsOfCurrentStrats');
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
   getters: {},
   modules: {},

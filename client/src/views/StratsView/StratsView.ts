@@ -1,28 +1,9 @@
-<template>
-  <div class="view-wrapper">
-    <map-picker @map-clicked="updateCurrentMap" />
-    <strat-list @delete-clicked="deleteStrat" @toggle-active="toggleStratActive" />
-    <transition name="fade">
-      <floating-add @on-click="showCreationOverlay" v-if="currentMap" />
-    </transition>
-    <transition name="fade">
-      <creation-overlay
-        v-if="creationOverlayOpen"
-        :isEdit="creationOverlayEditMode"
-        @submit-clicked="creationOverlaySubmitted"
-        @cancel-clicked="hideCreationOverlay"
-      />
-    </transition>
-  </div>
-</template>
-
-<script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { mapState } from 'vuex';
-import MapPicker from '@/components/@core/map-picker/map-picker.vue';
-import StratList from '@/components/@core/strat-list/strat-list.vue';
-import FloatingAdd from '@/components/@core/floating-add/floating-add.vue';
-import CreationOverlay from '@/components/@core/creation-overlay/creation-overlay.vue';
+import MapPicker from '@/components/map-picker/map-picker.vue';
+import StratList from '@/components/strat-list/strat-list.vue';
+import FloatingAdd from '@/components/floating-add/floating-add.vue';
+import CreationOverlay from '@/components/creation-overlay/creation-overlay.vue';
 
 @Component({
   name: 'StratsView',
@@ -72,11 +53,14 @@ export default class Home extends Vue {
   }) {
     this.$store.dispatch('updateStrat', { stratId, changeObj: { active } });
   }
-}
-</script>
 
-<style lang="scss">
-.strat-list {
-  margin-top: 24px;
+  private updateStep({
+    stepId,
+    description,
+  }: {
+    stepId: string;
+    description: string;
+  }) {
+    this.$store.dispatch('updateStep', { stepId, changeObj: { description } });
+  }
 }
-</style>

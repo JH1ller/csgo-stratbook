@@ -1,40 +1,42 @@
 <template>
   <div class="step-item">
-    <div class="step-item__container">
+    <div class="step-item__container" :class="{'-edit': editMode}" @dblclick="enableEditMode">
       <input
         type="text"
         class="step-item__description"
-        :class="{'-edit': editMode}"
         :readonly="!editMode"
-        @dblclick="enableEditMode"
-        v-model="description"
-        @keydown="handleKeyDown"
+        v-model="descriptionCopy"
       />
       <div class="step-item__grenade-wrapper">
         <img
           src="@/assets/icons/grenade.png"
           class="step-item__grenade-item"
-          :class="{'-active': grenadeActive}"
+          :class="{'-active': activeGrenadesCopy.grenade}"
+          @click="toggleGrenade('GRENADE')"
         />
         <img
           src="@/assets/icons/smoke.png"
           class="step-item__grenade-item"
-          :class="{'-active': smokeActive}"
+          :class="{'-active': activeGrenadesCopy.smoke}"
+          @click="toggleGrenade('SMOKE')"
         />
         <img
           src="@/assets/icons/flashbang.png"
           class="step-item__grenade-item"
-          :class="{'-active': flashbangActive}"
+          :class="{'-active': activeGrenadesCopy.flashbang}"
+          @click="toggleGrenade('FLASHBANG')"
         />
         <img
           src="@/assets/icons/flashbang.png"
           class="step-item__grenade-item"
-          :class="{'-active': flashbangTwoActive}"
+          :class="{'-active': activeGrenadesCopy.flashbangTwo}"
+          @click="toggleGrenade('FLASHBANG_TWO')"
         />
         <img
           src="@/assets/icons/molotov.png"
           class="step-item__grenade-item"
-          :class="{'-active': molotovActive}"
+          :class="{'-active': activeGrenadesCopy.molotov}"
+          @click="toggleGrenade('MOLOTOV')"
         />
       </div>
     </div>

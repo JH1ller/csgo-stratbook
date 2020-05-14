@@ -35,7 +35,14 @@
           <p class="strat-item__field-value">{{strat.note}}</p>
         </div>
         <div class="strat-item__field" v-if="strat.steps">
-          <step-item v-for="(step, index) in strat.steps" :step="step" :key="'step' + index" />
+          <step-item
+            v-for="(step, index) in strat.steps"
+            :step="step"
+            :key="'step' + index"
+            @edit-enabled="handleStepEditEnabled"
+            @update-step="updateStep"
+            ref="step-elements"
+          />
         </div>
       </div>
     </div>
