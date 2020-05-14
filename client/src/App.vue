@@ -11,9 +11,9 @@
 
 <script>
 import { Component, Vue } from "vue-property-decorator";
-import ViewTitle from "@/components/@core/view-title/view-title.vue";
-import Loader from "@/components/@shared/loader/loader.vue";
-import MainMenu from "@/components/@core/menus/main-menu/main-menu.vue";
+import ViewTitle from "@/components/view-title/view-title.vue";
+import Loader from "@/components/loader/loader.vue";
+import MainMenu from "@/components/menus/main-menu/main-menu.vue";
 
 @Component({
   components: {

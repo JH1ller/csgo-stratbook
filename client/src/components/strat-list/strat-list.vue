@@ -8,6 +8,7 @@
           :strat="strat"
           @delete-clicked="deleteClicked"
           @toggle-active="toggleActive"
+          @update-step="updateStep"
         />
       </transition-group>
     </div>

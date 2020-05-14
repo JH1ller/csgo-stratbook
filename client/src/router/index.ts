@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import StratsView from '../views/StratsView.vue';
+import StratsView from '../views/StratsView/StratsView.vue';
 import Map from '../views/Map.vue';
 import { mapsResolver } from '@/resolvers/index';
 
@@ -16,7 +16,7 @@ const routes = [
     path: '/strats',
     name: 'Strats',
     component: StratsView,
-    beforeEnter: mapsResolver
+    beforeEnter: mapsResolver,
   },
   {
     path: '/map/:map',

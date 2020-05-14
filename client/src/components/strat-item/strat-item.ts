@@ -1,4 +1,4 @@
-import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
+import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
 const { shell } = require('electron').remote;
 import { Map, Strat, Step, Player, Sides } from '@/services/models';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
@@ -9,7 +9,8 @@ import {
   faFilm,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import StepItem from '@/components/@core/step-item/step-item.vue';
+import StepItem from '@/components/step-item/step-item.vue';
+import { IStepItem } from '@/components/step-item/step-item';
 
 config.autoAddCss = false;
 library.add(faEdit, faTrashAlt, faBan, faFilm);
@@ -20,6 +21,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 })
 export default class StratItem extends Vue {
   @Prop() private strat!: Strat;
+  @Ref('step-elements') stepElements!: IStepItem[];
 
   private inDeletionQuestion: boolean = false;
 
@@ -30,15 +32,10 @@ export default class StratItem extends Vue {
   private isActive(): boolean {
     return this.strat.active;
   }
-  /* 
-  mounted() {
-    this.$forceUpdate();
-    document.addEventListener('keydown', e => {
-      if (e.key === 'u' && e.ctrlKey) {
-        this.$forceUpdate();
-      }
-    });
-  } */
+
+  private handleStepEditEnabled() {
+    this.stepElements.forEach(stepElement => stepElement.cancelEdit());
+  }
 
   @Emit()
   private deleteClicked() {
@@ -61,5 +58,10 @@ export default class StratItem extends Vue {
   @Emit()
   private toggleActive() {
     return { stratId: this.strat._id, active: !this.strat.active };
+  }
+
+  @Emit()
+  private updateStep(changeObj: any) {
+    return changeObj;
   }
 }

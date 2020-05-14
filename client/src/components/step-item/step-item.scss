@@ -9,6 +9,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    &.-edit {
+      border-color: $color--navyblue;
+      border-left-width: 3px;
+    }
+    
   }
 
   &__description {

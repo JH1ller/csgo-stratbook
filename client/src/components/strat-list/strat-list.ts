@@ -2,7 +2,7 @@ import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
 import { mapState } from 'vuex';
 const { remote } = require('electron');
 import { Map, Strat, Step, Player } from '@/services/models';
-import StratItem from '@/components/@core/strat-item/strat-item.vue';
+import StratItem from '@/components/strat-item/strat-item.vue';
 
 @Component({
   components: {
@@ -23,5 +23,11 @@ export default class StratList extends Vue {
   @Emit()
   private toggleActive(payload: any) {
     return payload;
+  }
+
+  // Drilled up from strat-item
+  @Emit()
+  private updateStep(changeObj: any) {
+    return changeObj;
   }
 }
