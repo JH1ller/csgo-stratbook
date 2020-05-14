@@ -1,9 +1,10 @@
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { mapState } from 'vuex';
 import MapPicker from '@/components/map-picker/map-picker.vue';
 import StratList from '@/components/strat-list/strat-list.vue';
 import FloatingAdd from '@/components/floating-add/floating-add.vue';
 import CreationOverlay from '@/components/creation-overlay/creation-overlay.vue';
+import { NadeTypes, Strat } from '@/services/models';
 
 @Component({
   name: 'StratsView',
@@ -13,12 +14,14 @@ import CreationOverlay from '@/components/creation-overlay/creation-overlay.vue'
     FloatingAdd,
     CreationOverlay,
   },
-  computed: mapState(['currentMap']),
+  computed: mapState(['currentMap', 'currentStrats']),
 })
 export default class Home extends Vue {
   private creationOverlayOpen: boolean = false;
   private creationOverlayEditMode: boolean = false;
-  private currentMap!: boolean;
+  private editStrat: Strat | null = null;
+  private currentMap!: string;
+  private currentStrats!: Strat[];
 
   private updateCurrentMap(mapId: string) {
     this.$store.dispatch('updateCurrentMap', mapId);
@@ -31,13 +34,21 @@ export default class Home extends Vue {
   private creationOverlaySubmitted(data: any) {
     if (!data.isEdit) {
       this.$store.dispatch('createStrat', data.strat);
+    } else {
+      this.$store.dispatch('updateStrat', {
+        stratId: data.stratId,
+        changeObj: data.strat,
+      });
     }
     this.hideCreationOverlay();
   }
 
-  private showCreationOverlay(editMode: boolean) {
+  private showCreationOverlay(strat: Strat) {
     this.creationOverlayOpen = true;
-    this.creationOverlayEditMode = editMode;
+    if (strat) {
+      this.editStrat = strat;
+      this.creationOverlayEditMode = true;
+    }
   }
 
   private hideCreationOverlay() {
@@ -57,10 +68,15 @@ export default class Home extends Vue {
   private updateStep({
     stepId,
     description,
+    grenades,
   }: {
     stepId: string;
     description: string;
+    grenades: NadeTypes[];
   }) {
-    this.$store.dispatch('updateStep', { stepId, changeObj: { description } });
+    this.$store.dispatch('updateStep', {
+      stepId,
+      changeObj: { description, grenades },
+    });
   }
 }

@@ -13,7 +13,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 })
 export default class CreationOverlay extends Vue {
   @Prop() strat!: Strat;
-  @Prop() isEdit: boolean = false;
+  @Prop() isEdit!: boolean;
   private name: string = '';
   private type: StratTypes = StratTypes.BUYROUND;
   private side: Sides = Sides.T;
@@ -35,6 +35,7 @@ export default class CreationOverlay extends Vue {
     if (this.isValid()) {
       this.$emit('submit-clicked', {
         isEdit: this.isEdit,
+        stratId: this.strat._id,
         strat: {
           name: this.name,
           type: this.type,
@@ -60,6 +61,10 @@ export default class CreationOverlay extends Vue {
 
   private mapToFields() {
     this.name = this.strat.name;
+    this.type = this.strat.type;
+    this.side = this.strat.side;
+    this.note = this.strat.note ?? '';
+    this.videoLink = this.strat.videoLink ?? '';
   }
 
   private isTSide() {

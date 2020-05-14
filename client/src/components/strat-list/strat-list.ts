@@ -13,21 +13,27 @@ import StratItem from '@/components/strat-item/strat-item.vue';
 export default class StratList extends Vue {
   private currentStrats!: Strat[];
 
-  // Drilled up from strat-item
+  // Emitted through from strat-item
   @Emit()
   private deleteClicked(stratId: string) {
     return stratId;
   }
 
-  // Drilled up from strat-item
+  // Emitted through from strat-item
   @Emit()
   private toggleActive(payload: any) {
     return payload;
   }
 
-  // Drilled up from strat-item
+  // Emitted through from strat-item
   @Emit()
   private updateStep(changeObj: any) {
     return changeObj;
+  }
+
+  // Emitted through from strat-item
+  @Emit()
+  private editStrat(strat: Strat) {
+    return strat;
   }
 }

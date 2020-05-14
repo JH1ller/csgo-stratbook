@@ -9,6 +9,7 @@
           @delete-clicked="deleteClicked"
           @toggle-active="toggleActive"
           @update-step="updateStep"
+          @edit-strat="editStrat"
         />
       </transition-group>
     </div>
