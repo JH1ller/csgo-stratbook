@@ -1,4 +1,4 @@
-![csgo-stratbook](.readme/logo_dark.png | width=200)
+<img src=".readme/logo_dark.png" width="128">
 
 ## CSGO Stratbook
 
