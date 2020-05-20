@@ -7,10 +7,10 @@ const cors = require('cors');
 const port = process.env.PORT || 3000;
 
 mongoose.connect(
-    process.env.NODE_ENV === 'production'
-        ? process.env.DATABASE_URL
-        : process.env.DATABASE_URL_DEV,
-    { useNewUrlParser: true }
+  process.env.NODE_ENV === 'production'
+    ? process.env.DATABASE_URL
+    : process.env.DATABASE_URL_DEV,
+  { useNewUrlParser: true, useUnifiedTopology: true }
 );
 
 const db = mongoose.connection;
@@ -24,8 +24,8 @@ app.use(cors());
  * Prevent crash on default route
  */
 app.get('/', (req, res) => {
-    res.send('Nothing to see here');
-})
+  res.send('Nothing to see here');
+});
 
 const mapsRouter = require('./routes/maps');
 app.use('/maps', mapsRouter);
@@ -39,4 +39,4 @@ app.use('/strats', stratsRouter);
 const stepsRouter = require('./routes/steps');
 app.use('/steps', stepsRouter);
 
-app.listen(port, () => console.log(`Server started on port ${port}`))
+app.listen(port, () => console.log(`Server started on port ${port}`));
