@@ -17,15 +17,22 @@ const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
 db.once('open', () => console.log('Connected to database'));
 
+/**
+ * Middleware
+ */
+
 app.use(express.json());
 app.use(cors());
 
 /**
- * Prevent crash on default route
+ * Routes
  */
 app.get('/', (req, res) => {
   res.send('Nothing to see here');
 });
+
+const authRouter = require('./routes/auth');
+app.use('/auth', authRouter);
 
 const mapsRouter = require('./routes/maps');
 app.use('/maps', mapsRouter);
