@@ -18,13 +18,14 @@
   },
   "homepage": "https://github.com/JH1ller/csgo-stratbook#readme",
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
     "@types/express": "^4.17.6",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongodb": "^3.5.6",
-    "mongoose": "^5.9.11",
-    "dotenv": "^8.2.0"
+    "mongoose": "^5.9.11"
   },
   "devDependencies": {
     "nodemon": "^2.0.3"
