@@ -4,7 +4,6 @@ const playerSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    //unique: true,
     max: 255,
     min: 6,
   },
@@ -12,6 +11,7 @@ const playerSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
     max: 255,
     min: 6,
   },
@@ -21,6 +21,11 @@ const playerSchema = new mongoose.Schema({
     required: true,
     max: 1024,
     min: 8,
+  },
+
+  confirmed: {
+    type: Boolean,
+    default: false,
   },
 
   role: {
