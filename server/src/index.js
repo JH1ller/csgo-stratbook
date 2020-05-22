@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const path = require('path');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -20,15 +21,18 @@ db.once('open', () => console.log('Connected to database'));
 /**
  * Middleware
  */
-
 app.use(express.json());
 app.use(cors());
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
+app.set('views', path.join(__dirname, 'templates'));
+app.set('view engine', 'pug');
 
 /**
  * Routes
  */
-app.get('/', (req, res) => {
-  res.send('Nothing to see here');
+app.get('/success', (req, res) => {
+  res.render('success');
 });
 
 const authRouter = require('./routes/auth');
