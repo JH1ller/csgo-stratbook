@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import StratsView from '../views/StratsView/StratsView.vue';
+import LoginView from '../views/LoginView/LoginView.vue';
 import Map from '../views/Map.vue';
 import { mapsResolver } from '@/resolvers/index';
 
@@ -10,13 +11,20 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    redirect: { name: 'Strats' },
+    redirect: (to: any) => {
+      return { name: 'Login' };
+    },
   },
   {
     path: '/strats',
     name: 'Strats',
     component: StratsView,
     beforeEnter: mapsResolver,
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: LoginView,
   },
   {
     path: '/map/:map',

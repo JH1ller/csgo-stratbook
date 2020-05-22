@@ -1,48 +1,48 @@
 const express = require('express');
 const router = express.Router();
-const Player = require('../models/player');
-const { getPlayer } = require('./utils/getters');
+const Team = require('../models/team');
+const { getTeam } = require('./utils/getters');
 const { verifyAuth } = require('./utils/verifyToken');
 
 // ! Get all | make admin later
 router.get('/', async (req, res) => {
   try {
-    const players = await Player.find();
-    res.json(players);
+    const teams = await Team.find();
+    res.json(teams);
   } catch (error) {
     res.status(500).json({ message: err.message });
   }
 });
 
 // ! Get One | Make admin later
-router.get('/:player_id', getPlayer, (req, res) => {
-  res.json(res.player);
+router.get('/:team_id', getTeam, (req, res) => {
+  res.json(res.team);
 });
 
 // * Update One
-router.patch('/update', verifyAuth, getPlayer, async (req, res) => {
+router.patch('/update', verifyAuth, getTeam, async (req, res) => {
   if (req.body.name) {
-    res.player.name = req.body.name;
+    res.team.name = req.body.name;
   }
   if (req.body.role) {
-    res.player.role = req.body.role;
+    res.team.role = req.body.role;
   }
   if (req.body.avatar) {
-    res.player.avatar = req.body.avatar;
+    res.team.avatar = req.body.avatar;
   }
   try {
-    const updatedPlayer = await res.player.save();
-    res.json(updatedPlayer);
+    const updatedTeam = await res.team.save();
+    res.json(updatedTeam);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 });
 
 // * Delete One
-router.delete('/:player_id/delete', verifyAuth, getPlayer, async (req, res) => {
+router.delete('/:team_id/delete', verifyAuth, getTeam, async (req, res) => {
   try {
-    await res.player.remove();
-    res.json({ message: 'Deleted player successfully' });
+    await res.team.remove();
+    res.json({ message: 'Deleted team successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -51,9 +51,9 @@ router.delete('/:player_id/delete', verifyAuth, getPlayer, async (req, res) => {
 // ! Delete All | admin
 router.delete('/deleteAll', async (req, res) => {
   try {
-    await Player.deleteMany({});
-    await Player.collection.dropIndexes();
-    res.json({ message: 'Deleted all players' });
+    await Team.deleteMany({});
+    await Team.collection.dropIndexes();
+    res.json({ message: 'Deleted all teams' });
   } catch (error) {
     res.status(500).json({ message: error });
   }

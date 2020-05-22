@@ -2,6 +2,7 @@ const Map = require('../../models/map');
 const Strat = require('../../models/strat');
 const Player = require('../../models/player');
 const Step = require('../../models/step');
+const Team = require('../../models/team');
 
 async function getStrat(req, res, next) {
   let strat;
@@ -48,6 +49,21 @@ async function getMap(req, res, next) {
   next();
 }
 
+async function getTeam(req, res, next) {
+  let team;
+  try {
+    team = await Team.findById(req.params.team_id);
+    if (!team) {
+      return res.status(404).json({ message: 'Cannot find team' });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+
+  res.team = team;
+  next();
+}
+
 async function getPlayer(req, res, next) {
   let player;
   try {
@@ -67,3 +83,4 @@ exports.getMap = getMap;
 exports.getStrat = getStrat;
 exports.getStep = getStep;
 exports.getPlayer = getPlayer;
+exports.getTeam = getTeam;
