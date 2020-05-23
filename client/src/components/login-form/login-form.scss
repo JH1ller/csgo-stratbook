@@ -3,9 +3,9 @@
     display: flex;
     flex-direction: column;
 
-    padding: 16px;
-    border: 2px dashed $color--navyblue-50;
-
+    padding: 24px;
+    // border: 1px solid $color--navyblue-50;
+    background-color: white;
     &:not(:first-of-type) {
       margin-top: 12px;
     }
@@ -28,24 +28,51 @@
   &__input {
     font-size: 1em;
     padding: 8px;
-    border: 3px solid $color--navyblue-50;
-    border-radius: 8px;
-    margin-top: 6px;
+    border: 2px solid $color--navyblue-50;
+    border-radius: 6px;
     width: 300px;
+
     transition: border 0.2s ease;
+    &:not(:first-of-type) {
+      margin-top: 12px;
+    }
+
     &.-invalid {
       border: 3px solid $color--red;
+    }
+
+    &::placeholder {
+      transition: opacity 0.3s ease;
+      opacity: 0.5;
+    }
+
+    &--email {
+      &:focus {
+        &::placeholder {
+          opacity: 0;
+        }
+      }
+    }
+    &--password {
+      &:focus {
+        &::placeholder {
+          opacity: 0;
+        }
+      }
     }
   }
 
   &__submit {
+    margin-top: 16px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
     text-transform: uppercase;
     color: white;
     border-radius: 2px;
     padding: 4px 8px;
     letter-spacing: 1px;
     font-size: 0.9em;
-    width: 64px;
     height: 32px;
     transition: background-color 0.2s ease;
     cursor: pointer;

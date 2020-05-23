@@ -2,6 +2,8 @@ require('dotenv').config();
 
 const express = require('express');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -18,12 +20,21 @@ const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
 db.once('open', () => console.log('Connected to database'));
 
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
+
 /**
  * Middleware
  */
 app.use(express.json());
 app.use(cors());
 app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use(limiter);
+app.use(helmet());
+
+if (process.env.NODE_ENV === 'production') app.set('trust proxy', 1);
 
 app.set('views', path.join(__dirname, 'templates'));
 app.set('view engine', 'pug');
