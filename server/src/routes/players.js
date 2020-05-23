@@ -14,9 +14,16 @@ router.get('/', async (req, res) => {
   }
 });
 
-// ! Get One | Make admin later
+// * Get One
 router.get('/:player_id', getPlayer, (req, res) => {
-  res.json(res.player);
+  res.json({
+    name: res.player.name,
+    email: res.player.email,
+    role: res.player.role,
+    avatar: res.player.avatar,
+    team: res.player.team,
+    date: res.player.date,
+  });
 });
 
 // * Update One

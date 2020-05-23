@@ -9,7 +9,7 @@
     &:not(:first-of-type) {
       margin-top: 12px;
     }
-
+    transition: height 0.3s ease;
     border-radius: 8px;
   }
 
@@ -77,5 +77,25 @@
     transition: background-color 0.2s ease;
     cursor: pointer;
     background-color: $color--green;
+  }
+
+  &__register-text {
+    margin-top: 8px;
+  }
+
+  &__register-link {
+    font-weight: bold;
+    margin-left: 4px;
+    color: $color--green;
+    cursor: pointer;
+  }
+
+  &__error {
+    color: $color--red;
+    max-width: 300px;
+    margin-bottom: 12px;
+    padding: 8px;
+    border-radius: 6px;
+    background-color: $color--red-25;
   }
 }
