@@ -9,6 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 const remote = require('electron').remote;
+import AuthService from '@/services/AuthService';
 
 config.autoAddCss = false;
 library.add(faTools, faUtensils, faBoxes, faUsers, faChess);
@@ -44,6 +45,8 @@ export default class MainMenu extends Vue {
     document.addEventListener('keydown', e => {
       if (e.key === 'd' && e.ctrlKey) {
         win.openDevTools();
+        const authService = AuthService.getInstance();
+        authService.getPlayerInfo();
       }
     });
   }

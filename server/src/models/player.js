@@ -38,6 +38,12 @@ const playerSchema = new mongoose.Schema({
     type: String,
   },
 
+  team: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'teams',
+    required: true,
+  },
+
   date: {
     type: Date,
     default: Date.now,
