@@ -33,12 +33,14 @@ Vue-Electron-Typescript application to manage strategies in Valve's popular comp
 - Vue Class Components & Property Decorator
 - Electron
 - Typescript
-- SCSS (BEVM)
+- SCSS
 #### Server/Backend
 
 - Node.js
 - Express
 - MongoDB/Mongoose
+- Bcrypt
+- JWT
 
 ### Goals
 
