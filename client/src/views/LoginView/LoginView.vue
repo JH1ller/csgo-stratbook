@@ -1,11 +1,22 @@
 <template>
   <div class="view-wrapper">
     <div class="login-view">
-      <login-form
-        ref="login-form"
-        @login-clicked="loginRequest"
-        @register-clicked="showRegisterForm"
-      />
+      <transition name="fade">
+        <register-form
+          v-if="registerFormVisible"
+          key="register"
+          ref="register-form"
+          @login-clicked="toggleRegisterForm"
+          @register-clicked="toggleRegisterForm"
+        />
+        <login-form
+          v-else
+          key="login"
+          ref="login-form"
+          @login-clicked="loginRequest"
+          @register-clicked="toggleRegisterForm"
+        />
+      </transition>
     </div>
   </div>
 </template>

@@ -6,7 +6,7 @@ const { getMap, getStrat } = require('./utils/getters');
 const { verifyAuth } = require('./utils/verifyToken');
 
 // * Get all
-router.get('/', async (req, res) => {
+router.get('/', verifyAuth, async (req, res) => {
   try {
     const maps = await Map.find();
     res.json(maps);

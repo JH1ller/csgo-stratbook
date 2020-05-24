@@ -67,7 +67,10 @@ async function getTeam(req, res, next) {
 async function getPlayer(req, res, next) {
   let player;
   try {
-    player = await Player.findById(req.user._id);
+    player = req.params.player_id
+      ? await Player.findById(req.params.player_id)
+      : await Player.findById(req.user._id);
+
     if (!player) {
       return res.status(404).json({ message: 'Cannot find player' });
     }

@@ -13,7 +13,7 @@ const registerValidation = (formData) => {
   return schema.validate(formData);
 };
 
-// Login validation
+// Login validation ? remove
 const loginValidation = (formData) => {
   const schema = Joi.object({
     email: Joi.string().min(6).required().email(),

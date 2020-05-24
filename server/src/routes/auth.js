@@ -38,13 +38,10 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  const { error } = loginValidation(req.body);
-  if (error) return res.status(400).send({ error: error.details[0].message });
-
   const targetUser = await Player.findOne({ email: req.body.email });
 
   if (!targetUser)
-    return res.status(400).send({ error: 'Email or password is wrong.' });
+    return res.status(400).send({ error: 'Email or password is invalid.' });
 
   const validPassword = await bcrypt.compare(
     req.body.password,
@@ -52,12 +49,16 @@ router.post('/login', async (req, res) => {
   );
 
   if (!validPassword)
-    return res.status(400).send({ error: 'Email or password is wrong.' });
+    return res.status(400).send({ error: 'Email or password is invalid.' });
 
   if (!targetUser.confirmed)
-    return res.status(400).send({ error: 'Email is not confirmed yet.' });
+    return res
+      .status(400)
+      .send({ error: 'Please confirm your email to log in.' });
 
-  const token = jwt.sign({ _id: targetUser._id }, process.env.TOKEN_SECRET);
+  const token = jwt.sign({ _id: targetUser._id }, process.env.TOKEN_SECRET, {
+    expiresIn: '30d',
+  });
   res.header('Authorization', token).send(token);
 });
 
