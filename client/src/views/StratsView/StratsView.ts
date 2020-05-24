@@ -16,7 +16,7 @@ import { NadeTypes, Strat } from '@/services/models';
   },
   computed: mapState(['currentMap', 'currentStrats']),
 })
-export default class Home extends Vue {
+export default class StratsView extends Vue {
   private creationOverlayOpen: boolean = false;
   private creationOverlayEditMode: boolean = false;
   private editStrat: Strat | null = null;

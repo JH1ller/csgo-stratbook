@@ -1,0 +1,25 @@
+.logo {
+    width: 150px;
+    height: auto;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.headline {}
+
+.text {
+    text-align: center;
+}
+
+body {
+    background-color: #dbe4e6;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

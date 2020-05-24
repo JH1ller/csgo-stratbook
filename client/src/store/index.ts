@@ -2,6 +2,9 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { Map, Strat, Step, Player } from '@/services/models';
 import APIService from '@/services/APIService';
+import AuthService from '@/services/AuthService';
+
+const authService = AuthService.getInstance();
 
 export interface AppState {
   ui: {
@@ -11,6 +14,7 @@ export interface AppState {
   maps: Map[];
   currentMap: string | null;
   currentStrats: Strat[];
+  token: string | null;
 }
 
 const getInitialState = (): AppState => {
@@ -22,6 +26,7 @@ const getInitialState = (): AppState => {
     maps: [],
     currentMap: null,
     currentStrats: [],
+    token: null,
   };
 };
 
@@ -47,6 +52,9 @@ export default new Vuex.Store({
     },
     setCurrentStrats(state, payload) {
       state.currentStrats = payload;
+    },
+    setToken(state, payload) {
+      state.token = payload;
     },
     setStepsOfStrat(state, { strat, steps }: { strat: Strat; steps: Step[] }) {
       const stateObj = state.currentStrats.find(
@@ -134,6 +142,20 @@ export default new Vuex.Store({
       try {
         const res = await APIService.updateStep(stepId, changeObj);
         dispatch('updateStepsOfCurrentStrats');
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async loginUser({ commit }, { email, password }) {
+      try {
+        const res = await authService.login(email, password);
+        if (res.error) {
+          return res.error;
+        } else if (res.token) {
+          commit('setToken', res.token);
+
+          return false;
+        }
       } catch (error) {
         console.error(error);
       }

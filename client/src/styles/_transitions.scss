@@ -9,12 +9,11 @@
 
 .fadeup-enter-active,
 .fadeup-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 .fadeup-enter,
 .fadeup-leave-to {
   opacity: 0;
-  transform: translateY(20px);
 }
 
 .fade-move {
