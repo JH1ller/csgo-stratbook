@@ -150,11 +150,27 @@ export default new Vuex.Store({
       try {
         const res = await authService.login(email, password);
         if (res.error) {
-          return res.error;
+          return { error: res.error };
         } else if (res.token) {
           commit('setToken', res.token);
 
-          return false;
+          return { success: 'Logged in successfully.' };
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async registerUser({ commit }, formData) {
+      try {
+        const res = await authService.register(formData);
+        console.log(res);
+        if (res.error) {
+          return { error: res.error };
+        } else if (res.user) {
+          return {
+            success:
+              'Registered successfully. A confirmation email has been sent.',
+          };
         }
       } catch (error) {
         console.error(error);

@@ -20,9 +20,6 @@
       margin-top: 12px;
     }
     transition: color 0.2s ease;
-    &.-invalid {
-      color: $color--red;
-    }
   }
 
   &__input {
@@ -91,5 +88,10 @@
     padding: 8px;
     border-radius: 6px;
     background-color: $color--red-25;
+
+    &.-success {
+      color: $color--green;
+      background-color: $color--green-25;
+    }
   }
 }

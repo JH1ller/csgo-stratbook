@@ -50,6 +50,18 @@ class AuthService {
     }
   }
 
+  async register(formData: any) {
+    const target = urljoin(url, Endpoints.AUTH, Actions.REGISTER);
+    console.log(formData);
+    try {
+      const res = await axios.post(target, formData);
+      this.token = res.data;
+      return { user: res.data };
+    } catch (error) {
+      return { error: error.response.data.error };
+    }
+  }
+
   saveTokenToStorage() {
     if (this.token) localStorage.setItem('auth-token', this.token);
   }

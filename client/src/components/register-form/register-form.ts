@@ -1,41 +1,50 @@
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
-import { library, config } from '@fortawesome/fontawesome-svg-core';
-import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-config.autoAddCss = false;
-library.add(faEdit, faTrashAlt);
-Vue.component('font-awesome-icon', FontAwesomeIcon);
-
-export interface IRegisterForm {
-  displayFormError: (message: string) => void;
+export interface RegisterFormData {
+  name: string;
+  email: string;
+  password: string;
 }
-
 @Component({
   components: {},
 })
-export default class RegisterForm extends Vue implements IRegisterForm {
-  private formData: any = {
-    name: '',
-    email: '',
-    password: '',
+export default class RegisterForm extends Vue {
+  private formData: RegisterFormData = {
+    name: 'test1',
+    email: 'test1@mail.com',
+    password: 'Wdawdawd123',
   };
-  private formError: string | null = null;
+  private imageFile: File | null = null;
+  @Prop() formMessage!: string | null;
+  @Prop() formMessageStyle!: string | null;
 
-  displayFormError(message: string) {
-    this.formError = message;
-    this.$forceUpdate();
+  get isError() {
+    return this.formMessageStyle === 'error';
+  }
+
+  get isSuccess() {
+    return this.formMessageStyle === 'success';
+  }
+
+  private fileSelected(e: any) {
+    console.log(e.target.files[0]);
+    if (e.target.files[0]) {
+      this.imageFile = e.target.files[0];
+    }
   }
 
   @Emit()
   private registerClicked(e: Event) {
     e.preventDefault();
-    this.formError = null;
-    return this.formData;
-  }
+    let requestFormData = new FormData();
+    if (this.imageFile) {
+      requestFormData.append('avatar', this.imageFile, this.imageFile.name);
+    }
 
-  @Emit()
-  private loginClicked() {
-    return;
+    for (let [key, value] of Object.entries(this.formData)) {
+      requestFormData.append(key, value);
+    }
+
+    return requestFormData;
   }
 }

@@ -32,7 +32,7 @@ const limiter = rateLimit({
  */
 app.use(express.json());
 app.use(cors());
-app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static('public'));
 app.use(limiter);
 app.use(helmet());
 
@@ -46,6 +46,10 @@ app.set('view engine', 'pug');
  */
 app.get('/success', (req, res) => {
   res.render('success');
+});
+
+app.get('/error', (req, res) => {
+  res.render('error');
 });
 
 const authRouter = require('./routes/auth');

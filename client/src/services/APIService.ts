@@ -29,9 +29,15 @@ class APIService {
 
   static async getAllMaps() {
     const target = urljoin(url, Endpoints.MAPS);
+    const authService = AuthService.getInstance();
+    const token = authService.getToken();
     console.log(target);
     try {
-      const res = await axios.get(target);
+      const res = await axios.get(target, {
+        headers: {
+          Authorization: token,
+        },
+      });
       const data = res.data;
       return data;
     } catch (error) {

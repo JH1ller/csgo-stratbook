@@ -1,8 +1,17 @@
 <template>
   <div class="register-form">
-    <form class="register-form__fieldset" @submit="registerClicked">
+    <form
+      class="register-form__fieldset"
+      @submit="registerClicked"
+      enctype="multipart/form-data"
+      novalidate
+    >
       <transition name="fade">
-        <span class="register-form__error" v-if="formError">{{ formError }}</span>
+        <span
+          class="register-form__error"
+          v-if="formMessage"
+          :class="{'-error': isError, '-success': isSuccess}"
+        >{{ formMessage }}</span>
       </transition>
       <input
         type="text"
@@ -22,10 +31,17 @@
         placeholder="Password"
         v-model="formData.password"
       />
+      <input
+        type="file"
+        class="register-form__input"
+        value="File"
+        @change="fileSelected"
+        accept="image/*"
+      />
       <input type="submit" class="register-form__submit" value="Register" @click="registerClicked" />
       <span class="register-form__register-text">
         Already registered?
-        <span class="register-form__register-link" @click="loginClicked">Login</span>
+        <router-link :to="{name: 'Login'}" class="register-form__register-link">Login</router-link>
       </span>
     </form>
   </div>
