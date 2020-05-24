@@ -1,0 +1,14 @@
+.login-view {
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  height: 100%;
+
+  & > .login-form,
+  & > .register-form {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

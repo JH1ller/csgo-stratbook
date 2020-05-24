@@ -1,6 +1,7 @@
 import axios from 'axios';
 import urljoin from 'url-join';
 import { Map, Strat, Step, Player } from '@/services/models';
+import AuthService from './AuthService';
 
 const url =
   process.env.NODE_ENV === 'production'
@@ -22,9 +23,8 @@ enum Actions {
 }
 
 class APIService {
-
   /**
-   * MAPS
+   * * MAPS
    */
 
   static async getAllMaps() {
@@ -49,15 +49,22 @@ class APIService {
   }
 
   /**
-   * STRATS
+   * * STRATS
    */
 
   static async getStratsOfMap(mapId: string) {
     const target = urljoin(url, Endpoints.STRATS);
+    const authService = AuthService.getInstance();
+    const token = authService.getToken();
+    if (!token) throw 'User not logged in.';
+
     try {
       const res = await axios.get(target, {
         params: {
           map: mapId,
+        },
+        headers: {
+          Authorization: token,
         },
       });
       const data = res.data;
@@ -69,8 +76,16 @@ class APIService {
 
   static async deleteStrat(stratId: string) {
     const target = urljoin(url, Endpoints.STRATS, stratId, Actions.DELETE);
+    const authService = AuthService.getInstance();
+    const token = authService.getToken();
+    if (!token) throw 'User not logged in.';
+
     try {
-      const res = await axios.delete(target);
+      const res = await axios.delete(target, {
+        headers: {
+          Authorization: token,
+        },
+      });
       const data = res.data;
       return data;
     } catch (error) {
@@ -80,10 +95,17 @@ class APIService {
 
   static async createStrat(strat: Strat, mapId: string) {
     const newStrat = { ...strat, map: mapId };
-    console.log(newStrat);
     const target = urljoin(url, Endpoints.STRATS, Actions.CREATE);
+    const authService = AuthService.getInstance();
+    const token = authService.getToken();
+    if (!token) throw 'User not logged in.';
+
     try {
-      return await axios.post(target, newStrat);
+      return await axios.post(target, newStrat, {
+        headers: {
+          Authorization: token,
+        },
+      });
     } catch (error) {
       console.error(error);
     }
@@ -91,8 +113,16 @@ class APIService {
 
   static async updateStrat(stratId: string, changeObj: any) {
     const target = urljoin(url, Endpoints.STRATS, stratId, Actions.UPDATE);
+    const authService = AuthService.getInstance();
+    const token = authService.getToken();
+    if (!token) throw 'User not logged in.';
+
     try {
-      const res = await axios.patch(target, changeObj);
+      const res = await axios.patch(target, changeObj, {
+        headers: {
+          Authorization: token,
+        },
+      });
       const data = res.data;
       console.log(data);
       return data;
@@ -102,15 +132,22 @@ class APIService {
   }
 
   /**
-   * STEPS
+   * * STEPS
    */
 
   static async getStepsOfStrat(stratId: string) {
     const target = urljoin(url, Endpoints.STEPS);
+    const authService = AuthService.getInstance();
+    const token = authService.getToken();
+    if (!token) throw 'User not logged in.';
+
     try {
       const res = await axios.get(target, {
         params: {
           strat: stratId,
+        },
+        headers: {
+          Authorization: token,
         },
       });
       return res.data;
@@ -121,10 +158,32 @@ class APIService {
 
   static async updateStep(stepId: string, changeObj: any) {
     const target = urljoin(url, Endpoints.STEPS, stepId, Actions.UPDATE);
+    const authService = AuthService.getInstance();
+    const token = authService.getToken();
+    if (!token) throw 'User not logged in.';
+
     try {
-      const res = await axios.patch(target, changeObj);
-      console.log(res.data);
+      const res = await axios.patch(target, changeObj, {
+        headers: {
+          Authorization: token,
+        },
+      });
       return res.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  /**
+   * * Players
+   */
+
+  static async getPlayer(playerId: string) {
+    const target = urljoin(url, Endpoints.PLAYERS, playerId);
+    try {
+      const res = await axios.get(target);
+      const data = res.data;
+      return data;
     } catch (error) {
       console.error(error);
     }

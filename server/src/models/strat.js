@@ -1,66 +1,70 @@
 const mongoose = require('mongoose');
 
 const stratSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
 
-    name: {
-        type: String,
-        required: true
-    },
+  map: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'maps',
+    required: true,
+  },
 
-    map: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'maps',
-        required: true
-    },
+  team: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'teams',
+    required: true,
+  },
 
-    side: {
-        type: String,
-        enum: ['CT', 'T'],
-        required: true
-    },
+  side: {
+    type: String,
+    enum: ['CT', 'T'],
+    required: true,
+  },
 
-    type: {
-        type: String,
-        enum: ['PISTOL', 'FORCE', 'BUYROUND'],
-        default: 'BUYROUND'
-    },
+  type: {
+    type: String,
+    enum: ['PISTOL', 'FORCE', 'BUYROUND'],
+    default: 'BUYROUND',
+  },
 
-    active: {
-        type: Boolean,
-        default: true
-    },
+  active: {
+    type: Boolean,
+    default: true,
+  },
 
-    videoLink: {
-        type: String,
-    },
+  videoLink: {
+    type: String,
+  },
 
-    note: {
-        type: String,
-    },
+  note: {
+    type: String,
+  },
 
-    createdBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'players'
-        // TODO: make required later
-    },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'players',
+    // TODO: make required later
+  },
 
-    createdAt: {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
+  createdAt: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
 
-    modifiedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'players'
-    },
+  modifiedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'players',
+  },
 
-    modifiedAt: {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
-
+  modifiedAt: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model('Strat', stratSchema);
