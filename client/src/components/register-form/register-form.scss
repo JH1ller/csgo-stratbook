@@ -1,4 +1,4 @@
-.login-form {
+.register-form {
   &__fieldset {
     display: flex;
     flex-direction: column;
@@ -47,7 +47,8 @@
     }
 
     &--email,
-    &--password {
+    &--password,
+    &--name {
       &:focus {
         &::placeholder {
           opacity: 0;

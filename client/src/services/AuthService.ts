@@ -67,6 +67,7 @@ class AuthService {
     if (this.token) {
       const decodedToken: JWTData = jwtDecode(this.token);
       try {
+        console.log(decodedToken);
         const res = await APIService.getPlayer(decodedToken._id);
         this.playerInfo = res;
         console.log(res);

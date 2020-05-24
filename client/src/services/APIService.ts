@@ -3,8 +3,6 @@ import urljoin from 'url-join';
 import { Map, Strat, Step, Player } from '@/services/models';
 import AuthService from './AuthService';
 
-const authService = AuthService.getInstance();
-
 const url =
   process.env.NODE_ENV === 'production'
     ? 'https://csgo-stratbook.herokuapp.com/'
@@ -56,6 +54,7 @@ class APIService {
 
   static async getStratsOfMap(mapId: string) {
     const target = urljoin(url, Endpoints.STRATS);
+    const authService = AuthService.getInstance();
     const token = authService.getToken();
     if (!token) throw 'User not logged in.';
 
@@ -77,6 +76,7 @@ class APIService {
 
   static async deleteStrat(stratId: string) {
     const target = urljoin(url, Endpoints.STRATS, stratId, Actions.DELETE);
+    const authService = AuthService.getInstance();
     const token = authService.getToken();
     if (!token) throw 'User not logged in.';
 
@@ -96,6 +96,7 @@ class APIService {
   static async createStrat(strat: Strat, mapId: string) {
     const newStrat = { ...strat, map: mapId };
     const target = urljoin(url, Endpoints.STRATS, Actions.CREATE);
+    const authService = AuthService.getInstance();
     const token = authService.getToken();
     if (!token) throw 'User not logged in.';
 
@@ -112,6 +113,7 @@ class APIService {
 
   static async updateStrat(stratId: string, changeObj: any) {
     const target = urljoin(url, Endpoints.STRATS, stratId, Actions.UPDATE);
+    const authService = AuthService.getInstance();
     const token = authService.getToken();
     if (!token) throw 'User not logged in.';
 
@@ -135,6 +137,7 @@ class APIService {
 
   static async getStepsOfStrat(stratId: string) {
     const target = urljoin(url, Endpoints.STEPS);
+    const authService = AuthService.getInstance();
     const token = authService.getToken();
     if (!token) throw 'User not logged in.';
 
@@ -155,6 +158,7 @@ class APIService {
 
   static async updateStep(stepId: string, changeObj: any) {
     const target = urljoin(url, Endpoints.STEPS, stepId, Actions.UPDATE);
+    const authService = AuthService.getInstance();
     const token = authService.getToken();
     if (!token) throw 'User not logged in.';
 
