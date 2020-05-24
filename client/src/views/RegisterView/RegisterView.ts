@@ -1,21 +1,19 @@
 import { Component, Vue, Ref } from 'vue-property-decorator';
-import LoginForm from '@/components/login-form/login-form.vue';
+import RegisterForm from '@/components/register-form/register-form.vue';
+import { RegisterFormData } from '@/components/register-form/register-form';
 
 @Component({
-  name: 'LoginView',
+  name: 'RegisterView',
   components: {
-    LoginForm,
+    RegisterForm,
   },
 })
-export default class LoginView extends Vue {
+export default class RegisterView extends Vue {
   private formMessage: string | null = null;
   private formMessageStyle: string | null = null;
 
-  private async loginRequest(payload: any) {
-    const res = await this.$store.dispatch('loginUser', {
-      email: payload.email,
-      password: payload.password,
-    });
+  private async registerRequest(formData: RegisterFormData) {
+    const res = await this.$store.dispatch('registerUser', formData);
     if (res.error) {
       this.formMessage = res.error;
       this.formMessageStyle = 'error';
@@ -25,7 +23,7 @@ export default class LoginView extends Vue {
       setTimeout(() => {
         this.formMessage = null;
         this.formMessageStyle = null;
-        this.$router.push({ name: 'Strats' });
+        this.$router.push({ name: 'Login' });
       }, 3000);
     }
   }

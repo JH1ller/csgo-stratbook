@@ -1,8 +1,12 @@
 <template>
   <div class="login-form">
-    <form class="login-form__fieldset" @submit="loginClicked">
+    <form class="login-form__fieldset" @submit="loginClicked" novalidate>
       <transition name="fade">
-        <span class="login-form__error" v-if="formError">{{ formError }}</span>
+        <span
+          class="login-form__error"
+          v-if="formMessage"
+          :class="{'-error': isError, '-success': isSuccess}"
+        >{{ formMessage }}</span>
       </transition>
       <input
         type="email"
@@ -19,10 +23,7 @@
       <input type="submit" class="login-form__submit" value="Sign in" @click="loginClicked" />
       <span class="login-form__register-text">
         Not registered?
-        <span
-          class="login-form__register-link"
-          @click="registerClicked"
-        >Create an account</span>
+        <router-link :to="{name: 'Register'}" class="login-form__register-link">Create an account</router-link>
       </span>
     </form>
   </div>

@@ -92,5 +92,10 @@
     padding: 8px;
     border-radius: 6px;
     background-color: $color--red-25;
+
+    &.-success {
+      color: $color--green;
+      background-color: $color--green-25;
+    }
   }
 }

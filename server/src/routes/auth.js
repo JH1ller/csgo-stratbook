@@ -5,16 +5,22 @@ const router = express.Router();
 const Player = require('../models/player');
 const { registerValidation, loginValidation } = require('./utils/validation');
 const { sendMail } = require('./utils/mailService');
+const { uploadMiddleware } = require('./utils/fileUpload');
 
-router.post('/register', async (req, res) => {
+/**
+ * * Routes
+ */
+
+router.post('/register', uploadMiddleware, async (req, res) => {
   const { error } = registerValidation(req.body);
   if (error) {
-    return res.status(400).send(error.details[0].message);
+    return res.status(400).send({ error: error.details[0].message });
   }
 
   const emailExists = await Player.findOne({ email: req.body.email });
 
-  if (emailExists) return res.status(400).send('Email already exists');
+  if (emailExists)
+    return res.status(400).send({ error: 'Email already exists' });
 
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -24,6 +30,9 @@ router.post('/register', async (req, res) => {
     email: req.body.email,
     password: hashedPassword,
   });
+
+  if (req.file) user.avatar = req.file.filename;
+
   try {
     const newUser = await user.save();
 
