@@ -1,4 +1,4 @@
-import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
+import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
 
 export interface RegisterFormData {
   name: string;
@@ -9,6 +9,7 @@ export interface RegisterFormData {
   components: {},
 })
 export default class RegisterForm extends Vue {
+  @Ref('file-input') fileInput!: HTMLInputElement;
   private formData: RegisterFormData = {
     name: 'test1',
     email: 'test1@mail.com',
@@ -27,9 +28,10 @@ export default class RegisterForm extends Vue {
   }
 
   private fileSelected(e: any) {
-    console.log(e.target.files[0]);
-    if (e.target.files[0]) {
-      this.imageFile = e.target.files[0];
+    const file = e.target.files[0];
+    if (file) {
+      this.imageFile = file;
+      this.fileInput.setAttribute('file-input-value', file.name);
     }
   }
 
