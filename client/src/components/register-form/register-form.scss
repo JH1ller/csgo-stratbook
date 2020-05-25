@@ -2,9 +2,7 @@
   &__fieldset {
     display: flex;
     flex-direction: column;
-
     padding: 24px;
-    // border: 1px solid $color--navyblue-50;
     background-color: white;
     &:not(:first-of-type) {
       margin-top: 12px;
@@ -20,9 +18,6 @@
       margin-top: 12px;
     }
     transition: color 0.2s ease;
-    &.-invalid {
-      color: $color--red;
-    }
   }
 
   &__input {
@@ -31,14 +26,10 @@
     border: 2px solid $color--navyblue-50;
     border-radius: 6px;
     width: 300px;
-
+    box-shadow: $shadow-subtle;
     transition: border 0.2s ease;
     &:not(:first-of-type) {
       margin-top: 12px;
-    }
-
-    &.-invalid {
-      border: 3px solid $color--red;
     }
 
     &::placeholder {
@@ -53,6 +44,66 @@
         &::placeholder {
           opacity: 0;
         }
+      }
+    }
+  }
+
+  &__file {
+    margin-top: 12px;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    height: 2.5rem;
+
+    & > input {
+      min-width: 14rem;
+      margin: 0;
+      opacity: 0;
+    }
+
+    & > span {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      height: 2.5rem;
+      padding: 0.5rem 1rem;
+      line-height: 1.5;
+      color: #555;
+      background-color: white;
+      border: 2px solid $color--navyblue-50;
+      border-radius: 0.25rem;
+      box-shadow: $shadow-subtle;
+      user-select: none;
+      cursor: pointer;
+
+      &:hover {
+        &:before {
+          background-color: #ddd;
+        }
+      }
+
+      &:before {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        border: 2px solid $color--navyblue-50;
+        bottom: -2px;
+        content: 'Browse';
+        padding: 0.5rem 1rem;
+        line-height: 1.5;
+        color: #555;
+        background-color: $color--light;
+        border-radius: 0 0.25rem 0.25rem 0;
+        transition: background-color 0.3s ease;
+      }
+
+      &:after {
+        content: attr(file-input-value);
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }

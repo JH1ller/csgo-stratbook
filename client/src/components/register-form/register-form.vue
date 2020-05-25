@@ -31,13 +31,10 @@
         placeholder="Password"
         v-model="formData.password"
       />
-      <input
-        type="file"
-        class="register-form__input"
-        value="File"
-        @change="fileSelected"
-        accept="image/*"
-      />
+      <label class="register-form__file">
+        <input type="file" id="file" @change="fileSelected" accept="image/*" />
+        <span ref="file-input" file-input-value="Choose avatar..."></span>
+      </label>
       <input type="submit" class="register-form__submit" value="Register" @click="registerClicked" />
       <span class="register-form__register-text">
         Already registered?
