@@ -15,6 +15,7 @@ export interface AppState {
   currentMap: string | null;
   currentStrats: Strat[];
   token: string | null;
+  profile: Player | null;
 }
 
 const getInitialState = (): AppState => {
@@ -27,6 +28,7 @@ const getInitialState = (): AppState => {
     currentMap: null,
     currentStrats: [],
     token: null,
+    profile: null,
   };
 };
 
@@ -62,6 +64,9 @@ export default new Vuex.Store({
       ) as Strat;
       Vue.set(stateObj, 'steps', steps);
     },
+    setProfile(state, profile) {
+      state.profile = profile;
+    },
   },
   actions: {
     resetState({ commit }) {
@@ -79,10 +84,8 @@ export default new Vuex.Store({
       try {
         const maps = await APIService.getAllMaps();
         commit('updateMaps', maps);
-        return true;
       } catch (error) {
         console.error(error);
-        return false;
       }
     },
     updateCurrentMap({ commit, dispatch }, payload) {
@@ -146,13 +149,22 @@ export default new Vuex.Store({
         console.error(error);
       }
     },
-    async loginUser({ commit }, { email, password }) {
+    async updateProfile({ commit }) {
+      try {
+        const profile = await authService.getPlayerInfo();
+        commit('setProfile', profile);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async loginUser({ commit, dispatch }, { email, password }) {
       try {
         const res = await authService.login(email, password);
         if (res.error) {
           return { error: res.error };
         } else if (res.token) {
           commit('setToken', res.token);
+          dispatch('updateProfile');
 
           return { success: 'Logged in successfully.' };
         }

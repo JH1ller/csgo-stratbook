@@ -1,9 +1,10 @@
 <template>
   <div class="register-form">
     <form
-      class="register-form__fieldset"
+      class="register-form__form"
       @submit="registerClicked"
       enctype="multipart/form-data"
+      ref="form"
       novalidate
     >
       <transition name="fade">
@@ -18,18 +19,27 @@
         class="register-form__input register-form__input--name"
         placeholder="Username"
         v-model="formData.name"
+        ref="name"
       />
       <input
         type="email"
         class="register-form__input register-form__input--email"
         placeholder="Email"
         v-model="formData.email"
+        ref="email"
       />
       <input
         type="password"
         class="register-form__input register-form__input--password"
         placeholder="Password"
         v-model="formData.password"
+        ref="password"
+      />
+      <input
+        type="password"
+        class="register-form__input register-form__input--password"
+        placeholder="Repeat password"
+        ref="password-repeat"
       />
       <label class="register-form__file">
         <input type="file" id="file" @change="fileSelected" accept="image/*" />

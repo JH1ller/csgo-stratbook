@@ -4,8 +4,8 @@ const playerSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    max: 255,
-    min: 6,
+    max: 20,
+    min: 3,
   },
 
   email: {

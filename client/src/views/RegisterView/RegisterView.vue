@@ -5,6 +5,7 @@
         :formMessage="formMessage"
         :formMessageStyle="formMessageStyle"
         @register-clicked="registerRequest"
+        @update-form-message="updateFormMessage"
       />
     </div>
   </div>

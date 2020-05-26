@@ -17,6 +17,12 @@
           >{{ item.label }}</span>
         </router-link>
       </li>
+      <li class="main-menu__profile" v-if="profile">
+        <router-link to="/profile" class="main-menu__profile-link">
+          <img :src="avatarUrl" class="main-menu__profile-avatar" />
+          <span class="main-menu__profile-label">{{ profile.name }}</span>
+        </router-link>
+      </li>
     </ul>
   </div>
 </template>
