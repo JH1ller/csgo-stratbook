@@ -1,3 +1,5 @@
+// TODO: refactor this stuff, it's almost unreadable
+
 .main-menu {
   width: 70px;
   height: 100vh;
@@ -10,8 +12,8 @@
   &:hover {
     width: 220px;
 
-    .main-menu__list-item-label {
-      //display: block;
+    .main-menu__list-item-label,
+    .main-menu__profile-label {
       transform: translateX(0);
       opacity: 1;
     }
@@ -21,63 +23,84 @@
     width: 100%;
     height: 100%;
     background: $color--darkblue;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
 
-    &-item {
-      width: 100%;
-      padding: 20px;
-      cursor: pointer;
+  &__list-item,
+  &__profile {
+    width: 100%;
+    padding: 20px;
+    cursor: pointer;
 
-      &:first-of-type {
-        padding-left: 16px;
-        background: $color--black;
+    &:first-of-type {
+      padding-left: 16px;
+      background: $color--black;
 
-        .main-menu__list-item-label {
-          color: white;
-          font-weight: bold;
-          transform: translateX(0);
-        }
-      }
-
-      &:hover {
-        background: $color--black;
-      }
-
-      &-link {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-      }
-
-      &-label {
-        font-family: Open Sans, sans-serif;
-        white-space: nowrap;
-        margin-left: 1.5rem;
-        opacity: 0;
-        overflow: hidden;
-        transition: opacity 0.5s ease-out;
-        color: $color--grey;
-        transform: translateX(-20px);
-        transition: all 0.5s ease-out;
-
-        &.-logo {
-          margin-left: 16px;
-        }
-      }
-
-      &-icon {
-        width: 30px;
-        height: 30px;
-
-        & path {
-          fill: $color--grey;
-        }
-
-        &.-logo {
-          width: 40px;
-          height: 40px;
-          object-fit: contain;
-        }
+      .main-menu__list-item-label {
+        color: white;
+        font-weight: bold;
+        transform: translateX(0);
       }
     }
+
+    &:hover {
+      background: $color--black;
+    }
+
+    &-link {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    &-label {
+      font-family: Open Sans, sans-serif;
+      white-space: nowrap;
+      margin-left: 1.5rem;
+      opacity: 0;
+      overflow: hidden;
+      transition: opacity 0.5s ease-out;
+      color: $color--grey;
+      transform: translateX(-20px);
+      transition: all 0.5s ease-out;
+
+      &.-logo {
+        margin-left: 16px;
+      }
+    }
+
+    &-icon {
+      width: 30px;
+      height: 30px;
+
+      & path {
+        fill: $color--grey;
+      }
+
+      &.-logo {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+      }
+    }
+  }
+
+  &__profile {
+    margin-top: auto;
+    padding: 12px;
+  }
+
+  &__profile-avatar {
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+  }
+
+  &__profile-label {
+    margin-left: 1rem;
+    color: white;
   }
 }

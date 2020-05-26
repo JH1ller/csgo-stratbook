@@ -29,7 +29,9 @@ class AuthService {
 
   private playerInfo: Player | null = null;
 
-  private constructor() {}
+  private constructor() {
+    this.loadTokenFromStorage();
+  }
 
   static getInstance(): AuthService {
     if (!AuthService.instance) {
@@ -79,9 +81,9 @@ class AuthService {
     if (this.token) {
       const decodedToken: JWTData = jwtDecode(this.token);
       try {
-        console.log(decodedToken);
         const res = await APIService.getPlayer(decodedToken._id);
         this.playerInfo = res;
+        return res;
         console.log(res);
       } catch (error) {
         console.error(error);

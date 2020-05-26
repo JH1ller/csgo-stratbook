@@ -27,4 +27,9 @@ export default class RegisterView extends Vue {
       }, 3000);
     }
   }
+
+  private updateFormMessage(payload: any) {
+    this.formMessage = payload.message;
+    this.formMessageStyle = payload.style;
+  }
 }

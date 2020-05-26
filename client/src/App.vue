@@ -9,18 +9,18 @@
   </div>
 </template>
 
-<script>
-import { Component, Vue } from "vue-property-decorator";
-import ViewTitle from "@/components/view-title/view-title.vue";
-import Loader from "@/components/loader/loader.vue";
-import MainMenu from "@/components/menus/main-menu/main-menu.vue";
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import ViewTitle from '@/components/view-title/view-title.vue';
+import Loader from '@/components/loader/loader.vue';
+import MainMenu from '@/components/menus/main-menu/main-menu.vue';
 
 @Component({
   components: {
     ViewTitle,
     Loader,
-    MainMenu
-  }
+    MainMenu,
+  },
 })
 export default class App extends Vue {}
 </script>

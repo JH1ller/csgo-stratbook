@@ -4,7 +4,10 @@ import StratsView from '../views/StratsView/StratsView.vue';
 import LoginView from '../views/LoginView/LoginView.vue';
 import RegisterView from '../views/RegisterView/RegisterView.vue';
 import Map from '../views/Map.vue';
-import { mapsResolver } from '@/resolvers/index';
+import { mapsResolver, profileResolver } from '@/resolvers/index';
+import AuthService from '@/services/AuthService';
+
+const authService = AuthService.getInstance();
 
 Vue.use(VueRouter);
 
@@ -13,7 +16,11 @@ const routes = [
     path: '/',
     name: 'Home',
     redirect: (to: any) => {
-      return { name: 'Login' };
+      if (authService.getToken() !== null) {
+        return { name: 'Strats' };
+      } else {
+        return { name: 'Login' };
+      }
     },
   },
   {
@@ -42,5 +49,7 @@ const routes = [
 const router = new VueRouter({
   routes,
 });
+
+router.beforeEach(profileResolver);
 
 export default router;
