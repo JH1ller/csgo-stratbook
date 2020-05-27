@@ -9,18 +9,11 @@ export enum Sides {
   T = 'T',
 }
 
-export enum NadeTypes {
-  GRENADE = 'GRENADE',
-  MOLOTOV = 'MOLOTOV',
-  FLASHBANG = 'FLASHBANG',
-  SMOKE = 'SMOKE',
-}
-
 export enum Roles {
-  GRENADE = 'GRENADE',
-  MOLOTOV = 'MOLOTOV',
-  FLASHBANG = 'FLASHBANG',
-  SMOKE = 'SMOKE',
+  IGL = 'IGL',
+  RIFLE = 'RIFLE',
+  ENTRY = 'ENTRY',
+  AWP = 'AWP',
 }
 
 export interface Map {
@@ -28,6 +21,15 @@ export interface Map {
   name: string;
   active: boolean;
   image?: string;
+}
+
+export interface Equipment {
+  grenade: boolean;
+  smoke: boolean;
+  flashbang: boolean;
+  flashbangTwo: boolean;
+  molotov: boolean;
+  defuseKit: boolean;
 }
 
 export interface Strat {
@@ -50,7 +52,7 @@ export interface Step {
   _id: string;
   player: string;
   strat: string;
-  grenades?: NadeTypes[];
+  equipment: Equipment;
   description?: string;
   note?: string;
 }
@@ -59,7 +61,7 @@ export interface Player {
   _id: string;
   name: string;
   email: string;
-  role: Roles;
+  role?: Roles;
   avatar?: string;
-  team: string;
+  team?: string;
 }

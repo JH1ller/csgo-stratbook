@@ -180,6 +180,25 @@ class APIService {
     }
   }
 
+  static async addStep(stratId: string, playerId: string, payload: any) {
+    const target = urljoin(url, Endpoints.STEPS, Actions.CREATE);
+    const authService = AuthService.getInstance();
+    const token = authService.getToken();
+    if (!token) throw 'User not logged in.';
+    console.log(playerId);
+    const requestObj = { ...payload, strat: stratId, player: playerId };
+    try {
+      const res = await axios.post(target, requestObj, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      return res.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   /**
    * * Players
    */
