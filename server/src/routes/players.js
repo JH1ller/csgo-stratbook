@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 });
 
 // * Get One
-router.get('/:player_id', getPlayer, (req, res) => {
+router.get('/:player_id', verifyAuth, getPlayer, (req, res) => {
   res.json({
     _id: res.player._id,
     name: res.player.name,

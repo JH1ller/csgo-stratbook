@@ -1,0 +1,24 @@
+@mixin input_default {
+  font-size: 1em;
+  padding: 8px;
+  border: 2px solid $color--navyblue-50;
+  border-radius: 6px;
+  width: 300px;
+  box-shadow: $shadow-subtle;
+  transition: border 0.2s ease;
+  &:not(:first-of-type) {
+    margin-top: 20px;
+  }
+
+  &:focus {
+    border-color: $color--navyblue-80;
+    &::placeholder {
+      opacity: 0;
+    }
+  }
+
+  &::placeholder {
+    transition: opacity 0.3s ease;
+    opacity: 0.5;
+  }
+}

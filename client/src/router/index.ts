@@ -4,7 +4,7 @@ import StratsView from '../views/StratsView/StratsView.vue';
 import LoginView from '../views/LoginView/LoginView.vue';
 import RegisterView from '../views/RegisterView/RegisterView.vue';
 import Map from '../views/Map.vue';
-import { mapsResolver, profileResolver } from '@/resolvers/index';
+import { stratsResolver, profileResolver } from '@/resolvers/index';
 import AuthService from '@/services/AuthService';
 
 const authService = AuthService.getInstance();
@@ -27,7 +27,7 @@ const routes = [
     path: '/strats',
     name: 'Strats',
     component: StratsView,
-    beforeEnter: mapsResolver,
+    beforeEnter: stratsResolver,
   },
   {
     path: '/login',
@@ -50,6 +50,6 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach(profileResolver);
+//router.beforeEach(profileResolver);
 
 export default router;

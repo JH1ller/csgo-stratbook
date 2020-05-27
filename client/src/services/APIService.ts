@@ -205,12 +205,20 @@ class APIService {
 
   static async getPlayer(playerId: string) {
     const target = urljoin(url, Endpoints.PLAYERS, playerId);
+    const authService = AuthService.getInstance();
+    const token = authService.getToken();
+    if (!token) throw 'User not logged in.';
     try {
-      const res = await axios.get(target);
+      const res = await axios.get(target, {
+        headers: {
+          Authorization: token,
+        },
+      });
       const data = res.data;
       return data;
     } catch (error) {
       console.error(error);
+      throw new Error(error);
     }
   }
 }

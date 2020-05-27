@@ -164,9 +164,11 @@ export default new Vuex.Store({
     async updateProfile({ commit }) {
       try {
         const profile = await authService.updatePlayerInfo();
+        console.log(profile);
         commit('setProfile', profile);
       } catch (error) {
         console.error(error);
+        throw new Error(error);
       }
     },
     async loginUser({ commit, dispatch }, { email, password }) {
@@ -176,7 +178,7 @@ export default new Vuex.Store({
           return { error: res.error };
         } else if (res.token) {
           commit('setToken', res.token);
-          dispatch('updateProfile');
+          //dispatch('updateProfile');
 
           return { success: 'Logged in successfully.' };
         }

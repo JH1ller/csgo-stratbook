@@ -14,9 +14,23 @@ router.get('/', async (req, res) => {
   }
 });
 
-// ! Get One | Make admin later
-router.get('/:team_id', getTeam, (req, res) => {
+router.get('/:team_id', verifyAuth, getTeam, (req, res) => {
   res.json(res.team);
+});
+
+// * Create One
+router.post('/create', verifyAuth, async (req, res) => {
+  const team = new Team({
+    name: req.body.name,
+    password: req.body.password,
+    avatar: req.body.avatar,
+  });
+  try {
+    const newTeam = await team.save();
+    res.status(201).json(newTeam);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 });
 
 // * Update One
@@ -24,12 +38,10 @@ router.patch('/update', verifyAuth, getTeam, async (req, res) => {
   if (req.body.name) {
     res.team.name = req.body.name;
   }
-  if (req.body.role) {
-    res.team.role = req.body.role;
+  if (req.body.password) {
+    res.team.password = req.body.password;
   }
-  if (req.body.avatar) {
-    res.team.avatar = req.body.avatar;
-  }
+  // TODO: add "edit avatar"
   try {
     const updatedTeam = await res.team.save();
     res.json(updatedTeam);

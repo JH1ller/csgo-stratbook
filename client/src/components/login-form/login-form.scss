@@ -21,30 +21,7 @@
   }
 
   &__input {
-    font-size: 1em;
-    padding: 8px;
-    border: 2px solid $color--navyblue-50;
-    border-radius: 6px;
-    width: 300px;
-    box-shadow: $shadow-subtle;
-    transition: border 0.2s ease;
-    &:not(:first-of-type) {
-      margin-top: 12px;
-    }
-
-    &::placeholder {
-      transition: opacity 0.3s ease;
-      opacity: 0.5;
-    }
-
-    &--email,
-    &--password {
-      &:focus {
-        &::placeholder {
-          opacity: 0;
-        }
-      }
-    }
+    @include input_default;
   }
 
   &__submit {
