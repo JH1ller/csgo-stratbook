@@ -10,13 +10,13 @@
       </transition>
       <input
         type="email"
-        class="login-form__input login-form__input--email"
+        class="login-form__input login-form__input"
         placeholder="Email"
         v-model="email"
       />
       <input
         type="password"
-        class="login-form__input login-form__input--password"
+        class="login-form__input login-form__input"
         placeholder="Password"
         v-model="password"
       />

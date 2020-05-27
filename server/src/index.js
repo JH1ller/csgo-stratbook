@@ -33,10 +33,12 @@ const limiter = rateLimit({
 app.use(express.json());
 app.use(cors());
 app.use('/public', express.static('public'));
-app.use(limiter);
 app.use(helmet());
 
-if (process.env.NODE_ENV === 'production') app.set('trust proxy', 1);
+if (process.env.NODE_ENV === 'production') {
+  app.use(limiter);
+  app.set('trust proxy', 1);
+}
 
 app.set('views', path.join(__dirname, 'templates'));
 app.set('view engine', 'pug');
@@ -66,5 +68,8 @@ app.use('/strats', stratsRouter);
 
 const stepsRouter = require('./routes/steps');
 app.use('/steps', stepsRouter);
+
+const teamsRouter = require('./routes/teams');
+app.use('/teams', teamsRouter);
 
 app.listen(port, () => console.log(`Server started on port ${port}`));

@@ -16,28 +16,28 @@
       </transition>
       <input
         type="text"
-        class="register-form__input register-form__input--name"
+        class="register-form__input"
         placeholder="Username"
         v-model="formData.name"
         ref="name"
       />
       <input
         type="email"
-        class="register-form__input register-form__input--email"
+        class="register-form__input"
         placeholder="Email"
         v-model="formData.email"
         ref="email"
       />
       <input
         type="password"
-        class="register-form__input register-form__input--password"
+        class="register-form__input"
         placeholder="Password"
         v-model="formData.password"
         ref="password"
       />
       <input
         type="password"
-        class="register-form__input register-form__input--password"
+        class="register-form__input"
         placeholder="Repeat password"
         ref="password-repeat"
       />

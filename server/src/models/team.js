@@ -19,10 +19,6 @@ const teamSchema = new mongoose.Schema({
     type: String,
   },
 
-  players: {
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'players' }],
-  },
-
   date: {
     type: Date,
     default: Date.now,
