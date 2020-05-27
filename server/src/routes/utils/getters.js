@@ -1,7 +1,7 @@
 const Map = require('../../models/map');
 const Strat = require('../../models/strat');
 const Player = require('../../models/player');
-const Step = require('../../models/step');
+const { stepSchema: Step } = require('../../models/step');
 const Team = require('../../models/team');
 
 async function getStrat(req, res, next) {

@@ -33,6 +33,12 @@ export default class StratList extends Vue {
 
   // Emitted through from strat-item
   @Emit()
+  private addStep(payload: any) {
+    return payload;
+  }
+
+  // Emitted through from strat-item
+  @Emit()
   private editStrat(strat: Strat) {
     return strat;
   }

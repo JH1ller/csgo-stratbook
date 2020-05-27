@@ -149,9 +149,21 @@ export default new Vuex.Store({
         console.error(error);
       }
     },
+    async addStep({ dispatch, state }, { stratId, payload }) {
+      try {
+        const res = await APIService.addStep(
+          stratId,
+          state?.profile?._id as string,
+          payload
+        );
+        dispatch('updateStepsOfCurrentStrats');
+      } catch (error) {
+        console.error(error);
+      }
+    },
     async updateProfile({ commit }) {
       try {
-        const profile = await authService.getPlayerInfo();
+        const profile = await authService.updatePlayerInfo();
         commit('setProfile', profile);
       } catch (error) {
         console.error(error);

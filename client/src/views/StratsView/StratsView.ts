@@ -4,7 +4,7 @@ import MapPicker from '@/components/map-picker/map-picker.vue';
 import StratList from '@/components/strat-list/strat-list.vue';
 import FloatingAdd from '@/components/floating-add/floating-add.vue';
 import CreationOverlay from '@/components/creation-overlay/creation-overlay.vue';
-import { NadeTypes, Strat } from '@/services/models';
+import { Equipment, Strat } from '@/services/models';
 
 @Component({
   name: 'StratsView',
@@ -68,15 +68,30 @@ export default class StratsView extends Vue {
   private updateStep({
     stepId,
     description,
-    grenades,
+    equipment,
   }: {
     stepId: string;
     description: string;
-    grenades: NadeTypes[];
+    equipment: Equipment;
   }) {
     this.$store.dispatch('updateStep', {
       stepId,
-      changeObj: { description, grenades },
+      changeObj: { description, equipment },
+    });
+  }
+
+  private addStep({
+    description,
+    equipment,
+    stratId,
+  }: {
+    description: string;
+    equipment: Equipment;
+    stratId: string;
+  }) {
+    this.$store.dispatch('addStep', {
+      stratId,
+      payload: { description, equipment },
     });
   }
 }

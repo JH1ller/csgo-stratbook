@@ -10,6 +10,7 @@
           @toggle-active="toggleActive"
           @update-step="updateStep"
           @edit-strat="editStrat"
+          @add-step="addStep"
         />
       </transition-group>
     </div>

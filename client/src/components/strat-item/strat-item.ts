@@ -69,4 +69,9 @@ export default class StratItem extends Vue {
   private updateStep(changeObj: any) {
     return changeObj;
   }
+
+  @Emit()
+  private addStep(payload: any) {
+    return { ...payload, stratId: this.strat._id };
+  }
 }

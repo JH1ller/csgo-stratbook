@@ -1,5 +1,5 @@
 import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
-import { Map, Strat, Step, Player, Sides, NadeTypes } from '@/services/models';
+import { Map, Strat, Step, Player, Sides, Equipment } from '@/services/models';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -16,13 +16,39 @@ export interface IStepItem {
   components: {},
 })
 export default class StepItem extends Vue implements IStepItem {
-  @Prop() private step!: Step;
+  @Prop({ default: null }) private step!: Step | null;
   private editMode: boolean = false;
-  private descriptionCopy: string = this.step.description ?? '';
-  private activeGrenadesCopy: any = { ...this.activeGrenades };
+  @Prop({ default: false }) addMode!: boolean;
+  private descriptionCopy: string = '';
+  private equipmentCopy: Equipment = {
+    grenade: false,
+    smoke: false,
+    flashbang: false,
+    flashbangTwo: false,
+    molotov: false,
+    defuseKit: false,
+  };
 
   private mounted() {
+    this.resetValues();
     window.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  private resetValues() {
+    if (this.step && !this.addMode) {
+      this.descriptionCopy = this.step.description ?? '';
+      this.equipmentCopy = this.step.equipment;
+    } else {
+      this.descriptionCopy = '';
+      this.equipmentCopy = {
+        grenade: false,
+        smoke: false,
+        flashbang: false,
+        flashbangTwo: false,
+        molotov: false,
+        defuseKit: false,
+      };
+    }
   }
 
   private beforeDestroy() {
@@ -31,67 +57,36 @@ export default class StepItem extends Vue implements IStepItem {
 
   @Emit()
   private deleteClicked() {
-    return this.step._id;
-  }
-
-  get activeGrenades() {
-    return {
-      grenade: this.step.grenades?.includes(NadeTypes.GRENADE),
-      smoke: this.step.grenades?.includes(NadeTypes.SMOKE),
-      flashbang: this.step.grenades?.includes(NadeTypes.FLASHBANG),
-      flashbangTwo:
-        this.step.grenades?.includes(NadeTypes.FLASHBANG) &&
-        this.countOccurences(this.step.grenades, NadeTypes.FLASHBANG) > 1,
-      molotov: this.step.grenades?.includes(NadeTypes.MOLOTOV),
-    };
-  }
-
-  get activeGrenadesArray() {
-    let grenadeArray: NadeTypes[] = [];
-    if (this.activeGrenadesCopy.grenade) grenadeArray.push(NadeTypes.GRENADE);
-    if (this.activeGrenadesCopy.smoke) grenadeArray.push(NadeTypes.SMOKE);
-    if (this.activeGrenadesCopy.flashbang)
-      grenadeArray.push(NadeTypes.FLASHBANG);
-    if (this.activeGrenadesCopy.flashbangTwo)
-      grenadeArray.push(NadeTypes.FLASHBANG);
-    if (this.activeGrenadesCopy.molotov) grenadeArray.push(NadeTypes.MOLOTOV);
-    return grenadeArray;
+    if (this.step) return this.step._id;
   }
 
   public cancelEdit() {
     this.editMode = false;
-    this.descriptionCopy = this.step.description ?? '';
-    this.activeGrenadesCopy = { ...this.activeGrenades };
+    this.resetValues();
   }
 
-  private countOccurences(arr: string[], item: string) {
-    return arr.reduce(
-      (acc: number, curr: string): number => (curr === item ? (acc += 1) : acc),
-      0
-    );
-  }
-
-  private toggleGrenade(grenade: NadeTypes | string) {
+  // TODO: refactor this mess
+  private toggleEquip(type: string) {
     if (!this.editMode) return;
-    if (grenade === 'FLASHBANG_TWO') {
-      if (this.activeGrenadesCopy.flashbangTwo === false) {
-        if (this.activeGrenadesCopy.flashbang === false) {
-          this.activeGrenadesCopy.flashbang = true;
+    if (type === 'flashbangTwo' && this.equipmentCopy) {
+      if (this.equipmentCopy.flashbangTwo === false) {
+        if (this.equipmentCopy.flashbang === false) {
+          this.equipmentCopy.flashbang = true;
         }
-        this.activeGrenadesCopy.flashbangTwo = true;
+        this.equipmentCopy.flashbangTwo = true;
       } else {
-        this.activeGrenadesCopy.flashbangTwo = false;
+        this.equipmentCopy.flashbangTwo = false;
       }
     } else if (
-      grenade === NadeTypes.FLASHBANG &&
-      this.activeGrenadesCopy.flashbangTwo === true &&
-      this.activeGrenadesCopy.flashbang === true
+      type === 'flashbang' &&
+      this.equipmentCopy.flashbangTwo === true &&
+      this.equipmentCopy.flashbang === true
     ) {
-      this.activeGrenadesCopy.flashbangTwo = false;
-      this.activeGrenadesCopy.flashbang = false;
+      this.equipmentCopy.flashbangTwo = false;
+      this.equipmentCopy.flashbang = false;
     } else {
-      this.activeGrenadesCopy[grenade.toLowerCase()] = !this.activeGrenadesCopy[
-        grenade.toLowerCase()
+      this.equipmentCopy[type as keyof Equipment] = !this.equipmentCopy[
+        type as keyof Equipment
       ];
     }
   }
@@ -106,11 +101,18 @@ export default class StepItem extends Vue implements IStepItem {
     if (this.editMode) {
       switch (e.key) {
         case 'Enter':
-          this.$emit('update-step', {
-            stepId: this.step._id,
-            description: this.descriptionCopy,
-            grenades: this.activeGrenadesArray,
-          });
+          if (this.addMode) {
+            this.$emit('add-step', {
+              description: this.descriptionCopy,
+              equipment: this.equipmentCopy,
+            });
+          } else {
+            this.$emit('update-step', {
+              stepId: this.step?._id,
+              description: this.descriptionCopy,
+              equipment: this.equipmentCopy,
+            });
+          }
           this.editMode = false;
           break;
         case 'Escape':

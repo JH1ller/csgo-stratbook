@@ -7,36 +7,36 @@
         :readonly="!editMode"
         v-model="descriptionCopy"
       />
-      <div class="step-item__grenade-wrapper">
+      <div class="step-item__equipment-wrapper">
         <img
           src="@/assets/icons/grenade.png"
           class="step-item__grenade-item"
-          :class="{'-active': activeGrenadesCopy.grenade}"
-          @click="toggleGrenade('GRENADE')"
+          :class="{'-active': equipmentCopy.grenade}"
+          @click="toggleEquip('grenade')"
         />
         <img
           src="@/assets/icons/smoke.png"
           class="step-item__grenade-item"
-          :class="{'-active': activeGrenadesCopy.smoke}"
-          @click="toggleGrenade('SMOKE')"
+          :class="{'-active': equipmentCopy.smoke}"
+          @click="toggleEquip('smoke')"
         />
         <img
           src="@/assets/icons/flashbang.png"
           class="step-item__grenade-item"
-          :class="{'-active': activeGrenadesCopy.flashbang}"
-          @click="toggleGrenade('FLASHBANG')"
+          :class="{'-active': equipmentCopy.flashbang}"
+          @click="toggleEquip('flashbang')"
         />
         <img
           src="@/assets/icons/flashbang.png"
           class="step-item__grenade-item"
-          :class="{'-active': activeGrenadesCopy.flashbangTwo}"
-          @click="toggleGrenade('FLASHBANG_TWO')"
+          :class="{'-active': equipmentCopy.flashbangTwo}"
+          @click="toggleEquip('flashbangTwo')"
         />
         <img
           src="@/assets/icons/molotov.png"
           class="step-item__grenade-item"
-          :class="{'-active': activeGrenadesCopy.molotov}"
-          @click="toggleGrenade('MOLOTOV')"
+          :class="{'-active': equipmentCopy.molotov}"
+          @click="toggleEquip('molotov')"
         />
       </div>
     </div>

@@ -56,9 +56,11 @@ export default class MainMenu extends Vue {
   }
 
   get avatarUrl() {
-    return process.env.NODE_ENV === 'development'
-      ? `http://localhost:3000/public/upload/${this.profile.avatar}`
-      : `https://csgo-stratbook.herokuapp.com/public/upload/${this.profile.avatar}`;
+    if (this.profile) {
+      return process.env.NODE_ENV === 'development'
+        ? `http://localhost:3000/public/upload/${this.profile.avatar}`
+        : `https://csgo-stratbook.herokuapp.com/public/upload/${this.profile.avatar}`;
+    }
   }
 
   private calculateMinHeight() {

@@ -77,7 +77,11 @@ class AuthService {
     return this.token;
   }
 
-  async getPlayerInfo() {
+  getPlayerInfo(): Player | null {
+    return this.playerInfo;
+  }
+
+  async updatePlayerInfo() {
     if (this.token) {
       const decodedToken: JWTData = jwtDecode(this.token);
       try {
