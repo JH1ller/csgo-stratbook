@@ -13,6 +13,7 @@ enum Endpoints {
   STRATS = 'strats',
   PLAYERS = 'players',
   STEPS = 'steps',
+  TEAMS = 'teams',
 }
 
 enum Actions {
@@ -217,6 +218,47 @@ class APIService {
     } catch (error) {
       console.error(error);
       throw new Error(error);
+    }
+  }
+
+  static async updatePlayer(payload: any) {
+    const target = urljoin(url, Endpoints.PLAYERS, Actions.UPDATE);
+    const authService = AuthService.getInstance();
+    const token = authService.getToken();
+    if (!token) throw 'User not logged in.'; // TODO: throw new Error instead
+    try {
+      const res = await axios.patch(target, payload, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      console.log(res.data);
+      return res.data;
+    } catch (error) {
+      console.error(error);
+      throw new Error(error);
+    }
+  }
+
+  /**
+   * Teams
+   */
+
+  static async createTeam(formData: any) {
+    const target = urljoin(url, Endpoints.TEAMS, Actions.CREATE);
+    const authService = AuthService.getInstance();
+    const token = authService.getToken();
+    if (!token) throw 'User not logged in.';
+    try {
+      const res = await axios.post(target, formData, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      return { team: res.data };
+    } catch (error) {
+      console.error(error);
+      return { error: error.response.data.error };
     }
   }
 }

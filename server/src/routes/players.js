@@ -38,6 +38,10 @@ router.patch('/update', verifyAuth, getPlayer, async (req, res) => {
   if (req.body.avatar) {
     res.player.avatar = req.body.avatar;
   }
+  if (req.body.team) {
+    res.player.team = req.body.team;
+  }
+  console.log(res.player);
   try {
     const updatedPlayer = await res.player.save();
     res.json(updatedPlayer);

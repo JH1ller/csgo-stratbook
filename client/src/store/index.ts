@@ -166,6 +166,7 @@ export default new Vuex.Store({
         const profile = await authService.updatePlayerInfo();
         console.log(profile);
         commit('setProfile', profile);
+        return profile;
       } catch (error) {
         console.error(error);
         throw new Error(error);
@@ -200,6 +201,30 @@ export default new Vuex.Store({
         }
       } catch (error) {
         console.error(error);
+      }
+    },
+    async createTeam({ commit, dispatch }, formData) {
+      try {
+        const res = await APIService.createTeam(formData);
+        if (res.error) {
+          return { error: res.error };
+        } else if (res.team) {
+          await dispatch('updatePlayer', res.team._id);
+          return {
+            success:
+              'Team successfully created. You can now visit the strats page and start creating strats!',
+          };
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async updatePlayer({ commit, dispatch }, teamId: string) {
+      try {
+        const res = await APIService.updatePlayer({ team: teamId });
+      } catch (error) {
+        console.error(error);
+        throw new Error(error);
       }
     },
   },

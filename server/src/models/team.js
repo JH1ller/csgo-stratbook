@@ -4,19 +4,24 @@ const teamSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    max: 255,
-    min: 6,
+    max: 24,
+    min: 3,
   },
 
   password: {
     type: String,
     required: true,
-    max: 24,
-    min: 6,
+    max: 30,
+    min: 4,
   },
 
   avatar: {
     type: String,
+  },
+
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'players',
   },
 
   date: {

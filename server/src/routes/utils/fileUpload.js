@@ -1,13 +1,14 @@
 const multer = require('multer');
 const path = require('path');
 const crypto = require('crypto');
+const sharp = require('sharp');
+const fs = require('fs');
 
 const fileStorage = multer.diskStorage({
   destination: function (req, file, next) {
     next(null, 'public/upload/');
   },
   filename: function (req, file, next) {
-    console.log(file);
     next(
       null,
       crypto.randomBytes(20).toString('hex') + path.extname(file.originalname)
@@ -46,4 +47,20 @@ const uploadMiddleware = (req, res, next) => {
   });
 };
 
+const processImage = async (file) => {
+  try {
+    await sharp(file.path)
+      .resize(256, 256)
+      .toFile(path.resolve(file.destination, 'temp', file.filename));
+    fs.unlinkSync(file.path);
+    fs.renameSync(
+      path.resolve(file.destination, 'temp', file.filename),
+      file.path
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports.uploadMiddleware = uploadMiddleware;
+module.exports.processImage = processImage;
