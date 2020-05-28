@@ -3,6 +3,8 @@ const router = express.Router();
 const Team = require('../models/team');
 const { getTeam } = require('./utils/getters');
 const { verifyAuth } = require('./utils/verifyToken');
+const { teamValidation } = require('./utils/validation');
+const { uploadMiddleware, processImage } = require('./utils/fileUpload');
 
 // ! Get all | make admin later
 router.get('/', async (req, res) => {
@@ -19,12 +21,29 @@ router.get('/:team_id', verifyAuth, getTeam, (req, res) => {
 });
 
 // * Create One
-router.post('/create', verifyAuth, async (req, res) => {
+router.post('/create', verifyAuth, uploadMiddleware, async (req, res) => {
+  const { error } = teamValidation(req.body);
+  if (error) {
+    return res.status(400).send({ error: error.details[0].message });
+  }
+
+  const teamExists = await Team.findOne({ name: req.body.name });
+
+  if (teamExists)
+    return res.status(400).send({ error: 'Team name already exists' });
+
   const team = new Team({
     name: req.body.name,
     password: req.body.password,
     avatar: req.body.avatar,
+    createdBy: req.user._id,
   });
+
+  if (req.file) {
+    team.avatar = req.file.filename;
+    await processImage(req.file);
+  }
+
   try {
     const newTeam = await team.save();
     res.status(201).json(newTeam);

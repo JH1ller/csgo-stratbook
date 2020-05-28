@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import StratsView from '../views/StratsView/StratsView.vue';
 import LoginView from '../views/LoginView/LoginView.vue';
 import RegisterView from '../views/RegisterView/RegisterView.vue';
+import TeamView from '../views/TeamView/TeamView.vue';
 import Map from '../views/Map.vue';
 import { stratsResolver, profileResolver } from '@/resolvers/index';
 import AuthService from '@/services/AuthService';
@@ -40,9 +41,10 @@ const routes = [
     component: RegisterView,
   },
   {
-    path: '/map/:map',
-    name: 'Map',
-    component: Map,
+    path: '/team',
+    name: 'Team',
+    component: TeamView,
+    beforeEnter: profileResolver,
   },
 ];
 

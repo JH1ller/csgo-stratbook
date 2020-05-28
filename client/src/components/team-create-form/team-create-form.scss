@@ -1,4 +1,4 @@
-.register-form {
+.team-create-form {
   &__form {
     display: flex;
     flex-direction: column;
@@ -6,13 +6,14 @@
     background-color: white;
     transition: height 0.3s ease;
     border-radius: 8px;
+    width: fit-content;
   }
 
   &__label {
     font-size: 1em;
     display: block;
     &:not(:first-of-type) {
-      margin-top: 12px;
+      margin-top: 24px;
     }
     transition: color 0.2s ease;
   }
@@ -20,18 +21,16 @@
   &__input {
     @include input_default;
 
-    &:not(:first-of-type) {
-      margin-top: 20px;
-    }
+    margin-top: 8px;
   }
 
   &__file {
-    margin-top: 24px;
+    margin-top: 8px;
     position: relative;
     display: inline-block;
     cursor: pointer;
     height: 2.5rem;
-
+    width: 300px;
     & > input {
       min-width: 14rem;
       margin: 0;
@@ -88,7 +87,7 @@
 
   &__submit {
     margin-top: 16px;
-    width: 100%;
+    width: 300px;
     display: flex;
     justify-content: center;
     text-transform: uppercase;

@@ -15,8 +15,12 @@ export const stratsResolver = async (to: Route, from: Route, next: any) => {
 
 export const profileResolver = async (to: Route, from: Route, next: any) => {
   try {
-    await store.dispatch('updateProfile');
-    next();
+    const profile = await store.dispatch('updateProfile');
+    if (!profile.team && to.name !== 'Team') {
+      next({ name: 'Team' });
+    } else {
+      next();
+    }
   } catch (error) {
     if (to.name !== 'Login') next({ name: 'Login' });
     console.log(error);
