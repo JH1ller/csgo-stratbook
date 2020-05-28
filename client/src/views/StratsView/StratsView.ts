@@ -45,7 +45,7 @@ export default class StratsView extends Vue {
 
   private showCreationOverlay(strat: Strat) {
     this.creationOverlayOpen = true;
-    if (strat) {
+    if (strat._id) {
       this.editStrat = strat;
       this.creationOverlayEditMode = true;
     }

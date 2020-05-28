@@ -130,7 +130,6 @@ class APIService {
         },
       });
       const data = res.data;
-      console.log(data);
       return data;
     } catch (error) {
       console.error(error);
@@ -185,7 +184,6 @@ class APIService {
     const authService = AuthService.getInstance();
     const token = authService.getToken();
     if (!token) throw 'User not logged in.';
-    console.log(playerId);
     const requestObj = { ...payload, strat: stratId, player: playerId };
     try {
       const res = await axios.post(target, requestObj, {

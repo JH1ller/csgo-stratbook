@@ -91,6 +91,12 @@ export default class StepItem extends Vue implements IStepItem {
     }
   }
 
+  private handleClick(e: MouseEvent) {
+    if (this.addMode) {
+      this.enableEditMode(e);
+    }
+  }
+
   private enableEditMode(e: MouseEvent) {
     e.stopPropagation();
     this.$emit('edit-enabled');
@@ -106,6 +112,7 @@ export default class StepItem extends Vue implements IStepItem {
               description: this.descriptionCopy,
               equipment: this.equipmentCopy,
             });
+            this.resetValues();
           } else {
             this.$emit('update-step', {
               stepId: this.step?._id,

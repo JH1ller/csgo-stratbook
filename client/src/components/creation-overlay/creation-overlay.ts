@@ -35,7 +35,7 @@ export default class CreationOverlay extends Vue {
     if (this.isValid()) {
       this.$emit('submit-clicked', {
         isEdit: this.isEdit,
-        stratId: this.strat._id,
+        stratId: this.isEdit ? this.strat._id : null,
         strat: {
           name: this.name,
           type: this.type,

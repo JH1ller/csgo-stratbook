@@ -44,7 +44,12 @@
             ref="step-elements"
           />
         </div>
-        <step-item :addMode="true" @add-step="addStep" />
+        <step-item
+          ref="add-step"
+          :addMode="true"
+          @add-step="addStep"
+          @edit-enabled="handleStepEditEnabled"
+        />
       </div>
     </div>
   </div>
