@@ -22,6 +22,10 @@
 
   &__input {
     @include input_default;
+
+    &:not(:first-of-type) {
+      margin-top: 20px;
+    }
   }
 
   &__submit {

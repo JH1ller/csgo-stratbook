@@ -54,7 +54,6 @@ class AuthService {
 
   async register(formData: any) {
     const target = urljoin(url, Endpoints.AUTH, Actions.REGISTER);
-    console.log(formData);
     try {
       const res = await axios.post(target, formData);
       this.token = res.data;
@@ -88,7 +87,6 @@ class AuthService {
         const res = await APIService.getPlayer(decodedToken._id);
         this.playerInfo = res;
         return res;
-        console.log(res);
       } catch (error) {
         console.error(error);
         throw new Error(error);

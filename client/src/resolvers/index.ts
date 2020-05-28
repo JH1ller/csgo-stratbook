@@ -16,7 +16,6 @@ export const stratsResolver = async (to: Route, from: Route, next: any) => {
 export const profileResolver = async (to: Route, from: Route, next: any) => {
   try {
     await store.dispatch('updateProfile');
-    console.log('profile resolver success');
     next();
   } catch (error) {
     if (to.name !== 'Login') next({ name: 'Login' });

@@ -28,20 +28,18 @@
     cursor: default;
   }
 
-  &__grenade {
-    &-wrapper {
-      padding-right: 12px;
-      display: flex;
-      align-items: center;
-    }
-    &-item {
-      width: 28px;
-      height: 28px;
-      opacity: 0.3;
+  &__equipment-wrapper {
+    padding-right: 12px;
+    display: flex;
+    align-items: center;
+  }
+  &__equipment-item {
+    width: 28px;
+    height: 28px;
+    opacity: 0.3;
 
-      &.-active {
-        opacity: 0.8;
-      }
+    &.-active {
+      opacity: 0.8;
     }
   }
 }

@@ -22,6 +22,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 export default class StratItem extends Vue {
   @Prop() private strat!: Strat;
   @Ref('step-elements') stepElements!: IStepItem[];
+  @Ref('add-step') addStepElement!: IStepItem;
 
   private inDeletionQuestion: boolean = false;
 
@@ -35,6 +36,7 @@ export default class StratItem extends Vue {
 
   private handleStepEditEnabled() {
     this.stepElements.forEach(stepElement => stepElement.cancelEdit());
+    this.addStepElement.cancelEdit();
   }
 
   @Emit()
