@@ -1,5 +1,6 @@
 <template>
   <div class="join-team-form">
+    <h2 class="join-team-form__headline">Join a team via code</h2>
     <form class="join-team-form__form" enctype="multipart/form-data" ref="form" novalidate>
       <transition name="fade">
         <span

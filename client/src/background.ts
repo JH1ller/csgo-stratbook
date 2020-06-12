@@ -86,6 +86,13 @@ app.on('ready', async () => {
   createWindow();
 });
 
+// app.on('open-url', function(event, data) {
+//   event.preventDefault();
+//   logEverywhere(data);
+// });
+
+// app.setAsDefaultProtocolClient('csgostratbook');
+
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
   if (process.platform === 'win32') {
@@ -98,5 +105,12 @@ if (isDevelopment) {
     process.on('SIGTERM', () => {
       app.quit();
     });
+  }
+}
+
+function logEverywhere(s: string) {
+  console.log(s);
+  if (win && win.webContents) {
+    win.webContents.executeJavaScript(`console.log("${s}")`);
   }
 }

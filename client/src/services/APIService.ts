@@ -284,6 +284,25 @@ class APIService {
       return { error: error.response.data.error };
     }
   }
+
+  static async getTeamOfPlayer(playerId: string) {
+    const target = urljoin(url, Endpoints.PLAYERS, playerId, 'team');
+    const authService = AuthService.getInstance();
+    const token = authService.getToken();
+    if (!token) throw 'User not logged in.';
+    try {
+      const res = await axios.get(target, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      const data = res.data;
+      return data;
+    } catch (error) {
+      console.error(error);
+      throw new Error(error);
+    }
+  }
 }
 
 export default APIService;

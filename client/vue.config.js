@@ -3,28 +3,31 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        prependData: `@import "@/styles/index.scss";`
-      }
-    }
+        prependData: `@import "@/styles/index.scss";`,
+      },
+    },
   },
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
-        productName: "CSGO-Stratbook",
-        appId: "CSGO.Stratbook",
+        productName: 'CSGO-Stratbook',
+        appId: 'CSGO.Stratbook',
         win: {
-          target: "portable",
+          target: 'portable',
           publisherName: 'Hiller',
-          icon: './icon.png'
+          icon: './icon.png',
         },
         portable: {
-          artifactName: "CSGO-Stratbook.exe"
+          artifactName: 'CSGO-Stratbook.exe',
         },
         directories: {
-          output: "dist_electron/release"
-        }
-      }
-    }
+          output: 'dist_electron/release',
+        },
+        protocols: {
+          name: 'csgostratbook-protocol',
+          schemes: ['csgostratbook'],
+        },
+      },
+    },
   },
-
-}
+};

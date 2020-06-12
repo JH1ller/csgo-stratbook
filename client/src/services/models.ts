@@ -65,3 +65,10 @@ export interface Player {
   avatar?: string;
   team?: string;
 }
+
+export interface Team {
+  _id: string;
+  name: string;
+  code: string;
+  avatar: string;
+}
