@@ -1,22 +1,19 @@
 import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
-
+import { FormComponent } from '@/interfaces/index';
 export interface TeamCreateFormData {
   name: string;
-  password: string;
 }
-@Component({
-  components: {},
-})
-export default class TeamCreateForm extends Vue {
+
+@Component({})
+export default class TeamCreateForm extends Vue implements FormComponent {
   @Ref('file-input') fileInput!: HTMLInputElement;
   @Ref('name') nameInput!: HTMLInputElement;
   @Ref('password') passwordInput!: HTMLInputElement;
-  @Prop() formMessage!: string | null;
-  @Prop() formMessageStyle!: string | null;
+  private formMessage: string | null = null;
+  private formMessageStyle: string | null = null;
 
   private formData: TeamCreateFormData = {
     name: '',
-    password: '',
   };
   private imageFile: File | null = null;
 
@@ -44,16 +41,6 @@ export default class TeamCreateForm extends Vue {
       );
       return false;
     }
-    if (
-      this.passwordInput.value.length < 4 ||
-      this.passwordInput.value.length > 30
-    ) {
-      this.updateFormMessage(
-        'Password must be between 4 and 30 characters long.',
-        'error'
-      );
-      return false;
-    }
     return true;
   }
 
@@ -73,8 +60,8 @@ export default class TeamCreateForm extends Vue {
     this.$emit('create-clicked', requestFormData);
   }
 
-  @Emit()
-  private updateFormMessage(message: string, style: string) {
-    return { message, style };
+  public updateFormMessage(message: string | null, style: string | null) {
+    this.formMessage = message;
+    this.formMessageStyle = style;
   }
 }

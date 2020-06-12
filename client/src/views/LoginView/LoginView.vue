@@ -1,11 +1,7 @@
 <template>
   <div class="view-wrapper">
     <div class="login-view">
-      <login-form
-        :formMessage="formMessage"
-        :formMessageStyle="formMessageStyle"
-        @login-clicked="loginRequest"
-      />
+      <login-form @login-clicked="loginRequest" ref="login-form" />
     </div>
   </div>
 </template>

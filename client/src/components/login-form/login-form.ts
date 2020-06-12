@@ -6,8 +6,8 @@ import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
 export default class LoginForm extends Vue {
   private email: string = '';
   private password: string = '';
-  @Prop() formMessage!: string | null;
-  @Prop() formMessageStyle!: string | null;
+  private formMessage: string | null = null;
+  private formMessageStyle: string | null = null;
 
   get isError() {
     return this.formMessageStyle === 'error';
@@ -21,5 +21,10 @@ export default class LoginForm extends Vue {
   private loginClicked(e: Event) {
     e.preventDefault();
     return { email: this.email, password: this.password };
+  }
+
+  public updateFormMessage(message: string | null, style: string | null) {
+    this.formMessage = message;
+    this.formMessageStyle = style;
   }
 }

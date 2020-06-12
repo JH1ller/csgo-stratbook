@@ -261,6 +261,29 @@ class APIService {
       return { error: error.response.data.error };
     }
   }
+
+  static async joinTeam(code: string) {
+    const target = urljoin(url, Endpoints.TEAMS, 'join');
+    const authService = AuthService.getInstance();
+    const token = authService.getToken();
+    if (!token) throw 'User not logged in.';
+    console.log(code);
+    try {
+      const res = await axios.post(
+        target,
+        { code },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return { team: res.data };
+    } catch (error) {
+      console.error(error);
+      return { error: error.response.data.error };
+    }
+  }
 }
 
 export default APIService;

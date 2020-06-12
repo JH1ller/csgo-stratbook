@@ -1,12 +1,6 @@
 <template>
   <div class="team-create-form">
-    <form
-      class="team-create-form__form"
-      @submit="createClicked"
-      enctype="multipart/form-data"
-      ref="form"
-      novalidate
-    >
+    <form class="team-create-form__form" enctype="multipart/form-data" ref="form" novalidate>
       <transition name="fade">
         <span
           class="team-create-form__error"
@@ -21,14 +15,6 @@
         v-model="formData.name"
         ref="name"
         id="name"
-      />
-      <label for="password" class="team-create-form__label">Join password</label>
-      <input
-        type="text"
-        class="team-create-form__input"
-        v-model="formData.password"
-        ref="password"
-        id="password"
       />
       <label for="file" class="team-create-form__label">Team Logo</label>
       <label class="team-create-form__file">

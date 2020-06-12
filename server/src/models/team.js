@@ -8,11 +8,10 @@ const teamSchema = new mongoose.Schema({
     min: 3,
   },
 
-  password: {
+  code: {
     type: String,
     required: true,
-    max: 30,
-    min: 4,
+    min: 20,
   },
 
   avatar: {

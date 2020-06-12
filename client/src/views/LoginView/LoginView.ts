@@ -1,5 +1,6 @@
 import { Component, Vue, Ref } from 'vue-property-decorator';
 import LoginForm from '@/components/login-form/login-form.vue';
+import { FormComponent } from '@/interfaces';
 
 @Component({
   name: 'LoginView',
@@ -8,8 +9,7 @@ import LoginForm from '@/components/login-form/login-form.vue';
   },
 })
 export default class LoginView extends Vue {
-  private formMessage: string | null = null;
-  private formMessageStyle: string | null = null;
+  @Ref('login-form') loginForm!: FormComponent;
 
   private async loginRequest(payload: any) {
     const res = await this.$store.dispatch('loginUser', {
@@ -17,14 +17,11 @@ export default class LoginView extends Vue {
       password: payload.password,
     });
     if (res.error) {
-      this.formMessage = res.error;
-      this.formMessageStyle = 'error';
+      this.loginForm.updateFormMessage(res.error, 'error');
     } else if (res.success) {
-      this.formMessage = res.success;
-      this.formMessageStyle = 'success';
+      this.loginForm.updateFormMessage(res.success, 'success');
       setTimeout(() => {
-        this.formMessage = null;
-        this.formMessageStyle = null;
+        this.loginForm.updateFormMessage(null, null);
         this.$router.push({ name: 'Strats' });
       }, 3000);
     }

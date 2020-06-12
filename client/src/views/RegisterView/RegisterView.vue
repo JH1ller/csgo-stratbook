@@ -1,12 +1,7 @@
 <template>
   <div class="view-wrapper">
     <div class="register-view">
-      <register-form
-        :formMessage="formMessage"
-        :formMessageStyle="formMessageStyle"
-        @register-clicked="registerRequest"
-        @update-form-message="updateFormMessage"
-      />
+      <register-form @register-clicked="registerRequest" ref="register-form" />
     </div>
   </div>
 </template>
