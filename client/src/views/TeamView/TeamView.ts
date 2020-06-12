@@ -1,7 +1,8 @@
 import { Component, Vue, Ref } from 'vue-property-decorator';
-import { mapState } from 'vuex';
+import { State } from 'vuex-class';
 import TeamCreateForm from '@/components/team-create-form/team-create-form.vue';
 import JoinTeamForm from '@/components/join-team-form/join-team-form.vue';
+import TeamInfo from '@/components/team-info/team-info.vue';
 import { TeamCreateFormData } from '@/components/team-create-form/team-create-form';
 import { Player } from '@/services/models';
 import { FormComponent } from '@/interfaces';
@@ -11,13 +12,17 @@ import { FormComponent } from '@/interfaces';
   components: {
     TeamCreateForm,
     JoinTeamForm,
+    TeamInfo,
   },
-  computed: mapState(['profile']),
 })
 export default class TeamView extends Vue {
-  private profile!: Player;
+  @State('profile') profile!: Player;
   @Ref('create-form') createForm!: FormComponent;
   @Ref('join-form') joinForm!: FormComponent;
+
+  get hasTeam(): boolean {
+    return this.profile.team ? true : false;
+  }
 
   private async createTeamRequest(formData: TeamCreateFormData) {
     const res = await this.$store.dispatch('createTeam', formData);

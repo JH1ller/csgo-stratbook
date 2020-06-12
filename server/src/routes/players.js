@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Player = require('../models/player');
+const Team = require('../models/team');
 const { getPlayer } = require('./utils/getters');
 const { verifyAuth } = require('./utils/verifyToken');
 
@@ -41,7 +42,9 @@ router.patch('/update', verifyAuth, getPlayer, async (req, res) => {
   if (req.body.team) {
     res.player.team = req.body.team;
   }
-  console.log(res.player);
+  if (req.body.team === '#null') {
+    res.player.team = undefined;
+  }
   try {
     const updatedPlayer = await res.player.save();
     res.json(updatedPlayer);
@@ -57,6 +60,20 @@ router.delete('/:player_id/delete', verifyAuth, getPlayer, async (req, res) => {
     res.json({ message: 'Deleted player successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+// * Get Team Info
+router.get('/:player_id/team', verifyAuth, getPlayer, async (req, res) => {
+  if (!res.player.team) {
+    return res.status(400).json({ message: "Player doesn't have a team" });
+  }
+  const team = await Team.findById(res.player.team);
+
+  if (team) {
+    return res.json(team);
+  } else {
+    res.status(400).json({ message: 'Team not found.' });
   }
 });
 

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { Map, Strat, Step, Player } from '@/services/models';
+import { Map, Strat, Step, Player, Team } from '@/services/models';
 import APIService from '@/services/APIService';
 import AuthService from '@/services/AuthService';
 
@@ -16,6 +16,7 @@ export interface AppState {
   currentStrats: Strat[];
   token: string | null;
   profile: Player | null;
+  teamInfo: Team | null;
 }
 
 const getInitialState = (): AppState => {
@@ -29,6 +30,7 @@ const getInitialState = (): AppState => {
     currentStrats: [],
     token: null,
     profile: null,
+    teamInfo: null,
   };
 };
 
@@ -66,6 +68,9 @@ export default new Vuex.Store({
     },
     setProfile(state, profile) {
       state.profile = profile;
+    },
+    setTeamInfo(state, teamInfo) {
+      state.teamInfo = teamInfo;
     },
   },
   actions: {
@@ -172,6 +177,23 @@ export default new Vuex.Store({
         throw new Error(error);
       }
     },
+    async updateTeamInfo({ commit, state }) {
+      try {
+        if (state.profile) {
+          const teamInfo = await APIService.getTeamOfPlayer(state.profile._id);
+          console.log(teamInfo);
+          commit('setTeamInfo', teamInfo);
+          return teamInfo;
+        } else {
+          throw new Error(
+            'Cannot retrieve team because user is not logged in.'
+          );
+        }
+      } catch (error) {
+        console.error(error);
+        throw new Error(error);
+      }
+    },
     async loginUser({ commit, dispatch }, { email, password }) {
       try {
         const res = await authService.login(email, password);
@@ -179,7 +201,7 @@ export default new Vuex.Store({
           return { error: res.error };
         } else if (res.token) {
           commit('setToken', res.token);
-          //dispatch('updateProfile');
+          dispatch('updateProfile');
 
           return { success: 'Logged in successfully.' };
         }

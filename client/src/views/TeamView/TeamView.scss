@@ -1,8 +1,11 @@
 .team-view {
   height: 100%;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: baseline;
+
+  &__create-wrapper {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: baseline;
+  }
 
   > *:not(:first-child) {
     margin-left: 24px;

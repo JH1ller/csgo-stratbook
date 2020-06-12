@@ -1,5 +1,6 @@
 <template>
   <div class="team-create-form">
+    <h2 class="team-create-form__headline">Create a team</h2>
     <form class="team-create-form__form" enctype="multipart/form-data" ref="form" novalidate>
       <transition name="fade">
         <span
