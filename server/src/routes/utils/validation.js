@@ -28,7 +28,6 @@ const loginValidation = (formData) => {
 const teamValidation = (formData) => {
   const schema = Joi.object({
     name: Joi.string().min(3).max(24).required(),
-    password: Joi.string().min(4).max(30).required(),
   });
   return schema.validate(formData);
 };

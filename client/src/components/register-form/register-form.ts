@@ -14,8 +14,8 @@ export default class RegisterForm extends Vue {
   @Ref('email') emailInput!: HTMLInputElement;
   @Ref('password') passwordInput!: HTMLInputElement;
   @Ref('password-repeat') passwordRepeatInput!: HTMLInputElement;
-  @Prop() formMessage!: string | null;
-  @Prop() formMessageStyle!: string | null;
+  private formMessage: string | null = null;
+  private formMessageStyle: string | null = null;
 
   private formData: RegisterFormData = {
     name: '',
@@ -83,8 +83,8 @@ export default class RegisterForm extends Vue {
     this.$emit('register-clicked', requestFormData);
   }
 
-  @Emit()
-  private updateFormMessage(message: string, style: string) {
-    return { message, style };
+  public updateFormMessage(message: string | null, style: string | null) {
+    this.formMessage = message;
+    this.formMessageStyle = style;
   }
 }

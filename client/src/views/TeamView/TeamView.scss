@@ -1,10 +1,10 @@
-.login-view {
+.team-view {
   height: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: baseline;
 
-  & > .login-form {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+  > *:not(:first-child) {
+    margin-left: 24px;
   }
 }

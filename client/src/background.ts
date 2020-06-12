@@ -21,7 +21,7 @@ function createWindow() {
     width: 1280,
     height: 720,
     minHeight: 670,
-    minWidth: 770,
+    minWidth: 840,
     title: 'CSGO Stratbook',
     useContentSize: true,
     webPreferences: {

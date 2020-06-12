@@ -1,6 +1,7 @@
 import { Component, Vue, Ref } from 'vue-property-decorator';
 import RegisterForm from '@/components/register-form/register-form.vue';
 import { RegisterFormData } from '@/components/register-form/register-form';
+import { FormComponent } from '@/interfaces';
 
 @Component({
   name: 'RegisterView',
@@ -9,27 +10,18 @@ import { RegisterFormData } from '@/components/register-form/register-form';
   },
 })
 export default class RegisterView extends Vue {
-  private formMessage: string | null = null;
-  private formMessageStyle: string | null = null;
+  @Ref('register-form') registerForm!: FormComponent;
 
   private async registerRequest(formData: RegisterFormData) {
     const res = await this.$store.dispatch('registerUser', formData);
     if (res.error) {
-      this.formMessage = res.error;
-      this.formMessageStyle = 'error';
+      this.registerForm.updateFormMessage(res.error, 'error');
     } else if (res.success) {
-      this.formMessage = res.success;
-      this.formMessageStyle = 'success';
+      this.registerForm.updateFormMessage(res.success, 'success');
       setTimeout(() => {
-        this.formMessage = null;
-        this.formMessageStyle = null;
+        this.registerForm.updateFormMessage(null, null);
         this.$router.push({ name: 'Login' });
       }, 3000);
     }
-  }
-
-  private updateFormMessage(payload: any) {
-    this.formMessage = payload.message;
-    this.formMessageStyle = payload.style;
   }
 }

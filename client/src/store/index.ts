@@ -209,10 +209,25 @@ export default new Vuex.Store({
         if (res.error) {
           return { error: res.error };
         } else if (res.team) {
+          console.log(res.team);
           await dispatch('updatePlayer', res.team._id);
           return {
             success:
               'Team successfully created. You can now visit the strats page and start creating strats!',
+          };
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async joinTeam({ commit, dispatch }, code: string) {
+      try {
+        const res = await APIService.joinTeam(code);
+        if (res.error) {
+          return { error: res.error };
+        } else {
+          return {
+            success: 'Successfully joined team.',
           };
         }
       } catch (error) {

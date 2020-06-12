@@ -1,12 +1,8 @@
 <template>
   <div class="view-wrapper">
     <div class="team-view">
-      <team-create-form
-        :formMessage="formMessage"
-        :formMessageStyle="formMessageStyle"
-        @create-clicked="createTeamRequest"
-        @update-form-message="updateFormMessage"
-      />
+      <team-create-form @create-clicked="createTeamRequest" ref="create-form" />
+      <join-team-form @join-clicked="joinTeamRequest" ref="join-form" />
     </div>
   </div>
 </template>

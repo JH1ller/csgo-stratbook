@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Team = require('../models/team');
+const Player = require('../models/player');
+const crypto = require('crypto');
 const { getTeam } = require('./utils/getters');
 const { verifyAuth } = require('./utils/verifyToken');
 const { teamValidation } = require('./utils/validation');
@@ -34,10 +36,12 @@ router.post('/create', verifyAuth, uploadMiddleware, async (req, res) => {
 
   const team = new Team({
     name: req.body.name,
-    password: req.body.password,
     avatar: req.body.avatar,
     createdBy: req.user._id,
   });
+
+  const code = crypto.randomBytes(5).toString('hex');
+  team.code = code;
 
   if (req.file) {
     team.avatar = req.file.filename;
@@ -57,8 +61,8 @@ router.patch('/update', verifyAuth, getTeam, async (req, res) => {
   if (req.body.name) {
     res.team.name = req.body.name;
   }
-  if (req.body.password) {
-    res.team.password = req.body.password;
+  if (req.body.code) {
+    res.team.code = req.body.code;
   }
   // TODO: add "edit avatar"
   try {
@@ -76,6 +80,25 @@ router.delete('/:team_id/delete', verifyAuth, getTeam, async (req, res) => {
     res.json({ message: 'Deleted team successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+// * Join team
+router.post('/join', verifyAuth, async (req, res) => {
+  const player = await Player.findById(req.user._id);
+  console.log(req.body);
+  const team = await Team.findOne({ code: req.body.code });
+
+  if (!team) {
+    return res.status(400).json({ message: 'Wrong join code' });
+  }
+
+  try {
+    player.team = team._id;
+    const updatedPlayer = await player.save();
+    return res.json(updatedPlayer);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
 });
 

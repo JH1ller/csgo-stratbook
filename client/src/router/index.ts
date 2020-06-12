@@ -17,11 +17,7 @@ const routes = [
     path: '/',
     name: 'Home',
     redirect: (to: any) => {
-      if (authService.getToken() !== null) {
-        return { name: 'Strats' };
-      } else {
-        return { name: 'Login' };
-      }
+      return { name: 'Strats' };
     },
   },
   {
