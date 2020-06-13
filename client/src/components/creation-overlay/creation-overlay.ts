@@ -14,6 +14,8 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 export default class CreationOverlay extends Vue {
   @Prop() strat!: Strat;
   @Prop() isEdit!: boolean;
+
+  // ! put in data object
   private name: string = '';
   private type: StratTypes = StratTypes.BUYROUND;
   private side: Sides = Sides.T;
