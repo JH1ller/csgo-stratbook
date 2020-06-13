@@ -28,6 +28,8 @@ const loginValidation = (formData) => {
 const teamValidation = (formData) => {
   const schema = Joi.object({
     name: Joi.string().min(3).max(24).required(),
+    website: Joi.string().min(6).max(100).uri(),
+    server: Joi.string().min(6).max(200),
   });
   return schema.validate(formData);
 };

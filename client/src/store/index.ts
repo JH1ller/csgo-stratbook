@@ -12,11 +12,12 @@ export interface AppState {
     loaderText: string;
   };
   maps: Map[];
-  currentMap: string | null;
+  currentMap: string;
   currentStrats: Strat[];
-  token: string | null;
-  profile: Player | null;
-  teamInfo: Team | null;
+  token: string;
+  profile: Player | {};
+  teamInfo: Team | {};
+  teamMembers: Player[];
 }
 
 const getInitialState = (): AppState => {
@@ -26,11 +27,12 @@ const getInitialState = (): AppState => {
       loaderText: '',
     },
     maps: [],
-    currentMap: null,
+    currentMap: '',
     currentStrats: [],
-    token: null,
-    profile: null,
-    teamInfo: null,
+    token: '',
+    profile: {},
+    teamInfo: {},
+    teamMembers: [],
   };
 };
 
@@ -57,8 +59,8 @@ export default new Vuex.Store({
     setCurrentStrats(state, payload) {
       state.currentStrats = payload;
     },
-    setToken(state, payload) {
-      state.token = payload;
+    setToken(state, token: string) {
+      state.token = token;
     },
     setStepsOfStrat(state, { strat, steps }: { strat: Strat; steps: Step[] }) {
       const stateObj = state.currentStrats.find(
@@ -66,11 +68,14 @@ export default new Vuex.Store({
       ) as Strat;
       Vue.set(stateObj, 'steps', steps);
     },
-    setProfile(state, profile) {
+    setProfile(state, profile: Player) {
       state.profile = profile;
     },
-    setTeamInfo(state, teamInfo) {
+    setTeamInfo(state, teamInfo: Team) {
       state.teamInfo = teamInfo;
+    },
+    setTeamMembers(state, members: Player[]) {
+      state.teamMembers = members;
     },
   },
   actions: {
@@ -158,7 +163,7 @@ export default new Vuex.Store({
       try {
         const res = await APIService.addStep(
           stratId,
-          state?.profile?._id as string,
+          (state.profile as Player)._id,
           payload
         );
         dispatch('updateStepsOfCurrentStrats');
@@ -170,24 +175,48 @@ export default new Vuex.Store({
       try {
         const profile = await authService.updatePlayerInfo();
         console.log(profile);
-        commit('setProfile', profile);
-        return profile;
+        if (profile) {
+          commit('setProfile', profile);
+          return profile;
+        } else {
+          throw new Error('Could not update Profile');
+        }
       } catch (error) {
         console.error(error);
         throw new Error(error);
       }
     },
-    async updateTeamInfo({ commit, state }) {
+    async updateTeamInfo({ commit, state, dispatch }) {
       try {
         if (state.profile) {
-          const teamInfo = await APIService.getTeamOfPlayer(state.profile._id);
+          const teamInfo = await APIService.getTeamOfPlayer(
+            (state.profile as Player)._id
+          );
           console.log(teamInfo);
           commit('setTeamInfo', teamInfo);
+          await dispatch('updateTeamMembers');
           return teamInfo;
         } else {
           throw new Error(
             'Cannot retrieve team because user is not logged in.'
           );
+        }
+      } catch (error) {
+        console.error(error);
+        throw new Error(error);
+      }
+    },
+    async updateTeamMembers({ commit, state }) {
+      try {
+        if (state.teamInfo) {
+          const members = await APIService.getMembersOfTeam(
+            (state.teamInfo as Team)._id
+          );
+          console.log(members);
+          commit('setTeamMembers', members);
+          return members;
+        } else {
+          throw new Error('Cannot retrieve members because team is not set.');
         }
       } catch (error) {
         console.error(error);
@@ -250,6 +279,21 @@ export default new Vuex.Store({
         } else {
           return {
             success: 'Successfully joined team.',
+          };
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async leaveTeam({ commit, dispatch }) {
+      try {
+        const res = await APIService.leaveTeam();
+        if (res.error) {
+          return { error: res.error };
+        } else {
+          await dispatch('updateProfile');
+          return {
+            success: 'Successfully left team.',
           };
         }
       } catch (error) {

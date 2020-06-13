@@ -17,6 +17,22 @@
         ref="name"
         id="name"
       />
+      <label for="name" class="team-create-form__label">Website</label>
+      <input
+        type="text"
+        class="team-create-form__input"
+        v-model="formData.website"
+        ref="website"
+        id="website"
+      />
+      <label for="name" class="team-create-form__label">Server IP</label>
+      <input
+        type="text"
+        class="team-create-form__input"
+        v-model="formData.server"
+        ref="server"
+        id="server"
+      />
       <label for="file" class="team-create-form__label">Team Logo</label>
       <label class="team-create-form__file">
         <input type="file" id="file" @change="fileSelected" accept="image/*" />

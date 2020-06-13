@@ -1,6 +1,7 @@
 .strat-item {
   &__container {
     background-color: white;
+    box-shadow: $shadow-subtle;
     padding: 12px 20px;
     border-radius: 10px;
     display: flex;

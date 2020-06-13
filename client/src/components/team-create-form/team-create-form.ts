@@ -2,18 +2,24 @@ import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
 import { FormComponent } from '@/interfaces/index';
 export interface TeamCreateFormData {
   name: string;
+  website: string;
+  server: string;
 }
 
 @Component({})
 export default class TeamCreateForm extends Vue implements FormComponent {
   @Ref('file-input') fileInput!: HTMLInputElement;
   @Ref('name') nameInput!: HTMLInputElement;
-  @Ref('password') passwordInput!: HTMLInputElement;
+  @Ref('website') websiteInput!: HTMLInputElement;
+  @Ref('server') serverInput!: HTMLInputElement;
+
   private formMessage: string | null = null;
   private formMessageStyle: string | null = null;
 
   private formData: TeamCreateFormData = {
     name: '',
+    website: '',
+    server: '',
   };
   private imageFile: File | null = null;
 

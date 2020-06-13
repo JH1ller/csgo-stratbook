@@ -4,6 +4,7 @@
     flex-direction: column;
     padding: 24px;
     background-color: white;
+    box-shadow: $shadow-subtle;
     &:not(:first-of-type) {
       margin-top: 12px;
     }

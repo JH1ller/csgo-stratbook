@@ -34,8 +34,9 @@ export const profileResolver = async (to: Route, from: Route, next: any) => {
 export const teamResolver = async (to: Route, from: Route, next: any) => {
   try {
     const profile = await store.dispatch('updateProfile');
-    const team = await store.dispatch('updateTeamInfo');
-    console.log(team);
+    if (profile.team) {
+      const team = await store.dispatch('updateTeamInfo');
+    }
     next();
   } catch (error) {
     if (to.name !== 'Login') next({ name: 'Login' });

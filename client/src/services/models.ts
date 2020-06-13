@@ -70,5 +70,7 @@ export interface Team {
   _id: string;
   name: string;
   code: string;
-  avatar: string;
+  avatar?: string;
+  website?: string;
+  server?: string;
 }

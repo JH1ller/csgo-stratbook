@@ -4,6 +4,7 @@
     flex-direction: column;
     padding: 24px;
     background-color: white;
+    box-shadow: $shadow-subtle;
     transition: height 0.3s ease;
     border-radius: 8px;
   }

@@ -8,6 +8,18 @@ const teamSchema = new mongoose.Schema({
     min: 3,
   },
 
+  website: {
+    type: String,
+    min: 6,
+    max: 100,
+  },
+
+  server: {
+    type: String,
+    min: 6,
+    max: 200,
+  },
+
   code: {
     type: String,
     required: true,
