@@ -45,8 +45,9 @@ Vue-Electron-Typescript application to manage strategies in Valve's popular comp
 ### Goals
 
 - [x] User authentication
-- [ ] Team management
+- [x] Team management
 - [x] JWT authenticated REST api
+- [ ] Steam OAuth
 - [x] Strategy CRUD via REST
 - [ ] Filter strategies
 - [x] Deploy api to heroku
