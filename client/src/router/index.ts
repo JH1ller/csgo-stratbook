@@ -52,6 +52,4 @@ const router = new VueRouter({
   routes,
 });
 
-//router.beforeEach(profileResolver);
-
 export default router;

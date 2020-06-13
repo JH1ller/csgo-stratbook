@@ -5,6 +5,7 @@
     &-container {
       display: flex;
       background: white;
+      box-shadow: $shadow-subtle;
       padding: 20px;
       border-radius: 10px;
       flex-wrap: wrap;

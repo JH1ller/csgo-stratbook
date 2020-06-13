@@ -22,6 +22,12 @@ router.get('/:team_id', verifyAuth, getTeam, (req, res) => {
   res.json(res.team);
 });
 
+router.get('/:team_id/players', verifyAuth, getTeam, async (req, res) => {
+  const players = await Player.find({ team: req.params.team_id });
+
+  res.json(players);
+});
+
 // * Create One
 router.post('/create', verifyAuth, uploadMiddleware, async (req, res) => {
   const { error } = teamValidation(req.body);
@@ -38,6 +44,8 @@ router.post('/create', verifyAuth, uploadMiddleware, async (req, res) => {
     name: req.body.name,
     avatar: req.body.avatar,
     createdBy: req.user._id,
+    website: req.body.website,
+    server: req.body.server,
   });
 
   const code = crypto.randomBytes(5).toString('hex');
@@ -64,6 +72,12 @@ router.patch('/update', verifyAuth, getTeam, async (req, res) => {
   if (req.body.code) {
     res.team.code = req.body.code;
   }
+  if (req.body.website) {
+    res.team.website = req.body.website;
+  }
+  if (req.body.server) {
+    res.team.server = req.body.server;
+  }
   // TODO: add "edit avatar"
   try {
     const updatedTeam = await res.team.save();
@@ -84,9 +98,8 @@ router.delete('/:team_id/delete', verifyAuth, getTeam, async (req, res) => {
 });
 
 // * Join team
-router.post('/join', verifyAuth, async (req, res) => {
+router.patch('/join', verifyAuth, async (req, res) => {
   const player = await Player.findById(req.user._id);
-  console.log(req.body);
   const team = await Team.findOne({ code: req.body.code });
 
   if (!team) {
@@ -95,6 +108,19 @@ router.post('/join', verifyAuth, async (req, res) => {
 
   try {
     player.team = team._id;
+    const updatedPlayer = await player.save();
+    return res.json(updatedPlayer);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+// * Leave team
+router.patch('/leave', verifyAuth, async (req, res) => {
+  const player = await Player.findById(req.user._id);
+  player.team = undefined;
+
+  try {
     const updatedPlayer = await player.save();
     return res.json(updatedPlayer);
   } catch (error) {

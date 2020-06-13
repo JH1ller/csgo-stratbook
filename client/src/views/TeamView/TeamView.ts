@@ -30,6 +30,11 @@ export default class TeamView extends Vue {
       this.createForm.updateFormMessage(res.error, 'error');
     } else if (res.success) {
       this.createForm.updateFormMessage(res.success, 'success');
+      setTimeout(async () => {
+        this.createForm.updateFormMessage(null, null);
+        await this.$store.dispatch('updateTeamInfo');
+        await this.$store.dispatch('updateProfile');
+      }, 3000);
     }
   }
 
@@ -39,6 +44,15 @@ export default class TeamView extends Vue {
       this.joinForm.updateFormMessage(res.error, 'error');
     } else if (res.success) {
       this.joinForm.updateFormMessage(res.success, 'success');
+      setTimeout(async () => {
+        this.joinForm.updateFormMessage(null, null);
+        await this.$store.dispatch('updateTeamInfo');
+        await this.$store.dispatch('updateProfile');
+      }, 3000);
     }
+  }
+
+  private async leaveTeamRequest() {
+    const res = await this.$store.dispatch('leaveTeam');
   }
 }

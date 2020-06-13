@@ -32,4 +32,9 @@ body {
 p,
 span {
   user-select: none;
+
+  &::selection {
+    background-color: $color--navyblue-80;
+    color: white;
+  }
 }

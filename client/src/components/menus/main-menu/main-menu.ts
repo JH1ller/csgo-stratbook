@@ -1,5 +1,5 @@
 import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
-import { mapState } from 'vuex';
+import { State } from 'vuex-class';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
 import {
   faTools,
@@ -17,15 +17,10 @@ config.autoAddCss = false;
 library.add(faTools, faUtensils, faBoxes, faUsers, faChess);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
-@Component({
-  components: {},
-  computed: mapState({
-    profile: (state: any) => state.profile,
-  }),
-})
+@Component({})
 export default class MainMenu extends Vue {
   private appName: string = 'CSGO Stratbook'; //TODO: dynamic
-  private profile!: Player | null;
+  @State('profile') profile!: Player;
 
   private menuItems = [
     {

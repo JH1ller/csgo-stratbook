@@ -269,7 +269,7 @@ class APIService {
     if (!token) throw 'User not logged in.';
     console.log(code);
     try {
-      const res = await axios.post(
+      const res = await axios.patch(
         target,
         { code },
         {
@@ -285,8 +285,49 @@ class APIService {
     }
   }
 
+  static async leaveTeam() {
+    const target = urljoin(url, Endpoints.TEAMS, 'leave');
+    const authService = AuthService.getInstance();
+    const token = authService.getToken();
+    if (!token) throw 'User not logged in.';
+    try {
+      const res = await axios.patch(
+        target,
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return { team: res.data };
+    } catch (error) {
+      console.error(error);
+      return { error: error.response.data.error };
+    }
+  }
+
   static async getTeamOfPlayer(playerId: string) {
     const target = urljoin(url, Endpoints.PLAYERS, playerId, 'team');
+    const authService = AuthService.getInstance();
+    const token = authService.getToken();
+    if (!token) throw 'User not logged in.';
+    try {
+      const res = await axios.get(target, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      const data = res.data;
+      return data;
+    } catch (error) {
+      console.error(error);
+      throw new Error(error);
+    }
+  }
+
+  static async getMembersOfTeam(teamId: string) {
+    const target = urljoin(url, Endpoints.TEAMS, teamId, 'players');
     const authService = AuthService.getInstance();
     const token = authService.getToken();
     if (!token) throw 'User not logged in.';
