@@ -2,11 +2,12 @@ import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Team, Player } from '@/services/models';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
-import { faCopy, faCrown } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faCrown, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+const { remote } = require('electron');
 
 config.autoAddCss = false;
-library.add(faCopy, faCrown);
+library.add(faCopy, faCrown, faGamepad);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 @Component({})
@@ -40,9 +41,22 @@ export default class TeamInfo extends Vue {
   }
 
   private copyServer() {
-    navigator.clipboard.writeText(
-      this.teamInfo.server ? this.teamInfo.server : ''
+    navigator.clipboard.writeText(this.connectionString);
+  }
+
+  private runServer() {
+    const currentWindow = remote.getCurrentWindow();
+    currentWindow.loadURL(
+      `steam://connect/${this.teamInfo.server?.ip}/${this.teamInfo.server?.password}`
     );
+  }
+
+  get connectionString() {
+    return `connect ${this.teamInfo.server?.ip}; ${
+      this.teamInfo.server?.password
+        ? `password ${this.teamInfo.server?.password}`
+        : ''
+    }`;
   }
 
   @Emit()

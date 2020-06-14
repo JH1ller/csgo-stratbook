@@ -3,7 +3,8 @@ import { FormComponent } from '@/interfaces/index';
 export interface TeamCreateFormData {
   name: string;
   website: string;
-  server: string;
+  serverIp: string;
+  serverPw: string;
 }
 
 @Component({})
@@ -19,7 +20,8 @@ export default class TeamCreateForm extends Vue implements FormComponent {
   private formData: TeamCreateFormData = {
     name: '',
     website: '',
-    server: '',
+    serverIp: '',
+    serverPw: '',
   };
   private imageFile: File | null = null;
 

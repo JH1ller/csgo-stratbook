@@ -28,7 +28,7 @@ class APIService {
    * * MAPS
    */
 
-  static async getAllMaps() {
+  static async getAllMaps(): Promise<Map[]> {
     const target = urljoin(url, Endpoints.MAPS);
     const authService = AuthService.getInstance();
     const token = authService.getToken();
@@ -39,10 +39,10 @@ class APIService {
           Authorization: token,
         },
       });
-      const data = res.data;
-      return data;
+      return res.data;
     } catch (error) {
       console.error(error);
+      throw new Error(error);
     }
   }
 

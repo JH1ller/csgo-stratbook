@@ -4,10 +4,29 @@
       <div class="team-info__left-wrapper">
         <h2 class="team-info__title">{{teamInfo.name}}</h2>
         <p class="team-info__website">{{teamInfo.website}}</p>
-        <span class="team-info__server" @click="copyServer">{{teamInfo.server}}</span>
+        <div class="team-info__server-wrapper">
+          <div
+            class="team-info__server-copy"
+            v-if="teamInfo.server"
+            @click="copyServer"
+            data-tooltip="Copy server connection string"
+          >
+            <font-awesome-icon icon="copy" />
+          </div>
+          <div
+            class="team-info__server-run"
+            v-if="teamInfo.server"
+            @click="runServer"
+            data-tooltip="Run game and join server"
+          >
+            <font-awesome-icon icon="gamepad" />
+          </div>
+        </div>
         <span class="team-info__code">
           {{teamInfo.code}}
-          <font-awesome-icon icon="copy" class="team-info__code-copy" @click="copyCode" />
+          <div class="team-info__code-copy" @click="copyCode" data-tooltip="Copy join code">
+            <font-awesome-icon icon="copy" />
+          </div>
         </span>
       </div>
       <div class="team-info__right-wrapper">
@@ -30,8 +49,8 @@
             </span>
             <img class="team-info__member-avatar" :src="resolveAvatar(player.avatar)" />
           </li>
+          <span class="team-info__leave" @click="leaveTeam" data-tooltip="Leave the team">Leave team</span>
         </ol>
-        <span class="team-info__leave" @click="leaveTeam">Leave team</span>
       </div>
     </div>
   </div>

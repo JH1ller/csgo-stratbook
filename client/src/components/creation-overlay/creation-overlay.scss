@@ -70,14 +70,13 @@
       left: 50%;
       transform: translate(-50%, -50%);
       padding: 24px;
-      background-color: white;
+      background-color: rgba(255, 255, 255, 0.8);
     }
 
     &-fieldset {
       padding: 16px;
-      // border: 2px solid $color--navyblue-50;
-      box-shadow: 0 0 8px #00000050;
-
+      box-shadow: $shadow-subtle;
+      background-color: white;
       &:not(:first-of-type) {
         margin-top: 12px;
       }

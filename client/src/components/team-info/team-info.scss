@@ -39,15 +39,33 @@
     margin-top: 4px;
   }
 
-  &__server {
-    font-size: 1.1em;
+  &__server-wrapper {
     display: flex;
     color: $color--navyblue-80;
     align-items: center;
-    max-width: 300px;
-    margin-top: auto;
-    user-select: auto;
+    margin-top: 12px;
+  }
+
+  &__server-copy,
+  &__server-run {
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+    border: 2px solid $color--navyblue-80;
+    border-radius: 6px;
     cursor: pointer;
+  }
+
+  &__server-run {
+    @include tooltip;
+    margin-left: 8px;
+  }
+
+  &__server-copy {
+    @include tooltip;
+    &::after {
+      left: 70px;
+    }
   }
 
   &__code {
@@ -55,30 +73,41 @@
     font-size: 1.4em;
     font-weight: bold;
     color: $color--navyblue-80;
-    text-shadow: 2px 2px 4px #00000030;
     padding: 4px 0 4px 12px;
     border: 3px dashed $color--navyblue-80;
     border-radius: 8px;
     display: flex;
     align-items: center;
-    margin-top: 12px;
+    margin-top: auto;
     user-select: auto;
     width: fit-content;
+  }
 
+  &__code-copy {
+    @include tooltip;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    margin-left: 8px;
+    padding: 6px 16px 6px 12px;
     & > svg {
-      cursor: pointer;
-      height: 42px;
-      width: 48px;
-      margin-left: 8px;
-      padding: 6px 16px 6px 12px;
+      height: 24px;
+      width: 24px;
     }
   }
 
   &__leave {
+    @include tooltip;
+    font-size: 0.9em;
     color: $color--red;
     margin-top: 12px;
     cursor: pointer;
     line-height: 0.8;
+    position: absolute;
+    bottom: -18px;
+    right: 0;
   }
 
   &__member-list {
@@ -86,6 +115,7 @@
     padding: 16px;
     border: 2px solid $color--navyblue-80;
     border-radius: 8px;
+    position: relative;
   }
 
   &__member {

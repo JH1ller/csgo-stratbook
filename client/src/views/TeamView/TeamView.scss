@@ -5,9 +5,8 @@
     display: flex;
     justify-content: space-evenly;
     align-items: baseline;
-  }
-
-  > *:not(:first-child) {
-    margin-left: 24px;
+    > *:not(:first-child) {
+      margin-left: 24px;
+    }
   }
 }

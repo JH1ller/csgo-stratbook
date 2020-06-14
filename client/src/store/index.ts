@@ -94,6 +94,8 @@ export default new Vuex.Store({
       try {
         const maps = await APIService.getAllMaps();
         commit('updateMaps', maps);
+        commit('setCurrentMap', maps[0]._id);
+        console.log(maps[0]);
       } catch (error) {
         console.error(error);
       }

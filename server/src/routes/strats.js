@@ -1,15 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const Strat = require('../models/strat');
+const Player = require('../models/player');
 const { getStrat } = require('./utils/getters');
 const { verifyAuth } = require('./utils/verifyToken');
 
 // * Get all
 router.get('/', verifyAuth, async (req, res) => {
+  const player = await Player.findById(req.user._id);
+
+  if (!player.team) {
+    return res
+      .status(400)
+      .json({ error: "Authenticated user doesn't have a team" });
+  }
   try {
     const strats = req.query.map
-      ? await Strat.find({ map: req.query.map })
-      : await Strat.find();
+      ? await Strat.find({ map: req.query.map, team: player.team })
+      : await Strat.find({ team: player.team });
 
     res.json(strats);
   } catch (error) {
@@ -23,7 +31,15 @@ router.get('/:strat_id', getStrat, (req, res) => {
 });
 
 // * Create One
-router.post('/create', async (req, res) => {
+router.post('/create', verifyAuth, async (req, res) => {
+  const player = await Player.findById(req.user._id);
+
+  if (!player.team) {
+    return res
+      .status(400)
+      .json({ error: "Authenticated user doesn't have a team" });
+  }
+
   const strat = new Strat({
     name: req.body.name,
     type: req.body.type,
@@ -32,7 +48,8 @@ router.post('/create', async (req, res) => {
     active: req.body.active,
     videoLink: req.body.videoLink,
     note: req.body.note,
-    createdBy: req.body.createdBy,
+    team: player.team,
+    createdBy: player._id,
     createdAt: Date.now(),
   });
   try {

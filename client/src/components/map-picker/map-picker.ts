@@ -1,17 +1,11 @@
 import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
-import { mapState } from 'vuex';
-const { remote } = require('electron');
+import { State } from 'vuex-class';
 import { Map, Strat, Step, Player } from '@/services/models';
 
-@Component({
-  components: {
-  },
-  computed: mapState(['maps', 'currentMap'])
-})
+@Component({})
 export default class MapPicker extends Vue {
-
-  private maps!: Map[];
-  private currentMap!: string;
+  @State('maps') maps!: Map[];
+  @State('currentMap') currentMap!: string;
 
   @Emit()
   private mapClicked(mapId: string) {
@@ -22,4 +16,3 @@ export default class MapPicker extends Vue {
     return mapId === this.currentMap;
   }
 }
-

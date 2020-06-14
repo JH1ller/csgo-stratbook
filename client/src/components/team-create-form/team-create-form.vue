@@ -25,14 +25,24 @@
         ref="website"
         id="website"
       />
-      <label for="name" class="team-create-form__label">Server IP</label>
-      <input
-        type="text"
-        class="team-create-form__input"
-        v-model="formData.server"
-        ref="server"
-        id="server"
-      />
+      <div class="team-create-form__server-wrapper">
+        <label for="name" class="team-create-form__label--ip">Server IP</label>
+        <input
+          type="text"
+          class="team-create-form__input--ip"
+          v-model="formData.serverIp"
+          ref="serverIp"
+          id="serverIp"
+        />
+        <label for="name" class="team-create-form__label--pw">Server Password</label>
+        <input
+          type="text"
+          class="team-create-form__input--pw"
+          v-model="formData.serverPw"
+          ref="serverPw"
+          id="serverPw"
+        />
+      </div>
       <label for="file" class="team-create-form__label">Team Logo</label>
       <label class="team-create-form__file">
         <input type="file" id="file" @change="fileSelected" accept="image/*" />

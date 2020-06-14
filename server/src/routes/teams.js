@@ -30,6 +30,7 @@ router.get('/:team_id/players', verifyAuth, getTeam, async (req, res) => {
 
 // * Create One
 router.post('/create', verifyAuth, uploadMiddleware, async (req, res) => {
+  console.log(req.body);
   const { error } = teamValidation(req.body);
   if (error) {
     return res.status(400).send({ error: error.details[0].message });
@@ -45,7 +46,10 @@ router.post('/create', verifyAuth, uploadMiddleware, async (req, res) => {
     avatar: req.body.avatar,
     createdBy: req.user._id,
     website: req.body.website,
-    server: req.body.server,
+    server: {
+      ip: req.body.serverIp,
+      password: req.body.serverPw,
+    },
   });
 
   const code = crypto.randomBytes(5).toString('hex');

@@ -15,7 +15,10 @@ const teamSchema = new mongoose.Schema({
   },
 
   server: {
-    type: String,
+    type: {
+      ip: String,
+      password: String,
+    },
     min: 6,
     max: 200,
   },
