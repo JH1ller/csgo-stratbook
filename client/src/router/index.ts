@@ -4,6 +4,7 @@ import StratsView from '../views/StratsView/StratsView.vue';
 import LoginView from '../views/LoginView/LoginView.vue';
 import RegisterView from '../views/RegisterView/RegisterView.vue';
 import TeamView from '../views/TeamView/TeamView.vue';
+import ProfileView from '@/views/ProfileView/ProfileView.vue';
 import Map from '../views/Map.vue';
 import {
   stratsResolver,
@@ -45,6 +46,11 @@ const routes = [
     name: 'Team',
     component: TeamView,
     beforeEnter: teamResolver,
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: ProfileView,
   },
 ];
 

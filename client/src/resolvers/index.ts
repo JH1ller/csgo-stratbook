@@ -37,12 +37,20 @@ export const teamResolver = async (to: Route, from: Route, next: any) => {
     const profile = await store.dispatch('updateProfile');
     if (profile.team) {
       const team = await store.dispatch('updateTeamInfo');
+      next();
     } else {
+      if (to.name !== 'Team') {
+        next({ name: 'Team' });
+      } else {
+        next();
+      }
       return true;
     }
-    next();
   } catch (error) {
-    if (to.name !== 'Login') next({ name: 'Login' });
+    if (to.name !== 'Login') {
+      await store.dispatch('showToast', 'You need to login first.');
+      next({ name: 'Login' });
+    }
     console.log(error);
     throw new Error(error);
   }

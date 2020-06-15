@@ -1,0 +1,9 @@
+.profile-view {
+  &__btn-logout {
+    background-color: $color--red;
+    color: white;
+    padding: 6px 12px;
+    font-size: 1.1em;
+    border-radius: 6px;
+  }
+}

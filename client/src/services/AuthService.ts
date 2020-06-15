@@ -40,6 +40,12 @@ class AuthService {
     return AuthService.instance;
   }
 
+  clear() {
+    this.token = null;
+    this.playerInfo = null;
+    this.clearStorage();
+  }
+
   async login(email: string, password: string) {
     const target = urljoin(url, Endpoints.AUTH, Actions.LOGIN);
     try {
@@ -60,7 +66,8 @@ class AuthService {
       this.token = res.data;
       return { user: res.data };
     } catch (error) {
-      return { error: error.response.data.error };
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 
@@ -71,6 +78,10 @@ class AuthService {
   loadTokenFromStorage(): string | undefined {
     this.token = localStorage.getItem('auth-token');
     if (this.token) return this.token;
+  }
+
+  clearStorage() {
+    localStorage.removeItem('auth-token');
   }
 
   getToken(): string | null {

@@ -18,7 +18,7 @@
           :style="{ transitionDelay: '0.' + index + 's' }"
         >{{ item.label }}</span>
       </router-link>
-      <router-link to="/profile" class="main-menu__profile" v-if="profile">
+      <router-link to="/profile" class="main-menu__profile" v-if="profile._id">
         <img :src="avatarUrl" class="main-menu__profile-avatar" />
         <span class="main-menu__profile-label">{{ profile.name }}</span>
       </router-link>

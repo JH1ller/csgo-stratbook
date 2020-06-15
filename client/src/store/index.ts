@@ -161,7 +161,7 @@ export default new Vuex.Store({
       try {
         const res = await APIService.updateStrat(stratId, changeObj);
         await dispatch('updateCurrentStrats');
-        await dispatch('showToast', 'Successfully left team.');
+        await dispatch('showToast', 'Successfully updated the strat.');
       } catch (error) {
         await dispatch('showToast', error);
       }
@@ -187,7 +187,6 @@ export default new Vuex.Store({
     async updateProfile({ commit }) {
       try {
         const profile = await authService.updatePlayerInfo();
-        console.log(profile);
         if (profile) {
           commit('setProfile', profile);
           return profile;
@@ -243,6 +242,12 @@ export default new Vuex.Store({
         return { error: error };
       }
     },
+    async logoutUser({ commit, dispatch }) {
+      commit('resetState');
+      authService.clear();
+      await dispatch('showToast', 'Logged out successfully');
+      return true;
+    },
     async registerUser({ commit }, formData) {
       try {
         const res = await authService.register(formData);
@@ -273,7 +278,7 @@ export default new Vuex.Store({
     async joinTeam({ commit, dispatch }, code: string) {
       try {
         const res = await APIService.joinTeam(code);
-        await dispatch('showToast', 'Successfully left team.');
+        await dispatch('showToast', 'Successfully joined team.');
         return {
           success: 'Successfully joined team.',
         };
