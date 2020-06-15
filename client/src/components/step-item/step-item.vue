@@ -6,6 +6,14 @@
       @dblclick="enableEditMode"
       @click="handleClick"
     >
+      <multiselect
+        class="step-item__select"
+        v-model="actorCopy"
+        :options="selectOptions"
+        :searchable="false"
+        :show-labels="false"
+        placeholder="Choose actor"
+      />
       <input
         type="text"
         class="step-item__description"
@@ -55,4 +63,6 @@
 </template>
 
 <script lang="ts" src="./step-item.ts"></script>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style lang="scss" src="./step-item.scss"></style>

@@ -1,8 +1,10 @@
 import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
 import { Map, Strat, Step, Player, Sides, Equipment } from '@/services/models';
+import { State } from 'vuex-class';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import Multiselect from 'vue-multiselect';
 
 config.autoAddCss = false;
 library.add(faEdit, faTrashAlt);
@@ -13,9 +15,12 @@ export interface IStepItem {
 }
 
 @Component({
-  components: {},
+  components: {
+    Multiselect,
+  },
 })
 export default class StepItem extends Vue implements IStepItem {
+  @State('teamMembers') teamMembers!: Player[];
   @Prop({ default: null }) private step!: Step | null;
   private editMode: boolean = false;
   @Prop({ default: false }) addMode!: boolean;
@@ -28,10 +33,23 @@ export default class StepItem extends Vue implements IStepItem {
     molotov: false,
     defuseKit: false,
   };
+  private actorCopy = '';
 
   private mounted() {
     this.resetValues();
     window.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  get selectOptions() {
+    const teamMemberNames = this.teamMembers.map(member => member.name);
+    return [
+      ...teamMemberNames,
+      '1st Spawn',
+      '2nd Spawn',
+      '3rd Spawn',
+      '4th Spawn',
+      '5th Spawn',
+    ];
   }
 
   private resetValues() {

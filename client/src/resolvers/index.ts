@@ -4,7 +4,8 @@ import APIService from '@/services/APIService';
 
 export const stratsResolver = async (to: Route, from: Route, next: any) => {
   try {
-    const redirected = await profileResolver(to, from, next);
+    let redirected = await profileResolver(to, from, next);
+    redirected = await teamResolver(to, from, next);
     if (!redirected) {
       await store.dispatch('updateMaps');
       next();
@@ -36,6 +37,8 @@ export const teamResolver = async (to: Route, from: Route, next: any) => {
     const profile = await store.dispatch('updateProfile');
     if (profile.team) {
       const team = await store.dispatch('updateTeamInfo');
+    } else {
+      return true;
     }
     next();
   } catch (error) {

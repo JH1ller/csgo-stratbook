@@ -35,7 +35,9 @@ export default class StratItem extends Vue {
   }
 
   private handleStepEditEnabled() {
-    this.stepElements.forEach(stepElement => stepElement.cancelEdit());
+    if (this.stepElements) {
+      this.stepElements.forEach(stepElement => stepElement.cancelEdit());
+    }
     this.addStepElement.cancelEdit();
   }
 
