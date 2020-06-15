@@ -11,8 +11,10 @@
         v-model="actorCopy"
         :options="selectOptions"
         :searchable="false"
+        :allow-empty="false"
         :show-labels="false"
         placeholder="Choose actor"
+        :disabled="!editMode"
       />
       <input
         type="text"

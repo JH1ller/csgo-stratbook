@@ -65,33 +65,11 @@ export default class StratsView extends Vue {
     this.$store.dispatch('updateStrat', { stratId, changeObj: { active } });
   }
 
-  private updateStep({
-    stepId,
-    description,
-    equipment,
-  }: {
-    stepId: string;
-    description: string;
-    equipment: Equipment;
-  }) {
-    this.$store.dispatch('updateStep', {
-      stepId,
-      changeObj: { description, equipment },
-    });
+  private updateStep(payload: {}) {
+    this.$store.dispatch('updateStep', payload);
   }
 
-  private addStep({
-    description,
-    equipment,
-    stratId,
-  }: {
-    description: string;
-    equipment: Equipment;
-    stratId: string;
-  }) {
-    this.$store.dispatch('addStep', {
-      stratId,
-      payload: { description, equipment },
-    });
+  private addStep(payload: {}) {
+    this.$store.dispatch('addStep', payload);
   }
 }

@@ -50,11 +50,13 @@ export interface Strat {
 
 export interface Step {
   _id: string;
-  player: string;
+  createdBy: string;
+  createdAt: Date;
   strat: string;
   equipment: Equipment;
   description?: string;
   note?: string;
+  actor?: string;
 }
 
 export interface Player {

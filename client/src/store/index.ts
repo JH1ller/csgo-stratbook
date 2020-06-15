@@ -109,7 +109,7 @@ export default new Vuex.Store({
         commit('updateMaps', maps);
         await dispatch('updateCurrentMap', maps[0]._id);
       } catch (error) {
-        dispatch('showToast', error);
+        await dispatch('showToast', error);
       }
     },
     updateCurrentMap({ commit, dispatch }, payload) {
@@ -123,25 +123,25 @@ export default new Vuex.Store({
         commit('setCurrentStrats', strats);
         await dispatch('updateStepsOfCurrentStrats');
       } catch (error) {
-        //
+        dispatch('showToast', error);
       }
     },
-    async updateStepsOfCurrentStrats({ commit }) {
+    async updateStepsOfCurrentStrats({ commit, dispatch }) {
       this.state.currentStrats.forEach(async strat => {
         try {
           const steps = await APIService.getStepsOfStrat(strat._id);
           commit('setStepsOfStrat', { strat, steps });
         } catch (error) {
-          //
+          dispatch('showToast', error);
         }
       });
     },
     async deleteStrat({ dispatch }, payload) {
       try {
         const res = await APIService.deleteStrat(payload);
-        dispatch('updateCurrentStrats');
+        await dispatch('updateCurrentStrats');
       } catch (error) {
-        //
+        dispatch('showToast', error);
       }
     },
     async createStrat({ dispatch }, payload) {
@@ -151,38 +151,37 @@ export default new Vuex.Store({
             payload,
             this.state.currentMap as string
           );
-          dispatch('updateCurrentStrats');
+          await dispatch('updateCurrentStrats');
         }
       } catch (error) {
-        //
+        dispatch('showToast', error);
       }
     },
     async updateStrat({ dispatch }, { stratId, changeObj }) {
       try {
         const res = await APIService.updateStrat(stratId, changeObj);
-        dispatch('updateCurrentStrats');
+        await dispatch('updateCurrentStrats');
+        await dispatch('showToast', 'Successfully left team.');
       } catch (error) {
-        //
+        await dispatch('showToast', error);
       }
     },
-    async updateStep({ dispatch }, { stepId, changeObj }) {
+    async updateStep({ dispatch }, payload) {
       try {
-        const res = await APIService.updateStep(stepId, changeObj);
-        dispatch('updateStepsOfCurrentStrats');
+        const res = await APIService.updateStep(payload);
+        await dispatch('updateStepsOfCurrentStrats');
+        await dispatch('showToast', 'Updated step');
       } catch (error) {
-        //
+        await dispatch('showToast', error);
       }
     },
-    async addStep({ dispatch, state }, { stratId, payload }) {
+    async addStep({ dispatch, state }, payload) {
       try {
-        const res = await APIService.addStep(
-          stratId,
-          (state.profile as Player)._id,
-          payload
-        );
-        dispatch('updateStepsOfCurrentStrats');
+        const res = await APIService.addStep(payload);
+        await dispatch('updateStepsOfCurrentStrats');
+        await dispatch('showToast', 'Added step');
       } catch (error) {
-        dispatch('showToast', error);
+        await dispatch('showToast', error);
       }
     },
     async updateProfile({ commit }) {
@@ -237,7 +236,7 @@ export default new Vuex.Store({
         const res = await authService.login(email, password);
         if (res.token) {
           commit('setToken', res.token);
-          dispatch('updateProfile');
+          await dispatch('updateProfile');
           return { success: 'Logged in successfully.' };
         }
       } catch (error) {
@@ -274,6 +273,7 @@ export default new Vuex.Store({
     async joinTeam({ commit, dispatch }, code: string) {
       try {
         const res = await APIService.joinTeam(code);
+        await dispatch('showToast', 'Successfully left team.');
         return {
           success: 'Successfully joined team.',
         };
@@ -286,6 +286,7 @@ export default new Vuex.Store({
         const res = await APIService.leaveTeam();
 
         await dispatch('updateProfile');
+        await dispatch('showToast', 'Successfully left team.');
         return {
           success: 'Successfully left team.',
         };

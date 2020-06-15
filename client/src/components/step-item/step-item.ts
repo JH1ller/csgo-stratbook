@@ -55,9 +55,11 @@ export default class StepItem extends Vue implements IStepItem {
   private resetValues() {
     if (this.step && !this.addMode) {
       this.descriptionCopy = this.step.description ?? '';
-      this.equipmentCopy = this.step.equipment;
+      this.equipmentCopy = { ...this.step.equipment };
+      this.actorCopy = this.step.actor ?? '';
     } else {
       this.descriptionCopy = '';
+      this.actorCopy = '';
       this.equipmentCopy = {
         grenade: false,
         smoke: false,
@@ -129,6 +131,7 @@ export default class StepItem extends Vue implements IStepItem {
             this.$emit('add-step', {
               description: this.descriptionCopy,
               equipment: this.equipmentCopy,
+              actor: this.actorCopy,
             });
             this.resetValues();
           } else {
@@ -136,6 +139,7 @@ export default class StepItem extends Vue implements IStepItem {
               stepId: this.step?._id,
               description: this.descriptionCopy,
               equipment: this.equipmentCopy,
+              actor: this.actorCopy,
             });
           }
           this.editMode = false;

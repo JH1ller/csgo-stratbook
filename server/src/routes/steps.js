@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { stepSchema: Step, equipmentSchema: Equip } = require('../models/step');
 const { getStep } = require('./utils/getters');
+const { verifyAuth } = require('./utils/verifyToken');
 
 // * Get all
 router.get('/', async (req, res) => {
@@ -22,14 +23,16 @@ router.get('/:step_id', getStep, (req, res) => {
 });
 
 // * Create One
-router.post('/create', async (req, res) => {
+router.post('/create', verifyAuth, async (req, res) => {
   const equip = new Equip(req.body.equipment);
   const step = new Step({
     strat: req.body.strat,
-    player: req.body.player,
+    createdBy: req.user._id,
     equipment: equip,
     description: req.body.description,
     note: req.body.note,
+    createdAt: Date.now(),
+    actor: req.body.actor,
   });
   try {
     const newStep = await step.save();
@@ -55,6 +58,9 @@ router.patch('/:step_id/update', getStep, async (req, res) => {
   }
   if (req.body.note) {
     res.step.note = req.body.note;
+  }
+  if (req.body.actor) {
+    res.step.actor = req.body.actor;
   }
   try {
     const updatedStep = await res.step.save();

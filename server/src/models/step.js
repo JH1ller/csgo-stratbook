@@ -39,10 +39,20 @@ const equipmentSchema = new mongoose.Schema({
 });
 
 const stepSchema = new mongoose.Schema({
-  player: {
+  createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'players',
     required: true,
+  },
+
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+
+  actor: {
+    type: String,
+    max: 30,
   },
 
   strat: {

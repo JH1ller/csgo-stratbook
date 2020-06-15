@@ -168,14 +168,19 @@ class APIService {
     }
   }
 
-  static async updateStep(stepId: string, changeObj: any) {
-    const target = urljoin(url, Endpoints.STEPS, stepId, Actions.UPDATE);
+  static async updateStep(payload: any) {
+    const target = urljoin(
+      url,
+      Endpoints.STEPS,
+      payload.stepId,
+      Actions.UPDATE
+    );
     const authService = AuthService.getInstance();
     const token = authService.getToken();
     if (!token) throw 'User not logged in.';
 
     try {
-      const res = await axios.patch(target, changeObj, {
+      const res = await axios.patch(target, payload, {
         headers: {
           Authorization: token,
         },
@@ -187,14 +192,13 @@ class APIService {
     }
   }
 
-  static async addStep(stratId: string, playerId: string, payload: any) {
+  static async addStep(payload: any) {
     const target = urljoin(url, Endpoints.STEPS, Actions.CREATE);
     const authService = AuthService.getInstance();
     const token = authService.getToken();
     if (!token) throw 'User not logged in.';
-    const requestObj = { ...payload, strat: stratId, player: playerId };
     try {
-      const res = await axios.post(target, requestObj, {
+      const res = await axios.post(target, payload, {
         headers: {
           Authorization: token,
         },
