@@ -9,18 +9,27 @@
       />
       <img v-else src="@/assets/icons/t_badge.png" class="strat-item__side-badge" draggable="false" />
       <div class="strat-item__btn-wrapper" :class="{'-deleting': inDeletionQuestion}">
-        <font-awesome-icon
-          icon="film"
+        <div
           class="strat-item__btn-youtube"
           v-if="strat.videoLink"
           @click="openVideo"
-        />
-        <font-awesome-icon icon="edit" class="strat-item__btn-edit" @click="editStrat" />
+          data-tooltip="Open video in browser"
+        >
+          <font-awesome-icon icon="film" />
+        </div>
+        <div class="strat-item__btn-edit" @click="editStrat" data-tooltip="Edit strat">
+          <font-awesome-icon icon="edit" />
+        </div>
+
         <div class="strat-item__deletion" v-if="inDeletionQuestion">
           <span class="strat-item__deletion-question">Are you sure?</span>
-          <font-awesome-icon icon="ban" class="strat-item__btn-cancel" @click="cancelDeletion" />
+          <div class="strat-item__btn-cancel" @click="cancelDeletion" data-tooltip="Cancel">
+            <font-awesome-icon icon="ban" />
+          </div>
         </div>
-        <font-awesome-icon icon="trash-alt" class="strat-item__btn-delete" @click="deleteClicked" />
+        <div class="strat-item__btn-delete" @click="deleteClicked" data-tooltip="Delete strat">
+          <font-awesome-icon icon="trash-alt" />
+        </div>
       </div>
       <div class="strat-item__field-wrapper">
         <div class="strat-item__field">

@@ -11,7 +11,7 @@ router.get('/', verifyAuth, async (req, res) => {
     const maps = await Map.find();
     res.json(maps);
   } catch (error) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -31,7 +31,7 @@ router.post('/create', verifyAuth, async (req, res) => {
     const newMap = await map.save();
     res.status(201).json(newMap);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -50,7 +50,7 @@ router.patch('/:map_id/update', verifyAuth, getMap, async (req, res) => {
     const updatedMap = await res.map.save();
     res.json(updatedMap);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -60,7 +60,7 @@ router.delete('/:map_id/delete', verifyAuth, getMap, async (req, res) => {
     await res.map.remove();
     res.json({ message: 'Deleted map successfully' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -71,7 +71,7 @@ router.delete('/deleteAll', verifyAuth, async (req, res) => {
     await Map.collection.dropIndexes();
     res.json({ message: 'Deleted all maps' });
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(500).json({ error: error.message });
   }
 });
 

@@ -9,10 +9,10 @@ async function getStrat(req, res, next) {
   try {
     strat = await Strat.findById(req.params.strat_id);
     if (!strat) {
-      return res.status(404).json({ message: 'Cannot find strat' });
+      return res.status(404).json({ error: 'Cannot find strat' });
     }
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ error: error.message });
   }
 
   res.strat = strat;
@@ -24,10 +24,10 @@ async function getStep(req, res, next) {
   try {
     step = await Step.findById(req.params.step_id);
     if (!step) {
-      return res.status(404).json({ message: 'Cannot find step' });
+      return res.status(404).json({ error: 'Cannot find step' });
     }
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ error: error.message });
   }
 
   res.step = step;
@@ -39,10 +39,10 @@ async function getMap(req, res, next) {
   try {
     map = await Map.findById(req.params.map_id);
     if (!map) {
-      return res.status(404).json({ message: 'Cannot find map' });
+      return res.status(404).json({ error: 'Cannot find map' });
     }
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ error: error.message });
   }
 
   res.map = map;
@@ -54,10 +54,10 @@ async function getTeam(req, res, next) {
   try {
     team = await Team.findById(req.params.team_id);
     if (!team) {
-      return res.status(404).json({ message: 'Cannot find team' });
+      return res.status(404).json({ error: 'Cannot find team' });
     }
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ error: error.message });
   }
 
   res.team = team;
@@ -72,10 +72,10 @@ async function getPlayer(req, res, next) {
       : await Player.findById(req.user._id);
 
     if (!player) {
-      return res.status(404).json({ message: 'Cannot find player' });
+      return res.status(404).json({ error: 'Cannot find player' });
     }
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ error: error.message });
   }
 
   res.player = player;

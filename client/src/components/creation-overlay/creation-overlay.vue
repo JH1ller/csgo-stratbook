@@ -28,7 +28,11 @@
               id="PISTOL"
               v-model="type"
             />
-            <label class="creation-overlay__form-radio-label" for="PISTOL">Pistol</label>
+            <label
+              class="creation-overlay__form-radio-label"
+              for="PISTOL"
+              :class="{'-selected': type === 'PISTOL'}"
+            >pistol</label>
             <input
               class="creation-overlay__form-radio"
               type="radio"
@@ -37,7 +41,11 @@
               id="FORCE"
               v-model="type"
             />
-            <label class="creation-overlay__form-radio-label" for="FORCE">Force</label>
+            <label
+              class="creation-overlay__form-radio-label"
+              for="FORCE"
+              :class="{'-selected': type === 'FORCE'}"
+            >force</label>
             <input
               class="creation-overlay__form-radio"
               type="radio"
@@ -46,7 +54,11 @@
               id="BUYROUND"
               v-model="type"
             />
-            <label class="creation-overlay__form-radio-label" for="BUYROUND">Buyround</label>
+            <label
+              class="creation-overlay__form-radio-label"
+              for="BUYROUND"
+              :class="{'-selected': type === 'BUYROUND'}"
+            >buyround</label>
           </div>
         </fieldset>
         <fieldset class="creation-overlay__form-fieldset">

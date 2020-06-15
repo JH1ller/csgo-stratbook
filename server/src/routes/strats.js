@@ -21,7 +21,7 @@ router.get('/', verifyAuth, async (req, res) => {
 
     res.json(strats);
   } catch (error) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -56,7 +56,7 @@ router.post('/create', verifyAuth, async (req, res) => {
     const newStrat = await strat.save();
     res.status(201).json(newStrat);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -102,7 +102,7 @@ router.patch('/:strat_id/update', getStrat, async (req, res) => {
     const updatedStrat = await res.strat.save();
     res.json(updatedStrat);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -112,7 +112,7 @@ router.delete('/:strat_id/delete', getStrat, async (req, res) => {
     await res.strat.remove();
     res.json({ message: 'Deleted strat successfully' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -123,7 +123,7 @@ router.delete('/deleteAll', async (req, res) => {
     await Strat.collection.dropIndexes();
     res.json({ message: 'Deleted all strats' });
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(500).json({ error: error });
   }
 });
 

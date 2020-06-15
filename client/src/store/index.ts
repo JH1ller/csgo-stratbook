@@ -10,6 +10,10 @@ export interface AppState {
   ui: {
     showLoader: boolean;
     loaderText: string;
+    toast: {
+      show: boolean;
+      message: string;
+    };
   };
   maps: Map[];
   currentMap: string;
@@ -25,6 +29,10 @@ const getInitialState = (): AppState => {
     ui: {
       showLoader: false,
       loaderText: '',
+      toast: {
+        show: false,
+        message: '',
+      },
     },
     maps: [],
     currentMap: '',
@@ -49,6 +57,13 @@ export default new Vuex.Store({
     },
     setLoaderText(state, payload) {
       state.ui.loaderText = payload;
+    },
+    showToast(state, message: string) {
+      state.ui.toast.message = message;
+      state.ui.toast.show = true;
+    },
+    hideToast(state) {
+      state.ui.toast.show = false;
     },
     updateMaps(state, payload) {
       state.maps = payload;
@@ -82,22 +97,19 @@ export default new Vuex.Store({
     resetState({ commit }) {
       commit('resetState');
     },
-    setLoader({ commit }, payload) {
-      commit('setLoader', payload);
-      return true;
+    showToast({ commit }, message: string) {
+      commit('showToast', message);
     },
-    setLoaderText({ commit }, payload) {
-      commit('setLoaderText', payload);
-      return true;
+    hideToast({ commit }) {
+      commit('hideToast');
     },
-    async updateMaps({ commit }) {
+    async updateMaps({ commit, dispatch }) {
       try {
         const maps = await APIService.getAllMaps();
         commit('updateMaps', maps);
-        commit('setCurrentMap', maps[0]._id);
-        console.log(maps[0]);
+        await dispatch('updateCurrentMap', maps[0]._id);
       } catch (error) {
-        console.error(error);
+        dispatch('showToast', error);
       }
     },
     updateCurrentMap({ commit, dispatch }, payload) {
@@ -111,7 +123,7 @@ export default new Vuex.Store({
         commit('setCurrentStrats', strats);
         await dispatch('updateStepsOfCurrentStrats');
       } catch (error) {
-        console.error(error);
+        //
       }
     },
     async updateStepsOfCurrentStrats({ commit }) {
@@ -120,7 +132,7 @@ export default new Vuex.Store({
           const steps = await APIService.getStepsOfStrat(strat._id);
           commit('setStepsOfStrat', { strat, steps });
         } catch (error) {
-          console.error(error);
+          //
         }
       });
     },
@@ -129,7 +141,7 @@ export default new Vuex.Store({
         const res = await APIService.deleteStrat(payload);
         dispatch('updateCurrentStrats');
       } catch (error) {
-        console.error(error);
+        //
       }
     },
     async createStrat({ dispatch }, payload) {
@@ -142,7 +154,7 @@ export default new Vuex.Store({
           dispatch('updateCurrentStrats');
         }
       } catch (error) {
-        console.error(error);
+        //
       }
     },
     async updateStrat({ dispatch }, { stratId, changeObj }) {
@@ -150,7 +162,7 @@ export default new Vuex.Store({
         const res = await APIService.updateStrat(stratId, changeObj);
         dispatch('updateCurrentStrats');
       } catch (error) {
-        console.error(error);
+        //
       }
     },
     async updateStep({ dispatch }, { stepId, changeObj }) {
@@ -158,7 +170,7 @@ export default new Vuex.Store({
         const res = await APIService.updateStep(stepId, changeObj);
         dispatch('updateStepsOfCurrentStrats');
       } catch (error) {
-        console.error(error);
+        //
       }
     },
     async addStep({ dispatch, state }, { stratId, payload }) {
@@ -170,7 +182,7 @@ export default new Vuex.Store({
         );
         dispatch('updateStepsOfCurrentStrats');
       } catch (error) {
-        console.error(error);
+        dispatch('showToast', error);
       }
     },
     async updateProfile({ commit }) {
@@ -184,7 +196,6 @@ export default new Vuex.Store({
           throw new Error('Could not update Profile');
         }
       } catch (error) {
-        console.error(error);
         throw new Error(error);
       }
     },
@@ -194,7 +205,6 @@ export default new Vuex.Store({
           const teamInfo = await APIService.getTeamOfPlayer(
             (state.profile as Player)._id
           );
-          console.log(teamInfo);
           commit('setTeamInfo', teamInfo);
           await dispatch('updateTeamMembers');
           return teamInfo;
@@ -204,7 +214,6 @@ export default new Vuex.Store({
           );
         }
       } catch (error) {
-        console.error(error);
         throw new Error(error);
       }
     },
@@ -214,55 +223,44 @@ export default new Vuex.Store({
           const members = await APIService.getMembersOfTeam(
             (state.teamInfo as Team)._id
           );
-          console.log(members);
           commit('setTeamMembers', members);
           return members;
         } else {
           throw new Error('Cannot retrieve members because team is not set.');
         }
       } catch (error) {
-        console.error(error);
         throw new Error(error);
       }
     },
     async loginUser({ commit, dispatch }, { email, password }) {
       try {
         const res = await authService.login(email, password);
-        if (res.error) {
-          return { error: res.error };
-        } else if (res.token) {
+        if (res.token) {
           commit('setToken', res.token);
           dispatch('updateProfile');
-
           return { success: 'Logged in successfully.' };
         }
       } catch (error) {
-        console.error(error);
+        return { error: error };
       }
     },
     async registerUser({ commit }, formData) {
       try {
         const res = await authService.register(formData);
-        console.log(res);
-        if (res.error) {
-          return { error: res.error };
-        } else if (res.user) {
+        if (res.user) {
           return {
             success:
               'Registered successfully. A confirmation email has been sent.',
           };
         }
       } catch (error) {
-        console.error(error);
+        return { error: error };
       }
     },
     async createTeam({ commit, dispatch }, formData) {
       try {
         const res = await APIService.createTeam(formData);
-        if (res.error) {
-          return { error: res.error };
-        } else if (res.team) {
-          console.log(res.team);
+        if (res.team) {
           await dispatch('updatePlayer', res.team._id);
           return {
             success:
@@ -270,43 +268,35 @@ export default new Vuex.Store({
           };
         }
       } catch (error) {
-        console.error(error);
+        return { error: error };
       }
     },
     async joinTeam({ commit, dispatch }, code: string) {
       try {
         const res = await APIService.joinTeam(code);
-        if (res.error) {
-          return { error: res.error };
-        } else {
-          return {
-            success: 'Successfully joined team.',
-          };
-        }
+        return {
+          success: 'Successfully joined team.',
+        };
       } catch (error) {
-        console.error(error);
+        return { error: error };
       }
     },
     async leaveTeam({ commit, dispatch }) {
       try {
         const res = await APIService.leaveTeam();
-        if (res.error) {
-          return { error: res.error };
-        } else {
-          await dispatch('updateProfile');
-          return {
-            success: 'Successfully left team.',
-          };
-        }
+
+        await dispatch('updateProfile');
+        return {
+          success: 'Successfully left team.',
+        };
       } catch (error) {
-        console.error(error);
+        return { error: error };
       }
     },
     async updatePlayer({ commit, dispatch }, teamId: string) {
       try {
         const res = await APIService.updatePlayer({ team: teamId });
       } catch (error) {
-        console.error(error);
         throw new Error(error);
       }
     },

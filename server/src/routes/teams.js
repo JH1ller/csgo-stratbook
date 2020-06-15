@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
     const teams = await Team.find();
     res.json(teams);
   } catch (error) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -64,7 +64,7 @@ router.post('/create', verifyAuth, uploadMiddleware, async (req, res) => {
     const newTeam = await team.save();
     res.status(201).json(newTeam);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -87,7 +87,7 @@ router.patch('/update', verifyAuth, getTeam, async (req, res) => {
     const updatedTeam = await res.team.save();
     res.json(updatedTeam);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -97,7 +97,7 @@ router.delete('/:team_id/delete', verifyAuth, getTeam, async (req, res) => {
     await res.team.remove();
     res.json({ message: 'Deleted team successfully' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -107,7 +107,7 @@ router.patch('/join', verifyAuth, async (req, res) => {
   const team = await Team.findOne({ code: req.body.code });
 
   if (!team) {
-    return res.status(400).json({ message: 'Wrong join code' });
+    return res.status(400).json({ error: 'Wrong join code' });
   }
 
   try {
@@ -115,7 +115,7 @@ router.patch('/join', verifyAuth, async (req, res) => {
     const updatedPlayer = await player.save();
     return res.json(updatedPlayer);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -128,7 +128,7 @@ router.patch('/leave', verifyAuth, async (req, res) => {
     const updatedPlayer = await player.save();
     return res.json(updatedPlayer);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -139,7 +139,7 @@ router.delete('/deleteAll', async (req, res) => {
     await Team.collection.dropIndexes();
     res.json({ message: 'Deleted all teams' });
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(500).json({ error: error.message });
   }
 });
 

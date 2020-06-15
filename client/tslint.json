@@ -13,6 +13,7 @@
 		"quotemark": [true, "single"],
 		"trailing-comma": false,
 		"no-console": false,
-		"max-line-length": 400
+		"max-line-length": 400,
+		"no-empty": [true, "allow-empty-catch"]
 	}
 }

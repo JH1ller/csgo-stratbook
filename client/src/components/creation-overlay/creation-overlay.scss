@@ -96,10 +96,30 @@
     }
 
     &-radio-label {
-      font-size: 0.9em;
-      font-style: italic;
-      margin-left: 4px;
+      &:not(:first-of-type) {
+        margin-left: 12px;
+      }
+      padding: 3px 5px;
+      border-radius: 4px;
+      font-variant: small-caps;
+      font-size: 1.1em;
+      transform: scaleY(0.8);
       cursor: pointer;
+      background-color: rgba($color--grey, 0.5);
+      transition: background-color 0.3s ease;
+      text-align: center;
+      min-width: 68px;
+      font-family: $font_fjallaone-regular;
+
+      &[for='BUYROUND'].-selected {
+        background-color: $color--blue;
+      }
+      &[for='PISTOL'].-selected {
+        background-color: $color--yellow;
+      }
+      &[for='FORCE'].-selected {
+        background-color: $color--red;
+      }
     }
 
     &-radio-wrapper {
@@ -121,6 +141,7 @@
       &:not(:first-of-type) {
         margin-left: 12px;
       }
+      display: none;
     }
   }
 }

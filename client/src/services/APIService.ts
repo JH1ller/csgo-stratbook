@@ -41,8 +41,8 @@ class APIService {
       });
       return res.data;
     } catch (error) {
-      console.error(error);
-      throw new Error(error);
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 
@@ -51,7 +51,8 @@ class APIService {
     try {
       return await axios.post(target, map);
     } catch (error) {
-      console.error(error);
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 
@@ -77,7 +78,8 @@ class APIService {
       const data = res.data;
       return data;
     } catch (error) {
-      console.error(error);
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 
@@ -96,7 +98,8 @@ class APIService {
       const data = res.data;
       return data;
     } catch (error) {
-      console.error(error);
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 
@@ -114,7 +117,8 @@ class APIService {
         },
       });
     } catch (error) {
-      console.error(error);
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 
@@ -133,7 +137,8 @@ class APIService {
       const data = res.data;
       return data;
     } catch (error) {
-      console.error(error);
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 
@@ -158,7 +163,8 @@ class APIService {
       });
       return res.data;
     } catch (error) {
-      console.error(error);
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 
@@ -176,7 +182,8 @@ class APIService {
       });
       return res.data;
     } catch (error) {
-      console.error(error);
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 
@@ -194,7 +201,8 @@ class APIService {
       });
       return res.data;
     } catch (error) {
-      console.error(error);
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 
@@ -216,8 +224,8 @@ class APIService {
       const data = res.data;
       return data;
     } catch (error) {
-      console.error(error);
-      throw new Error(error);
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 
@@ -235,8 +243,8 @@ class APIService {
       console.log(res.data);
       return res.data;
     } catch (error) {
-      console.error(error);
-      throw new Error(error);
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 
@@ -257,8 +265,8 @@ class APIService {
       });
       return { team: res.data };
     } catch (error) {
-      console.error(error);
-      return { error: error.response.data.error };
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 
@@ -280,8 +288,8 @@ class APIService {
       );
       return { team: res.data };
     } catch (error) {
-      console.error(error);
-      return { error: error.response.data.error };
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 
@@ -302,8 +310,8 @@ class APIService {
       );
       return { team: res.data };
     } catch (error) {
-      console.error(error);
-      return { error: error.response.data.error };
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 
@@ -321,8 +329,8 @@ class APIService {
       const data = res.data;
       return data;
     } catch (error) {
-      console.error(error);
-      throw new Error(error);
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 
@@ -340,8 +348,8 @@ class APIService {
       const data = res.data;
       return data;
     } catch (error) {
-      console.error(error);
-      throw new Error(error);
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 }

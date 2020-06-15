@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
 
     res.json(steps);
   } catch (error) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -35,7 +35,7 @@ router.post('/create', async (req, res) => {
     const newStep = await step.save();
     res.status(201).json(newStep);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -60,7 +60,7 @@ router.patch('/:step_id/update', getStep, async (req, res) => {
     const updatedStep = await res.step.save();
     res.json(updatedStep);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -70,7 +70,7 @@ router.delete('/:step_id/delete', getStep, async (req, res) => {
     await res.step.remove();
     res.json({ message: 'Deleted step successfully' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -81,7 +81,7 @@ router.delete('/deleteAll', async (req, res) => {
     await Step.collection.dropIndexes();
     res.json({ message: 'Deleted all steps' });
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(500).json({ error: error.message });
   }
 });
 

@@ -38,16 +38,22 @@ export default class TeamInfo extends Vue {
 
   private copyCode() {
     navigator.clipboard.writeText(this.teamInfo.code.toUpperCase());
+    this.$store.dispatch('showToast', 'Join code copied');
   }
 
   private copyServer() {
     navigator.clipboard.writeText(this.connectionString);
+    this.$store.dispatch('showToast', 'Connection string copied');
   }
 
   private runServer() {
     const currentWindow = remote.getCurrentWindow();
     currentWindow.loadURL(
       `steam://connect/${this.teamInfo.server?.ip}/${this.teamInfo.server?.password}`
+    );
+    this.$store.dispatch(
+      'showToast',
+      `Launching game and connecting to ${this.teamInfo.server?.ip}`
     );
   }
 

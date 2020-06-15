@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
     const players = await Player.find();
     res.json(players);
   } catch (error) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -49,7 +49,7 @@ router.patch('/update', verifyAuth, getPlayer, async (req, res) => {
     const updatedPlayer = await res.player.save();
     res.json(updatedPlayer);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -59,7 +59,7 @@ router.delete('/:player_id/delete', verifyAuth, getPlayer, async (req, res) => {
     await res.player.remove();
     res.json({ message: 'Deleted player successfully' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -84,7 +84,7 @@ router.delete('/deleteAll', async (req, res) => {
     await Player.collection.dropIndexes();
     res.json({ message: 'Deleted all players' });
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(500).json({ error: error });
   }
 });
 

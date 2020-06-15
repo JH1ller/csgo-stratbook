@@ -67,7 +67,7 @@ export default class StepItem extends Vue implements IStepItem {
 
   // TODO: refactor this mess
   private toggleEquip(type: string) {
-    if (!this.editMode) return;
+    if (!this.editMode && !this.addMode) return;
     if (type === 'flashbangTwo' && this.equipmentCopy) {
       if (this.equipmentCopy.flashbangTwo === false) {
         if (this.equipmentCopy.flashbang === false) {
@@ -92,7 +92,7 @@ export default class StepItem extends Vue implements IStepItem {
   }
 
   private handleClick(e: MouseEvent) {
-    if (this.addMode) {
+    if (this.addMode && !this.editMode) {
       this.enableEditMode(e);
     }
   }

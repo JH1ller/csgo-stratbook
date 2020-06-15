@@ -48,7 +48,8 @@ class AuthService {
       this.saveTokenToStorage();
       return { token: res.data };
     } catch (error) {
-      return { error: error.response.data.error };
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
     }
   }
 

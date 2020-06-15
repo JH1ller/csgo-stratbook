@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <loader></loader>
+    <toast />
     <view-title ref="ViewTitle"></view-title>
     <main-menu />
     <transition name="fade" mode="out-in">
@@ -13,6 +13,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import ViewTitle from '@/components/view-title/view-title.vue';
 import Loader from '@/components/loader/loader.vue';
+import Toast from '@/components/toast/toast.vue';
 import MainMenu from '@/components/menus/main-menu/main-menu.vue';
 
 @Component({
@@ -20,6 +21,7 @@ import MainMenu from '@/components/menus/main-menu/main-menu.vue';
     ViewTitle,
     Loader,
     MainMenu,
+    Toast,
   },
 })
 export default class App extends Vue {}

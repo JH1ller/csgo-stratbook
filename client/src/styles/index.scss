@@ -20,7 +20,7 @@ svg:not(:root) {
 html,
 body {
   height: 100%;
-  overflow: hidden;
+  overflow: overlay;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
@@ -37,4 +37,21 @@ span {
     background-color: $color--navyblue-80;
     color: white;
   }
+}
+
+img {
+  user-select: none;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba($color--navyblue, 0.6);
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
 }
