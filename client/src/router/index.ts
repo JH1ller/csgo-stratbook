@@ -5,15 +5,11 @@ import LoginView from '../views/LoginView/LoginView.vue';
 import RegisterView from '../views/RegisterView/RegisterView.vue';
 import TeamView from '../views/TeamView/TeamView.vue';
 import ProfileView from '@/views/ProfileView/ProfileView.vue';
-import Map from '../views/Map.vue';
 import {
   stratsResolver,
   profileResolver,
   teamResolver,
 } from '@/resolvers/index';
-import AuthService from '@/services/AuthService';
-
-const authService = AuthService.getInstance();
 
 Vue.use(VueRouter);
 

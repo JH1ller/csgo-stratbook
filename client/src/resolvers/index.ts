@@ -1,6 +1,5 @@
 import { Route } from 'vue-router';
 import store from '@/store/index';
-import APIService from '@/services/APIService';
 
 export const stratsResolver = async (to: Route, from: Route, next: any) => {
   try {
@@ -11,8 +10,7 @@ export const stratsResolver = async (to: Route, from: Route, next: any) => {
       next();
     }
   } catch (error) {
-    console.log(error);
-    throw new Error(error);
+    console.log(error.message);
   }
 };
 
@@ -27,8 +25,7 @@ export const profileResolver = async (to: Route, from: Route, next: any) => {
     }
   } catch (error) {
     if (to.name !== 'Login') next({ name: 'Login' });
-    console.log(error);
-    throw new Error(error);
+    console.log(error.message);
   }
 };
 
@@ -51,7 +48,6 @@ export const teamResolver = async (to: Route, from: Route, next: any) => {
       await store.dispatch('showToast', 'You need to login first.');
       next({ name: 'Login' });
     }
-    console.log(error);
-    throw new Error(error);
+    console.log(error.message);
   }
 };

@@ -94,6 +94,9 @@ export default new Vuex.Store({
     setTeamMembers(state, members: Player[]) {
       state.teamMembers = members;
     },
+    setStatus(state, status: Status) {
+      state.status = status;
+    },
   },
   actions: {
     resetState({ commit }) {
@@ -191,6 +194,10 @@ export default new Vuex.Store({
         const profile = await authService.updatePlayerInfo();
         if (profile) {
           commit('setProfile', profile);
+          commit(
+            'setStatus',
+            profile.team ? Status.LOGGED_IN_WITH_TEAM : Status.LOGGED_IN_NO_TEAM
+          );
           return profile;
         } else {
           throw new Error('Could not update Profile');
