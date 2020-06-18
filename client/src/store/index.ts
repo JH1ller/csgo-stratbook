@@ -255,6 +255,7 @@ export default new Vuex.Store({
     async logoutUser({ commit, dispatch }) {
       commit('resetState');
       authService.clear();
+      commit('setStatus', Status.NO_AUTH);
       await dispatch('showToast', 'Logged out successfully');
       return true;
     },
@@ -312,6 +313,7 @@ export default new Vuex.Store({
     async updatePlayer({ commit, dispatch }, teamId: string) {
       try {
         const res = await APIService.updatePlayer({ team: teamId });
+        await dispatch('updateProfile');
       } catch (error) {
         throw new Error(error);
       }
