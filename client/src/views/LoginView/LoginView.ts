@@ -22,7 +22,7 @@ export default class LoginView extends Vue {
       this.loginForm.updateFormMessage(res.success, 'success');
       setTimeout(() => {
         this.loginForm.updateFormMessage(null, null);
-        this.$router.push({ name: 'Strats' });
+        this.$router.push({ name: 'Strats', query: { toast: 'false' } });
       }, 3000);
     }
   }

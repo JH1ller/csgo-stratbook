@@ -67,7 +67,7 @@ export default new Vuex.Store({
     hideToast(state) {
       state.ui.toast.show = false;
     },
-    updateMaps(state, payload) {
+    setMaps(state, payload) {
       state.maps = payload;
     },
     setCurrentMap(state, payload) {
@@ -111,7 +111,7 @@ export default new Vuex.Store({
     async updateMaps({ commit, dispatch }) {
       try {
         const maps = await APIService.getAllMaps();
-        commit('updateMaps', maps);
+        commit('setMaps', maps);
         await dispatch('updateCurrentMap', maps[0]._id);
       } catch (error) {
         await dispatch('showToast', error);
@@ -212,6 +212,7 @@ export default new Vuex.Store({
           const teamInfo = await APIService.getTeamOfPlayer(
             (state.profile as Player)._id
           );
+          commit('setStatus', Status.LOGGED_IN_WITH_TEAM);
           commit('setTeamInfo', teamInfo);
           await dispatch('updateTeamMembers');
           return teamInfo;

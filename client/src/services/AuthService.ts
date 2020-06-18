@@ -103,6 +103,8 @@ class AuthService {
         console.error(error);
         throw new Error(error);
       }
+    } else {
+      throw new Error('Could not fetch player info: No token in storage.');
     }
   }
 }
