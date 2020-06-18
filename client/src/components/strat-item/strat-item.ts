@@ -56,7 +56,7 @@ export default class StratItem extends Vue {
   }
 
   private openVideo() {
-    shell.openExternal(this.strat.videoLink);
+    shell.openExternal(this.strat.videoLink as string);
   }
 
   @Emit()

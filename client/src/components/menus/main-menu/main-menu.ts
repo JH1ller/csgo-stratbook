@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 const remote = require('electron').remote;
 import AuthService from '@/services/AuthService';
 import { Player } from '@/services/models';
+import { BrowserWindow } from 'electron';
 
 config.autoAddCss = false;
 library.add(faTools, faUtensils, faBoxes, faUsers, faChess);
@@ -41,11 +42,11 @@ export default class MainMenu extends Vue {
   ];
 
   private async mounted() {
-    const win = remote.getCurrentWindow();
+    const win: BrowserWindow = remote.getCurrentWindow();
     // win?.setMinimumSize(660, this.calculateMinHeight());
     document.addEventListener('keydown', e => {
       if (e.key === 'd' && e.ctrlKey) {
-        win.openDevTools();
+        win.webContents.openDevTools();
       }
     });
   }
