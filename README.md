@@ -6,7 +6,7 @@ Vue-Electron-Typescript application to manage strategies in Valve's popular comp
 
 ![node](https://img.shields.io/badge/node-12.16.1-blue.svg)
 ![npm](https://img.shields.io/badge/npm-6.13.4-blue.svg)
-![electron](https://img.shields.io/badge/electron-6.0.0-blue.svg)
+![electron](https://img.shields.io/badge/electron-8.3.2-blue.svg)
 ![vue](https://img.shields.io/badge/vue-2.6.11-green.svg)
 ![cli](https://img.shields.io/badge/vue_cli-4.2.3-green.svg)
 ![vuex](https://img.shields.io/badge/vuex-3.1.3-green.svg)
