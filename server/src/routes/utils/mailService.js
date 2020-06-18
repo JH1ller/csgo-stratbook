@@ -1,4 +1,6 @@
 const nodemailer = require('nodemailer');
+const Email = require('email-templates');
+const path = require('path');
 
 console.log(process.env.NODE_ENV);
 
@@ -15,23 +17,42 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendMail = async (to, token) => {
+const email = new Email({
+  message: {
+    from: 'CS Stratbook <csstratbook@jhiller.me>',
+  },
+  send: true,
+  transport: transporter,
+  juice: true,
+  juiceResources: {
+    webResources: {
+      relativeTo: path.join(__dirname, 'templates', 'css'),
+    },
+  },
+});
+
+const sendMail = async (to, token, name) => {
   const link =
     process.env.NODE_ENV === 'development'
       ? `http://localhost:3000/auth/confirmation/${token}`
       : `https://csgo-stratbook.herokuapp.com/auth/confirmation/${token}`;
-
   try {
-    const mail = await transporter.sendMail({
-      from: 'CS Stratbook <csstratbook@jhiller.me>',
-      to: to,
-      subject: 'Confirm your Email for CS Stratbook',
-      text: `Click the following link to verify your email: ${link}`,
-      html: `<b>Click the following link to verify your email:</b> <a href="${link}">${link}</a>`,
+    const res = await email.send({
+      template: path.join(__dirname, 'templates', 'verify'),
+      message: {
+        to,
+      },
+      locals: {
+        name,
+        link,
+      },
     });
-    console.log('Email sent: ', mail.messageId);
+    console.log(
+      'Successfully sent verification mail with id: ' + res.messageId
+    );
   } catch (error) {
     console.log(error);
+    throw new Error(error);
   }
 };
 

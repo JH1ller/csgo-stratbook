@@ -79,3 +79,9 @@ export interface Team {
     password?: string;
   };
 }
+
+export enum Status {
+  NO_AUTH = 'NO_AUTH',
+  LOGGED_IN_NO_TEAM = 'LOGGED_IN_NO_TEAM',
+  LOGGED_IN_WITH_TEAM = 'LOGGED_IN_WITH_TEAM',
+}

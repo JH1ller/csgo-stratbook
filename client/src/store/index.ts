@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { Map, Strat, Step, Player, Team } from '@/services/models';
+import { Map, Strat, Step, Player, Team, Status } from '@/services/models';
 import APIService from '@/services/APIService';
 import AuthService from '@/services/AuthService';
 
@@ -15,6 +15,7 @@ export interface AppState {
       message: string;
     };
   };
+  status: Status;
   maps: Map[];
   currentMap: string;
   currentStrats: Strat[];
@@ -34,6 +35,7 @@ const getInitialState = (): AppState => {
         message: '',
       },
     },
+    status: Status.NO_AUTH,
     maps: [],
     currentMap: '',
     currentStrats: [],

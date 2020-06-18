@@ -38,10 +38,11 @@ router.post('/register', uploadMiddleware, async (req, res) => {
 
     const token = jwt.sign({ _id: newUser._id }, process.env.EMAIL_SECRET);
 
-    sendMail(newUser.email, token);
+    sendMail(newUser.email, token, newUser.name);
 
     res.send({ user: user._id });
   } catch (error) {
+    console.log(error);
     res.status(400).send({ error: error });
   }
 });
