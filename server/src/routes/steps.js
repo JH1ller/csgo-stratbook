@@ -71,7 +71,7 @@ router.patch('/:step_id/update', getStep, async (req, res) => {
 });
 
 // * Delete One
-router.delete('/:step_id/delete', getStep, async (req, res) => {
+router.delete('/:step_id/delete', verifyAuth, getStep, async (req, res) => {
   try {
     await res.step.remove();
     res.json({ message: 'Deleted step successfully' });

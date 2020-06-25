@@ -72,4 +72,8 @@ export default class StratsView extends Vue {
   private addStep(payload: {}) {
     this.$store.dispatch('addStep', payload);
   }
+
+  private deleteStep(stepId: string) {
+    this.$store.dispatch('deleteStep', stepId);
+  }
 }

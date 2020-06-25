@@ -145,6 +145,7 @@ export default new Vuex.Store({
       try {
         const res = await APIService.deleteStrat(payload);
         await dispatch('updateCurrentStrats');
+        await dispatch('showToast', 'Deleted strat');
       } catch (error) {
         dispatch('showToast', error);
       }
@@ -180,11 +181,20 @@ export default new Vuex.Store({
         await dispatch('showToast', error);
       }
     },
-    async addStep({ dispatch, state }, payload) {
+    async addStep({ dispatch }, payload) {
       try {
         const res = await APIService.addStep(payload);
         await dispatch('updateStepsOfCurrentStrats');
         await dispatch('showToast', 'Added step');
+      } catch (error) {
+        await dispatch('showToast', error);
+      }
+    },
+    async deleteStep({ dispatch }, stepId: string) {
+      try {
+        const res = await APIService.deleteStep(stepId);
+        await dispatch('updateStepsOfCurrentStrats');
+        await dispatch('showToast', 'Deleted step');
       } catch (error) {
         await dispatch('showToast', error);
       }
@@ -313,7 +323,6 @@ export default new Vuex.Store({
     async updatePlayer({ commit, dispatch }, teamId: string) {
       try {
         const res = await APIService.updatePlayer({ team: teamId });
-        await dispatch('updateProfile');
       } catch (error) {
         throw new Error(error);
       }

@@ -3,11 +3,11 @@
     <div class="team-info__container">
       <div class="team-info__left-wrapper">
         <h2 class="team-info__title">{{teamInfo.name}}</h2>
-        <p class="team-info__website">{{teamInfo.website}}</p>
+        <p v-if="teamInfo.website" class="team-info__website">{{teamInfo.website}}</p>
         <div class="team-info__server-wrapper">
           <div
             class="team-info__server-copy"
-            v-if="teamInfo.server"
+            v-if="teamInfo.server.ip"
             @click="copyServer"
             data-tooltip="Copy server connection string"
           >
@@ -15,7 +15,7 @@
           </div>
           <div
             class="team-info__server-run"
-            v-if="teamInfo.server"
+            v-if="teamInfo.server.ip"
             @click="runServer"
             data-tooltip="Run game and join server"
           >

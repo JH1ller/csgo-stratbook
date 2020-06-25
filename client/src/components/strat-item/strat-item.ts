@@ -41,13 +41,12 @@ export default class StratItem extends Vue {
     this.addStepElement.cancelEdit();
   }
 
-  @Emit()
   private deleteClicked() {
     if (!this.inDeletionQuestion) {
       this.inDeletionQuestion = true;
     } else {
       this.inDeletionQuestion = false;
-      return this.strat._id;
+      this.$emit('delete-clicked', this.strat._id);
     }
   }
 
@@ -77,5 +76,10 @@ export default class StratItem extends Vue {
   @Emit()
   private addStep(payload: any) {
     return { ...payload, strat: this.strat._id };
+  }
+
+  @Emit()
+  private deleteStep(stepId: string) {
+    return stepId;
   }
 }

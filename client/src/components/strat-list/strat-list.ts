@@ -42,4 +42,10 @@ export default class StratList extends Vue {
   private editStrat(strat: Strat) {
     return strat;
   }
+
+  // Emitted through from strat-item
+  @Emit()
+  private deleteStep(stepId: string) {
+    return stepId;
+  }
 }

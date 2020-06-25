@@ -31,6 +31,17 @@ h1 {
     text-align: center;
 }
 
+.link,
+.link-info {
+    color: white;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.link-info {
+    margin-top: 64px;
+}
+
 
 /* margin: 0 auto; and flex-box both dont seem to work in email templates */
 a {

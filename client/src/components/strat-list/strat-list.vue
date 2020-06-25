@@ -11,6 +11,7 @@
           @update-step="updateStep"
           @edit-strat="editStrat"
           @add-step="addStep"
+          @delete-step="deleteStep"
         />
       </transition-group>
     </div>

@@ -1,4 +1,6 @@
 .step-item {
+  display: flex;
+  align-items: center;
   &:not(:first-of-type) {
     margin-top: 4px;
   }
@@ -51,6 +53,28 @@
     &.-active {
       opacity: 0.8;
     }
+  }
+
+  &__btn-delete {
+    @include tooltip;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    padding: 4px;
+    transition: color 0.3s ease;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $color--navyblue-80;
+    &:hover {
+      color: lighten($color--navyblue-80, 15%);
+    }
+  }
+
+  &__icon {
+    width: 18px;
+    height: 18px;
   }
 }
 

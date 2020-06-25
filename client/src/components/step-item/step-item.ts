@@ -1,4 +1,4 @@
-import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
+import { Component, Prop, Vue, Emit, Watch, Ref } from 'vue-property-decorator';
 import { Map, Strat, Step, Player, Sides, Equipment } from '@/services/models';
 import { State } from 'vuex-class';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
@@ -121,6 +121,12 @@ export default class StepItem extends Vue implements IStepItem {
     e.stopPropagation();
     this.$emit('edit-enabled');
     this.editMode = true;
+  }
+
+  @Emit()
+  private deleteStep() {
+    this.$emit('edit-enabled');
+    return this.step?._id;
   }
 
   private handleKeyDown(e: KeyboardEvent) {

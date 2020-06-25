@@ -50,6 +50,7 @@
             :key="'step' + index"
             @edit-enabled="handleStepEditEnabled"
             @update-step="updateStep"
+            @delete-step="deleteStep"
             ref="step-elements"
           />
         </div>

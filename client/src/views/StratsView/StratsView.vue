@@ -7,6 +7,7 @@
       @toggle-active="toggleStratActive"
       @update-step="updateStep"
       @add-step="addStep"
+      @delete-step="deleteStep"
     />
     <transition name="fade">
       <floating-add @on-click="showCreationOverlay" v-if="currentMap" />

@@ -61,6 +61,14 @@
         />
       </div>
     </div>
+    <div
+      class="step-item__btn-delete"
+      v-if="editMode && !addMode"
+      data-tooltip="Delete step"
+      @click="deleteStep"
+    >
+      <font-awesome-icon class="step-item__icon" icon="trash-alt" />
+    </div>
   </div>
 </template>
 

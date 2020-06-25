@@ -210,6 +210,24 @@ class APIService {
     }
   }
 
+  static async deleteStep(stepId: string) {
+    const target = urljoin(url, Endpoints.STEPS, stepId, Actions.DELETE);
+    const authService = AuthService.getInstance();
+    const token = authService.getToken();
+    if (!token) throw 'User not logged in.';
+    try {
+      const res = await axios.delete(target, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      return res.data;
+    } catch (error) {
+      console.error(error.response.data.error);
+      throw new Error(error.response.data.error);
+    }
+  }
+
   /**
    * * Players
    */
