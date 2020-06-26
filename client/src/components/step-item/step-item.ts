@@ -20,7 +20,7 @@ export interface IStepItem {
   },
 })
 export default class StepItem extends Vue implements IStepItem {
-  @State('teamMembers') teamMembers!: Player[];
+  @State teamMembers!: Player[];
   @Prop({ default: null }) private step!: Step | null;
   private editMode: boolean = false;
   @Prop({ default: false }) addMode!: boolean;

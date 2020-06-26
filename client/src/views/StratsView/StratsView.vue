@@ -1,6 +1,7 @@
 <template>
   <div class="view-wrapper">
     <map-picker @map-clicked="updateCurrentMap" />
+    <filter-menu />
     <strat-list
       @delete-clicked="deleteStrat"
       @edit-strat="showCreationOverlay"

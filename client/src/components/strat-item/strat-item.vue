@@ -1,8 +1,8 @@
 <template>
   <div class="strat-item">
-    <div class="strat-item__container" :class="{'-inactive': !isActive()}" @dblclick="toggleActive">
+    <div class="strat-item__container" :class="{'-inactive': !isActive}" @dblclick="toggleActive">
       <img
-        v-if="isCtSide()"
+        v-if="isCtSide"
         src="@/assets/icons/ct_badge.png"
         class="strat-item__side-badge"
         draggable="false"
@@ -45,7 +45,7 @@
         </div>
         <div class="strat-item__field" v-if="strat.steps">
           <step-item
-            v-for="(step, index) in strat.steps"
+            v-for="(step, index) in filteredSteps"
             :step="step"
             :key="'step' + index"
             @edit-enabled="handleStepEditEnabled"

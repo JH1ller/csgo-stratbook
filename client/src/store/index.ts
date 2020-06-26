@@ -1,6 +1,15 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { Map, Strat, Step, Player, Team, Status } from '@/services/models';
+import {
+  Map,
+  Strat,
+  Step,
+  Player,
+  Team,
+  Status,
+  Sides,
+  StratTypes,
+} from '@/services/models';
 import APIService from '@/services/APIService';
 import AuthService from '@/services/AuthService';
 
@@ -23,6 +32,11 @@ export interface AppState {
   profile: Player | {};
   teamInfo: Team | {};
   teamMembers: Player[];
+  filters: {
+    player: string;
+    side: Sides | null;
+    type: StratTypes | null;
+  };
 }
 
 const getInitialState = (): AppState => {
@@ -43,6 +57,11 @@ const getInitialState = (): AppState => {
     profile: {},
     teamInfo: {},
     teamMembers: [],
+    filters: {
+      player: '',
+      side: null,
+      type: null,
+    },
   };
 };
 

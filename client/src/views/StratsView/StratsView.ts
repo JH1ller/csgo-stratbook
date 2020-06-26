@@ -4,6 +4,7 @@ import MapPicker from '@/components/map-picker/map-picker.vue';
 import StratList from '@/components/strat-list/strat-list.vue';
 import FloatingAdd from '@/components/floating-add/floating-add.vue';
 import CreationOverlay from '@/components/creation-overlay/creation-overlay.vue';
+import FilterMenu from '@/components/filter-menu/filter-menu.vue';
 import { Equipment, Strat } from '@/services/models';
 
 @Component({
@@ -13,6 +14,7 @@ import { Equipment, Strat } from '@/services/models';
     StratList,
     FloatingAdd,
     CreationOverlay,
+    FilterMenu
   },
   computed: mapState(['currentMap', 'currentStrats']),
 })

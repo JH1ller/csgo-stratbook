@@ -2,7 +2,7 @@
   <div class="main-menu">
     <ul class="main-menu__list">
       <router-link to="/" class="main-menu__list-item logo">
-        <img src="@/assets/icons/logo_white.png" class="main-menu__list-item-icon -logo" />
+        <img src="@/assets/icons/logo_white_small.png" class="main-menu__list-item-icon -logo" />
         <span class="main-menu__list-item-label -logo">{{ appName }}</span>
       </router-link>
 

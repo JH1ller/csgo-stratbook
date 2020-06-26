@@ -1,0 +1,74 @@
+.filter-menu {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: calc(100% - 70px);
+  z-index: 5;
+  pointer-events: none;
+
+  &__container {
+    position: relative;
+    pointer-events: all;
+    height: 200px;
+    display: flex;
+    background: white;
+    box-shadow: $shadow-subtle;
+    padding: 20px;
+    border-radius: 10px;
+    flex-wrap: wrap;
+    //transform: translateY(200px);
+    transform: translateY(0);
+    transition: transform 0.5s ease;
+    z-index: 1;
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.5);
+    &:hover {
+      transform: translateY(0);
+    }
+
+    &::before {
+      content: 'Filters';
+      height: 30px;
+      position: relative;
+      left: 50%;
+      top: -50px;
+      transform: translateX(-50%);
+      width: fit-content;
+      color: $color--dark;
+      padding: 5px 60px 5px 30px;
+      font-size: 14px;
+      font-weight: bold;
+      z-index: -1;
+      background: $color--light-active;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    &::after {
+      height: 100%;
+      width: 100%;
+      display: block;
+      background: white;
+      position: absolute;
+      top: -0;
+      left: 0;
+      content: '';
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+  }
+
+  &__icon-filter {
+    position: absolute;
+    left: calc(50% + 25px);
+    top: -21px;
+    color: lighten($color--dark, 30%);
+    z-index: 7;
+    width: 14px;
+    height: 14px;
+  }
+
+  &__filter-player {
+    z-index: 6;
+  }
+}

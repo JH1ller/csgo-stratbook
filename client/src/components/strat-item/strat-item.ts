@@ -1,6 +1,7 @@
 import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 const { shell } = require('electron').remote;
-import { Map, Strat, Step, Player, Sides } from '@/services/models';
+import { Map, Strat, Step, Player, Sides, StratTypes } from '@/services/models';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
 import {
   faEdit,
@@ -23,15 +24,30 @@ export default class StratItem extends Vue {
   @Prop() private strat!: Strat;
   @Ref('step-elements') stepElements!: IStepItem[];
   @Ref('add-step') addStepElement!: IStepItem;
+  @State filters!: {
+    player: string;
+    side: Sides | null;
+    type: StratTypes | null;
+  };
 
   private inDeletionQuestion: boolean = false;
 
-  private isCtSide(): boolean {
+  private get isCtSide(): boolean {
     return this.strat.side === Sides.CT;
   }
 
-  private isActive(): boolean {
+  private get isActive(): boolean {
     return this.strat.active;
+  }
+
+  private get filteredSteps() {
+    return this.strat.steps
+      ? this.strat.steps.filter(step => {
+          return this.filters.player
+            ? step.actor === this.filters.player
+            : true;
+        })
+      : [];
   }
 
   private handleStepEditEnabled() {

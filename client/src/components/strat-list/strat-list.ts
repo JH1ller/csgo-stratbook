@@ -1,17 +1,31 @@
 import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
-import { mapState } from 'vuex';
-const { remote } = require('electron');
-import { Map, Strat, Step, Player } from '@/services/models';
+import { State } from 'vuex-class';
+
+import { Map, Strat, Sides, StratTypes } from '@/services/models';
 import StratItem from '@/components/strat-item/strat-item.vue';
 
 @Component({
   components: {
     StratItem,
   },
-  computed: mapState(['currentStrats']),
 })
 export default class StratList extends Vue {
-  private currentStrats!: Strat[];
+  @State currentStrats!: Strat[];
+  @State filters!: {
+    player: string;
+    side: Sides | null;
+    type: StratTypes | null;
+  };
+
+  private get filteredStrats() {
+    return this.currentStrats
+      .filter(strat => {
+        return this.filters.side ? strat.side === this.filters.side : true;
+      })
+      .filter(strat => {
+        return this.filters.type ? strat.type === this.filters.type : true;
+      });
+  }
 
   // Emitted through from strat-item
   @Emit()
