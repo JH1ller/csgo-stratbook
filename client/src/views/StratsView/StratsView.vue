@@ -1,7 +1,12 @@
 <template>
   <div class="view-wrapper">
     <map-picker @map-clicked="updateCurrentMap" />
-    <filter-menu />
+    <filter-menu
+      @player-selected="updatePlayerFilter"
+      @type-filter-selected="updateTypeFilter"
+      @side-filter-selected="updateSideFilter"
+      @name-filter-selected="updateNameFilter"
+    />
     <strat-list
       @delete-clicked="deleteStrat"
       @edit-strat="showCreationOverlay"

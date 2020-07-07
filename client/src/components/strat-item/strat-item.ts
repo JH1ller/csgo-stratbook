@@ -25,6 +25,7 @@ export default class StratItem extends Vue {
   @Ref('step-elements') stepElements!: IStepItem[];
   @Ref('add-step') addStepElement!: IStepItem;
   @State filters!: {
+    name: string;
     player: string;
     side: Sides | null;
     type: StratTypes | null;

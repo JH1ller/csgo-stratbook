@@ -1,11 +1,11 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
-import { mapState } from 'vuex';
+import { State, Action } from 'vuex-class';
 import MapPicker from '@/components/map-picker/map-picker.vue';
 import StratList from '@/components/strat-list/strat-list.vue';
 import FloatingAdd from '@/components/floating-add/floating-add.vue';
 import CreationOverlay from '@/components/creation-overlay/creation-overlay.vue';
 import FilterMenu from '@/components/filter-menu/filter-menu.vue';
-import { Equipment, Strat } from '@/services/models';
+import { Equipment, Strat, StratTypes, Sides } from '@/services/models';
 
 @Component({
   name: 'StratsView',
@@ -14,16 +14,19 @@ import { Equipment, Strat } from '@/services/models';
     StratList,
     FloatingAdd,
     CreationOverlay,
-    FilterMenu
+    FilterMenu,
   },
-  computed: mapState(['currentMap', 'currentStrats']),
 })
 export default class StratsView extends Vue {
   private creationOverlayOpen: boolean = false;
   private creationOverlayEditMode: boolean = false;
   private editStrat: Strat | null = null;
-  private currentMap!: string;
-  private currentStrats!: Strat[];
+  @State currentMap!: string;
+  @State currentStrats!: Strat[];
+  @Action updatePlayerFilter!: (value: string) => {};
+  @Action updateTypeFilter!: (type: StratTypes | null) => {};
+  @Action updateNameFilter!: (name: string) => {};
+  @Action updateSideFilter!: (side: Sides | null) => {};
 
   private updateCurrentMap(mapId: string) {
     this.$store.dispatch('updateCurrentMap', mapId);

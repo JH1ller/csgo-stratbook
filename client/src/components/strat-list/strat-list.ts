@@ -12,6 +12,7 @@ import StratItem from '@/components/strat-item/strat-item.vue';
 export default class StratList extends Vue {
   @State currentStrats!: Strat[];
   @State filters!: {
+    name: string;
     player: string;
     side: Sides | null;
     type: StratTypes | null;
@@ -24,6 +25,11 @@ export default class StratList extends Vue {
       })
       .filter(strat => {
         return this.filters.type ? strat.type === this.filters.type : true;
+      })
+      .filter(strat => {
+        return this.filters.name
+          ? strat.name.toLowerCase().includes(this.filters.name.toLowerCase())
+          : true;
       });
   }
 

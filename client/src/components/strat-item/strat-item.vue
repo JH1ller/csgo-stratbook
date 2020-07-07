@@ -45,9 +45,9 @@
         </div>
         <div class="strat-item__field" v-if="strat.steps">
           <step-item
-            v-for="(step, index) in filteredSteps"
+            v-for="step in filteredSteps"
             :step="step"
-            :key="'step' + index"
+            :key="step._id"
             @edit-enabled="handleStepEditEnabled"
             @update-step="updateStep"
             @delete-step="deleteStep"

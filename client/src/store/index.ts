@@ -33,6 +33,7 @@ export interface AppState {
   teamInfo: Team | {};
   teamMembers: Player[];
   filters: {
+    name: string;
     player: string;
     side: Sides | null;
     type: StratTypes | null;
@@ -58,6 +59,7 @@ const getInitialState = (): AppState => {
     teamInfo: {},
     teamMembers: [],
     filters: {
+      name: '',
       player: '',
       side: null,
       type: null,
@@ -115,6 +117,18 @@ export default new Vuex.Store({
     },
     setStatus(state, status: Status) {
       state.status = status;
+    },
+    setPlayerFilter(state, value: string) {
+      state.filters.player = value;
+    },
+    setTypeFilter(state, value: StratTypes | null) {
+      state.filters.type = value;
+    },
+    setSideFilter(state, value: Sides | null) {
+      state.filters.side = value;
+    },
+    setNameFilter(state, value: string) {
+      state.filters.name = value;
     },
   },
   actions: {
@@ -345,6 +359,18 @@ export default new Vuex.Store({
       } catch (error) {
         throw new Error(error);
       }
+    },
+    updatePlayerFilter({ commit }, value: string) {
+      commit('setPlayerFilter', value);
+    },
+    updateTypeFilter({ commit }, value: StratTypes | null) {
+      commit('setTypeFilter', value);
+    },
+    updateSideFilter({ commit }, value: Sides | null) {
+      commit('setSideFilter', value);
+    },
+    updateNameFilter({ commit }, value: string) {
+      commit('setNameFilter', value);
     },
   },
   getters: {},
