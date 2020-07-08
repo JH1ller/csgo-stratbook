@@ -15,12 +15,11 @@
     box-shadow: $shadow-subtle;
     padding: 20px;
     border-radius: 10px;
-    //transform: translateY(200px);
-    transform: translateY(0);
+    transform: translateY(200px);
+    justify-content: center;
     transition: transform 0.5s ease;
     z-index: 1;
     box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.5);
-    justify-content: center;
     &:hover {
       transform: translateY(0);
     }
@@ -28,9 +27,9 @@
     &::before {
       content: 'Filters';
       height: 30px;
-      position: relative;
+      position: absolute;
       left: 50%;
-      top: -50px;
+      top: -30px;
       transform: translateX(-50%);
       color: $color--dark;
       padding: 5px 60px 5px 30px;
@@ -67,16 +66,39 @@
     height: 14px;
   }
 
+  &__btn-clear {
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 7;
+    width: 100px;
+    background-color: $color--green;
+    color: white;
+    border-radius: 4px;
+    height: 30px;
+    cursor: pointer;
+    &:hover {
+      background-color: lighten($color--green, 10%);
+    }
+  }
+
   &__filter-player {
     @include input_default;
     padding: 0;
     z-index: 6;
     max-width: 200px;
     width: 200px;
+    max-height: 35px;
+
+    & > div {
+      margin-top: 3px;
+    }
   }
 
   &__fieldset {
     min-width: 265px;
+    max-height: 135px;
     z-index: 6;
     padding: 16px;
     box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.2);

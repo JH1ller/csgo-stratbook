@@ -57,4 +57,9 @@ export default class FilterMenu extends Vue {
       this.$emit('side-filter-selected', side);
     }
   }
+
+  @Emit()
+  private clearFilters() {
+    return;
+  }
 }

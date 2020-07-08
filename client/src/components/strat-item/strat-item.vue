@@ -44,15 +44,17 @@
           <p class="strat-item__field-value">{{strat.note}}</p>
         </div>
         <div class="strat-item__field" v-if="strat.steps">
-          <step-item
-            v-for="step in filteredSteps"
-            :step="step"
-            :key="step._id"
-            @edit-enabled="handleStepEditEnabled"
-            @update-step="updateStep"
-            @delete-step="deleteStep"
-            ref="step-elements"
-          />
+          <transition-group name="fade" mode="in-out">
+            <step-item
+              v-for="step in filteredSteps"
+              :step="step"
+              :key="step._id"
+              @edit-enabled="handleStepEditEnabled"
+              @update-step="updateStep"
+              @delete-step="deleteStep"
+              ref="step-elements"
+            />
+          </transition-group>
         </div>
         <step-item
           ref="add-step"

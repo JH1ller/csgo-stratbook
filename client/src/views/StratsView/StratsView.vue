@@ -6,6 +6,7 @@
       @type-filter-selected="updateTypeFilter"
       @side-filter-selected="updateSideFilter"
       @name-filter-selected="updateNameFilter"
+      @clear-filters="clearFilters"
     />
     <strat-list
       @delete-clicked="deleteStrat"

@@ -372,6 +372,12 @@ export default new Vuex.Store({
     updateNameFilter({ commit }, value: string) {
       commit('setNameFilter', value);
     },
+    clearFilters({ commit }) {
+      commit('setNameFilter', '');
+      commit('setTypeFilter', null);
+      commit('setSideFilter', null);
+      commit('setPlayerFilter', '');
+    },
   },
   getters: {},
   modules: {},

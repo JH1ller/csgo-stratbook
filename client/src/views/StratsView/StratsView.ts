@@ -27,6 +27,7 @@ export default class StratsView extends Vue {
   @Action updateTypeFilter!: (type: StratTypes | null) => {};
   @Action updateNameFilter!: (name: string) => {};
   @Action updateSideFilter!: (side: Sides | null) => {};
+  @Action clearFilters!: () => {};
 
   private updateCurrentMap(mapId: string) {
     this.$store.dispatch('updateCurrentMap', mapId);
