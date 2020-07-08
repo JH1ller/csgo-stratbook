@@ -42,16 +42,16 @@ Vue-Electron-Typescript application to manage strategies in Valve's popular comp
 - Bcrypt
 - JWT
 
-### Goals
+### Features
 
 - [x] User authentication
-- [x] Team management
-- [x] JWT authenticated REST api
+- [x] JWT authenticated REST api to create & manage strategies
+- [x] Team creation & team profiles
+- [x] Filter strategies
+
 - [ ] Steam OAuth
-- [x] Strategy CRUD via REST
-- [ ] Filter strategies
-- [x] Deploy api to heroku
-- [ ] Switch from MongoDB to Firebase Realtime DB
+- [ ] Settings Menu
+- [ ] Player Profiles
 
 
 ### Minimum OS Version requirements
