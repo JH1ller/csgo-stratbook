@@ -3,14 +3,7 @@ const path = require('path');
 const crypto = require('crypto');
 const sharp = require('sharp');
 const fs = require('fs');
-const knox = require('knox');
 const AWS = require('aws-sdk');
-
-const awsClient = knox.createClient({
-  key: process.env.AWS_ACCESS_KEY_ID,
-  secret: process.env.AWS_SECRET_ACCESS_KEY,
-  bucket: process.env.S3_BUCKET_NAME,
-});
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
