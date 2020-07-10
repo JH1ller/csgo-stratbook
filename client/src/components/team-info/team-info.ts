@@ -20,7 +20,7 @@ export default class TeamInfo extends Vue {
     if (this.teamInfo.avatar) {
       return process.env.NODE_ENV === 'development'
         ? `http://localhost:3000/public/upload/${this.teamInfo.avatar}`
-        : `https://csgo-stratbook.herokuapp.com/public/upload/${this.teamInfo.avatar}`;
+        : `https://csgo-stratbook.s3.amazonaws.com/${this.teamInfo.avatar}`;
     } else {
       return require('@/assets/images/default.jpg');
     }
@@ -30,7 +30,7 @@ export default class TeamInfo extends Vue {
     if (url) {
       return process.env.NODE_ENV === 'development'
         ? `http://localhost:3000/public/upload/${url}`
-        : `https://csgo-stratbook.herokuapp.com/public/upload/${url}`;
+        : `https://csgo-stratbook.s3.amazonaws.com/${url}`;
     } else {
       return require('@/assets/images/default.jpg');
     }

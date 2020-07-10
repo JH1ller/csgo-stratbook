@@ -5,7 +5,7 @@ const router = express.Router();
 const Player = require('../models/player');
 const { registerValidation, loginValidation } = require('./utils/validation');
 const { sendMail } = require('./utils/mailService');
-const { uploadMiddleware } = require('./utils/fileUpload');
+const { uploadMiddleware, processImage } = require('./utils/fileUpload');
 
 /**
  * * Routes
@@ -31,7 +31,10 @@ router.post('/register', uploadMiddleware, async (req, res) => {
     password: hashedPassword,
   });
 
-  if (req.file) user.avatar = req.file.filename;
+  if (req.file) {
+    user.avatar = req.file.filename;
+    await processImage(req.file);
+  }
 
   try {
     const newUser = await user.save();

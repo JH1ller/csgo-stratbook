@@ -55,7 +55,7 @@ export default class MainMenu extends Vue {
     if (this.profile?.avatar) {
       return process.env.NODE_ENV === 'development'
         ? `http://localhost:3000/public/upload/${this.profile.avatar}`
-        : `https://csgo-stratbook.herokuapp.com/public/upload/${this.profile.avatar}`;
+        : `https://csgo-stratbook.s3.amazonaws.com/${this.profile.avatar}`;
     } else {
       return require('@/assets/images/default.jpg');
     }

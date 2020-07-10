@@ -3,6 +3,19 @@ const path = require('path');
 const crypto = require('crypto');
 const sharp = require('sharp');
 const fs = require('fs');
+const knox = require('knox');
+const AWS = require('aws-sdk');
+
+const awsClient = knox.createClient({
+  key: process.env.AWS_ACCESS_KEY_ID,
+  secret: process.env.AWS_SECRET_ACCESS_KEY,
+  bucket: process.env.S3_BUCKET_NAME,
+});
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+});
 
 const fileStorage = multer.diskStorage({
   destination: function (req, file, next) {
@@ -57,10 +70,32 @@ const processImage = async (file) => {
       path.resolve(file.destination, 'temp', file.filename),
       file.path
     );
+    console.log('attempting file upload...');
+    uploadFile(file.path, file.filename);
   } catch (error) {
     console.log(error);
   }
 };
+
+function uploadFile(filepath, filename) {
+  try {
+    const fileContent = fs.readFileSync(filepath);
+    const params = {
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: filename, // filename on S3
+      Body: fileContent,
+    };
+
+    s3.upload(params, function (err, data) {
+      if (err) {
+        throw err;
+      }
+      console.log(`File uploaded successfully. ${data.Location}`);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 module.exports.uploadMiddleware = uploadMiddleware;
 module.exports.processImage = processImage;
