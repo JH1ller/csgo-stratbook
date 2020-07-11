@@ -63,31 +63,34 @@ const processImage = async (file) => {
       path.resolve(file.destination, 'temp', file.filename),
       file.path
     );
-    console.log('attempting file upload...');
-    uploadFile(file.path, file.filename);
+    if (process.env.NODE_ENV !== 'development')
+      await uploadFile(file.path, file.filename);
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 };
 
 function uploadFile(filepath, filename) {
-  try {
-    const fileContent = fs.readFileSync(filepath);
-    const params = {
-      Bucket: process.env.S3_BUCKET_NAME,
-      Key: filename, // filename on S3
-      Body: fileContent,
-    };
+  return new Promise((resolve, reject) => {
+    try {
+      const fileContent = fs.readFileSync(filepath);
+      const params = {
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: filename, // filename on S3
+        Body: fileContent,
+      };
 
-    s3.upload(params, function (err, data) {
-      if (err) {
-        throw err;
-      }
-      console.log(`File uploaded successfully. ${data.Location}`);
-    });
-  } catch (error) {
-    console.log(error);
-  }
+      s3.upload(params, function (err, data) {
+        if (err) {
+          throw err;
+        }
+        console.log(`File uploaded successfully. ${data.Location}`);
+        resolve(data.Location);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
 }
 
 module.exports.uploadMiddleware = uploadMiddleware;

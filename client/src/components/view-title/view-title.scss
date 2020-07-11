@@ -1,20 +1,24 @@
 .view-title {
   position: fixed;
-  width: 100%;
+  width: calc(100% - 70px);
   top: 0;
   left: 70px;
   background-color: white;
   //margin-left: 70px;
   height: 50px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
-  padding-left: 30px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 
   &__text {
     font-size: 1.3em;
     font-family: 'Open Sans', sans-serif;
     font-weight: bold;
+    margin-left: 30px;
+  }
+
+  &__loader {
+    margin-right: 30px;
   }
 }

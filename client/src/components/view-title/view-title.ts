@@ -1,21 +1,21 @@
 import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
+import Loader from '@/components/loader/loader.vue';
+import { Route } from 'vue-router';
+import { State } from 'vuex-class';
+import { Team } from '@/services/models';
 
 @Component({
-    components: {
-    }
+  components: {
+    Loader,
+  },
 })
 export default class ViewTitle extends Vue {
+  @State private teamInfo!: Team;
+  @State(state => state.ui.showLoader) private showLoader!: boolean;
 
-    private title: any = 'EsportBERG'; // TODO: replace with team name
-
-    private mounted() {
-        this.title = this.$route.name;
-    }
-
-    @Watch('$route')
-    onRouteChanged(to: any, from: any) {
-        this.title = to.name;
-    }
-
-
+  private get title() {
+    return this.$route.name === 'Strats' && this.teamInfo.name
+      ? this.$route.name + ' - ' + this.teamInfo.name
+      : this.$route.name;
+  }
 }
