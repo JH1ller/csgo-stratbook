@@ -163,14 +163,23 @@ export default new Vuex.Store({
     async updateCurrentStrats({ commit, dispatch }) {
       if (!this.state.currentMap) return;
       try {
+        await dispatch('showLoader');
         const strats = await APIService.getStratsOfMap(this.state.currentMap);
-        commit('setCurrentStrats', strats);
-        await dispatch('updateStepsOfCurrentStrats');
+        const stratPromises = strats.map(async strat => {
+          const steps = await APIService.getStepsOfStrat(strat._id);
+          Vue.set(strat, 'steps', steps);
+          return strat;
+        });
+        const updatedStrats = await Promise.all(stratPromises);
+        commit('setCurrentStrats', updatedStrats);
+        dispatch('hideLoader');
       } catch (error) {
+        dispatch('hideLoader');
         dispatch('showToast', error);
       }
     },
     async updateStepsOfCurrentStrats({ commit, dispatch }) {
+      // TODO: change to updateStepsOfStrat
       this.state.currentStrats.forEach(async strat => {
         try {
           const steps = await APIService.getStepsOfStrat(strat._id);

@@ -21,20 +21,27 @@ export default class StratsView extends Vue {
   private creationOverlayOpen: boolean = false;
   private creationOverlayEditMode: boolean = false;
   private editStrat: Strat | null = null;
+  private refreshInterval!: NodeJS.Timeout;
   @State currentMap!: string;
   @State currentStrats!: Strat[];
   @Action updatePlayerFilter!: (value: string) => {};
   @Action updateTypeFilter!: (type: StratTypes | null) => {};
   @Action updateNameFilter!: (name: string) => {};
   @Action updateSideFilter!: (side: Sides | null) => {};
+  @Action updateCurrentMap!: (mapId: string) => {};
+  @Action updateCurrentStrats!: () => {};
+  @Action deleteStrat!: (stratId: string) => {};
+  @Action updateStep!: (payload: any) => {};
+  @Action addStep!: (payload: any) => {};
+  @Action deleteStep!: (stepId: string) => {};
   @Action clearFilters!: () => {};
 
-  private updateCurrentMap(mapId: string) {
-    this.$store.dispatch('updateCurrentMap', mapId);
+  private mounted() {
+    this.refreshInterval = setInterval(() => this.updateCurrentStrats(), 10000);
   }
 
-  private deleteStrat(stratId: string) {
-    this.$store.dispatch('deleteStrat', stratId);
+  private beforeDestroy() {
+    clearInterval(this.refreshInterval);
   }
 
   private creationOverlaySubmitted(data: any) {
@@ -69,17 +76,5 @@ export default class StratsView extends Vue {
     active: boolean;
   }) {
     this.$store.dispatch('updateStrat', { stratId, changeObj: { active } });
-  }
-
-  private updateStep(payload: {}) {
-    this.$store.dispatch('updateStep', payload);
-  }
-
-  private addStep(payload: {}) {
-    this.$store.dispatch('addStep', payload);
-  }
-
-  private deleteStep(stepId: string) {
-    this.$store.dispatch('deleteStep', stepId);
   }
 }

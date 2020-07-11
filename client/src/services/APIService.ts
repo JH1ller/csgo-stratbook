@@ -60,7 +60,7 @@ class APIService {
    * * STRATS
    */
 
-  static async getStratsOfMap(mapId: string) {
+  static async getStratsOfMap(mapId: string): Promise<Strat[]> {
     const target = urljoin(url, Endpoints.STRATS);
     const authService = AuthService.getInstance();
     const token = authService.getToken();
