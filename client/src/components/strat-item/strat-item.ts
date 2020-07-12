@@ -87,7 +87,7 @@ export default class StratItem extends Vue {
 
   @Emit()
   private updateStep(payload: {}) {
-    return payload;
+    return { ...payload, strat: this.strat._id };
   }
 
   @Emit()
@@ -97,6 +97,6 @@ export default class StratItem extends Vue {
 
   @Emit()
   private deleteStep(stepId: string) {
-    return stepId;
+    return { stepId, strat: this.strat._id };
   }
 }

@@ -100,10 +100,13 @@ export default new Vuex.Store({
     setToken(state, token: string) {
       state.token = token;
     },
-    setStepsOfStrat(state, { strat, steps }: { strat: Strat; steps: Step[] }) {
-      const stateObj = state.currentStrats.find(
-        targetStrat => targetStrat._id === strat._id
-      ) as Strat;
+    setStepsOfStrat(
+      state,
+      { stratID, steps }: { stratID: string; steps: Step[] }
+    ) {
+      const stateObj = state.currentStrats.find(targetStrat => {
+        return targetStrat._id === stratID;
+      }) as Strat;
       Vue.set(stateObj, 'steps', steps);
     },
     setProfile(state, profile: Player) {
@@ -149,10 +152,13 @@ export default new Vuex.Store({
     },
     async updateMaps({ commit, dispatch }) {
       try {
+        await dispatch('showLoader');
         const maps = await APIService.getAllMaps();
         commit('setMaps', maps);
         await dispatch('updateCurrentMap', maps[0]._id);
+        dispatch('hideLoader');
       } catch (error) {
+        dispatch('hideLoader');
         await dispatch('showToast', error);
       }
     },
@@ -165,29 +171,21 @@ export default new Vuex.Store({
       try {
         await dispatch('showLoader');
         const strats = await APIService.getStratsOfMap(this.state.currentMap);
-        const stratPromises = strats.map(async strat => {
-          const steps = await APIService.getStepsOfStrat(strat._id);
-          Vue.set(strat, 'steps', steps);
-          return strat;
-        });
-        const updatedStrats = await Promise.all(stratPromises);
-        commit('setCurrentStrats', updatedStrats);
+        commit('setCurrentStrats', strats);
         dispatch('hideLoader');
       } catch (error) {
         dispatch('hideLoader');
         dispatch('showToast', error);
       }
     },
-    async updateStepsOfCurrentStrats({ commit, dispatch }) {
-      // TODO: change to updateStepsOfStrat
-      this.state.currentStrats.forEach(async strat => {
-        try {
-          const steps = await APIService.getStepsOfStrat(strat._id);
-          commit('setStepsOfStrat', { strat, steps });
-        } catch (error) {
-          dispatch('showToast', error);
-        }
-      });
+    async updateStepsOfStrat({ commit, dispatch }, stratID: string) {
+      try {
+        const steps = await APIService.getStepsOfStrat(stratID);
+        console.log(steps);
+        commit('setStepsOfStrat', { stratID, steps });
+      } catch (error) {
+        dispatch('showToast', error);
+      }
     },
     async deleteStrat({ dispatch }, payload) {
       try {
@@ -233,7 +231,7 @@ export default new Vuex.Store({
       try {
         await dispatch('showLoader');
         const res = await APIService.updateStep(payload);
-        await dispatch('updateStepsOfCurrentStrats');
+        await dispatch('updateStepsOfStrat', payload.strat);
         await dispatch('showToast', 'Updated step');
         dispatch('hideLoader');
       } catch (error) {
@@ -245,7 +243,7 @@ export default new Vuex.Store({
       try {
         await dispatch('showLoader');
         const res = await APIService.addStep(payload);
-        await dispatch('updateStepsOfCurrentStrats');
+        await dispatch('updateStepsOfStrat', payload.strat);
         await dispatch('showToast', 'Added step');
         dispatch('hideLoader');
       } catch (error) {
@@ -253,11 +251,11 @@ export default new Vuex.Store({
         dispatch('hideLoader');
       }
     },
-    async deleteStep({ dispatch }, stepId: string) {
+    async deleteStep({ dispatch }, payload) {
       try {
         await dispatch('showLoader');
-        const res = await APIService.deleteStep(stepId);
-        await dispatch('updateStepsOfCurrentStrats');
+        const res = await APIService.deleteStep(payload.stepId);
+        await dispatch('updateStepsOfStrat', payload.strat);
         await dispatch('showToast', 'Deleted step');
         dispatch('hideLoader');
       } catch (error) {

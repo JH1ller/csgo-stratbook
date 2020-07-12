@@ -30,6 +30,7 @@ export default class StratsView extends Vue {
   @Action updateSideFilter!: (side: Sides | null) => {};
   @Action updateCurrentMap!: (mapId: string) => {};
   @Action updateCurrentStrats!: () => {};
+  @Action createStrat!: (payload: any) => {};
   @Action deleteStrat!: (stratId: string) => {};
   @Action updateStep!: (payload: any) => {};
   @Action addStep!: (payload: any) => {};
@@ -37,7 +38,7 @@ export default class StratsView extends Vue {
   @Action clearFilters!: () => {};
 
   private mounted() {
-    this.refreshInterval = setInterval(() => this.updateCurrentStrats(), 10000);
+    this.refreshInterval = setInterval(() => this.updateCurrentStrats(), 30000);
   }
 
   private beforeDestroy() {

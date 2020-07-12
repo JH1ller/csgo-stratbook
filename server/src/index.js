@@ -24,7 +24,7 @@ db.once('open', () => console.log('Connected to database'));
 
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 1000, // limit each IP to 100 requests per windowMs
 });
 
 /**

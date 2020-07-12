@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Strat = require('../models/strat');
+const { stepSchema: Step, equipmentSchema: Equip } = require('../models/step');
 const Player = require('../models/player');
 const { getStrat } = require('./utils/getters');
 const { verifyAuth } = require('./utils/verifyToken');
@@ -19,7 +20,23 @@ router.get('/', verifyAuth, async (req, res) => {
       ? await Strat.find({ map: req.query.map, team: player.team })
       : await Strat.find({ team: player.team });
 
-    res.json(strats);
+    const stepPromises = strats.map(async (strat) => {
+      const steps = await Step.find({ strat: strat._id });
+      return {
+        _id: strat._id,
+        name: strat.name,
+        map: strat.map,
+        side: strat.side,
+        type: strat.type,
+        active: strat.active,
+        videoLink: strat.videoLink,
+        note: strat.note,
+        steps,
+      };
+    });
+    const stratsWithSteps = await Promise.all(stepPromises);
+
+    res.json(stratsWithSteps);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
