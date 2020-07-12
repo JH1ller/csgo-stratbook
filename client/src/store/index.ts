@@ -181,7 +181,6 @@ export default new Vuex.Store({
     async updateStepsOfStrat({ commit, dispatch }, stratID: string) {
       try {
         const steps = await APIService.getStepsOfStrat(stratID);
-        console.log(steps);
         commit('setStepsOfStrat', { stratID, steps });
       } catch (error) {
         dispatch('showToast', error);
@@ -207,6 +206,7 @@ export default new Vuex.Store({
             payload,
             this.state.currentMap as string
           );
+          dispatch('showToast', 'Added strat');
           await dispatch('updateCurrentStrats');
           dispatch('hideLoader');
         }
