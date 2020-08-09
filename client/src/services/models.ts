@@ -85,3 +85,8 @@ export enum Status {
   LOGGED_IN_NO_TEAM = 'LOGGED_IN_NO_TEAM',
   LOGGED_IN_WITH_TEAM = 'LOGGED_IN_WITH_TEAM',
 }
+
+export interface Response {
+  success?: string;
+  error?: string;
+}

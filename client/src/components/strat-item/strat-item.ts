@@ -1,7 +1,7 @@
 import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { namespace } from 'vuex-class';
 const { shell } = require('electron').remote;
-import { Map, Strat, Step, Player, Sides, StratTypes } from '@/services/models';
+import { Strat, Sides, StratTypes } from '@/services/models';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
 import {
   faEdit,
@@ -17,6 +17,8 @@ config.autoAddCss = false;
 library.add(faEdit, faTrashAlt, faBan, faFilm);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
+const filterModule = namespace('filter');
+
 @Component({
   components: { StepItem },
 })
@@ -24,7 +26,7 @@ export default class StratItem extends Vue {
   @Prop() private strat!: Strat;
   @Ref('step-elements') stepElements!: IStepItem[];
   @Ref('add-step') addStepElement!: IStepItem;
-  @State filters!: {
+  @filterModule.State filters!: {
     name: string;
     player: string;
     side: Sides | null;
@@ -35,10 +37,6 @@ export default class StratItem extends Vue {
 
   private get isCtSide(): boolean {
     return this.strat.side === Sides.CT;
-  }
-
-  private get isActive(): boolean {
-    return this.strat.active;
   }
 
   private get filteredSteps() {

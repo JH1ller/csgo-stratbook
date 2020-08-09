@@ -1,14 +1,17 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
-import { State, Action } from 'vuex-class';
+import { namespace } from 'vuex-class';
 import MapPicker from '@/components/map-picker/map-picker.vue';
 import StratList from '@/components/strat-list/strat-list.vue';
 import FloatingAdd from '@/components/floating-add/floating-add.vue';
 import CreationOverlay from '@/components/creation-overlay/creation-overlay.vue';
 import FilterMenu from '@/components/filter-menu/filter-menu.vue';
-import { Equipment, Strat, StratTypes, Sides } from '@/services/models';
+import { Strat, StratTypes, Sides } from '@/services/models';
+
+const filterModule = namespace('filter');
+const mapModule = namespace('map');
+const stratModule = namespace('strat');
 
 @Component({
-  name: 'StratsView',
   components: {
     MapPicker,
     StratList,
@@ -22,23 +25,27 @@ export default class StratsView extends Vue {
   private creationOverlayEditMode: boolean = false;
   private editStrat: Strat | null = null;
   private refreshInterval!: NodeJS.Timeout;
-  @State currentMap!: string;
-  @State currentStrats!: Strat[];
-  @Action updatePlayerFilter!: (value: string) => {};
-  @Action updateTypeFilter!: (type: StratTypes | null) => {};
-  @Action updateNameFilter!: (name: string) => {};
-  @Action updateSideFilter!: (side: Sides | null) => {};
-  @Action updateCurrentMap!: (mapId: string) => {};
-  @Action updateCurrentStrats!: () => {};
-  @Action createStrat!: (payload: any) => {};
-  @Action deleteStrat!: (stratId: string) => {};
-  @Action updateStep!: (payload: any) => {};
-  @Action addStep!: (payload: any) => {};
-  @Action deleteStep!: (stepId: string) => {};
-  @Action clearFilters!: () => {};
+  @mapModule.State currentMap!: string;
+  @stratModule.State strats!: Strat[];
+  @filterModule.Action updatePlayerFilter!: (value: string) => void;
+  @filterModule.Action updateTypeFilter!: (type: StratTypes | null) => void;
+  @filterModule.Action updateNameFilter!: (name: string) => void;
+  @filterModule.Action updateSideFilter!: (side: Sides | null) => void;
+  @mapModule.Action updateCurrentMap!: (mapId: string) => void;
+  @stratModule.Action fetchStrats!: () => void;
+  @stratModule.Action updateStrat!: (payload: {
+    stratId: string;
+    changeObj: any;
+  }) => void;
+  @stratModule.Action createStrat!: (payload: any) => void;
+  @stratModule.Action deleteStrat!: (stratId: string) => void;
+  @stratModule.Action updateStep!: (payload: any) => void;
+  @stratModule.Action addStep!: (payload: any) => void;
+  @stratModule.Action deleteStep!: (stepId: string) => void;
+  @filterModule.Action clearFilters!: () => void;
 
   private mounted() {
-    this.refreshInterval = setInterval(() => this.updateCurrentStrats(), 30000);
+    this.refreshInterval = setInterval(() => this.fetchStrats(), 15000); // TODO: move interval value to cfg
   }
 
   private beforeDestroy() {
@@ -47,9 +54,9 @@ export default class StratsView extends Vue {
 
   private creationOverlaySubmitted(data: any) {
     if (!data.isEdit) {
-      this.$store.dispatch('createStrat', data.strat);
+      this.createStrat(data.strat);
     } else {
-      this.$store.dispatch('updateStrat', {
+      this.updateStrat({
         stratId: data.stratId,
         changeObj: data.strat,
       });
@@ -74,6 +81,6 @@ export default class StratsView extends Vue {
     stratId: string;
     active: boolean;
   }) {
-    this.$store.dispatch('updateStrat', { stratId, changeObj: { active } });
+    this.updateStrat({ stratId, changeObj: { active } });
   }
 }

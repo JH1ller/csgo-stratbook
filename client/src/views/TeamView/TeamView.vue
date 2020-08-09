@@ -2,7 +2,7 @@
   <div class="view-wrapper">
     <div class="team-view">
       <transition name="fade">
-        <div v-if="!hasTeam" class="team-view__create-wrapper">
+        <div v-if="!profile.team" class="team-view__create-wrapper">
           <team-create-form @create-clicked="createTeamRequest" ref="create-form" />
           <join-team-form @join-clicked="joinTeamRequest" ref="join-form" />
         </div>

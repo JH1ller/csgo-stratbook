@@ -1,6 +1,6 @@
-import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { Map, Strat, Step, Player, Sides, StratTypes } from '@/services/models';
+import { Component, Vue, Emit } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
+import { Player, Sides, StratTypes } from '@/services/models';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -10,19 +10,22 @@ config.autoAddCss = false;
 library.add(faFilter);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
+const filterModule = namespace('filter');
+const teamModule = namespace('team');
+
 @Component({
   components: {
     Multiselect,
   },
 })
 export default class FilterMenu extends Vue {
-  @State filters!: {
+  @filterModule.State filters!: {
     name: string;
     player: string;
     side: Sides | null;
     type: StratTypes | null;
   };
-  @State teamMembers!: Player[];
+  @teamModule.State teamMembers!: Player[];
 
   private get playerOptions() {
     const teamMemberNames = this.teamMembers.map(member => member.name);

@@ -1,6 +1,6 @@
-import { Component, Prop, Vue, Emit, Watch, Ref } from 'vue-property-decorator';
-import { Map, Strat, Step, Player, Sides, Equipment } from '@/services/models';
-import { State } from 'vuex-class';
+import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
+import { Step, Player, Equipment } from '@/services/models';
+import { namespace } from 'vuex-class';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -9,6 +9,8 @@ import Multiselect from 'vue-multiselect';
 config.autoAddCss = false;
 library.add(faEdit, faTrashAlt);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
+
+const teamModule = namespace('team');
 
 export interface IStepItem {
   cancelEdit: () => void;
@@ -20,7 +22,7 @@ export interface IStepItem {
   },
 })
 export default class StepItem extends Vue implements IStepItem {
-  @State teamMembers!: Player[];
+  @teamModule.State teamMembers!: Player[];
   @Prop({ default: null }) private step!: Step | null;
   private editMode: boolean = false;
   @Prop({ default: false }) addMode!: boolean;

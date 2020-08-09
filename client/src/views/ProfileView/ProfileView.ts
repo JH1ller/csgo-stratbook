@@ -1,9 +1,14 @@
-import { Component, Vue, Ref } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
 
-@Component({ name: 'ProfileView' })
+const authModule = namespace('auth');
+
+@Component({})
 export default class ProfileView extends Vue {
-  private async logoutRequest(payload: any) {
-    const res = await this.$store.dispatch('logoutUser');
-    if (res) this.$router.push({ name: 'Login' });
+  @authModule.Action private logoutUser!: () => Promise<void>;
+
+  private async logoutRequest() {
+    await this.logoutUser();
+    this.$router.push({ name: 'Login' });
   }
 }
