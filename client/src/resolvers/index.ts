@@ -7,7 +7,7 @@ export const stratsResolver: NavigationGuard = async (to, from, next) => {
     let redirected = await profileResolver(to, from, next);
     redirected = await teamResolver(to, from, next);
     if (!redirected) {
-      await store.dispatch('updateMaps');
+      await store.dispatch('map/updateMaps');
       next();
     }
   } catch (error) {
@@ -15,16 +15,9 @@ export const stratsResolver: NavigationGuard = async (to, from, next) => {
   }
 };
 
-export const profileResolver: NavigationGuard = async (to, from, next) => {
+export const profileResolver: NavigationGuard = async (to, _from, next) => {
   try {
-    const profile = await store.dispatch('updateProfile');
-    // if (!profile.team && to.name !== 'Team') {
-    //   next({ name: 'Team' });
-    //   await store.dispatch('showToast', 'You need to join a team first');
-    //   return true; // * return as "redirected"
-    // } else {
-    //   next();
-    // }
+    const profile = await store.dispatch('auth/fetchProfile');
     next();
   } catch (error) {
     if (to.name !== 'Login') next({ name: 'Login' });
@@ -33,16 +26,19 @@ export const profileResolver: NavigationGuard = async (to, from, next) => {
   }
 };
 
-export const teamResolver: NavigationGuard = async (to, from, next) => {
+export const teamResolver: NavigationGuard = async (to, _from, next) => {
   try {
-    const profile = await store.dispatch('updateProfile');
+    const profile = await store.dispatch('auth/fetchProfile');
     if (profile.team) {
-      const team = await store.dispatch('updateTeamInfo');
+      const team = await store.dispatch('team/fetchTeamInfo');
       next();
     } else {
       if (to.name !== 'Team') {
         if (!(to.query.toast === 'false'))
-          await store.dispatch('showToast', 'You need to join a team first');
+          await store.dispatch(
+            'app/showToast',
+            'You need to join a team first'
+          );
         next({ name: 'Team' });
       } else {
         next();
@@ -51,7 +47,7 @@ export const teamResolver: NavigationGuard = async (to, from, next) => {
     }
   } catch (error) {
     if (to.name !== 'Login') {
-      await store.dispatch('showToast', 'You need to login first');
+      await store.dispatch('app/showToast', 'You need to login first');
       next({ name: 'Login' });
     }
     console.log(error.message);

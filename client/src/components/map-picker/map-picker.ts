@@ -1,11 +1,13 @@
 import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { Map, Strat, Step, Player } from '@/services/models';
+import { namespace } from 'vuex-class';
+import { Map } from '@/services/models';
+
+const mapModule = namespace('map');
 
 @Component({})
 export default class MapPicker extends Vue {
-  @State('maps') maps!: Map[];
-  @State('currentMap') currentMap!: string;
+  @mapModule.State maps!: Map[];
+  @mapModule.State currentMap!: string;
 
   @Emit()
   private mapClicked(mapId: string) {

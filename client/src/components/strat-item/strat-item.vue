@@ -1,6 +1,10 @@
 <template>
   <div class="strat-item">
-    <div class="strat-item__container" :class="{'-inactive': !isActive}" @dblclick="toggleActive">
+    <div
+      class="strat-item__container"
+      :class="{'-inactive': !strat.active}"
+      @dblclick="toggleActive"
+    >
       <img
         v-if="isCtSide"
         src="@/assets/icons/ct_badge.png"

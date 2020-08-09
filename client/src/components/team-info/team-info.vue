@@ -30,7 +30,7 @@
         </span>
       </div>
       <div class="team-info__right-wrapper">
-        <img :src="avatarUrl" alt class="team-info__avatar" />
+        <img :src="teamAvatarUrl" alt class="team-info__avatar" />
         <ol class="team-info__member-list">
           <p class="team-info__member-header">Members</p>
           <li

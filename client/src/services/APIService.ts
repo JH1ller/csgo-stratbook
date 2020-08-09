@@ -2,6 +2,7 @@ import axios from 'axios';
 import urljoin from 'url-join';
 import { Map, Strat, Step, Player } from '@/services/models';
 import AuthService from './AuthService';
+import { TeamCreateFormData } from '@/components/team-create-form/team-create-form';
 
 const url =
   process.env.NODE_ENV === 'production'
@@ -274,7 +275,7 @@ class APIService {
    * Teams
    */
 
-  static async createTeam(formData: any) {
+  static async createTeam(formData: TeamCreateFormData) {
     const target = urljoin(url, Endpoints.TEAMS, Actions.CREATE);
     const authService = AuthService.getInstance();
     const token = authService.getToken();

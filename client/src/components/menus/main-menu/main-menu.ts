@@ -1,5 +1,5 @@
-import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
 import {
   faTools,
@@ -10,7 +10,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 const remote = require('electron').remote;
-import AuthService from '@/services/AuthService';
 import { Player } from '@/services/models';
 import { BrowserWindow } from 'electron';
 
@@ -18,10 +17,12 @@ config.autoAddCss = false;
 library.add(faTools, faUtensils, faBoxes, faUsers, faChess);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
+const authModule = namespace('auth');
+
 @Component({})
 export default class MainMenu extends Vue {
-  private appName: string = 'CSGO Stratbook'; //TODO: dynamic
-  @State('profile') profile!: Player;
+  private appName: string = 'CSGO Stratbook'; // TODO: dynamic
+  @authModule.State profile!: Player;
 
   private menuItems = [
     {

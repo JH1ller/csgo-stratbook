@@ -1,8 +1,11 @@
 import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { namespace } from 'vuex-class';
 
-import { Map, Strat, Sides, StratTypes } from '@/services/models';
+import { Strat, Sides, StratTypes } from '@/services/models';
 import StratItem from '@/components/strat-item/strat-item.vue';
+
+const stratModule = namespace('strat');
+const filterModule = namespace('filter');
 
 @Component({
   components: {
@@ -10,8 +13,8 @@ import StratItem from '@/components/strat-item/strat-item.vue';
   },
 })
 export default class StratList extends Vue {
-  @State currentStrats!: Strat[];
-  @State filters!: {
+  @stratModule.State strats!: Strat[];
+  @filterModule.State filters!: {
     name: string;
     player: string;
     side: Sides | null;
@@ -19,7 +22,7 @@ export default class StratList extends Vue {
   };
 
   private get filteredStrats() {
-    return this.currentStrats
+    return this.strats
       .filter(strat => {
         return this.filters.side ? strat.side === this.filters.side : true;
       })

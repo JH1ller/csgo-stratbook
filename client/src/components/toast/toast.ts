@@ -1,15 +1,19 @@
 import { Component, Vue, Watch, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { namespace } from 'vuex-class';
+
+const appModule = namespace('app');
+
 @Component({})
 export default class Toast extends Vue {
-  @State(state => state.ui.toast.message) message!: string;
-  @State(state => state.ui.toast.show) show!: boolean;
+  @appModule.State(state => state.ui.toast.message) private message!: string;
+  @appModule.State(state => state.ui.toast.show) private show!: boolean;
+  @appModule.Action private hideToast!: () => void;
 
   @Watch('show')
-  showChangedHandler(to: boolean, from: boolean) {
-    if (to === true) {
+  showChangedHandler(to: boolean) {
+    if (to) {
       setTimeout(() => {
-        this.$store.dispatch('hideToast');
+        this.hideToast();
       }, 3000);
     }
   }
