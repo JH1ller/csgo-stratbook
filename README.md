@@ -1,4 +1,6 @@
-<img src=".readme/logo_dark.png" width="128">
+<p align="center">
+  <img src=".readme/logo_dark.png" width="128">
+</p>
 
 ## CSGO Stratbook
 
