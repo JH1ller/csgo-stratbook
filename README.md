@@ -13,6 +13,9 @@ Vue-Electron-Typescript application to manage strategies in Valve's popular comp
 ![typescript](https://img.shields.io/badge/typescript-3.7.5-yellow.svg)
 ![sass](https://img.shields.io/badge/node--sass-4.13.1-red.svg)
 
+<img src="https://i.imgur.com/kf87rQD.png" height="290"> <img src="https://i.imgur.com/UJehjxX.png" height="290">
+
+
 ### Table of Content
 
 - [CSGO Stratbook](#csgo-stratbook)
