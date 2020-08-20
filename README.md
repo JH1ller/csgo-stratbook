@@ -1,4 +1,6 @@
-<img src=".readme/logo_dark.png" width="128">
+<p align="center">
+  <img src=".readme/logo_dark.png" width="128">
+</p>
 
 ## CSGO Stratbook
 
@@ -12,6 +14,9 @@ Vue-Electron-Typescript application to manage strategies in Valve's popular comp
 ![vuex](https://img.shields.io/badge/vuex-3.1.3-green.svg)
 ![typescript](https://img.shields.io/badge/typescript-3.7.5-yellow.svg)
 ![sass](https://img.shields.io/badge/node--sass-4.13.1-red.svg)
+
+<img src="https://i.imgur.com/kf87rQD.png" width="512"> <img src="https://i.imgur.com/UJehjxX.png" width="512">
+
 
 ### Table of Content
 
