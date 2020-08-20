@@ -13,7 +13,7 @@
       @edit-strat="showCreationOverlay"
       @toggle-active="toggleStratActive"
       @update-step="updateStep"
-      @add-step="addStep"
+      @add-step="createStep"
       @delete-step="deleteStep"
     />
     <transition name="fade">

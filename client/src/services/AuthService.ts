@@ -4,18 +4,15 @@ import urljoin from 'url-join';
 import { Player } from './models';
 import APIService from './APIService';
 
-const url =
-  process.env.NODE_ENV === 'production'
-    ? 'https://csgo-stratbook.herokuapp.com/'
-    : 'http://localhost:3000/';
+const url = process.env.NODE_ENV === 'production' ? 'https://csgo-stratbook.herokuapp.com/' : 'http://localhost:3000/';
 
 enum Endpoints {
-  AUTH = 'auth',
+  AUTH = 'auth'
 }
 
 enum Actions {
   LOGIN = 'login',
-  REGISTER = 'register',
+  REGISTER = 'register'
 }
 
 interface JWTData {
@@ -90,22 +87,6 @@ class AuthService {
 
   getPlayerInfo(): Player | null {
     return this.playerInfo;
-  }
-
-  async updatePlayerInfo() {
-    if (this.token) {
-      const decodedToken: JWTData = jwtDecode(this.token);
-      try {
-        const res = await APIService.getPlayer(decodedToken._id);
-        this.playerInfo = res;
-        return res;
-      } catch (error) {
-        console.error(error);
-        throw new Error(error);
-      }
-    } else {
-      throw new Error('Could not fetch player info: No token in storage.');
-    }
   }
 }
 

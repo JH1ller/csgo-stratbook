@@ -50,6 +50,11 @@ const stepSchema = new mongoose.Schema({
     default: Date.now,
   },
 
+  modifiedAt: {
+    type: Date,
+    default: Date.now,
+  },
+
   actor: {
     type: String,
     max: 30,
@@ -71,6 +76,17 @@ const stepSchema = new mongoose.Schema({
   note: {
     type: String,
   },
+
+  image: {
+    type: String,
+  },
+});
+
+stepSchema.pre('save', function (next) {
+  if (this.isModified()) {
+    this.modifiedAt = Date.now();
+  }
+  next();
 });
 
 module.exports.stepSchema = mongoose.model('Step', stepSchema);

@@ -46,7 +46,7 @@ const stratSchema = new mongoose.Schema({
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'players',
-    // TODO: make required later
+    required: true,
   },
 
   createdAt: {
@@ -62,9 +62,15 @@ const stratSchema = new mongoose.Schema({
 
   modifiedAt: {
     type: Date,
-    required: true,
     default: Date.now,
   },
+});
+
+stratSchema.pre('save', function (next) {
+  if (this.isModified()) {
+    this.modifiedAt = Date.now();
+  }
+  next();
 });
 
 module.exports = mongoose.model('Strat', stratSchema);

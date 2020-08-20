@@ -5,81 +5,73 @@ const { stepSchema: Step } = require('../../models/step');
 const Team = require('../../models/team');
 
 async function getStrat(req, res, next) {
-  let strat;
+  const stratID = req.params.strat_id || req.body._id;
   try {
-    strat = await Strat.findById(req.params.strat_id);
+    const strat = await Strat.findById(stratID);
     if (!strat) {
       return res.status(404).json({ error: 'Cannot find strat' });
     }
+    res.strat = strat;
+    next();
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
-
-  res.strat = strat;
-  next();
 }
 
 async function getStep(req, res, next) {
-  let step;
+  const stepID = req.params.step_id || req.body._id;
   try {
-    step = await Step.findById(req.params.step_id);
+    const step = await Step.findById(stepID);
     if (!step) {
       return res.status(404).json({ error: 'Cannot find step' });
     }
+    res.step = step;
+    next();
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
-
-  res.step = step;
-  next();
 }
 
 async function getMap(req, res, next) {
-  let map;
+  const mapID = req.params.map_id || req.body._id;
   try {
-    map = await Map.findById(req.params.map_id);
+    const map = await Map.findById(mapID);
     if (!map) {
       return res.status(404).json({ error: 'Cannot find map' });
     }
+    res.map = map;
+    next();
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
-
-  res.map = map;
-  next();
 }
 
 async function getTeam(req, res, next) {
-  let team;
+  const teamID = req.params.team_id || req.body._id;
   try {
-    team = await Team.findById(req.params.team_id);
+    const team = await Team.findById(teamID);
     if (!team) {
       return res.status(404).json({ error: 'Cannot find team' });
     }
+    res.team = team;
+    next();
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
-
-  res.team = team;
-  next();
 }
 
 async function getPlayer(req, res, next) {
-  let player;
+  const playerID = req.params.player_id || req.user._id;
   try {
-    player = req.params.player_id
-      ? await Player.findById(req.params.player_id)
-      : await Player.findById(req.user._id);
-
+    const player = await Player.findById(playerID);
     if (!player) {
       return res.status(404).json({ error: 'Cannot find player' });
     }
+    res.player = player;
+    next();
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
-
-  res.player = player;
-  next();
 }
 
 exports.getMap = getMap;

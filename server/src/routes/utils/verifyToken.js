@@ -10,7 +10,7 @@ const verifyAuth = (req, res, next) => {
     req.user = verifiedUserId;
     next();
   } catch (error) {
-    res.status(400).send({ error: 'Access denied: Invalid token.' });
+    res.status(401).send({ error: 'Access denied: Invalid token.' });
   }
 };
 

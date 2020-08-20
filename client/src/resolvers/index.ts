@@ -7,7 +7,7 @@ export const stratsResolver: NavigationGuard = async (to, from, next) => {
     let redirected = await profileResolver(to, from, next);
     redirected = await teamResolver(to, from, next);
     if (!redirected) {
-      await store.dispatch('map/updateMaps');
+      await store.dispatch('map/fetchMaps');
       next();
     }
   } catch (error) {

@@ -15,11 +15,6 @@ router.get('/', verifyAuth, async (req, res) => {
   }
 });
 
-// * Get One
-router.get('/:map_id', getMap, (req, res) => {
-  res.json(res.map);
-});
-
 // * Create One
 router.post('/create', verifyAuth, async (req, res) => {
   const map = new Map({
@@ -37,13 +32,13 @@ router.post('/create', verifyAuth, async (req, res) => {
 
 // * Update One
 router.patch('/:map_id/update', verifyAuth, getMap, async (req, res) => {
-  if (req.body.name) {
+  if (req.body.name != null) {
     res.map.name = req.body.name;
   }
-  if (req.body.active) {
+  if (req.body.active != null) {
     res.map.active = req.body.active;
   }
-  if (req.body.image) {
+  if (req.body.image != null) {
     res.map.image = req.body.image;
   }
   try {

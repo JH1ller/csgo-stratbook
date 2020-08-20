@@ -14,12 +14,10 @@ const authModule = namespace('auth');
 })
 export default class RegisterView extends Vue {
   @Ref('register-form') registerForm!: FormComponent;
-  @authModule.Action private registerUser!: (
-    formData: RegisterFormData
-  ) => Promise<Response>;
+  @authModule.Action private register!: (formData: RegisterFormData) => Promise<Response>;
 
   private async registerRequest(formData: RegisterFormData) {
-    const res = await this.registerUser(formData);
+    const res = await this.register(formData);
     if (res.error) {
       this.registerForm.updateFormMessage(res.error, 'error');
     } else if (res.success) {

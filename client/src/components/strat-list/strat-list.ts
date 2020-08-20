@@ -30,9 +30,7 @@ export default class StratList extends Vue {
         return this.filters.type ? strat.type === this.filters.type : true;
       })
       .filter(strat => {
-        return this.filters.name
-          ? strat.name.toLowerCase().includes(this.filters.name.toLowerCase())
-          : true;
+        return this.filters.name ? strat.name.toLowerCase().includes(this.filters.name.toLowerCase()) : true;
       });
   }
 
@@ -44,7 +42,7 @@ export default class StratList extends Vue {
 
   // Emitted through from strat-item
   @Emit()
-  private toggleActive(payload: any) {
+  private toggleActive(payload: Partial<Strat>) {
     return payload;
   }
 

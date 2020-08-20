@@ -3,22 +3,17 @@ const router = express.Router();
 const Strat = require('../models/strat');
 const { stepSchema: Step, equipmentSchema: Equip } = require('../models/step');
 const Player = require('../models/player');
-const { getStrat } = require('./utils/getters');
+const { getStrat, getPlayer } = require('./utils/getters');
 const { verifyAuth } = require('./utils/verifyToken');
 
-// * Get all
-router.get('/', verifyAuth, async (req, res) => {
-  const player = await Player.findById(req.user._id);
-
-  if (!player.team) {
-    return res
-      .status(400)
-      .json({ error: "Authenticated user doesn't have a team" });
+router.get('/', verifyAuth, getPlayer, async (req, res) => {
+  if (!res.player.team) {
+    return res.status(400).json({ error: "Authenticated user doesn't have a team" });
   }
   try {
     const strats = req.query.map
-      ? await Strat.find({ map: req.query.map, team: player.team })
-      : await Strat.find({ team: player.team });
+      ? await Strat.find({ map: req.query.map, team: res.player.team })
+      : await Strat.find({ team: res.player.team });
 
     const stepPromises = strats.map(async (strat) => {
       const steps = await Step.find({ strat: strat._id });
@@ -42,19 +37,10 @@ router.get('/', verifyAuth, async (req, res) => {
   }
 });
 
-// * Get One
-router.get('/:strat_id', getStrat, (req, res) => {
-  res.json(res.strat);
-});
-
 // * Create One
-router.post('/create', verifyAuth, async (req, res) => {
-  const player = await Player.findById(req.user._id);
-
-  if (!player.team) {
-    return res
-      .status(400)
-      .json({ error: "Authenticated user doesn't have a team" });
+router.post('/create', verifyAuth, getPlayer, async (req, res) => {
+  if (!res.player.team) {
+    return res.status(400).json({ error: "Authenticated user doesn't have a team" });
   }
 
   const strat = new Strat({
@@ -65,61 +51,47 @@ router.post('/create', verifyAuth, async (req, res) => {
     active: req.body.active,
     videoLink: req.body.videoLink,
     note: req.body.note,
-    team: player.team,
-    createdBy: player._id,
+    team: res.player.team,
+    createdBy: res.player._id,
     createdAt: Date.now(),
   });
+
   try {
     const newStrat = await strat.save();
     res.status(201).json(newStrat);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
 // * Update One
-router.patch('/:strat_id/update', getStrat, async (req, res) => {
-  let modified = false;
-  if (req.body.name !== null && req.body.name !== undefined) {
+router.patch('/update', getStrat, async (req, res) => {
+  if (req.body.name != null) {
     res.strat.name = req.body.name;
-    modified = true;
   }
-  if (req.body.type !== null && req.body.type !== undefined) {
+  if (req.body.type != null) {
     res.strat.type = req.body.type;
-    modified = true;
   }
-  if (req.body.map !== null && req.body.map !== undefined) {
+  if (req.body.map != null) {
     res.strat.map = req.body.map;
-    modified = true;
   }
-  if (req.body.side !== null && req.body.side !== undefined) {
+  if (req.body.side != null) {
     res.strat.side = req.body.side;
-    modified = true;
   }
-  if (req.body.active !== null && req.body.active !== undefined) {
+  if (req.body.active != null) {
     res.strat.active = req.body.active;
-    modified = true;
   }
-  if (req.body.videoLink !== null && req.body.videoLink !== undefined) {
+  if (req.body.videoLink != null) {
     res.strat.videoLink = req.body.videoLink;
-    modified = true;
   }
-  if (req.body.note !== null && req.body.note !== undefined) {
+  if (req.body.note != null) {
     res.strat.note = req.body.note;
-    modified = true;
-  }
-  if (req.body.createdBy !== null && req.body.createdBy !== undefined) {
-    res.strat.createdBy = req.body.createdBy;
-    modified = true;
-  }
-  if (modified) {
-    res.strat.modifiedAt = Date.now();
   }
   try {
     const updatedStrat = await res.strat.save();
     res.json(updatedStrat);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -136,9 +108,13 @@ router.delete('/:strat_id/delete', getStrat, async (req, res) => {
 // * Delete All
 router.delete('/deleteAll', async (req, res) => {
   try {
-    await Strat.deleteMany({});
-    await Strat.collection.dropIndexes();
-    res.json({ message: 'Deleted all strats' });
+    if (res.player.isAdmin) {
+      await Strat.deleteMany({});
+      await Strat.collection.dropIndexes();
+      res.json({ message: 'Deleted all strats' });
+    } else {
+      res.status(401).json({ error: 'This action requires higher privileges.' });
+    }
   } catch (error) {
     res.status(500).json({ error: error });
   }

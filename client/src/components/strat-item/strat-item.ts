@@ -1,14 +1,9 @@
 import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
 const { shell } = require('electron').remote;
-import { Strat, Sides, StratTypes } from '@/services/models';
+import { Strat, Sides, StratTypes, Step } from '@/services/models';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
-import {
-  faEdit,
-  faTrashAlt,
-  faBan,
-  faFilm,
-} from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrashAlt, faBan, faFilm } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import StepItem from '@/components/step-item/step-item.vue';
 import { IStepItem } from '@/components/step-item/step-item';
@@ -42,9 +37,7 @@ export default class StratItem extends Vue {
   private get filteredSteps() {
     return this.strat.steps
       ? this.strat.steps.filter(step => {
-          return this.filters.player
-            ? step.actor === this.filters.player
-            : true;
+          return this.filters.player ? step.actor === this.filters.player : true;
         })
       : [];
   }
@@ -79,22 +72,22 @@ export default class StratItem extends Vue {
   }
 
   @Emit()
-  private toggleActive() {
-    return { stratId: this.strat._id, active: !this.strat.active };
+  private toggleActive(): Partial<Strat> {
+    return { _id: this.strat._id, active: !this.strat.active };
   }
 
   @Emit()
-  private updateStep(payload: {}) {
+  private updateStep(payload: Partial<Step>) {
     return { ...payload, strat: this.strat._id };
   }
 
   @Emit()
-  private addStep(payload: any) {
+  private addStep(payload: Partial<Step>) {
     return { ...payload, strat: this.strat._id };
   }
 
   @Emit()
-  private deleteStep(stepId: string) {
-    return { stepId, strat: this.strat._id };
+  private deleteStep(stepID: string) {
+    return { stepID, strat: this.strat._id };
   }
 }

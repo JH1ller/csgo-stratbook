@@ -22,20 +22,15 @@ export const mapModule: Module<MapState, RootState> = {
   state: mapInitialState(),
   getters: {},
   actions: {
-    async updateMaps({ commit, dispatch }) {
-      try {
-        dispatch('app/showLoader', null, { root: true });
-        const maps = await APIService.getAllMaps();
-        commit(SET_MAPS, maps);
-        dispatch('updateCurrentMap', maps[0]._id);
-        dispatch('app/hideLoader', null, { root: true });
-      } catch (error) {
-        dispatch('app/hideLoader', null, { root: true });
-        dispatch('app/showToast', error, { root: true });
+    async fetchMaps({ commit, dispatch }) {
+      const res = await APIService.getMaps();
+      if (res.success) {
+        commit(SET_MAPS, res.success);
+        dispatch('updateCurrentMap', res.success[0]._id);
       }
     },
-    updateCurrentMap({ commit, dispatch }, payload) {
-      commit(SET_CURRENT_MAP, payload);
+    updateCurrentMap({ commit, dispatch }, mapID: string) {
+      commit(SET_CURRENT_MAP, mapID);
       dispatch('strat/fetchStrats', null, { root: true });
     },
     resetState({ commit }) {

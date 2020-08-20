@@ -14,13 +14,12 @@ const { uploadMiddleware, processImage } = require('./utils/fileUpload');
 router.post('/register', uploadMiddleware, async (req, res) => {
   const { error } = registerValidation(req.body);
   if (error) {
-    return res.status(400).send({ error: error.details[0].message });
+    return res.status(400).json({ error: error.details[0].message });
   }
 
   const emailExists = await Player.findOne({ email: req.body.email });
 
-  if (emailExists)
-    return res.status(400).send({ error: 'Email already exists' });
+  if (emailExists) return res.status(400).json({ error: 'Email already exists' });
 
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -37,37 +36,26 @@ router.post('/register', uploadMiddleware, async (req, res) => {
   }
 
   try {
-    const newUser = await user.save();
-
-    const token = jwt.sign({ _id: newUser._id }, process.env.EMAIL_SECRET);
-
-    sendMail(newUser.email, token, newUser.name);
-
-    res.send({ user: user._id });
+    const token = jwt.sign({ _id: user._id }, process.env.EMAIL_SECRET);
+    await sendMail(user.email, token, user.name);
+    await user.save();
+    res.json({ _id: user._id, email: user.email });
   } catch (error) {
     console.log(error);
-    res.status(400).send({ error: error });
+    res.status(500).json({ error: error });
   }
 });
 
 router.post('/login', async (req, res) => {
   const targetUser = await Player.findOne({ email: req.body.email });
 
-  if (!targetUser)
-    return res.status(400).send({ error: 'Email or password is invalid.' });
+  if (!targetUser) return res.status(400).json({ error: 'Email or password is invalid.' });
 
-  const validPassword = await bcrypt.compare(
-    req.body.password,
-    targetUser.password
-  );
+  const validPassword = await bcrypt.compare(req.body.password, targetUser.password);
 
-  if (!validPassword)
-    return res.status(400).send({ error: 'Email or password is invalid.' });
+  if (!validPassword) return res.status(400).json({ error: 'Email or password is invalid.' });
 
-  if (!targetUser.confirmed)
-    return res
-      .status(400)
-      .send({ error: 'Please confirm your email to log in.' });
+  if (!targetUser.confirmed) return res.status(401).send({ error: 'Please confirm your email to log in.' });
 
   const token = jwt.sign({ _id: targetUser._id }, process.env.TOKEN_SECRET, {
     expiresIn: '30d',
@@ -83,7 +71,7 @@ router.get('/confirmation/:token', async (req, res) => {
     await targetUser.save();
     return res.redirect('/success');
   } catch (error) {
-    res.status(400).send({ error: error });
+    res.status(400).json({ error: error });
     return res.redirect('/error');
   }
 });

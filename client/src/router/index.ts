@@ -5,47 +5,44 @@ import LoginView from '../views/LoginView/LoginView.vue';
 import RegisterView from '../views/RegisterView/RegisterView.vue';
 import TeamView from '../views/TeamView/TeamView.vue';
 import ProfileView from '@/views/ProfileView/ProfileView.vue';
-import {
-  stratsResolver,
-  profileResolver,
-  teamResolver,
-} from '@/resolvers/index';
+import { stratsResolver, teamResolver } from '@/resolvers/index';
+import { RouteNames, Routes } from './router.models';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
+    name: RouteNames.Home,
     redirect: (to: any) => {
-      return { name: 'Strats' };
+      return Routes.Strats;
     },
   },
   {
     path: '/strats',
-    name: 'Strats',
+    name: RouteNames.Strats,
     component: StratsView,
     beforeEnter: stratsResolver,
   },
   {
     path: '/login',
-    name: 'Login',
+    name: RouteNames.Login,
     component: LoginView,
   },
   {
     path: '/register',
-    name: 'Register',
+    name: RouteNames.Register,
     component: RegisterView,
   },
   {
     path: '/team',
-    name: 'Team',
+    name: RouteNames.Team,
     component: TeamView,
     beforeEnter: teamResolver,
   },
   {
     path: '/profile',
-    name: 'Profile',
+    name: RouteNames.Profile,
     component: ProfileView,
   },
 ];

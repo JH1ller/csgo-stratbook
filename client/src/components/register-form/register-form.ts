@@ -6,7 +6,7 @@ export interface RegisterFormData {
   password: string;
 }
 @Component({
-  components: {},
+  components: {}
 })
 export default class RegisterForm extends Vue {
   @Ref('file-input') fileInput!: HTMLInputElement;
@@ -20,7 +20,7 @@ export default class RegisterForm extends Vue {
   private formData: RegisterFormData = {
     name: '',
     email: '',
-    password: '',
+    password: ''
   };
   private imageFile: File | null = null;
   private pwRegex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$/);
@@ -43,10 +43,7 @@ export default class RegisterForm extends Vue {
 
   private validateForm(): boolean {
     if (this.nameInput.value.length < 3 || this.nameInput.value.length > 20) {
-      this.updateFormMessage(
-        'Name must be between 3 and 20 characters.',
-        'error'
-      );
+      this.updateFormMessage('Name must be between 3 and 20 characters.', 'error');
       return false;
     }
     if (this.emailInput.value.length < 6 || !this.emailInput.checkValidity()) {
@@ -77,7 +74,7 @@ export default class RegisterForm extends Vue {
       requestFormData.append('avatar', this.imageFile, this.imageFile.name);
     }
 
-    for (let [key, value] of Object.entries(this.formData)) {
+    for (const [key, value] of Object.entries(this.formData)) {
       requestFormData.append(key, value);
     }
     this.$emit('register-clicked', requestFormData);

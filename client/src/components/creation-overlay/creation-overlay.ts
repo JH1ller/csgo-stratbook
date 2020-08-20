@@ -36,16 +36,13 @@ export default class CreationOverlay extends Vue {
   private submitClicked() {
     if (this.isValid()) {
       this.$emit('submit-clicked', {
-        isEdit: this.isEdit,
-        stratId: this.isEdit ? this.strat._id : null,
-        strat: {
-          name: this.name,
-          type: this.type,
-          side: this.side,
-          note: this.note,
-          videoLink: this.videoLink,
-        },
-      });
+        _id: this.isEdit ? this.strat._id : null,
+        name: this.name,
+        type: this.type,
+        side: this.side,
+        note: this.note,
+        videoLink: this.videoLink,
+      } as Partial<Strat>);
     } else {
       this.triedSubmitting = true;
     }

@@ -43,10 +43,31 @@ const playerSchema = new mongoose.Schema({
     ref: 'teams',
   },
 
-  date: {
+  createdAt: {
     type: Date,
     default: Date.now,
   },
+
+  modifiedAt: {
+    type: Date,
+    default: Date.now,
+  },
+
+  lastOnline: {
+    type: Date,
+  },
+
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+playerSchema.pre('save', function (next) {
+  if (this.isModified()) {
+    this.modifiedAt = Date.now();
+  }
+  next();
 });
 
 module.exports = mongoose.model('Player', playerSchema);

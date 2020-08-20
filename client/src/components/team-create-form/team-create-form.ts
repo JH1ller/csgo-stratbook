@@ -1,10 +1,11 @@
-import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
+import { Component, Vue, Ref } from 'vue-property-decorator';
 import { FormComponent } from '@/interfaces/index';
 export interface TeamCreateFormData {
   name: string;
-  website: string;
-  serverIp: string;
-  serverPw: string;
+  website?: string;
+  serverIp?: string;
+  serverPw?: string;
+  imageFile?: File;
 }
 
 @Component({})
@@ -21,7 +22,7 @@ export default class TeamCreateForm extends Vue implements FormComponent {
     name: '',
     website: '',
     serverIp: '',
-    serverPw: '',
+    serverPw: ''
   };
   private imageFile: File | null = null;
 
@@ -43,10 +44,7 @@ export default class TeamCreateForm extends Vue implements FormComponent {
 
   private validateForm(): boolean {
     if (this.nameInput.value.length < 3 || this.nameInput.value.length > 20) {
-      this.updateFormMessage(
-        'Team name must be between 3 and 24 characters.',
-        'error'
-      );
+      this.updateFormMessage('Team name must be between 3 and 24 characters.', 'error');
       return false;
     }
     return true;

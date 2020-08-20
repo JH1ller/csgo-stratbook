@@ -38,6 +38,11 @@ const teamSchema = new mongoose.Schema({
     ref: 'players',
   },
 
+  manager: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'players',
+  },
+
   date: {
     type: Date,
     default: Date.now,
