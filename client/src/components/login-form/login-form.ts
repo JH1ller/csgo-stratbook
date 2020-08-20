@@ -1,8 +1,6 @@
 import { Component, Vue, Emit } from 'vue-property-decorator';
 
-@Component({
-  components: {},
-})
+@Component({})
 export default class LoginForm extends Vue {
   private email: string = '';
   private password: string = '';

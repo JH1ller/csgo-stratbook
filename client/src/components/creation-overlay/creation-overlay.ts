@@ -8,9 +8,7 @@ config.autoAddCss = false;
 library.add(faBan, faCheck);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
-@Component({
-  components: {},
-})
+@Component({})
 export default class CreationOverlay extends Vue {
   @Prop() strat!: Strat;
   @Prop() isEdit!: boolean;

@@ -3,12 +3,9 @@
 </template>
 
 <script>
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 
-@Component({
-  name: "Map",
-  components: {}
-})
+@Component({})
 export default class Map extends Vue {}
 </script>
 

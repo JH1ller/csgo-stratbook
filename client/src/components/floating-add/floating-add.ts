@@ -7,9 +7,7 @@ config.autoAddCss = false;
 library.add(faPlus);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
-@Component({
-  components: {},
-})
+@Component({})
 export default class FloatingAdd extends Vue {
   @Emit()
   private onClick() {

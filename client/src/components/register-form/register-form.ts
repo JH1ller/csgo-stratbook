@@ -5,9 +5,7 @@ export interface RegisterFormData {
   email: string;
   password: string;
 }
-@Component({
-  components: {}
-})
+@Component({})
 export default class RegisterForm extends Vue {
   @Ref('file-input') fileInput!: HTMLInputElement;
   @Ref('name') nameInput!: HTMLInputElement;
@@ -20,7 +18,7 @@ export default class RegisterForm extends Vue {
   private formData: RegisterFormData = {
     name: '',
     email: '',
-    password: ''
+    password: '',
   };
   private imageFile: File | null = null;
   private pwRegex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$/);
