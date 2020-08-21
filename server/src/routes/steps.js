@@ -6,10 +6,10 @@ const { getStep, getPlayer } = require('./utils/getters');
 const { verifyAuth } = require('./utils/verifyToken');
 
 // * Get all
-router.get('/', verifyAuth, getPlayer, async (req, res) => {
+router.get('/', verifyAuth, async (req, res) => {
   try {
     const strat = await Strat.findById(req.query.strat);
-    if (strat.team !== res.player.team) return res.status(401).json({ error: 'Unauthorized' });
+    if (!strat.team.equals(res.player.team)) return res.status(403).json({ error: 'Unauthorized' });
 
     const steps = await Step.find({ strat: req.query.strat });
     res.json(steps);
@@ -19,15 +19,15 @@ router.get('/', verifyAuth, getPlayer, async (req, res) => {
 });
 
 // * Create One
-router.post('/create', verifyAuth, getPlayer, async (req, res) => {
+router.post('/create', verifyAuth, async (req, res) => {
   try {
     const strat = await Strat.findById(req.body.strat);
-    if (strat.team !== res.player.team) return res.status(401).json({ error: 'Unauthorized' });
+    if (!strat.team.equals(res.player.team)) return res.status(403).json({ error: 'Unauthorized' });
 
     const equip = new Equip(req.body.equipment);
     const step = new Step({
       strat: req.body.strat,
-      createdBy: req.user._id,
+      createdBy: res.player._id,
       equipment: equip,
       description: req.body.description,
       note: req.body.note,
@@ -43,9 +43,9 @@ router.post('/create', verifyAuth, getPlayer, async (req, res) => {
 });
 
 // * Update One
-router.patch('/update', verifyAuth, getPlayer, getStep, async (req, res) => {
+router.patch('/update', verifyAuth, getStep, async (req, res) => {
   const strat = await Strat.findById(res.step.strat);
-  if (strat.team !== res.player.team) return res.status(401).json({ error: 'Unauthorized' });
+  if (!strat.team.equals(res.player.team)) return res.status(403).json({ error: 'Unauthorized' });
 
   if (req.body.strat != null) {
     res.step.strat = req.body.strat;
@@ -71,10 +71,10 @@ router.patch('/update', verifyAuth, getPlayer, getStep, async (req, res) => {
 });
 
 // * Delete One
-router.delete('/:step_id/delete', verifyAuth, getPlayer, getStep, async (req, res) => {
+router.delete('/:step_id/delete', verifyAuth, getStep, async (req, res) => {
   try {
     const strat = await Strat.findById(res.step.strat);
-    if (strat.team !== res.player.team) return res.status(401).json({ error: 'Unauthorized' });
+    if (!strat.team.equals(res.player.team)) return res.status(403).json({ error: 'Unauthorized' });
     await res.step.remove();
     res.json({ message: 'Deleted step successfully' });
   } catch (error) {

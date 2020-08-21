@@ -6,20 +6,19 @@ const { verifyAuth } = require('./utils/verifyToken');
 
 // * Get One
 router.get('/:player_id', verifyAuth, getPlayer, (req, res) => {
-  const { _id, name, email, role, avatar, team, date } = res.player;
+  const { _id, name, role, avatar, team, createdAt } = res.player;
   res.json({
     _id,
     name,
-    email,
     role,
     avatar,
     team,
-    date,
+    createdAt,
   });
 });
 
 // * Update One
-router.patch('/update', verifyAuth, getPlayer, async (req, res) => {
+router.patch('/update', verifyAuth, async (req, res) => {
   if (req.body.name != null) {
     res.player.name = req.body.name;
   }
@@ -41,27 +40,27 @@ router.patch('/update', verifyAuth, getPlayer, async (req, res) => {
 });
 
 // * Delete One
-router.delete('/:player_id/delete', verifyAuth, getPlayer, async (req, res) => {
+router.delete('/:player_id/delete', verifyAuth, async (req, res) => {
   try {
     if (res.player.isAdmin) {
       await res.player.remove();
       res.json({ message: 'Deleted player successfully' });
     } else {
-      res.status(401).json({ error: 'This action requires higher privileges.' });
+      res.status(403).json({ error: 'This action requires higher privileges.' });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-router.delete('/deleteAll', verifyAuth, getPlayer, async (req, res) => {
+router.delete('/deleteAll', verifyAuth, async (req, res) => {
   try {
     if (res.player.isAdmin) {
       await Player.deleteMany({});
       await Player.collection.dropIndexes();
       res.json({ message: 'Deleted all players' });
     } else {
-      res.status(401).json({ error: 'This action requires higher privileges.' });
+      res.status(403).json({ error: 'This action requires higher privileges.' });
     }
   } catch (error) {
     res.status(500).json({ error: error });

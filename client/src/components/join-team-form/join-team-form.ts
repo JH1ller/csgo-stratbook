@@ -1,4 +1,4 @@
-import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
+import { Component, Vue, Ref } from 'vue-property-decorator';
 import { FormComponent } from '@/interfaces/index';
 
 @Component({})
@@ -17,7 +17,7 @@ export default class JoinTeamForm extends Vue implements FormComponent {
   }
 
   private validateForm(): boolean {
-    if (this.codeInput.value.length !== 10) {
+    if (this.codeInput.value.length !== 6) {
       this.updateFormMessage('Please enter a valid join code.', 'error');
       return false;
     }

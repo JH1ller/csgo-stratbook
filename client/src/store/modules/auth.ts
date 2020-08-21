@@ -66,6 +66,13 @@ export const authModule: Module<AuthState, RootState> = {
         return { error: res.error };
       }
     },
+    loadTokenFromStorage({ commit, dispatch }) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        commit(SET_TOKEN, token);
+        dispatch('fetchProfile');
+      }
+    },
     resetState({ commit }) {
       commit(RESET_STATE);
     },

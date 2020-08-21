@@ -88,6 +88,6 @@ export default class StratItem extends Vue {
 
   @Emit()
   private deleteStep(stepID: string) {
-    return { stepID, strat: this.strat._id };
+    return { stepID, stratID: this.strat._id };
   }
 }

@@ -61,7 +61,8 @@ async function getTeam(req, res, next) {
 }
 
 async function getPlayer(req, res, next) {
-  const playerID = req.params.player_id || req.user._id;
+  if (res.player) next();
+  const playerID = req.params.player_id;
   try {
     const player = await Player.findById(playerID);
     if (!player) {

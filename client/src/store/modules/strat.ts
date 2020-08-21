@@ -6,6 +6,7 @@ import APIService from '@/services/APIService';
 
 const SET_STRATS = 'SET_STRATS';
 const SET_STEPS_OF_STRAT = 'SET_STEPS_OF_STRAT';
+const RESET_STATE = 'RESET_STATE';
 
 export interface StratState {
   strats: Strat[];
@@ -53,23 +54,26 @@ export const stratModule: Module<StratState, RootState> = {
     async updateStep({ dispatch }, payload: Partial<Step>) {
       const res = await APIService.updateStep(payload);
       if (res.success) {
-        dispatch('updateStepsOfStrat', payload.strat);
+        dispatch('fetchStepsOfStrat', payload.strat);
         dispatch('app/showToast', 'Updated step', { root: true });
       }
     },
     async createStep({ dispatch }, step: Partial<Step>) {
       const res = await APIService.createStep(step);
       if (res.success) {
-        dispatch('updateStepsOfStrat', step.strat);
+        dispatch('fetchStepsOfStrat', step.strat);
         dispatch('app/showToast', 'Added step', { root: true });
       }
     },
     async deleteStep({ dispatch }, payload: { stepID: string; stratID: string }) {
       const res = await APIService.deleteStep(payload.stepID);
       if (res.success) {
-        dispatch('updateStepsOfStrat', payload.stratID);
+        dispatch('fetchStepsOfStrat', payload.stratID);
         dispatch('app/showToast', 'Deleted step', { root: true });
       }
+    },
+    resetState({ commit }) {
+      commit(RESET_STATE);
     },
   },
   mutations: {
@@ -81,6 +85,9 @@ export const stratModule: Module<StratState, RootState> = {
         return targetStrat._id === stratID;
       }) as Strat;
       Vue.set(stateObj, 'steps', steps);
+    },
+    [RESET_STATE](state) {
+      Object.assign(state, stratInitialState());
     },
   },
 };

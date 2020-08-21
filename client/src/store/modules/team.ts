@@ -55,11 +55,10 @@ export const teamModule: Module<TeamState, RootState> = {
         commit(SET_TEAM_MEMBERS, res.success);
       }
     },
-    async createTeam({ dispatch, commit }, formData: TeamCreateFormData) {
+    async createTeam({ commit, dispatch }, formData: TeamCreateFormData) {
       const res = await APIService.createTeam(formData);
       if (res.success) {
-        commit(SET_TEAM_INFO, res.success);
-        dispatch('auth/fetchProfile', res.success, { root: true });
+        dispatch('auth/setProfile', res.success, { root: true });
         return { success: 'Team successfully created. You can now visit the strats page and start creating strats!' };
       } else {
         return { error: res.error };
@@ -68,7 +67,7 @@ export const teamModule: Module<TeamState, RootState> = {
     async joinTeam({ dispatch }, code: string) {
       const res = await APIService.joinTeam(code);
       if (res.success) {
-        await dispatch('auth/setProfile', res.success, { root: true });
+        dispatch('auth/setProfile', res.success, { root: true });
         return { success: 'Successfully joined team.' };
       } else {
         return { error: res.error };
@@ -77,8 +76,10 @@ export const teamModule: Module<TeamState, RootState> = {
     async leaveTeam({ dispatch }) {
       const res = await APIService.leaveTeam();
       if (res.success) {
-        await dispatch('auth/setProfile', res.success, { root: true });
-        await dispatch('strat/resetState', null, { root: true });
+        dispatch('auth/setProfile', res.success, { root: true });
+        dispatch('resetState');
+        dispatch('strat/resetState', null, { root: true });
+        dispatch('app/showToast', 'You have left the team.', { root: true });
         return { success: 'Successfully left team.' };
       } else {
         return { error: res.error };

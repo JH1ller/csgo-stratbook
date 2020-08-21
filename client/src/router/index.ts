@@ -5,7 +5,7 @@ import LoginView from '../views/LoginView/LoginView.vue';
 import RegisterView from '../views/RegisterView/RegisterView.vue';
 import TeamView from '../views/TeamView/TeamView.vue';
 import ProfileView from '@/views/ProfileView/ProfileView.vue';
-import { stratsResolver, teamResolver } from '@/resolvers/index';
+import { stratsResolver, teamResolver, loginResolver } from '@/resolvers/index';
 import { RouteNames, Routes } from './router.models';
 
 Vue.use(VueRouter);
@@ -28,11 +28,13 @@ const routes = [
     path: '/login',
     name: RouteNames.Login,
     component: LoginView,
+    beforeEnter: loginResolver,
   },
   {
     path: '/register',
     name: RouteNames.Register,
     component: RegisterView,
+    beforeEnter: loginResolver,
   },
   {
     path: '/team',
