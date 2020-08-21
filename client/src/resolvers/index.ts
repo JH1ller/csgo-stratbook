@@ -1,56 +1,54 @@
 import { NavigationGuard } from 'vue-router';
-import store from '@/store/index';
+import store from '@/store';
+import { Routes } from '@/router/router.models';
+import { Status } from '@/services/models';
 
-export const stratsResolver: NavigationGuard = async (to, from, next) => {
-  try {
-    // TODO: find different system for this as it's very error-prone
-    let redirected = await profileResolver(to, from, next);
-    redirected = await teamResolver(to, from, next);
-    if (!redirected) {
+export const stratsResolver: NavigationGuard = async (_to, _from, next) => {
+  await store.dispatch('auth/fetchProfile');
+
+  switch (store.state.auth.status) {
+    case Status.NO_AUTH:
+      next(Routes.Login);
+      break;
+    case Status.LOGGED_IN_NO_TEAM:
+      next(Routes.Team);
+      break;
+    case Status.LOGGED_IN_WITH_TEAM:
       await store.dispatch('map/fetchMaps');
       next();
-    }
-  } catch (error) {
-    console.log(error.message);
+      break;
   }
 };
 
-export const profileResolver: NavigationGuard = async (to, _from, next) => {
-  try {
-    const profile = await store.dispatch('auth/fetchProfile');
-    next();
-  } catch (error) {
-    if (to.name !== 'Login') next({ name: 'Login' });
-    console.log(error.message);
-    return true;
-  }
-};
+export const teamResolver: NavigationGuard = async (_to, _from, next) => {
+  await store.dispatch('auth/fetchProfile');
 
-export const teamResolver: NavigationGuard = async (to, _from, next) => {
-  try {
-    const profile = await store.dispatch('auth/fetchProfile');
-    if (profile.team) {
-      const team = await store.dispatch('team/fetchTeamInfo');
+  switch (store.state.auth.status) {
+    case Status.NO_AUTH:
+      next(Routes.Login);
+      break;
+    case Status.LOGGED_IN_NO_TEAM:
       next();
-    } else {
-      if (to.name !== 'Team') {
-        if (!(to.query.toast === 'false'))
-          await store.dispatch(
-            'app/showToast',
-            'You need to join a team first'
-          );
-        next({ name: 'Team' });
-      } else {
-        next();
-      }
-      return true;
-    }
-  } catch (error) {
-    if (to.name !== 'Login') {
-      await store.dispatch('app/showToast', 'You need to login first');
-      next({ name: 'Login' });
-    }
-    console.log(error.message);
-    return true;
+      break;
+    case Status.LOGGED_IN_WITH_TEAM:
+      await store.dispatch('team/fetchTeamInfo');
+      next();
+      break;
+  }
+};
+
+export const loginResolver: NavigationGuard = async (_to, _from, next) => {
+  await store.dispatch('auth/fetchProfile');
+
+  switch (store.state.auth.status) {
+    case Status.NO_AUTH:
+      next();
+      break;
+    case Status.LOGGED_IN_NO_TEAM:
+      next(Routes.Team);
+      break;
+    case Status.LOGGED_IN_WITH_TEAM:
+      next(Routes.Strats);
+      break;
   }
 };

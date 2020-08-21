@@ -62,9 +62,13 @@ router.delete('/:map_id/delete', verifyAuth, getMap, async (req, res) => {
 // * Delete All
 router.delete('/deleteAll', verifyAuth, async (req, res) => {
   try {
-    await Map.deleteMany({});
-    await Map.collection.dropIndexes();
-    res.json({ message: 'Deleted all maps' });
+    if (res.player.isAdmin) {
+      await Map.deleteMany({});
+      await Map.collection.dropIndexes();
+      res.json({ message: 'Deleted all maps' });
+    } else {
+      res.status(403).json({ error: 'This action requires higher privileges.' });
+    }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

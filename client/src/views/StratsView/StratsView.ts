@@ -39,7 +39,7 @@ export default class StratsView extends Vue {
   @stratModule.Action deleteStrat!: (stratId: string) => Promise<void>;
   @stratModule.Action updateStep!: (payload: any) => Promise<void>;
   @stratModule.Action createStep!: (payload: any) => Promise<void>;
-  @stratModule.Action deleteStep!: (stepId: string) => Promise<void>;
+  @stratModule.Action deleteStep!: (stepID: string) => Promise<void>;
   @filterModule.Action clearFilters!: () => Promise<void>;
 
   private mounted() {

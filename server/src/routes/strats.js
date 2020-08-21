@@ -6,7 +6,7 @@ const Player = require('../models/player');
 const { getStrat, getPlayer } = require('./utils/getters');
 const { verifyAuth } = require('./utils/verifyToken');
 
-router.get('/', verifyAuth, getPlayer, async (req, res) => {
+router.get('/', verifyAuth, async (req, res) => {
   if (!res.player.team) {
     return res.status(400).json({ error: "Authenticated user doesn't have a team" });
   }
@@ -38,7 +38,7 @@ router.get('/', verifyAuth, getPlayer, async (req, res) => {
 });
 
 // * Create One
-router.post('/create', verifyAuth, getPlayer, async (req, res) => {
+router.post('/create', verifyAuth, async (req, res) => {
   if (!res.player.team) {
     return res.status(400).json({ error: "Authenticated user doesn't have a team" });
   }
@@ -113,7 +113,7 @@ router.delete('/deleteAll', async (req, res) => {
       await Strat.collection.dropIndexes();
       res.json({ message: 'Deleted all strats' });
     } else {
-      res.status(401).json({ error: 'This action requires higher privileges.' });
+      res.status(403).json({ error: 'This action requires higher privileges.' });
     }
   } catch (error) {
     res.status(500).json({ error: error });

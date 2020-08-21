@@ -1,10 +1,11 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import urljoin from 'url-join';
-import { Map, Strat, Step, Player, Team } from '@/services/models';
+import { Map, Strat, Step, Player, Team, Status } from '@/services/models';
 import { TeamCreateFormData } from '@/components/team-create-form/team-create-form';
 import store from '@/store';
 import router from '@/router';
 import jwtDecode from 'jwt-decode';
+import { Routes, RouteNames } from '@/router/router.models';
 
 const baseURL =
   process.env.NODE_ENV === 'production' ? 'https://csgo-stratbook.herokuapp.com/' : 'http://localhost:3000/';
@@ -12,30 +13,45 @@ const baseURL =
 const axiosInstance = axios.create({
   baseURL,
   timeout: 30000,
+  headers: {
+    Accept: 'application/json',
+  },
 });
 
-axiosInstance.interceptors.request.use(config => {
-  if (store.state.auth.token) {
-    config.headers['Authorization'] = store.state.auth.token;
-    store.dispatch('app/showLoader');
-    return config;
-  } else {
-    throw new axios.Cancel('User not authenticated. Request cancelled.');
+axiosInstance.interceptors.request.use(
+  config => {
+    if (store.state.auth.token) {
+      config.headers['Authorization'] = store.state.auth.token;
+      store.dispatch('app/showLoader');
+      return config;
+    } else {
+      console.error('User not authenticated. Request cancelled.');
+      throw new axios.Cancel('User not authenticated. Request cancelled.');
+    }
+  },
+  error => {
+    console.error(error);
+    return Promise.reject(error);
   }
-});
+);
 axiosInstance.interceptors.response.use(
-  () => store.dispatch('app/hideLoader'),
+  response => {
+    store.dispatch('app/hideLoader');
+    return response;
+  },
   error => {
     store.dispatch('app/hideLoader');
     console.error(error.response.data.error);
     if (error.response.status === 401) {
-      router.push({ name: 'Login' });
+      if (router.currentRoute.name !== RouteNames.Login) router.push(Routes.Login);
       store.dispatch('app/showToast', 'Authorization expired. Please login again.');
+      store.dispatch('auth/updateStatus', Status.NO_AUTH);
     } else {
       if (error.response.status !== 500) {
         store.dispatch('app/showToast', error.response.data.error);
       }
     }
+    return Promise.reject(error);
   }
 );
 
@@ -92,7 +108,7 @@ class APIService {
 
     try {
       const { data } = await axiosInstance.get(target);
-      return { success: data, error: 'test' };
+      return { success: data };
     } catch (error) {
       return { error: error.response.data.error };
     }

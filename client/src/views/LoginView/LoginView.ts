@@ -13,13 +13,10 @@ const authModule = namespace('auth');
 })
 export default class LoginView extends Vue {
   @Ref('login-form') loginForm!: FormComponent;
-  @authModule.Action loginUser!: (credentials: {
-    email: string;
-    password: string;
-  }) => Promise<Response>;
+  @authModule.Action login!: (credentials: { email: string; password: string }) => Promise<Response>;
 
   private async loginRequest(payload: any) {
-    const res = await this.loginUser({
+    const res = await this.login({
       email: payload.email,
       password: payload.password,
     });

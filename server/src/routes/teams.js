@@ -3,12 +3,12 @@ const router = express.Router();
 const Team = require('../models/team');
 const Player = require('../models/player');
 const crypto = require('crypto');
-const { getTeam, getPlayer } = require('./utils/getters');
+const { getTeam } = require('./utils/getters');
 const { verifyAuth } = require('./utils/verifyToken');
 const { teamValidation } = require('./utils/validation');
 const { uploadMiddleware, processImage } = require('./utils/fileUpload');
 
-router.get('/', verifyAuth, getPlayer, async (req, res) => {
+router.get('/', verifyAuth, async (req, res) => {
   try {
     if (!res.player.team) {
       return res.status(400).json({ message: "Player doesn't have a team" });
@@ -34,7 +34,7 @@ router.get('/players', verifyAuth, async (req, res) => {
 });
 
 // * Create One
-router.post('/create', verifyAuth, getPlayer, uploadMiddleware, async (req, res) => {
+router.post('/create', verifyAuth, uploadMiddleware, async (req, res) => {
   const { error } = teamValidation(req.body);
   if (error) {
     return res.status(400).send({ error: error.details[0].message });
@@ -47,8 +47,8 @@ router.post('/create', verifyAuth, getPlayer, uploadMiddleware, async (req, res)
   const team = new Team({
     name: req.body.name,
     avatar: req.body.avatar,
-    createdBy: req.user._id,
-    manager: req.user._id,
+    createdBy: res.player._id,
+    manager: res.player._id,
     website: req.body.website,
     server: {
       ip: req.body.serverIp,
@@ -73,9 +73,15 @@ router.post('/create', verifyAuth, getPlayer, uploadMiddleware, async (req, res)
   try {
     const newTeam = await team.save();
     res.player.team = newTeam._id;
-    await res.player.save();
+    const updatedPlayer = await res.player.save();
 
-    res.status(201).json(newTeam);
+    res.status(201).json({
+      _id: updatedPlayer._id,
+      name: updatedPlayer.name,
+      createdAt: updatedPlayer.createdAt,
+      avatar: updatedPlayer.avatar,
+      team: updatedPlayer.team,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -108,10 +114,15 @@ router.patch('/update', verifyAuth, getTeam, async (req, res) => {
 });
 
 // * Delete One
-router.delete('/:team_id/delete', verifyAuth, getTeam, async (req, res) => {
+router.delete('/delete', verifyAuth, async (req, res) => {
   try {
-    await res.team.remove();
-    res.json({ message: 'Deleted team successfully' });
+    const team = await Team.findById(res.player.team);
+    if (team.manager === res.player._id) {
+      await res.team.remove();
+      res.json({ message: 'Deleted team successfully' });
+    } else {
+      res.status(403).json({ error: 'This action requires higher privileges.' });
+    }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -119,7 +130,6 @@ router.delete('/:team_id/delete', verifyAuth, getTeam, async (req, res) => {
 
 // * Join team
 router.patch('/join', verifyAuth, async (req, res) => {
-  const player = await Player.findById(req.user._id);
   const team = await Team.findOne({ code: req.body.code });
 
   if (!team) {
@@ -127,16 +137,22 @@ router.patch('/join', verifyAuth, async (req, res) => {
   }
 
   try {
-    player.team = team._id;
-    const updatedPlayer = await player.save();
-    return res.json(updatedPlayer);
+    res.player.team = team._id;
+    const updatedPlayer = await res.player.save();
+    return res.json({
+      _id: updatedPlayer._id,
+      name: updatedPlayer.name,
+      createdAt: updatedPlayer.createdAt,
+      avatar: updatedPlayer.avatar,
+      team: updatedPlayer.team,
+    });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 });
 
 // * Leave team
-router.patch('/leave', verifyAuth, getPlayer, async (req, res) => {
+router.patch('/leave', verifyAuth, async (req, res) => {
   const team = await Team.findById(res.player.team);
 
   let code;
@@ -150,22 +166,32 @@ router.patch('/leave', verifyAuth, getPlayer, async (req, res) => {
 
   await team.save();
 
-  player.team = undefined;
+  res.player.team = undefined;
 
   try {
-    const updatedPlayer = await player.save();
-    return res.json(updatedPlayer);
+    const updatedPlayer = await res.player.save();
+    return res.json({
+      _id: updatedPlayer._id,
+      name: updatedPlayer.name,
+      createdAt: updatedPlayer.createdAt,
+      avatar: updatedPlayer.avatar,
+      team: updatedPlayer.team,
+    });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 });
 
 // ! Delete All | admin
-router.delete('/deleteAll', async (req, res) => {
+router.delete('/deleteAll', verifyAuth, async (req, res) => {
   try {
-    await Team.deleteMany({});
-    await Team.collection.dropIndexes();
-    res.json({ message: 'Deleted all teams' });
+    if (res.player.isAdmin) {
+      await Team.deleteMany({});
+      await Team.collection.dropIndexes();
+      res.json({ message: 'Deleted all teams' });
+    } else {
+      res.status(403).json({ error: 'This action requires higher privileges.' });
+    }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
