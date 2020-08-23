@@ -44,14 +44,7 @@ export default class StepItem extends Vue implements IStepItem {
 
   get selectOptions() {
     const teamMemberNames = this.teamMembers.map(member => member.name);
-    return [
-      ...teamMemberNames,
-      '1st Spawn',
-      '2nd Spawn',
-      '3rd Spawn',
-      '4th Spawn',
-      '5th Spawn',
-    ];
+    return [...teamMemberNames, '1st Spawn', '2nd Spawn', '3rd Spawn', '4th Spawn', '5th Spawn'];
   }
 
   private resetValues() {
@@ -107,9 +100,7 @@ export default class StepItem extends Vue implements IStepItem {
       this.equipmentCopy.flashbangTwo = false;
       this.equipmentCopy.flashbang = false;
     } else {
-      this.equipmentCopy[type as keyof Equipment] = !this.equipmentCopy[
-        type as keyof Equipment
-      ];
+      this.equipmentCopy[type as keyof Equipment] = !this.equipmentCopy[type as keyof Equipment];
     }
   }
 
@@ -144,7 +135,7 @@ export default class StepItem extends Vue implements IStepItem {
             this.resetValues();
           } else {
             this.$emit('update-step', {
-              stepId: this.step?._id,
+              _id: this.step?._id,
               description: this.descriptionCopy,
               equipment: this.equipmentCopy,
               actor: this.actorCopy,

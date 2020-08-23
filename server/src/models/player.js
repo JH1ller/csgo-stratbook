@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { boolean } = require('@hapi/joi');
 
 const playerSchema = new mongoose.Schema({
   name: {
@@ -51,6 +52,10 @@ const playerSchema = new mongoose.Schema({
   modifiedAt: {
     type: Date,
     default: Date.now,
+  },
+
+  isOnline: {
+    type: Boolean,
   },
 
   lastOnline: {

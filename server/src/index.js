@@ -75,4 +75,6 @@ app.use('/teams', teamsRouter);
 
 initWS(io);
 
+app.set('io', io);
+
 server.listen(port, null, () => console.log(`Server started on port ${port}`));

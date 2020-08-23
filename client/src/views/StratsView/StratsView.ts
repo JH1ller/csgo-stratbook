@@ -43,7 +43,7 @@ export default class StratsView extends Vue {
   @filterModule.Action clearFilters!: () => Promise<void>;
 
   private mounted() {
-    this.refreshInterval = setInterval(() => this.fetchStrats(), 15000); // TODO: move interval value to cfg
+    //this.refreshInterval = setInterval(() => this.fetchStrats(), 15000); // TODO: move interval value to cfg
   }
 
   private beforeDestroy() {

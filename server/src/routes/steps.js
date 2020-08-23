@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { stepSchema: Step, equipmentSchema: Equip } = require('../models/step');
 const Strat = require('../models/strat');
-const { getStep, getPlayer } = require('./utils/getters');
+const { getStep } = require('./utils/getters');
 const { verifyAuth } = require('./utils/verifyToken');
 
 // * Get all

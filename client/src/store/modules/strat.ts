@@ -25,7 +25,7 @@ export const stratModule: Module<StratState, RootState> = {
       const res = await APIService.getStratsOfMap(rootState.map.currentMap);
       if (res.success) commit(SET_STRATS, res.success);
     },
-    async fetchStepsOfStrat({ commit }, stratID: string) {
+    async fetchStepsOfStrat({ commit, state }, stratID: string) {
       const res = await APIService.getStepsOfStrat(stratID);
       if (res.success) commit(SET_STEPS_OF_STRAT, { stratID, steps: res.success });
     },
@@ -41,27 +41,23 @@ export const stratModule: Module<StratState, RootState> = {
       const res = await APIService.createStrat(newStrat);
       if (res.success) {
         dispatch('app/showToast', 'Added strat', { root: true });
-        dispatch('fetchStrats');
       }
     },
     async updateStrat({ dispatch }, payload: Partial<Strat>) {
       const res = await APIService.updateStrat(payload);
       if (res.success) {
-        dispatch('fetchStrats');
         dispatch('app/showToast', 'Successfully updated the strat.', { root: true });
       }
     },
     async updateStep({ dispatch }, payload: Partial<Step>) {
       const res = await APIService.updateStep(payload);
       if (res.success) {
-        dispatch('fetchStepsOfStrat', payload.strat);
         dispatch('app/showToast', 'Updated step', { root: true });
       }
     },
     async createStep({ dispatch }, step: Partial<Step>) {
       const res = await APIService.createStep(step);
       if (res.success) {
-        dispatch('fetchStepsOfStrat', step.strat);
         dispatch('app/showToast', 'Added step', { root: true });
       }
     },
