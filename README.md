@@ -13,7 +13,7 @@ Vue-Electron-Typescript application to manage strategies in Valve's popular comp
 ![cli](https://img.shields.io/badge/vue_cli-4.2.3-green.svg)
 ![vuex](https://img.shields.io/badge/vuex-3.1.3-green.svg)
 ![typescript](https://img.shields.io/badge/typescript-3.7.5-yellow.svg)
-![sass](https://img.shields.io/badge/node--sass-4.13.1-red.svg)
+![socket.io](https://img.shields.io/badge/socket.io-2.3.0-blue.svg)
 
 <img src="https://i.imgur.com/kf87rQD.png" width="512"> <img src="https://i.imgur.com/UJehjxX.png" width="512">
 
@@ -54,6 +54,7 @@ Vue-Electron-Typescript application to manage strategies in Valve's popular comp
 - [x] Team creation & team profiles
 - [x] Filter strategies
 
+- [ ] Live DB via socket.io
 - [ ] Steam OAuth
 - [ ] Settings Menu
 - [ ] Player Profiles
