@@ -1,6 +1,7 @@
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease;
+  //position: absolute;
 }
 .fade-enter,
 .fade-leave-to {
@@ -26,13 +27,11 @@
   }
 
   &-leave-active {
-    transition: opacity 0.4s linear,
-      transform 0.4s cubic-bezier(0.5, 0, 0.7, 0.4);
+    transition: opacity 0.4s linear, transform 0.4s cubic-bezier(0.5, 0, 0.7, 0.4);
   }
 
   &-enter-active {
-    transition: opacity 0.5s linear,
-      transform 0.5s cubic-bezier(0.2, 0.5, 0.1, 1);
+    transition: opacity 0.5s linear, transform 0.5s cubic-bezier(0.2, 0.5, 0.1, 1);
   }
 
   &-enter,

@@ -6,12 +6,10 @@ import store from '@/store';
 import router from '@/router';
 import jwtDecode from 'jwt-decode';
 import { Routes, RouteNames } from '@/router/router.models';
-
-const baseURL =
-  process.env.NODE_ENV === 'production' ? 'https://csgo-stratbook.herokuapp.com/' : 'http://localhost:3000/';
+import { BASE_URL } from '@/config';
 
 const axiosInstance = axios.create({
-  baseURL,
+  baseURL: BASE_URL,
   timeout: 30000,
   headers: {
     Accept: 'application/json',
@@ -49,6 +47,8 @@ axiosInstance.interceptors.response.use(
     } else {
       if (error.response.status !== 500) {
         store.dispatch('app/showToast', error.response.data.error);
+      } else {
+        store.dispatch('app/showToast', 'An error occured on the server.');
       }
     }
     return Promise.reject(error);
@@ -115,7 +115,7 @@ class APIService {
   }
 
   static async login(email: string, password: string): Promise<APIResponse<string>> {
-    const target = urljoin(baseURL, Endpoints.Auth, Actions.Login);
+    const target = urljoin(BASE_URL, Endpoints.Auth, Actions.Login);
 
     try {
       store.dispatch('app/showLoader');
@@ -130,7 +130,7 @@ class APIService {
   }
 
   static async register(formData: Partial<Player>): Promise<APIResponse<{ _id: string; email: string }>> {
-    const target = urljoin(baseURL, Endpoints.Auth, Actions.Register);
+    const target = urljoin(BASE_URL, Endpoints.Auth, Actions.Register);
     try {
       store.dispatch('app/showLoader');
       // * not using axiosInstance here, because register doesn't require authorization
