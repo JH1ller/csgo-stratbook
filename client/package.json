@@ -24,6 +24,7 @@
     "directory-tree": "^2.2.4",
     "dotenv": "^8.2.0",
     "jwt-decode": "^2.2.0",
+    "socket.io-client": "^2.3.0",
     "url-join": "^4.0.1",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.2",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.12.1",
+    "@types/socket.io-client": "^1.4.33",
     "@types/url-join": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^2.18.0",

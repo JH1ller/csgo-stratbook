@@ -21,6 +21,7 @@
         class="step-item__description"
         :readonly="!editMode"
         v-model="descriptionCopy"
+        :placeholder="!editMode ? 'Add step...' : ''"
       />
       <div class="step-item__equipment-wrapper">
         <img

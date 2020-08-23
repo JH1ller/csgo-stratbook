@@ -5,16 +5,17 @@ const path = require('path');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 const mongoose = require('mongoose');
 const cors = require('cors');
 const port = process.env.PORT || 3000;
+const { initWS } = require('./sockets/index');
 
-mongoose.connect(
-  process.env.NODE_ENV === 'production'
-    ? process.env.DATABASE_URL
-    : process.env.DATABASE_URL_DEV,
-  { useNewUrlParser: true, useUnifiedTopology: true }
-);
+mongoose.connect(process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : process.env.DATABASE_URL_DEV, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 mongoose.set('useCreateIndex', true);
 
@@ -72,4 +73,6 @@ app.use('/steps', stepsRouter);
 const teamsRouter = require('./routes/teams');
 app.use('/teams', teamsRouter);
 
-app.listen(port, () => console.log(`Server started on port ${port}`));
+initWS(io);
+
+server.listen(port, null, () => console.log(`Server started on port ${port}`));
