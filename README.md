@@ -7,8 +7,8 @@
 Vue-Electron-Typescript application to manage strategies in Valve's popular competitive FPS Counterstrike: Global Offensive
 
 ![electron](https://img.shields.io/badge/electron-8.3.2-blue.svg)
-![vue](https://img.shields.io/badge/vue-2.6.11-green.svg)
-![typescript](https://img.shields.io/badge/typescript-3.7.5-yellow.svg)
+![vue](https://img.shields.io/badge/vue-2.6.11-blue.svg)
+![typescript](https://img.shields.io/badge/typescript-3.7.5-blue.svg)
 ![socket.io](https://img.shields.io/badge/socket.io-2.3.0-blue.svg)
 
 <img src="https://i.imgur.com/kf87rQD.png" width="512"> <img src="https://i.imgur.com/UJehjxX.png" width="512">
