@@ -21,9 +21,12 @@ export const stratModule: Module<StratState, RootState> = {
   state: stratInitialState(),
   getters: {},
   actions: {
-    async fetchStrats({ commit, rootState }) {
+    async fetchStrats({ commit, rootState, state }) {
       const res = await APIService.getStratsOfMap(rootState.map.currentMap);
-      if (res.success) commit(SET_STRATS, res.success);
+      if (res.success) {
+        commit(SET_STRATS, res.success);
+        localStorage.setItem('strats', JSON.stringify(state.strats));
+      }
     },
     async fetchStepsOfStrat({ commit, state }, stratID: string) {
       const res = await APIService.getStepsOfStrat(stratID);
@@ -67,6 +70,10 @@ export const stratModule: Module<StratState, RootState> = {
         dispatch('fetchStepsOfStrat', payload.stratID);
         dispatch('app/showToast', 'Deleted step', { root: true });
       }
+    },
+    loadStratsFromStorage({ commit }) {
+      const strats = localStorage.getItem('strats');
+      if (strats) commit(SET_STRATS, JSON.parse(strats));
     },
     resetState({ commit }) {
       commit(RESET_STATE);

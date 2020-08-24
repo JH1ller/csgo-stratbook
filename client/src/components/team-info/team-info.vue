@@ -35,13 +35,13 @@
           <p class="team-info__member-header">Members</p>
           <li
             class="team-info__member"
-            :class="{ '-self': player._id === profile._id }"
+            :class="{ '-self': player._id === profile._id, '-online': player.isOnline }"
             v-for="player in teamMembers"
             :key="player._id"
           >
             <span class="team-info__member-name">
               <font-awesome-icon
-                v-if="player._id === teamInfo.createdBy"
+                v-if="player._id === teamInfo.manager"
                 icon="crown"
                 class="team-info__captain-icon"
               />

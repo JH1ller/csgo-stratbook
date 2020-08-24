@@ -66,6 +66,8 @@ export interface Player {
   role?: Roles;
   avatar?: string;
   team?: string;
+  isOnline?: boolean;
+  lastOnline?: Date;
 }
 
 export interface Team {
@@ -73,6 +75,8 @@ export interface Team {
   name: string;
   code: string;
   avatar?: string;
+  createdBy?: string;
+  manager?: string;
   website?: string;
   server?: {
     ip?: string;

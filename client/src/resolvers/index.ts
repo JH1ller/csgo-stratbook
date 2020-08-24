@@ -19,7 +19,9 @@ export const globalResolver: NavigationGuard = async (_to, _from, next) => {
 };
 
 export const stratsResolver: NavigationGuard = async (_to, _from, next) => {
-  await store.dispatch('auth/fetchProfile');
+  if (store.state.auth.token) {
+    await store.dispatch('auth/fetchProfile');
+  }
 
   switch (store.state.auth.status) {
     case Status.NO_AUTH:
@@ -36,7 +38,9 @@ export const stratsResolver: NavigationGuard = async (_to, _from, next) => {
 };
 
 export const teamResolver: NavigationGuard = async (_to, _from, next) => {
-  await store.dispatch('auth/fetchProfile');
+  if (store.state.auth.token) {
+    await store.dispatch('auth/fetchProfile');
+  }
 
   switch (store.state.auth.status) {
     case Status.NO_AUTH:
@@ -53,7 +57,9 @@ export const teamResolver: NavigationGuard = async (_to, _from, next) => {
 };
 
 export const loginResolver: NavigationGuard = async (_to, _from, next) => {
-  await store.dispatch('auth/fetchProfile');
+  if (store.state.auth.token) {
+    await store.dispatch('auth/fetchProfile');
+  }
 
   switch (store.state.auth.status) {
     case Status.NO_AUTH:

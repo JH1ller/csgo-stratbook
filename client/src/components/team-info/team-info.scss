@@ -132,6 +132,10 @@
     &.-self {
       background-color: $color--navyblue-20;
     }
+
+    &.-online {
+      border: 2px solid $color--green;
+    }
   }
 
   &__member-name {

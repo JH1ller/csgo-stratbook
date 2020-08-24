@@ -22,16 +22,26 @@ export const mapModule: Module<MapState, RootState> = {
   state: mapInitialState(),
   getters: {},
   actions: {
-    async fetchMaps({ commit, dispatch }) {
+    async fetchMaps({ commit, dispatch, state }) {
       const res = await APIService.getMaps();
       if (res.success) {
         commit(SET_MAPS, res.success);
+        localStorage.setItem('maps', JSON.stringify(state.maps));
         dispatch('updateCurrentMap', res.success[0]._id);
       }
     },
     updateCurrentMap({ commit, dispatch }, mapID: string) {
       commit(SET_CURRENT_MAP, mapID);
+      localStorage.setItem('currentMap', mapID);
       dispatch('strat/fetchStrats', null, { root: true });
+    },
+    loadMapsFromStorage({ commit }) {
+      const maps = localStorage.getItem('maps');
+      if (maps) commit(SET_CURRENT_MAP, JSON.parse(maps));
+    },
+    loadCurrentMapFromStorage({ commit }) {
+      const currentMap = localStorage.getItem('currentMap');
+      if (currentMap) commit(SET_CURRENT_MAP, currentMap);
     },
     resetState({ commit }) {
       commit(RESET_STATE);

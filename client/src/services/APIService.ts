@@ -42,6 +42,7 @@ axiosInstance.interceptors.response.use(
     console.error(error.response.data.error);
     if (error.response.status === 401) {
       if (router.currentRoute.name !== RouteNames.Login) router.push(Routes.Login);
+      store.dispatch('auth/resetState');
       store.dispatch('app/showToast', 'Authorization expired. Please login again.');
       store.dispatch('auth/updateStatus', Status.NO_AUTH);
     } else {
@@ -102,11 +103,10 @@ class APIService {
   }
 
   static async getPlayer(): Promise<APIResponse<Player>> {
-    const decodedToken: JWTData = jwtDecode(store.state.auth.token);
-    if (!decodedToken._id) return { error: 'Could not fetch player info: No token in storage.' };
-    const target = urljoin(Endpoints.Players, decodedToken._id);
-
     try {
+      const decodedToken: JWTData = jwtDecode(store.state.auth.token);
+      if (!decodedToken?._id) return { error: 'Could not fetch player info: No token in storage.' };
+      const target = urljoin(Endpoints.Players, decodedToken._id);
       const { data } = await axiosInstance.get(target);
       return { success: data };
     } catch (error) {

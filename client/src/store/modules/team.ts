@@ -42,6 +42,7 @@ export const teamModule: Module<TeamState, RootState> = {
       const res = await APIService.getTeam();
       if (res.success) {
         commit(SET_TEAM_INFO, res.success);
+        localStorage.setItem('teamInfo', JSON.stringify(res.success));
         dispatch('auth/updateStatus', Status.LOGGED_IN_WITH_TEAM, { root: true });
         dispatch('fetchTeamMembers');
         return { success: res.success };
@@ -53,6 +54,7 @@ export const teamModule: Module<TeamState, RootState> = {
       const res = await APIService.getMembersOfTeam();
       if (res.success) {
         commit(SET_TEAM_MEMBERS, res.success);
+        localStorage.setItem('teamMembers', JSON.stringify(res.success));
       }
     },
     async createTeam({ commit, dispatch }, formData: TeamCreateFormData) {
@@ -84,6 +86,14 @@ export const teamModule: Module<TeamState, RootState> = {
       } else {
         return { error: res.error };
       }
+    },
+    loadTeamInfoFromStorage({ commit }) {
+      const teamInfo = localStorage.getItem('teamInfo');
+      if (teamInfo) commit(SET_TEAM_INFO, JSON.parse(teamInfo));
+    },
+    loadTeamMembersFromStorage({ commit }) {
+      const teamMembers = localStorage.getItem('teamMembers');
+      if (teamMembers) commit(SET_TEAM_MEMBERS, JSON.parse(teamMembers));
     },
     resetState({ commit }) {
       commit(RESET_STATE);

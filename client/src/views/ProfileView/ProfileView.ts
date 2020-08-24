@@ -1,5 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
+import { Routes } from '@/router/router.models';
 
 const authModule = namespace('auth');
 
@@ -9,6 +10,6 @@ export default class ProfileView extends Vue {
 
   private async logoutRequest() {
     await this.logout();
-    this.$router.push({ name: 'Login' });
+    this.$router.push(Routes.Login);
   }
 }

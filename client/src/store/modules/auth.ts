@@ -2,6 +2,7 @@ import { Module } from 'vuex';
 import { RootState } from '..';
 import { Status, Player } from '@/services/models';
 import APIService from '@/services/APIService';
+import WebSocketService from '@/services/WebSocketService';
 
 const SET_TOKEN = 'SET_TOKEN';
 const SET_PROFILE = 'SET_PROFILE';
@@ -29,6 +30,7 @@ export const authModule: Module<AuthState, RootState> = {
       const res = await APIService.getPlayer();
       if (res.success) {
         const profile = res.success;
+        localStorage.setItem('profile', JSON.stringify(profile));
         dispatch('setProfile', profile);
         return { success: profile };
       } else {
@@ -41,6 +43,11 @@ export const authModule: Module<AuthState, RootState> = {
     setProfile({ commit }, profile: Player) {
       commit(SET_PROFILE, profile);
       commit(SET_STATUS, profile.team ? Status.LOGGED_IN_WITH_TEAM : Status.LOGGED_IN_NO_TEAM);
+      if (profile.team) {
+        WebSocketService.getInstance().connect();
+      } else {
+        WebSocketService.getInstance().disconnect();
+      }
     },
     async login({ commit, dispatch }, { email, password }) {
       const res = await APIService.login(email, password);
@@ -56,6 +63,7 @@ export const authModule: Module<AuthState, RootState> = {
     async logout({ dispatch }) {
       dispatch('resetState', null, { root: true });
       localStorage.clear();
+      WebSocketService.getInstance().disconnect();
       dispatch('app/showToast', 'Logged out successfully', { root: true });
     },
     async register(_, formData) {
@@ -71,6 +79,12 @@ export const authModule: Module<AuthState, RootState> = {
       if (token) {
         commit(SET_TOKEN, token);
         await dispatch('fetchProfile');
+      }
+    },
+    async loadProfileFromStorage({ dispatch }) {
+      const profile = localStorage.getItem('profile');
+      if (profile) {
+        await dispatch('setProfile', JSON.parse(profile));
       }
     },
     resetState({ commit }) {
