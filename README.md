@@ -34,12 +34,15 @@ Vue-Electron-Typescript application to manage strategies in Valve's popular comp
 - Vue Class Components & Property Decorator
 - Electron
 - Typescript
+- Socket.io-Client
 - SCSS
+
 #### Server/Backend
 
 - Node.js
 - Express
 - MongoDB/Mongoose
+- Socket.io
 - Bcrypt
 - JWT
 
@@ -49,8 +52,8 @@ Vue-Electron-Typescript application to manage strategies in Valve's popular comp
 - [x] JWT authenticated REST api to create & manage strategies
 - [x] Team creation & team profiles
 - [x] Filter strategies
+- [x] Live DB via socket.io
 
-- [ ] Live DB via socket.io
 - [ ] Steam OAuth
 - [ ] Settings Menu
 - [ ] Player Profiles
