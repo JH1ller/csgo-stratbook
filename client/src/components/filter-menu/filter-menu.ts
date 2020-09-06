@@ -1,14 +1,7 @@
 import { Component, Vue, Emit } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
 import { Player, Sides, StratTypes } from '@/services/models';
-import { library, config } from '@fortawesome/fontawesome-svg-core';
-import { faFilter } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import Multiselect from 'vue-multiselect';
-
-config.autoAddCss = false;
-library.add(faFilter);
-Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 const filterModule = namespace('filter');
 const teamModule = namespace('team');

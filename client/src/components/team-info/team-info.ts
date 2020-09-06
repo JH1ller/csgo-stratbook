@@ -1,17 +1,10 @@
-import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
+import { Component, Vue, Emit } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
 import { Team, Player } from '@/services/models';
-import { library, config } from '@fortawesome/fontawesome-svg-core';
-import { faCopy, faCrown, faGamepad } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 const { shell } = require('electron').remote;
 import ago from 's-ago';
 
 const { remote } = require('electron');
-
-config.autoAddCss = false;
-library.add(faCopy, faCrown, faGamepad);
-Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 const teamModule = namespace('team');
 const authModule = namespace('auth');

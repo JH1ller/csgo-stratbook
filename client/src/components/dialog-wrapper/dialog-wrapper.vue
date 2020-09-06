@@ -4,9 +4,7 @@
       <ConfirmDialog
         v-for="dialog in openDialogs"
         :key="dialog.key"
-        :text="dialog.text"
-        :resolve="dialog.resolve"
-        :reject="dialog.reject"
+        v-bind="dialog"
         @close="closeDialog(dialog.key)"
       />
     </transition-group>

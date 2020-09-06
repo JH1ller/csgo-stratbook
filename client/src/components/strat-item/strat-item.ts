@@ -2,15 +2,8 @@ import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
 const { shell } = require('electron').remote;
 import { Strat, Sides, StratTypes, Step } from '@/services/models';
-import { library, config } from '@fortawesome/fontawesome-svg-core';
-import { faEdit, faTrashAlt, faBan, faFilm } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import StepItem from '@/components/step-item/step-item.vue';
 import { IStepItem } from '@/components/step-item/step-item';
-
-config.autoAddCss = false;
-library.add(faEdit, faTrashAlt, faBan, faFilm);
-Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 const filterModule = namespace('filter');
 

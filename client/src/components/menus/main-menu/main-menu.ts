@@ -1,21 +1,8 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
-import { library, config } from '@fortawesome/fontawesome-svg-core';
-import {
-  faTools,
-  faUtensils,
-  faBoxes,
-  faUsers,
-  faChess,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 const remote = require('electron').remote;
 import { Player } from '@/services/models';
 import { BrowserWindow } from 'electron';
-
-config.autoAddCss = false;
-library.add(faTools, faUtensils, faBoxes, faUsers, faChess);
-Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 const authModule = namespace('auth');
 

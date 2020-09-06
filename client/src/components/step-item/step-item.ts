@@ -1,14 +1,7 @@
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
 import { Step, Player, Equipment } from '@/services/models';
 import { namespace } from 'vuex-class';
-import { library, config } from '@fortawesome/fontawesome-svg-core';
-import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import Multiselect from 'vue-multiselect';
-
-config.autoAddCss = false;
-library.add(faEdit, faTrashAlt);
-Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 const teamModule = namespace('team');
 
