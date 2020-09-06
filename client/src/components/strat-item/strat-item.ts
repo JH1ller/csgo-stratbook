@@ -28,8 +28,6 @@ export default class StratItem extends Vue {
     type: StratTypes | null;
   };
 
-  private inDeletionQuestion: boolean = false;
-
   private get isCtSide(): boolean {
     return this.strat.side === Sides.CT;
   }
@@ -49,21 +47,13 @@ export default class StratItem extends Vue {
     this.addStepElement.cancelEdit();
   }
 
-  private deleteClicked() {
-    if (!this.inDeletionQuestion) {
-      this.inDeletionQuestion = true;
-    } else {
-      this.inDeletionQuestion = false;
-      this.$emit('delete-clicked', this.strat._id);
-    }
-  }
-
-  private cancelDeletion() {
-    this.inDeletionQuestion = false;
-  }
-
   private openVideo() {
     shell.openExternal(this.strat.videoLink as string);
+  }
+
+  @Emit()
+  private deleteStrat() {
+    return this.strat._id;
   }
 
   @Emit()

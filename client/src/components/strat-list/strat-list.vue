@@ -4,7 +4,7 @@
       v-for="strat in filteredStrats"
       :key="strat._id"
       :strat="strat"
-      @delete-clicked="deleteClicked"
+      @delete-strat="deleteStrat"
       @toggle-active="toggleActive"
       @update-step="updateStep"
       @edit-strat="editStrat"

@@ -5,13 +5,7 @@ import store from './store';
 
 Vue.config.productionTip = false;
 
-store.dispatch('auth/loadTokenFromStorage');
-store.dispatch('auth/loadProfileFromStorage');
-store.dispatch('map/loadMapsFromStorage');
-store.dispatch('map/loadCurrentMapFromStorage');
-store.dispatch('team/loadTeamInfoFromStorage');
-store.dispatch('team/loadTeamMembersFromStorage');
-store.dispatch('strat/loadStratsFromStorage');
+store.dispatch('loadDataFromStorage');
 
 new Vue({
   router,

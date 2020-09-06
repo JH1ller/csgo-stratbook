@@ -4,6 +4,9 @@ import { Team, Player } from '@/services/models';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
 import { faCopy, faCrown, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+const { shell } = require('electron').remote;
+import ago from 's-ago';
+
 const { remote } = require('electron');
 
 config.autoAddCss = false;
@@ -33,6 +36,16 @@ export default class TeamInfo extends Vue {
     }
   }
 
+  private openWebsite() {
+    if (this.teamInfo.website) shell.openExternal(this.teamInfo.website);
+  }
+
+  private lastOnlineString(lastOnline: Date) {
+    if (!lastOnline) return;
+    const date = new Date(lastOnline);
+    return ago(date);
+  }
+
   private copyCode() {
     navigator.clipboard.writeText(this.teamInfo.code.toUpperCase());
     this.showToast('Join code copied');
@@ -45,12 +58,8 @@ export default class TeamInfo extends Vue {
 
   private runServer() {
     const currentWindow = remote.getCurrentWindow();
-    currentWindow.loadURL(
-      `steam://connect/${this.teamInfo.server?.ip}/${this.teamInfo.server?.password}`
-    );
-    this.showToast(
-      `Launching game and connecting to ${this.teamInfo.server?.ip}`
-    );
+    currentWindow.loadURL(`steam://connect/${this.teamInfo.server?.ip}/${this.teamInfo.server?.password}`);
+    this.showToast(`Launching game and connecting to ${this.teamInfo.server?.ip}`);
   }
 
   @Emit()

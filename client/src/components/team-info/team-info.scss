@@ -134,8 +134,20 @@
     }
 
     &.-online {
-      border: 2px solid $color--green;
+      border: 1px solid $color--green;
     }
+  }
+
+  &__member-last-online {
+    font-size: 0.8em;
+    font-style: italic;
+    color: rgba($color--navyblue, 0.8);
+    margin-left: 3px;
+  }
+
+  &__member-text {
+    display: flex;
+    flex-direction: column;
   }
 
   &__member-name {

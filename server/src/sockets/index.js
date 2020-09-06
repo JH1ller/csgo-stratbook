@@ -45,18 +45,24 @@ const initWS = (io) => {
       } catch (error) {
         console.log(error);
       }
+    } else {
+      clients.forEach(({ teamID }) => io.to(teamID).emit('deleted-step'));
     }
   });
 
   Strat.watch(null, { fullDocument: 'updateLookup' }).on('change', async (data) => {
     if (data.operationType !== 'delete') {
       io.to(data.fullDocument.team).emit('changed-strat', { mapID: data.fullDocument.map });
+    } else {
+      clients.forEach(({ teamID }) => io.to(teamID).emit('deleted-strat'));
     }
   });
 
   Player.watch(null, { fullDocument: 'updateLookup' }).on('change', async (data) => {
     if (data.operationType !== 'delete') {
       io.to(data.fullDocument.team).emit('changed-player', { playerID: data.fullDocument._id });
+    } else {
+      clients.forEach(({ teamID }) => io.to(teamID).emit('deleted-player'));
     }
   });
 };

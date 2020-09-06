@@ -37,7 +37,7 @@ export const mapModule: Module<MapState, RootState> = {
     },
     loadMapsFromStorage({ commit }) {
       const maps = localStorage.getItem('maps');
-      if (maps) commit(SET_CURRENT_MAP, JSON.parse(maps));
+      if (maps) commit(SET_MAPS, JSON.parse(maps));
     },
     loadCurrentMapFromStorage({ commit }) {
       const currentMap = localStorage.getItem('currentMap');

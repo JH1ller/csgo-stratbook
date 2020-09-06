@@ -6,10 +6,12 @@ import FloatingAdd from '@/components/floating-add/floating-add.vue';
 import CreationOverlay from '@/components/creation-overlay/creation-overlay.vue';
 import FilterMenu from '@/components/filter-menu/filter-menu.vue';
 import { Strat, StratTypes, Sides } from '@/services/models';
+import { Dialog } from '@/components/dialog-wrapper/dialog-wrapper.models';
 
 const filterModule = namespace('filter');
 const mapModule = namespace('map');
 const stratModule = namespace('strat');
+const appModule = namespace('app');
 
 @Component({
   components: {
@@ -41,6 +43,7 @@ export default class StratsView extends Vue {
   @stratModule.Action createStep!: (payload: any) => Promise<void>;
   @stratModule.Action deleteStep!: (stepID: string) => Promise<void>;
   @filterModule.Action clearFilters!: () => Promise<void>;
+  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
 
   private mounted() {
     //this.refreshInterval = setInterval(() => this.fetchStrats(), 15000); // TODO: move interval value to cfg
@@ -71,5 +74,17 @@ export default class StratsView extends Vue {
 
   private toggleStratActive(data: Partial<Strat>) {
     this.updateStrat(data);
+  }
+
+  private async deleteStratRequest(stratID: string) {
+    try {
+      await this.showDialog({
+        key: 'strats-view/confirm-delete',
+        text: 'Are you sure you want to delete this strat?',
+      });
+      this.deleteStrat(stratID);
+    } catch (error) {
+      //
+    }
   }
 }

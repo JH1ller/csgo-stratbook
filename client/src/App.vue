@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <dialog-wrapper />
     <toast />
     <view-title ref="ViewTitle"></view-title>
     <main-menu />
@@ -15,6 +16,7 @@ import ViewTitle from '@/components/view-title/view-title.vue';
 import Loader from '@/components/loader/loader.vue';
 import Toast from '@/components/toast/toast.vue';
 import MainMenu from '@/components/menus/main-menu/main-menu.vue';
+import DialogWrapper from './components/dialog-wrapper/dialog-wrapper.vue';
 
 @Component({
   components: {
@@ -22,6 +24,7 @@ import MainMenu from '@/components/menus/main-menu/main-menu.vue';
     Loader,
     MainMenu,
     Toast,
+    DialogWrapper,
   },
 })
 export default class App extends Vue {}

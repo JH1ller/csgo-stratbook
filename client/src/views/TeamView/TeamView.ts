@@ -6,9 +6,11 @@ import TeamInfo from '@/components/team-info/team-info.vue';
 import { TeamCreateFormData } from '@/components/team-create-form/team-create-form';
 import { Player, Response, Team } from '@/services/models';
 import { FormComponent } from '@/interfaces';
+import { Dialog } from '@/components/dialog-wrapper/dialog-wrapper.models';
 
 const teamModule = namespace('team');
 const authModule = namespace('auth');
+const appModule = namespace('app');
 
 @Component({
   components: {
@@ -25,6 +27,7 @@ export default class TeamView extends Vue {
   @teamModule.Action joinTeam!: (code: string) => Promise<Response>;
   @teamModule.Action leaveTeam!: () => Promise<Response>;
   @teamModule.Action fetchTeamInfo!: () => Promise<void>;
+  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
   @Ref('create-form') createForm!: FormComponent;
   @Ref('join-form') joinForm!: FormComponent;
 
@@ -56,6 +59,14 @@ export default class TeamView extends Vue {
   }
 
   private async leaveTeamRequest() {
-    this.leaveTeam();
+    try {
+      await this.showDialog({
+        key: 'team-view/confirm-leave',
+        text: 'Are you sure you want to leave your team?',
+      });
+      this.leaveTeam();
+    } catch (error) {
+      //
+    }
   }
 }

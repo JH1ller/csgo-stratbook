@@ -12,7 +12,7 @@
         draggable="false"
       />
       <img v-else src="@/assets/icons/t_badge.png" class="strat-item__side-badge" draggable="false" />
-      <div class="strat-item__btn-wrapper" :class="{'-deleting': inDeletionQuestion}">
+      <div class="strat-item__btn-wrapper">
         <div
           class="strat-item__btn-youtube"
           v-if="strat.videoLink"
@@ -24,14 +24,7 @@
         <div class="strat-item__btn-edit" @click="editStrat" data-tooltip="Edit strat">
           <font-awesome-icon icon="edit" />
         </div>
-
-        <div class="strat-item__deletion" v-if="inDeletionQuestion">
-          <span class="strat-item__deletion-question">Are you sure?</span>
-          <div class="strat-item__btn-cancel" @click="cancelDeletion" data-tooltip="Cancel">
-            <font-awesome-icon icon="ban" />
-          </div>
-        </div>
-        <div class="strat-item__btn-delete" @click="deleteClicked" data-tooltip="Delete strat">
+        <div class="strat-item__btn-delete" @click="deleteStrat" data-tooltip="Delete strat">
           <font-awesome-icon icon="trash-alt" />
         </div>
       </div>

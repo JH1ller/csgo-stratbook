@@ -9,7 +9,7 @@
       @clear-filters="clearFilters"
     />
     <strat-list
-      @delete-clicked="deleteStrat"
+      @delete-strat="deleteStratRequest"
       @edit-strat="showCreationOverlay"
       @toggle-active="toggleStratActive"
       @update-step="updateStep"

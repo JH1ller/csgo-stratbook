@@ -1,7 +1,7 @@
 import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
 
-import { Strat, Sides, StratTypes } from '@/services/models';
+import { Strat, Sides, StratTypes, Step } from '@/services/models';
 import StratItem from '@/components/strat-item/strat-item.vue';
 
 const stratModule = namespace('strat');
@@ -36,8 +36,8 @@ export default class StratList extends Vue {
 
   // Emitted through from strat-item
   @Emit()
-  private deleteClicked(stratId: string) {
-    return stratId;
+  private deleteStrat(stratID: string) {
+    return stratID;
   }
 
   // Emitted through from strat-item
@@ -48,8 +48,8 @@ export default class StratList extends Vue {
 
   // Emitted through from strat-item
   @Emit()
-  private updateStep(changeObj: any) {
-    return changeObj;
+  private updateStep(payload: Partial<Step>) {
+    return payload;
   }
 
   // Emitted through from strat-item
@@ -66,7 +66,7 @@ export default class StratList extends Vue {
 
   // Emitted through from strat-item
   @Emit()
-  private deleteStep(stepId: string) {
-    return stepId;
+  private deleteStep(stepID: string) {
+    return stepID;
   }
 }

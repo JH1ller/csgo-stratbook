@@ -8,9 +8,13 @@ import WebSocketService from '@/services/WebSocketService';
 export const globalResolver: NavigationGuard = async (_to, _from, next) => {
   if (isEmpty(store.state.auth.profile) && store.state.auth.token) {
     await store.dispatch('auth/fetchProfile');
+  } else if (store.state.auth.token) {
+    store.dispatch('auth/fetchProfile');
   }
   if (isEmpty(store.state.team.teamInfo) && (store.state.auth.profile as Player).team) {
     await store.dispatch('team/fetchTeamInfo');
+  } else if ((store.state.auth.profile as Player).team) {
+    store.dispatch('team/fetchTeamInfo');
   }
   if (store.state.auth.status === Status.LOGGED_IN_WITH_TEAM) {
     WebSocketService.getInstance().connect(); // * starting socket connection
@@ -19,15 +23,13 @@ export const globalResolver: NavigationGuard = async (_to, _from, next) => {
 };
 
 export const stratsResolver: NavigationGuard = async (_to, _from, next) => {
-  if (store.state.auth.token) {
-    await store.dispatch('auth/fetchProfile');
-  }
-
   switch (store.state.auth.status) {
     case Status.NO_AUTH:
+      store.dispatch('app/showToast', 'You need to login first.');
       next(Routes.Login);
       break;
     case Status.LOGGED_IN_NO_TEAM:
+      store.dispatch('app/showToast', 'You need to join a team first.');
       next(Routes.Team);
       break;
     case Status.LOGGED_IN_WITH_TEAM:
@@ -38,12 +40,9 @@ export const stratsResolver: NavigationGuard = async (_to, _from, next) => {
 };
 
 export const teamResolver: NavigationGuard = async (_to, _from, next) => {
-  if (store.state.auth.token) {
-    await store.dispatch('auth/fetchProfile');
-  }
-
   switch (store.state.auth.status) {
     case Status.NO_AUTH:
+      store.dispatch('app/showToast', 'You need to login first.');
       next(Routes.Login);
       break;
     case Status.LOGGED_IN_NO_TEAM:
@@ -57,10 +56,6 @@ export const teamResolver: NavigationGuard = async (_to, _from, next) => {
 };
 
 export const loginResolver: NavigationGuard = async (_to, _from, next) => {
-  if (store.state.auth.token) {
-    await store.dispatch('auth/fetchProfile');
-  }
-
   switch (store.state.auth.status) {
     case Status.NO_AUTH:
       next();

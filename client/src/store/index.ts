@@ -33,6 +33,15 @@ export default new Vuex.Store({
     resetState({ dispatch, state }) {
       Object.keys(state).forEach(module => dispatch(`${module}/resetState`));
     },
+    loadDataFromStorage({ dispatch }) {
+      dispatch('auth/loadTokenFromStorage');
+      dispatch('auth/loadProfileFromStorage');
+      dispatch('map/loadMapsFromStorage');
+      dispatch('map/loadCurrentMapFromStorage');
+      dispatch('team/loadTeamInfoFromStorage');
+      dispatch('team/loadTeamMembersFromStorage');
+      dispatch('strat/loadStratsFromStorage');
+    },
   },
   getters: {},
 });

@@ -3,7 +3,11 @@
     <div class="team-info__container">
       <div class="team-info__left-wrapper">
         <h2 class="team-info__title">{{teamInfo.name}}</h2>
-        <p v-if="teamInfo.website" class="team-info__website">{{teamInfo.website}}</p>
+        <p
+          v-if="teamInfo.website"
+          class="team-info__website"
+          @click="openWebsite"
+        >{{teamInfo.website}}</p>
         <div class="team-info__server-wrapper">
           <div
             class="team-info__server-copy"
@@ -39,14 +43,19 @@
             v-for="player in teamMembers"
             :key="player._id"
           >
-            <span class="team-info__member-name">
-              <font-awesome-icon
-                v-if="player._id === teamInfo.manager"
-                icon="crown"
-                class="team-info__captain-icon"
-              />
-              {{ player.name }}
-            </span>
+            <div class="team-info__member-text">
+              <span class="team-info__member-name">
+                <font-awesome-icon
+                  v-if="player._id === teamInfo.manager"
+                  icon="crown"
+                  class="team-info__captain-icon"
+                />
+                {{ player.name }}
+              </span>
+              <p
+                class="team-info__member-last-online"
+              >{{ player.isOnline ? 'online' : lastOnlineString(player.lastOnline) }}</p>
+            </div>
             <img class="team-info__member-avatar" :src="resolveAvatar(player.avatar)" />
           </li>
           <span class="team-info__leave" @click="leaveTeam" data-tooltip="Leave the team">Leave team</span>
