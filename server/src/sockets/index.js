@@ -38,31 +38,67 @@ const initWS = (io) => {
   });
 
   Step.watch(null, { fullDocument: 'updateLookup' }).on('change', async (data) => {
-    if (data.operationType !== 'delete') {
-      try {
-        const strat = await Strat.findById(data.fullDocument.strat);
-        io.to(strat.team).emit('changed-step', { stratID: strat._id });
-      } catch (error) {
-        console.log(error);
+    if (data.operationType === 'delete') return;
+
+    try {
+      const strat = await Strat.findById(data.fullDocument.strat);
+      switch (data.operationType) {
+        case 'insert':
+          io.to(strat.team).emit('created-step', { step: data.fullDocument });
+          break;
+        case 'update':
+          data.updateDescription.updatedFields.deleted
+            ? io.to(strat.team).emit('deleted-step', { stepID: data.fullDocument._id })
+            : io.to(strat.team).emit('updated-step', { step: data.fullDocument });
+          break;
       }
-    } else {
-      clients.forEach(({ teamID }) => io.to(teamID).emit('deleted-step'));
+    } catch (error) {
+      console.log(error);
     }
   });
 
   Strat.watch(null, { fullDocument: 'updateLookup' }).on('change', async (data) => {
-    if (data.operationType !== 'delete') {
-      io.to(data.fullDocument.team).emit('changed-strat', { mapID: data.fullDocument.map });
-    } else {
-      clients.forEach(({ teamID }) => io.to(teamID).emit('deleted-strat'));
+    if (data.operationType === 'delete') return;
+
+    console.log(data); // TODO: remove
+
+    switch (data.operationType) {
+      case 'insert':
+        io.to(data.fullDocument.team).emit('created-strat', { strat: data.fullDocument });
+        break;
+      case 'update':
+        data.updateDescription.updatedFields.deleted
+          ? io.to(data.fullDocument.team).emit('deleted-strat', { stratID: data.fullDocument._id })
+          : io.to(data.fullDocument.team).emit('updated-strat', { strat: data.fullDocument });
+        break;
+    }
+  });
+
+  Team.watch(null, { fullDocument: 'updateLookup' }).on('change', async (data) => {
+    if (data.operationType === 'delete') return;
+
+    switch (
+      data.operationType // keep switch statement in case "insert" is handled here later
+    ) {
+      case 'update':
+        data.updateDescription.updatedFields.deleted
+          ? io.to(data.fullDocument._id).emit('deleted-team')
+          : io.to(data.fullDocument._id).emit('updated-team', { team: data.fullDocument });
+        break;
     }
   });
 
   Player.watch(null, { fullDocument: 'updateLookup' }).on('change', async (data) => {
-    if (data.operationType !== 'delete') {
-      io.to(data.fullDocument.team).emit('changed-player', { playerID: data.fullDocument._id });
-    } else {
-      clients.forEach(({ teamID }) => io.to(teamID).emit('deleted-player'));
+    if (data.operationType === 'delete') return;
+
+    switch (
+      data.operationType // keep switch statement in case "insert" is handled here later
+    ) {
+      case 'update':
+        data.updateDescription.updatedFields.deleted
+          ? io.to(data.fullDocument.team).emit('deleted-player', { playerID: data.fullDocument._id })
+          : io.to(data.fullDocument.team).emit('updated-player', { player: data.fullDocument });
+        break;
     }
   });
 };

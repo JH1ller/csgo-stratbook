@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongooseDelete = require('mongoose-delete');
 
 const equipmentSchema = new mongoose.Schema({
   grenade: {
@@ -81,6 +82,8 @@ const stepSchema = new mongoose.Schema({
     type: String,
   },
 });
+
+stepSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
 
 stepSchema.pre('save', function (next) {
   if (this.isModified()) {

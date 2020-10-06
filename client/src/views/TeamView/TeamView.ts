@@ -45,7 +45,6 @@ export default class TeamView extends Vue {
   }
 
   private async joinTeamRequest(code: string) {
-    console.log('teamview');
     const res = await this.joinTeam(code);
     if (res.error) {
       this.joinForm.updateFormMessage(res.error, 'error');

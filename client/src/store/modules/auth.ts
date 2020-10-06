@@ -43,6 +43,7 @@ export const authModule: Module<AuthState, RootState> = {
     setProfile({ commit }, profile: Player) {
       commit(SET_PROFILE, profile);
       commit(SET_STATUS, profile.team ? Status.LOGGED_IN_WITH_TEAM : Status.LOGGED_IN_NO_TEAM);
+      console.log(profile);
       if (profile.team) {
         WebSocketService.getInstance().connect();
       } else {
@@ -64,7 +65,7 @@ export const authModule: Module<AuthState, RootState> = {
       dispatch('resetState', null, { root: true });
       localStorage.clear();
       WebSocketService.getInstance().disconnect();
-      dispatch('app/showToast', 'Logged out successfully', { root: true });
+      dispatch('app/showToast', { id: 'auth/logout', text: 'Logged out successfully.' }, { root: true });
     },
     async register(_, formData) {
       const res = await APIService.register(formData);

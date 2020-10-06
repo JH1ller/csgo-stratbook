@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { boolean } = require('@hapi/joi');
+const mongooseDelete = require('mongoose-delete');
 
 const playerSchema = new mongoose.Schema({
   name: {
@@ -67,6 +67,8 @@ const playerSchema = new mongoose.Schema({
     default: false,
   },
 });
+
+playerSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
 
 playerSchema.pre('save', function (next) {
   if (this.isModified()) {

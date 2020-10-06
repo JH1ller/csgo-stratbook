@@ -25,11 +25,11 @@ export const globalResolver: NavigationGuard = async (_to, _from, next) => {
 export const stratsResolver: NavigationGuard = async (_to, _from, next) => {
   switch (store.state.auth.status) {
     case Status.NO_AUTH:
-      store.dispatch('app/showToast', 'You need to login first.');
+      store.dispatch('app/showToast', { id: 'stratsResolver/noAuth', text: 'You need to login first.' });
       next(Routes.Login);
       break;
     case Status.LOGGED_IN_NO_TEAM:
-      store.dispatch('app/showToast', 'You need to join a team first.');
+      store.dispatch('app/showToast', { id: 'stratsResolver/noTeam', text: 'You need to join a team first.' });
       next(Routes.Team);
       break;
     case Status.LOGGED_IN_WITH_TEAM:
@@ -42,7 +42,7 @@ export const stratsResolver: NavigationGuard = async (_to, _from, next) => {
 export const teamResolver: NavigationGuard = async (_to, _from, next) => {
   switch (store.state.auth.status) {
     case Status.NO_AUTH:
-      store.dispatch('app/showToast', 'You need to login first.');
+      store.dispatch('app/showToast', { id: 'teamResolver/noAuth', text: 'You need to login first.' });
       next(Routes.Login);
       break;
     case Status.LOGGED_IN_NO_TEAM:

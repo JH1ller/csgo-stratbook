@@ -34,7 +34,7 @@ router.get('/players', verifyAuth, async (req, res) => {
 });
 
 // * Create One
-router.post('/create', verifyAuth, uploadMiddleware, async (req, res) => {
+router.post('/', verifyAuth, uploadMiddleware, async (req, res) => {
   const { error } = teamValidation(req.body);
   if (error) {
     return res.status(400).send({ error: error.details[0].message });
@@ -88,7 +88,7 @@ router.post('/create', verifyAuth, uploadMiddleware, async (req, res) => {
 });
 
 // * Update One
-router.patch('/update', verifyAuth, getTeam, async (req, res) => {
+router.patch('/', verifyAuth, getTeam, async (req, res) => {
   if (req.body.name != null) {
     res.team.name = req.body.name;
   }
@@ -114,11 +114,17 @@ router.patch('/update', verifyAuth, getTeam, async (req, res) => {
 });
 
 // * Delete One
-router.delete('/delete', verifyAuth, async (req, res) => {
+router.delete('/', verifyAuth, async (req, res) => {
   try {
     const team = await Team.findById(res.player.team);
     if (team.manager === res.player._id) {
-      await res.team.remove();
+      await res.team.delete();
+      const members = await Player.find({ team: res.team._id });
+      const memberPromises = members.map(async (member) => {
+        member.team = undefined;
+        return await member.save();
+      });
+      await Promise.all(memberPromises);
       res.json({ message: 'Deleted team successfully' });
     } else {
       res.status(403).json({ error: 'This action requires higher privileges.' });

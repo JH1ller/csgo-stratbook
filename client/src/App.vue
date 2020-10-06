@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <dialog-wrapper />
-    <toast />
+    <toast-wrapper />
     <view-title ref="ViewTitle"></view-title>
     <main-menu />
     <transition name="fade" mode="out-in">
@@ -14,7 +14,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import ViewTitle from '@/components/view-title/view-title.vue';
 import Loader from '@/components/loader/loader.vue';
-import Toast from '@/components/toast/toast.vue';
+import ToastWrapper from '@/components/toast-wrapper/toast-wrapper.vue';
 import MainMenu from '@/components/menus/main-menu/main-menu.vue';
 import DialogWrapper from './components/dialog-wrapper/dialog-wrapper.vue';
 
@@ -23,7 +23,7 @@ import DialogWrapper from './components/dialog-wrapper/dialog-wrapper.vue';
     ViewTitle,
     Loader,
     MainMenu,
-    Toast,
+    ToastWrapper,
     DialogWrapper,
   },
 })

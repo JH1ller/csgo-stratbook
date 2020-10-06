@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongooseDelete = require('mongoose-delete');
 
 const teamSchema = new mongoose.Schema({
   name: {
@@ -48,5 +49,7 @@ const teamSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+
+teamSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
 
 module.exports = mongoose.model('Team', teamSchema);
