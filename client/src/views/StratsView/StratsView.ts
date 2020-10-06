@@ -1,5 +1,4 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 import MapPicker from '@/components/map-picker/map-picker.vue';
 import StratList from '@/components/strat-list/strat-list.vue';
 import FloatingAdd from '@/components/floating-add/floating-add.vue';
@@ -7,11 +6,7 @@ import CreationOverlay from '@/components/creation-overlay/creation-overlay.vue'
 import FilterMenu from '@/components/filter-menu/filter-menu.vue';
 import { Strat, StratTypes, Sides } from '@/services/models';
 import { Dialog } from '@/components/dialog-wrapper/dialog-wrapper.models';
-
-const filterModule = namespace('filter');
-const mapModule = namespace('map');
-const stratModule = namespace('strat');
-const appModule = namespace('app');
+import { appModule, mapModule, stratModule, filterModule } from '@/store/namespaces';
 
 @Component({
   components: {

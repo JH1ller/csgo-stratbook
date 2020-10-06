@@ -1,10 +1,8 @@
 import { Component, Vue } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 const remote = require('electron').remote;
 import { Player } from '@/services/models';
 import { BrowserWindow } from 'electron';
-
-const authModule = namespace('auth');
+import { authModule } from '@/store/namespaces';
 
 @Component({})
 export default class MainMenu extends Vue {

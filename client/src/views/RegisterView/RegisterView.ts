@@ -2,11 +2,9 @@ import { Component, Vue, Ref } from 'vue-property-decorator';
 import RegisterForm from '@/components/register-form/register-form.vue';
 import { RegisterFormData } from '@/components/register-form/register-form';
 import { FormComponent } from '@/interfaces';
-import { namespace } from 'vuex-class';
 import { Response } from '@/services/models';
 import { Routes } from '@/router/router.models';
-
-const authModule = namespace('auth');
+import { authModule } from '@/store/namespaces';
 
 @Component({
   components: {

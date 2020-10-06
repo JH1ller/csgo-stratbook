@@ -1,8 +1,6 @@
-import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
+import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
 import { Map } from '@/services/models';
-
-const mapModule = namespace('map');
+import { mapModule } from '@/store/namespaces';
 
 @Component({})
 export default class MapPicker extends Vue {

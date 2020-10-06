@@ -1,8 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 import { Toast } from './toast-wrapper.models';
-
-const appModule = namespace('app');
+import { appModule } from '@/store/namespaces';
 
 @Component({})
 export default class ToastWrapper extends Vue {

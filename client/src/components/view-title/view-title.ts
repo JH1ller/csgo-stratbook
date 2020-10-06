@@ -1,10 +1,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import Loader from '@/components/loader/loader.vue';
-import { namespace } from 'vuex-class';
 import { Team } from '@/services/models';
-
-const teamModule = namespace('team');
-const appModule = namespace('app');
+import { appModule, teamModule } from '@/store/namespaces';
 
 @Component({
   components: {

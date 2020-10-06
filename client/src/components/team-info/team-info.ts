@@ -1,21 +1,17 @@
 import { Component, Vue, Emit } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 import { Team, Player } from '@/services/models';
 const { shell } = require('electron').remote;
 import ago from 's-ago';
 import { Toast } from '../toast-wrapper/toast-wrapper.models';
+import { appModule, teamModule, authModule } from '@/store/namespaces';
 
 const { remote } = require('electron');
-
-const teamModule = namespace('team');
-const authModule = namespace('auth');
-const appModule = namespace('app');
 
 @Component({})
 export default class TeamInfo extends Vue {
   @appModule.Action private showToast!: (toast: Toast) => void;
-  @teamModule.State private teamInfo!: Team;
   @authModule.State private profile!: Player;
+  @teamModule.State private teamInfo!: Team;
   @teamModule.State private teamMembers!: Player[];
   @teamModule.Getter private teamAvatarUrl!: string;
   @teamModule.Getter private connectionString!: string;
