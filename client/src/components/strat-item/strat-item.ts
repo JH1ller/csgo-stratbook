@@ -1,11 +1,9 @@
 import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 const { shell } = require('electron').remote;
 import { Strat, Sides, StratTypes, Step } from '@/services/models';
 import StepItem from '@/components/step-item/step-item.vue';
 import { IStepItem } from '@/components/step-item/step-item';
-
-const filterModule = namespace('filter');
+import { filterModule } from '@/store/namespaces';
 
 @Component({
   components: { StepItem },
@@ -15,6 +13,7 @@ export default class StratItem extends Vue {
   @Ref('step-elements') stepElements!: IStepItem[];
   @Ref('add-step') addStepElement!: IStepItem;
   @filterModule.State filters!: {
+    // TODO: create interface for Filter
     name: string;
     player: string;
     side: Sides | null;

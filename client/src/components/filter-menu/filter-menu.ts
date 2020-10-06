@@ -1,10 +1,7 @@
 import { Component, Vue, Emit } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 import { Player, Sides, StratTypes } from '@/services/models';
 import Multiselect from 'vue-multiselect';
-
-const filterModule = namespace('filter');
-const teamModule = namespace('team');
+import { filterModule, teamModule } from '@/store/namespaces';
 
 @Component({
   components: {

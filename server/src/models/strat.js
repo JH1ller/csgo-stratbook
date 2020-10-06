@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongooseDelete = require('mongoose-delete');
 
 const stratSchema = new mongoose.Schema({
   name: {
@@ -65,6 +66,8 @@ const stratSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+
+stratSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
 
 stratSchema.pre('save', function (next) {
   if (this.isModified()) {

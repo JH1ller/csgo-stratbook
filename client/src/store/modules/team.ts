@@ -6,6 +6,9 @@ import { TeamCreateFormData } from '@/components/team-create-form/team-create-fo
 
 const SET_TEAM_INFO = 'SET_TEAM_INFO';
 const SET_TEAM_MEMBERS = 'SET_TEAM_MEMBERS';
+const ADD_TEAM_MEMBER = 'ADD_TEAM_MEMBER';
+const UPDATE_TEAM_MEMBER = 'UPDATE_TEAM_MEMBER';
+const DELETE_TEAM_MEMBER = 'DELETE_TEAM_MEMBER';
 const RESET_STATE = 'RESET_STATE';
 
 export interface TeamState {
@@ -42,7 +45,7 @@ export const teamModule: Module<TeamState, RootState> = {
       const res = await APIService.getTeam();
       if (res.success) {
         commit(SET_TEAM_INFO, res.success);
-        localStorage.setItem('teamInfo', JSON.stringify(res.success));
+        dispatch('saveTeamInfoToStorage');
         dispatch('auth/updateStatus', Status.LOGGED_IN_WITH_TEAM, { root: true });
         dispatch('fetchTeamMembers');
         return { success: res.success };
@@ -50,14 +53,14 @@ export const teamModule: Module<TeamState, RootState> = {
         return { error: res.error };
       }
     },
-    async fetchTeamMembers({ commit }) {
+    async fetchTeamMembers({ commit, dispatch }) {
       const res = await APIService.getMembersOfTeam();
       if (res.success) {
         commit(SET_TEAM_MEMBERS, res.success);
-        localStorage.setItem('teamMembers', JSON.stringify(res.success));
+        dispatch('saveTeamMembersToStorage');
       }
     },
-    async createTeam({ commit, dispatch }, formData: TeamCreateFormData) {
+    async createTeam({ dispatch }, formData: TeamCreateFormData) {
       const res = await APIService.createTeam(formData);
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
@@ -79,13 +82,28 @@ export const teamModule: Module<TeamState, RootState> = {
       const res = await APIService.leaveTeam();
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
-        dispatch('resetState');
+        //dispatch('resetState');
         dispatch('strat/resetState', null, { root: true });
-        dispatch('app/showToast', 'You have left the team.', { root: true });
+        dispatch('app/showToast', { id: 'team/leaveTeam', text: 'You have left the team' }, { root: true });
+        //localStorage.clear(); // TODO: clear everything except auth data
+        // TODO: create team/resetState and call it here
         return { success: 'Successfully left team.' };
       } else {
         return { error: res.error };
       }
+    },
+    updateMemberLocally({ commit }, payload: { player: Player }) {
+      commit(UPDATE_TEAM_MEMBER, payload.player);
+    },
+    deleteMemberLocally({ commit }, payload: { playerID: string }) {
+      commit(UPDATE_TEAM_MEMBER, payload.playerID);
+    },
+    updateTeamLocally({ commit }, payload: { player: Player }) {
+      commit(UPDATE_TEAM_MEMBER, payload.player);
+    },
+    deleteTeamLocally({ commit, dispatch }) {
+      commit(SET_TEAM_INFO, {});
+      dispatch('auth/fetchProfile', null, { root: true });
     },
     loadTeamInfoFromStorage({ commit }) {
       const teamInfo = localStorage.getItem('teamInfo');
@@ -94,6 +112,12 @@ export const teamModule: Module<TeamState, RootState> = {
     loadTeamMembersFromStorage({ commit }) {
       const teamMembers = localStorage.getItem('teamMembers');
       if (teamMembers) commit(SET_TEAM_MEMBERS, JSON.parse(teamMembers));
+    },
+    saveTeamInfoToStorage({ state }) {
+      localStorage.setItem('teamInfo', JSON.stringify(state.teamInfo));
+    },
+    saveTeamMembersToStorage({ state }) {
+      localStorage.setItem('teamMembers', JSON.stringify(state.teamMembers));
     },
     resetState({ commit }) {
       commit(RESET_STATE);
@@ -105,6 +129,15 @@ export const teamModule: Module<TeamState, RootState> = {
     },
     [SET_TEAM_MEMBERS](state, members: Player[]) {
       state.teamMembers = members;
+    },
+    [UPDATE_TEAM_MEMBER](state, player: Player) {
+      console.log(player);
+      console.log(state.teamMembers);
+      const member = state.teamMembers.find(member => member._id === player._id);
+      if (member) Object.assign(member, player);
+    },
+    [DELETE_TEAM_MEMBER](state, playerID: string) {
+      state.teamMembers = state.teamMembers.filter(member => member._id !== playerID);
     },
     [RESET_STATE](state) {
       Object.assign(state, teamInitialState());

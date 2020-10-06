@@ -7,6 +7,7 @@ import router from '@/router';
 import jwtDecode from 'jwt-decode';
 import { Routes, RouteNames } from '@/router/router.models';
 import { BASE_URL } from '@/config';
+import { log } from '@/utils/logger';
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -23,12 +24,12 @@ axiosInstance.interceptors.request.use(
       store.dispatch('app/showLoader');
       return config;
     } else {
-      console.error('User not authenticated. Request cancelled.');
+      log.error('axios::interceptor', 'User not authenticated. Request cancelled.');
       throw new axios.Cancel('User not authenticated. Request cancelled.');
     }
   },
   error => {
-    console.error(error);
+    log.error('axios::interceptor', 'User not authenticated. Request cancelled.');
     return Promise.reject(error);
   }
 );
@@ -39,17 +40,20 @@ axiosInstance.interceptors.response.use(
   },
   error => {
     store.dispatch('app/hideLoader');
-    console.error(error.response.data.error);
+    log.error('axios::interceptor', error.response.data.error);
     if (error.response.status === 401) {
       if (router.currentRoute.name !== RouteNames.Login) router.push(Routes.Login);
       store.dispatch('auth/resetState');
-      store.dispatch('app/showToast', 'Authorization expired. Please login again.');
+      store.dispatch('app/showToast', {
+        id: 'axiosInterceptor/401',
+        text: 'Authorization expired. Please login again.',
+      });
       store.dispatch('auth/updateStatus', Status.NO_AUTH);
     } else {
       if (error.response.status !== 500) {
-        store.dispatch('app/showToast', error.response.data.error);
+        store.dispatch('app/showToast', { id: 'axiosInterceptor/error', text: error.response.data.error });
       } else {
-        store.dispatch('app/showToast', 'An error occured on the server.');
+        store.dispatch('app/showToast', { id: 'axiosInterceptor/500', text: 'An error occured on the server.' });
       }
     }
     return Promise.reject(error);
@@ -65,6 +69,7 @@ enum Endpoints {
   Auth = '/auth',
 }
 
+// TODO: obsolete, remove
 enum Actions {
   Create = 'create',
   Update = 'update',
@@ -144,7 +149,7 @@ class APIService {
   }
 
   static async updatePlayer(payload: Partial<Player>): Promise<APIResponse<Player>> {
-    const target = urljoin(Endpoints.Players, Actions.Update);
+    const target = urljoin(Endpoints.Players);
     try {
       const { data } = await axiosInstance.patch(target, payload);
       return { success: data };
@@ -168,7 +173,7 @@ class APIService {
   }
 
   static async deleteStrat(stratId: string): Promise<APIResponse<Message>> {
-    const target = urljoin(Endpoints.Strats, stratId, Actions.Delete);
+    const target = urljoin(Endpoints.Strats, stratId);
     try {
       const { data } = await axiosInstance.delete(target);
       return { success: data };
@@ -178,7 +183,7 @@ class APIService {
   }
 
   static async createStrat(strat: Partial<Strat>): Promise<APIResponse<Strat>> {
-    const target = urljoin(Endpoints.Strats, Actions.Create);
+    const target = urljoin(Endpoints.Strats);
     try {
       const { data } = await axiosInstance.post(target, strat);
       return { success: data };
@@ -188,7 +193,7 @@ class APIService {
   }
 
   static async updateStrat(payload: Partial<Strat>): Promise<APIResponse<Strat>> {
-    const target = urljoin(Endpoints.Strats, Actions.Update);
+    const target = urljoin(Endpoints.Strats);
 
     try {
       const { data } = await axiosInstance.patch(target, payload);
@@ -212,7 +217,7 @@ class APIService {
   }
 
   static async updateStep(payload: Partial<Step>): Promise<APIResponse<Step>> {
-    const target = urljoin(Endpoints.Steps, Actions.Update);
+    const target = urljoin(Endpoints.Steps);
 
     try {
       const { data } = await axiosInstance.patch(target, payload);
@@ -223,7 +228,7 @@ class APIService {
   }
 
   static async createStep(step: Partial<Step>): Promise<APIResponse<Step>> {
-    const target = urljoin(Endpoints.Steps, Actions.Create);
+    const target = urljoin(Endpoints.Steps);
 
     try {
       const { data } = await axiosInstance.post(target, step);
@@ -234,7 +239,7 @@ class APIService {
   }
 
   static async deleteStep(stepID: string): Promise<APIResponse<Message>> {
-    const target = urljoin(Endpoints.Steps, stepID, Actions.Delete);
+    const target = urljoin(Endpoints.Steps, stepID);
     try {
       const { data } = await axiosInstance.delete(target);
       return { success: data };
@@ -244,7 +249,7 @@ class APIService {
   }
 
   static async createTeam(formData: TeamCreateFormData): Promise<APIResponse<Team>> {
-    const target = urljoin(Endpoints.Teams, Actions.Create);
+    const target = urljoin(Endpoints.Teams);
     try {
       const { data } = await axiosInstance.post(target, formData);
       return { success: data };

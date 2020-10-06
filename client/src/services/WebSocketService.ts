@@ -1,7 +1,8 @@
 import io from 'socket.io-client';
 import { BASE_URL } from '@/config';
 import store from '@/store';
-import { Player } from './models';
+import { Player, Strat, Step, Team } from './models';
+import { log } from '@/utils/logger';
 
 class WebSocketService {
   private static instance: WebSocketService;
@@ -25,12 +26,12 @@ class WebSocketService {
   }
 
   disconnect() {
-    this.socket.close();
+    this.socket?.close();
   }
 
   private setupListeners() {
     this.socket.on('connect', () => {
-      console.log('WS: Websocket connection established.');
+      log.info('ws::connected', 'Websocket connection established.');
       this.socket.emit('join-room', {
         teamID: (store.state.auth.profile as Player).team,
         playerID: (store.state.auth.profile as Player)._id,
@@ -38,37 +39,61 @@ class WebSocketService {
     });
 
     this.socket.on('room-joined', (data: { roomID: string }) => {
-      console.log(`WS: Connected to room ${data.roomID}`);
+      log.info('ws::joined', `Connected to room ${data.roomID}`);
     });
 
-    this.socket.on('changed-step', (data: { stratID: string }) => {
-      if (store.state.strat.strats.find(strat => strat._id === data.stratID)) {
-        store.dispatch('strat/fetchStepsOfStrat', data.stratID);
-      }
+    this.socket.on('disconnect', () => {
+      log.info('ws::disconnect', 'Websocket connection lost or disconnected');
     });
 
-    this.socket.on('changed-strat', (data: { mapID: string }) => {
-      if (store.state.map.currentMap === data.mapID) {
-        store.dispatch('strat/fetchStrats');
-      }
+    this.socket.on('created-strat', (data: { strat: Strat }) => {
+      log.info('ws::created', data);
+      store.dispatch('strat/addStratLocally', data);
     });
 
-    this.socket.on('changed-player', (data: { playerID: string }) => {
-      if (data.playerID !== (store.state.auth.profile as Player)._id) {
-        store.dispatch('team/fetchTeamMembers');
-      }
+    this.socket.on('updated-strat', (data: { strat: Strat }) => {
+      log.info('ws::updated', data);
+      store.dispatch('strat/updateStratLocally', data);
     });
 
-    this.socket.on('deleted-step', () => {
-      store.dispatch('strat/fetchStrats');
+    this.socket.on('deleted-strat', (data: { stratID: string }) => {
+      log.info('ws::deleted', data);
+      store.dispatch('strat/deleteStratLocally', data);
     });
 
-    this.socket.on('deleted-strat', () => {
-      store.dispatch('strat/fetchStrats');
+    this.socket.on('created-step', (data: { step: Strat }) => {
+      log.info('ws::created', data);
+      store.dispatch('strat/addStepLocally', data);
     });
 
-    this.socket.on('deleted-player', () => {
-      store.dispatch('team/fetchTeamMembers');
+    this.socket.on('updated-step', (data: { step: Step }) => {
+      log.info('ws::updated', data);
+      store.dispatch('strat/updateStepLocally', data);
+    });
+
+    this.socket.on('deleted-step', (data: { stepID: string }) => {
+      log.info('ws::deleted', data);
+      store.dispatch('strat/deleteStepLocally', data);
+    });
+
+    this.socket.on('deleted-player', (data: { playerID: string }) => {
+      log.info('ws::deleted', data);
+      store.dispatch('team/deleteMemberLocally', data);
+    });
+
+    this.socket.on('updated-player', (data: { player: Player }) => {
+      log.info('ws::updated', data);
+      store.dispatch('team/updateMemberLocally', data);
+    });
+
+    this.socket.on('deleted-team', () => {
+      log.info('ws::deleted', 'Team deleted');
+      store.dispatch('team/deleteTeamLocally');
+    });
+
+    this.socket.on('updated-team', (data: { team: Team }) => {
+      log.info('ws::updated', data);
+      store.dispatch('team/updateTeamLocally', data);
     });
   }
 }

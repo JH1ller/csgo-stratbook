@@ -1,10 +1,8 @@
 import { Component, Vue, Ref } from 'vue-property-decorator';
 import LoginForm from '@/components/login-form/login-form.vue';
 import { FormComponent } from '@/interfaces';
-import { namespace } from 'vuex-class';
 import { Response } from '@/services/models';
-
-const authModule = namespace('auth');
+import { authModule } from '@/store/namespaces';
 
 @Component({
   components: {

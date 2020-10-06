@@ -16,7 +16,7 @@ router.get('/', verifyAuth, async (req, res) => {
 });
 
 // * Create One
-router.post('/create', verifyAuth, async (req, res) => {
+router.post('/', verifyAuth, async (req, res) => {
   const map = new Map({
     name: req.body.name,
     active: req.body.active,
@@ -31,7 +31,7 @@ router.post('/create', verifyAuth, async (req, res) => {
 });
 
 // * Update One
-router.patch('/:map_id/update', verifyAuth, getMap, async (req, res) => {
+router.patch('/', verifyAuth, getMap, async (req, res) => {
   if (req.body.name != null) {
     res.map.name = req.body.name;
   }
@@ -50,9 +50,9 @@ router.patch('/:map_id/update', verifyAuth, getMap, async (req, res) => {
 });
 
 // * Delete One
-router.delete('/:map_id/delete', verifyAuth, getMap, async (req, res) => {
+router.delete('/:map_id', verifyAuth, getMap, async (req, res) => {
   try {
-    await res.map.remove();
+    await res.map.delete();
     res.json({ message: 'Deleted map successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -61,6 +61,7 @@ router.delete('/:map_id/delete', verifyAuth, getMap, async (req, res) => {
 
 // * Delete All
 router.delete('/deleteAll', verifyAuth, async (req, res) => {
+  // TODO: maybe add dev env conditional aswell
   try {
     if (res.player.isAdmin) {
       await Map.deleteMany({});

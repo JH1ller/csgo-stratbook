@@ -18,7 +18,7 @@ router.get('/:player_id', verifyAuth, getPlayer, (req, res) => {
 });
 
 // * Update One
-router.patch('/update', verifyAuth, async (req, res) => {
+router.patch('/', verifyAuth, async (req, res) => {
   if (req.body.name != null) {
     res.player.name = req.body.name;
   }
@@ -40,10 +40,10 @@ router.patch('/update', verifyAuth, async (req, res) => {
 });
 
 // * Delete One
-router.delete('/:player_id/delete', verifyAuth, async (req, res) => {
+router.delete('/:player_id', verifyAuth, async (req, res) => {
   try {
     if (res.player.isAdmin) {
-      await res.player.remove();
+      await res.player.delete();
       res.json({ message: 'Deleted player successfully' });
     } else {
       res.status(403).json({ error: 'This action requires higher privileges.' });

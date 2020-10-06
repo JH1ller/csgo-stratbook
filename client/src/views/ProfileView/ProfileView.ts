@@ -1,8 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 import { Routes } from '@/router/router.models';
-
-const authModule = namespace('auth');
+import { authModule } from '@/store/namespaces';
 
 @Component({})
 export default class ProfileView extends Vue {

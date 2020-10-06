@@ -45,7 +45,7 @@ export interface Strat {
   createdAt: Date;
   modifiedBy: string;
   modifiedAt: Date;
-  steps?: Step[];
+  steps: Step[];
 }
 
 export interface Step {

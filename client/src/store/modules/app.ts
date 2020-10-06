@@ -1,6 +1,7 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
 import { Dialog } from '@/components/dialog-wrapper/dialog-wrapper.models';
+import { Toast } from '@/components/toast-wrapper/toast-wrapper.models';
 
 const SET_LOADER_VISIBLE = 'SET_LOADER_VISIBLE';
 const SET_LOADER_TEXT = 'SET_LOADER_TEXT';
@@ -14,10 +15,7 @@ export interface AppState {
   ui: {
     showLoader: boolean;
     loaderText: string;
-    toast: {
-      show: boolean;
-      message: string;
-    };
+    toasts: Toast[];
   };
   openDialogs: Dialog[];
 }
@@ -26,10 +24,7 @@ const appInitialState = (): AppState => ({
   ui: {
     showLoader: false,
     loaderText: '',
-    toast: {
-      show: false,
-      message: '',
-    },
+    toasts: [],
   },
   openDialogs: [],
 });
@@ -39,8 +34,13 @@ export const appModule: Module<AppState, RootState> = {
   state: appInitialState(),
   getters: {},
   actions: {
-    showToast({ commit }, message: string) {
-      commit(SHOW_TOAST, message);
+    showToast({ commit, state }, toast: Toast) {
+      if (!state.ui.toasts.find(item => item.id === toast.id)) {
+        commit(SHOW_TOAST, toast);
+        setTimeout(() => {
+          commit(HIDE_TOAST, toast.id);
+        }, 5000);
+      }
     },
     hideToast({ commit }) {
       commit(HIDE_TOAST);
@@ -78,12 +78,11 @@ export const appModule: Module<AppState, RootState> = {
     [SET_LOADER_TEXT](state, payload) {
       state.ui.loaderText = payload;
     },
-    [SHOW_TOAST](state, message: string) {
-      state.ui.toast.message = message;
-      state.ui.toast.show = true;
+    [SHOW_TOAST](state, toast: Toast) {
+      state.ui.toasts.push(toast);
     },
-    [HIDE_TOAST](state) {
-      state.ui.toast.show = false;
+    [HIDE_TOAST](state, toastID: string) {
+      state.ui.toasts = state.ui.toasts.filter(toast => toast.id !== toastID);
     },
     [OPEN_DIALOG](state, dialog: Dialog) {
       state.openDialogs.push(dialog);

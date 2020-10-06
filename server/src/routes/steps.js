@@ -19,7 +19,7 @@ router.get('/', verifyAuth, async (req, res) => {
 });
 
 // * Create One
-router.post('/create', verifyAuth, async (req, res) => {
+router.post('/', verifyAuth, async (req, res) => {
   try {
     const strat = await Strat.findById(req.body.strat);
     if (!strat.team.equals(res.player.team)) return res.status(403).json({ error: 'Unauthorized' });
@@ -43,7 +43,7 @@ router.post('/create', verifyAuth, async (req, res) => {
 });
 
 // * Update One
-router.patch('/update', verifyAuth, getStep, async (req, res) => {
+router.patch('/', verifyAuth, getStep, async (req, res) => {
   const strat = await Strat.findById(res.step.strat);
   if (!strat.team.equals(res.player.team)) return res.status(403).json({ error: 'Unauthorized' });
 
@@ -71,11 +71,11 @@ router.patch('/update', verifyAuth, getStep, async (req, res) => {
 });
 
 // * Delete One
-router.delete('/:step_id/delete', verifyAuth, getStep, async (req, res) => {
+router.delete('/:step_id', verifyAuth, getStep, async (req, res) => {
   try {
     const strat = await Strat.findById(res.step.strat);
     if (!strat.team.equals(res.player.team)) return res.status(403).json({ error: 'Unauthorized' });
-    await res.step.remove();
+    await res.step.delete();
     res.json({ message: 'Deleted step successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });

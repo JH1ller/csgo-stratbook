@@ -1,9 +1,7 @@
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
 import { Step, Player, Equipment } from '@/services/models';
-import { namespace } from 'vuex-class';
 import Multiselect from 'vue-multiselect';
-
-const teamModule = namespace('team');
+import { teamModule } from '@/store/namespaces';
 
 export interface IStepItem {
   cancelEdit: () => void;

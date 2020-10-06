@@ -26,7 +26,7 @@ router.get('/', verifyAuth, async (req, res) => {
         active: strat.active,
         videoLink: strat.videoLink,
         note: strat.note,
-        steps,
+        steps: steps || [],
       };
     });
     const stratsWithSteps = await Promise.all(stepPromises);
@@ -38,7 +38,7 @@ router.get('/', verifyAuth, async (req, res) => {
 });
 
 // * Create One
-router.post('/create', verifyAuth, async (req, res) => {
+router.post('/', verifyAuth, async (req, res) => {
   if (!res.player.team) {
     return res.status(400).json({ error: "Authenticated user doesn't have a team" });
   }
@@ -65,7 +65,7 @@ router.post('/create', verifyAuth, async (req, res) => {
 });
 
 // * Update One
-router.patch('/update', getStrat, async (req, res) => {
+router.patch('/', getStrat, async (req, res) => {
   if (req.body.name != null) {
     res.strat.name = req.body.name;
   }
@@ -96,9 +96,9 @@ router.patch('/update', getStrat, async (req, res) => {
 });
 
 // * Delete One
-router.delete('/:strat_id/delete', getStrat, async (req, res) => {
+router.delete('/:strat_id', getStrat, async (req, res) => {
   try {
-    await res.strat.remove();
+    await res.strat.delete();
     res.json({ message: 'Deleted strat successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });

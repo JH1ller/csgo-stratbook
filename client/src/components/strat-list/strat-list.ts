@@ -1,11 +1,7 @@
 import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
-
 import { Strat, Sides, StratTypes, Step } from '@/services/models';
 import StratItem from '@/components/strat-item/strat-item.vue';
-
-const stratModule = namespace('strat');
-const filterModule = namespace('filter');
+import { stratModule, filterModule } from '@/store/namespaces';
 
 @Component({
   components: {

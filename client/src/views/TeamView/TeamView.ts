@@ -7,10 +7,7 @@ import { TeamCreateFormData } from '@/components/team-create-form/team-create-fo
 import { Player, Response, Team } from '@/services/models';
 import { FormComponent } from '@/interfaces';
 import { Dialog } from '@/components/dialog-wrapper/dialog-wrapper.models';
-
-const teamModule = namespace('team');
-const authModule = namespace('auth');
-const appModule = namespace('app');
+import { appModule, authModule, teamModule } from '@/store/namespaces';
 
 @Component({
   components: {
@@ -45,7 +42,6 @@ export default class TeamView extends Vue {
   }
 
   private async joinTeamRequest(code: string) {
-    console.log('teamview');
     const res = await this.joinTeam(code);
     if (res.error) {
       this.joinForm.updateFormMessage(res.error, 'error');
