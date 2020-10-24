@@ -75,7 +75,7 @@ export default class StratsView extends Vue {
     try {
       await this.showDialog({
         key: 'strats-view/confirm-delete',
-        text: 'Are you sure you want to delete this strat?',
+        text: 'Are you sure you want to delete this strat?'
       });
       this.deleteStrat(stratID);
     } catch (error) {

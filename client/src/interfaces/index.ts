@@ -1,3 +1,3 @@
 export interface FormComponent {
-  updateFormMessage: (message: string | null, style: string | null) => void;
+  updateFormMessage: (message: string | null) => void;
 }

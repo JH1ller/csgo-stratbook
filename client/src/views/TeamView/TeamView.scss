@@ -1,12 +1,35 @@
 .team-view {
   height: 100%;
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  box-shadow: $shadow-subtle;
+  padding: 24px;
+  border-radius: 8px;
+  
+  &__title {
+    font-size: 2em;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  
+  &__container {
+  }
 
-  &__create-wrapper {
+  &__right-wrapper {
     display: flex;
-    justify-content: space-evenly;
-    align-items: baseline;
-    > *:not(:first-child) {
-      margin-left: 24px;
-    }
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  &__avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 8px;
+    box-shadow: $shadow-subtle;
+  }
+
+  &__member-list {
+    margin-top: 32px;
   }
 }

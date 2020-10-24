@@ -32,6 +32,7 @@ export default new Vuex.Store({
   actions: {
     resetState({ dispatch, state }) {
       Object.keys(state).forEach(module => dispatch(`${module}/resetState`));
+      localStorage.clear();
     },
     loadDataFromStorage({ dispatch }) {
       dispatch('auth/loadTokenFromStorage');

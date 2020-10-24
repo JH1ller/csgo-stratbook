@@ -16,7 +16,6 @@ export default class TeamCreateForm extends Vue implements FormComponent {
   @Ref('server') serverInput!: HTMLInputElement;
 
   private formMessage: string | null = null;
-  private formMessageStyle: string | null = null;
 
   private formData: TeamCreateFormData = {
     name: '',
@@ -25,14 +24,6 @@ export default class TeamCreateForm extends Vue implements FormComponent {
     serverPw: ''
   };
   private imageFile: File | null = null;
-
-  get isError() {
-    return this.formMessageStyle === 'error';
-  }
-
-  get isSuccess() {
-    return this.formMessageStyle === 'success';
-  }
 
   private fileSelected(e: any) {
     const file = e.target.files[0];
@@ -44,7 +35,7 @@ export default class TeamCreateForm extends Vue implements FormComponent {
 
   private validateForm(): boolean {
     if (this.nameInput.value.length < 3 || this.nameInput.value.length > 20) {
-      this.updateFormMessage('Team name must be between 3 and 24 characters.', 'error');
+      this.updateFormMessage('Team name must be between 3 and 24 characters.');
       return false;
     }
     return true;
@@ -66,8 +57,7 @@ export default class TeamCreateForm extends Vue implements FormComponent {
     this.$emit('create-clicked', requestFormData);
   }
 
-  public updateFormMessage(message: string | null, style: string | null) {
+  public updateFormMessage(message: string | null) {
     this.formMessage = message;
-    this.formMessageStyle = style;
   }
 }

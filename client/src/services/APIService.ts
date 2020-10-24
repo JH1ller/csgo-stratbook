@@ -43,7 +43,7 @@ axiosInstance.interceptors.response.use(
     log.error('axios::interceptor', error.response.data.error);
     if (error.response.status === 401) {
       if (router.currentRoute.name !== RouteNames.Login) router.push(Routes.Login);
-      store.dispatch('auth/resetState');
+      store.dispatch('resetState');
       store.dispatch('app/showToast', {
         id: 'axiosInterceptor/401',
         text: 'Authorization expired. Please login again.',
