@@ -11,13 +11,7 @@ export default class MemberList extends Vue {
   @teamModule.State private teamMembers!: Player[];
   @authModule.State private profile!: Player;
 
-  private resolveAvatar: typeof resolveAvatar = resolveAvatar;
-
-  private mounted() {
-    // * force UI update in interval for correct "time-ago" display
-    // TODO: maybe unregister interval on unmount
-    setInterval(() => this.$forceUpdate(), 1000);
-  }
+  private resolveAvatar: (url?: string) => string = resolveAvatar;
 
   @Emit()
   private leaveTeam(): void {

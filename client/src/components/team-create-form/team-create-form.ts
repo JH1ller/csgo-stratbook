@@ -1,5 +1,4 @@
-import { Component, Vue, Ref } from 'vue-property-decorator';
-import { FormComponent } from '@/interfaces/index';
+import { Component, Vue, Ref, Prop, Emit } from 'vue-property-decorator';
 export interface TeamCreateFormData {
   name: string;
   website?: string;
@@ -9,19 +8,19 @@ export interface TeamCreateFormData {
 }
 
 @Component({})
-export default class TeamCreateForm extends Vue implements FormComponent {
+export default class TeamCreateForm extends Vue {
   @Ref('file-input') fileInput!: HTMLInputElement;
   @Ref('name') nameInput!: HTMLInputElement;
   @Ref('website') websiteInput!: HTMLInputElement;
   @Ref('server') serverInput!: HTMLInputElement;
 
-  private formMessage: string | null = null;
+  @Prop() formError!: string;
 
   private formData: TeamCreateFormData = {
     name: '',
     website: '',
     serverIp: '',
-    serverPw: ''
+    serverPw: '',
   };
   private imageFile: File | null = null;
 
@@ -35,7 +34,7 @@ export default class TeamCreateForm extends Vue implements FormComponent {
 
   private validateForm(): boolean {
     if (this.nameInput.value.length < 3 || this.nameInput.value.length > 20) {
-      this.updateFormMessage('Team name must be between 3 and 24 characters.');
+      this.updateFormError('Team name must be between 3 and 24 characters.');
       return false;
     }
     return true;
@@ -51,13 +50,14 @@ export default class TeamCreateForm extends Vue implements FormComponent {
       requestFormData.append('avatar', this.imageFile, this.imageFile.name);
     }
 
-    for (let [key, value] of Object.entries(this.formData)) {
+    for (const [key, value] of Object.entries(this.formData)) {
       requestFormData.append(key, value);
     }
     this.$emit('create-clicked', requestFormData);
   }
 
-  public updateFormMessage(message: string | null) {
-    this.formMessage = message;
+  @Emit()
+  private updateFormError(text: string) {
+    return text;
   }
 }

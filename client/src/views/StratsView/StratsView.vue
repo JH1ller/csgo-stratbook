@@ -7,6 +7,8 @@
       @side-filter-selected="updateSideFilter"
       @name-filter-selected="updateNameFilter"
       @clear-filters="clearFilters"
+      :teamMembers="teamMembers"
+      :filters="filters"
     />
     <strat-list
       @delete-strat="deleteStratRequest"
@@ -15,6 +17,8 @@
       @update-step="updateStep"
       @add-step="createStep"
       @delete-step="deleteStep"
+      :strats="strats"
+      :filters="filters"
     />
     <transition name="fade">
       <floating-add @on-click="showCreationOverlay" v-if="currentMap" />

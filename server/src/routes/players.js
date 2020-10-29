@@ -6,7 +6,7 @@ const { verifyAuth } = require('./utils/verifyToken');
 
 // * Get One
 router.get('/:player_id', verifyAuth, getPlayer, (req, res) => {
-  const { _id, name, role, avatar, team, createdAt } = res.player;
+  const { _id, name, role, avatar, team, createdAt, isOnline, lastOnline } = res.player;
   res.json({
     _id,
     name,
@@ -14,6 +14,8 @@ router.get('/:player_id', verifyAuth, getPlayer, (req, res) => {
     avatar,
     team,
     createdAt,
+    isOnline,
+    lastOnline
   });
 });
 

@@ -1,7 +1,7 @@
-import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
-import { Strat, Sides, StratTypes, Step } from '@/services/models';
+import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
+import { Strat, Step } from '@/services/models';
 import StratItem from '@/components/strat-item/strat-item.vue';
-import { stratModule, filterModule } from '@/store/namespaces';
+import { Filters } from '@/store/modules/filter';
 
 @Component({
   components: {
@@ -9,13 +9,8 @@ import { stratModule, filterModule } from '@/store/namespaces';
   },
 })
 export default class StratList extends Vue {
-  @stratModule.State strats!: Strat[];
-  @filterModule.State filters!: {
-    name: string;
-    player: string;
-    side: Sides | null;
-    type: StratTypes | null;
-  };
+  @Prop() strats!: Strat[];
+  @Prop() filters!: Filters
 
   private get filteredStrats() {
     return this.strats

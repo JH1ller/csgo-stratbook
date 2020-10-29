@@ -4,9 +4,8 @@
       <transition name="fade">
         <span
           class="login-form__error"
-          v-if="formMessage"
-          :class="{'-error': isError, '-success': isSuccess}"
-        >{{ formMessage }}</span>
+          v-if="formError"
+        >{{ formError }}</span>
       </transition>
       <input
         type="email"

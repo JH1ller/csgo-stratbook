@@ -4,9 +4,10 @@ import StratList from '@/components/strat-list/strat-list.vue';
 import FloatingAdd from '@/components/floating-add/floating-add.vue';
 import CreationOverlay from '@/components/creation-overlay/creation-overlay.vue';
 import FilterMenu from '@/components/filter-menu/filter-menu.vue';
-import { Strat, StratTypes, Sides } from '@/services/models';
+import { Strat, StratTypes, Sides, Player, Step } from '@/services/models';
 import { Dialog } from '@/components/dialog-wrapper/dialog-wrapper.models';
-import { appModule, mapModule, stratModule, filterModule } from '@/store/namespaces';
+import { appModule, mapModule, stratModule, filterModule, teamModule } from '@/store/namespaces';
+import { Filters } from '@/store/modules/filter';
 
 @Component({
   components: {
@@ -24,6 +25,8 @@ export default class StratsView extends Vue {
   private refreshInterval!: NodeJS.Timeout;
   @mapModule.State currentMap!: string;
   @stratModule.State strats!: Strat[];
+  @filterModule.State filters!: Filters;
+  @teamModule.State teamMembers!: Player[];
   // TODO: remove any from params
   @filterModule.Action updatePlayerFilter!: (value: string) => Promise<void>;
   @filterModule.Action updateTypeFilter!: (type: StratTypes | null) => Promise<void>;
@@ -32,17 +35,17 @@ export default class StratsView extends Vue {
   @mapModule.Action updateCurrentMap!: (mapId: string) => Promise<void>;
   @stratModule.Action fetchStrats!: () => Promise<void>;
   @stratModule.Action updateStrat!: (payload: Partial<Strat>) => Promise<void>;
-  @stratModule.Action createStrat!: (payload: any) => Promise<void>;
+  @stratModule.Action createStrat!: (payload: Partial<Strat>) => Promise<void>;
   @stratModule.Action deleteStrat!: (stratId: string) => Promise<void>;
-  @stratModule.Action updateStep!: (payload: any) => Promise<void>;
-  @stratModule.Action createStep!: (payload: any) => Promise<void>;
+  @stratModule.Action updateStep!: (payload: Partial<Step>) => Promise<void>;
+  @stratModule.Action createStep!: (payload: Partial<Step>) => Promise<void>;
   @stratModule.Action deleteStep!: (stepID: string) => Promise<void>;
   @filterModule.Action clearFilters!: () => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
 
-  private mounted() {
-    //this.refreshInterval = setInterval(() => this.fetchStrats(), 15000); // TODO: move interval value to cfg
-  }
+  // private mounted() {
+  //   this.refreshInterval = setInterval(() => this.fetchStrats(), 15000); // TODO: move interval value to cfg
+  // }
 
   private beforeDestroy() {
     clearInterval(this.refreshInterval);
@@ -71,15 +74,10 @@ export default class StratsView extends Vue {
     this.updateStrat(data);
   }
 
-  private async deleteStratRequest(stratID: string) {
-    try {
-      await this.showDialog({
-        key: 'strats-view/confirm-delete',
-        text: 'Are you sure you want to delete this strat?'
-      });
-      this.deleteStrat(stratID);
-    } catch (error) {
-      //
-    }
+  private deleteStratRequest(stratID: string) {
+    this.showDialog({
+      key: 'strats-view/confirm-delete',
+      text: 'Are you sure you want to delete this strat?'
+    }).then(() => this.deleteStrat(stratID));
   }
 }

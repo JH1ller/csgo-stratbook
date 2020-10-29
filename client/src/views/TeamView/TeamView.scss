@@ -1,19 +1,19 @@
 .team-view {
-  height: 100%;
-  display: flex;
-  justify-content: space-between;
-  background-color: white;
-  box-shadow: $shadow-subtle;
-  padding: 24px;
-  border-radius: 8px;
   
+  &__content {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    background-color: white;
+    box-shadow: $shadow-subtle;
+    padding: 24px;
+    border-radius: 8px;
+  }
+
   &__title {
     font-size: 2em;
     text-transform: uppercase;
     font-weight: bold;
-  }
-  
-  &__container {
   }
 
   &__right-wrapper {
@@ -30,6 +30,7 @@
   }
 
   &__member-list {
+    height: 100%;
     margin-top: 32px;
   }
 }

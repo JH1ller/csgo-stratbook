@@ -5,9 +5,8 @@
       <transition name="fade">
         <span
           class="team-create-form__error"
-          v-if="formMessage"
-          :class="{'-error': isError, '-success': isSuccess}"
-        >{{ formMessage }}</span>
+          v-if="formError"
+        >{{ formError }}</span>
       </transition>
       <label for="name" class="team-create-form__label">Team name</label>
       <input

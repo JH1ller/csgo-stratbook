@@ -19,7 +19,7 @@ class WebSocketService {
   }
 
   connect() {
-    if (!this.socket) {
+    if (!this.socket || !this.socket.connected) {
       this.socket = io(BASE_URL);
       this.setupListeners();
     }
@@ -81,7 +81,7 @@ class WebSocketService {
       store.dispatch('team/deleteMemberLocally', data);
     });
 
-    this.socket.on('updated-player', (data: { player: Player }) => {
+    this.socket.on('updated-player', (data: { player: Partial<Player> }) => {
       log.info('ws::updated', data);
       store.dispatch('team/updateMemberLocally', data);
     });

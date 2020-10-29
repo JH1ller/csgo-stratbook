@@ -1,7 +1,7 @@
-import { Component, Vue, Emit } from 'vue-property-decorator';
-import { Player, Sides, StratTypes } from '@/services/models';
+import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
+import { Player, Sides } from '@/services/models';
 import Multiselect from 'vue-multiselect';
-import { filterModule, teamModule } from '@/store/namespaces';
+import { Filters } from '@/store/modules/filter';
 
 @Component({
   components: {
@@ -9,13 +9,8 @@ import { filterModule, teamModule } from '@/store/namespaces';
   },
 })
 export default class FilterMenu extends Vue {
-  @filterModule.State filters!: {
-    name: string;
-    player: string;
-    side: Sides | null;
-    type: StratTypes | null;
-  };
-  @teamModule.State teamMembers!: Player[];
+  @Prop() filters!: Filters
+  @Prop() teamMembers!: Player[];
 
   private get playerOptions() {
     const teamMemberNames = this.teamMembers.map(member => member.name);

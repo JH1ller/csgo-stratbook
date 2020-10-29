@@ -1,7 +1,7 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
 import { Player, Team, Status } from '@/services/models';
-import APIService from '@/services/APIService';
+import APIService, { APIResponse } from '@/services/APIService';
 import { TeamCreateFormData } from '@/components/team-create-form/team-create-form';
 
 const SET_TEAM_INFO = 'SET_TEAM_INFO';
@@ -64,7 +64,12 @@ export const teamModule: Module<TeamState, RootState> = {
       const res = await APIService.createTeam(formData);
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
-        return { success: 'Team successfully created. You can now visit the strats page and start creating strats!' };
+        dispatch('app/showToast', 
+        { 
+          id: 'team/createTeam', 
+          text: 'Team successfully created. You can now visit the strats page and start creating strats!' 
+        }, { root: true });
+        return { success: 'Team successfully created. You can now visit the strats page and start creating strats!' }; // TODO: probably obsolete. remove
       } else {
         return { error: res.error };
       }
@@ -73,6 +78,11 @@ export const teamModule: Module<TeamState, RootState> = {
       const res = await APIService.joinTeam(code);
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
+        dispatch('app/showToast', 
+        { 
+          id: 'team/createTeam', 
+          text: 'Successfully joined team.' 
+        }, { root: true });
         return { success: 'Successfully joined team.' };
       } else {
         return { error: res.error };
@@ -131,8 +141,6 @@ export const teamModule: Module<TeamState, RootState> = {
       state.teamMembers = members;
     },
     [UPDATE_TEAM_MEMBER](state, player: Player) {
-      console.log(player);
-      console.log(state.teamMembers);
       const member = state.teamMembers.find(member => member._id === player._id);
       if (member) Object.assign(member, player);
     },

@@ -3,11 +3,7 @@
     <h2 class="join-team-form__headline">Join a team via code</h2>
     <form class="join-team-form__form" enctype="multipart/form-data" ref="form" novalidate>
       <transition name="fade">
-        <span
-          class="join-team-form__error"
-          v-if="formMessage"
-          :class="{'-error': isError, '-success': isSuccess}"
-        >{{ formMessage }}</span>
+        <span class="join-team-form__error" v-if="formError">{{ formError }}</span>
       </transition>
       <label for="code" class="join-team-form__label">Join code</label>
       <input

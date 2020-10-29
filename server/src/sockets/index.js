@@ -97,7 +97,19 @@ const initWS = (io) => {
       case 'update':
         data.updateDescription.updatedFields.deleted
           ? io.to(data.fullDocument.team).emit('deleted-player', { playerID: data.fullDocument._id })
-          : io.to(data.fullDocument.team).emit('updated-player', { player: data.fullDocument });
+          : io.to(data.fullDocument.team).emit('updated-player', 
+          { 
+            player: {
+              _id: data.fullDocument._id,
+              name: data.fullDocument.name,
+              role: data.fullDocument.role,
+              avatar: data.fullDocument.avatar,
+              team: data.fullDocument.team,
+              createdAt: data.fullDocument.createdAt,
+              isOnline: data.fullDocument.isOnline,
+              lastOnline: data.fullDocument.lastOnline
+            }
+          });
         break;
     }
   });

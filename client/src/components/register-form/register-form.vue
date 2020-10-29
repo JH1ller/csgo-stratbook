@@ -10,9 +10,8 @@
       <transition name="fade">
         <span
           class="register-form__error"
-          v-if="formMessage"
-          :class="{'-error': isError, '-success': isSuccess}"
-        >{{ formMessage }}</span>
+          v-if="formError"
+        >{{ formError }}</span>
       </transition>
       <input
         type="text"

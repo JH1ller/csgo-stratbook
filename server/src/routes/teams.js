@@ -78,9 +78,12 @@ router.post('/', verifyAuth, uploadMiddleware, async (req, res) => {
     res.status(201).json({
       _id: updatedPlayer._id,
       name: updatedPlayer.name,
+      role: updatedPlayer.role,
       createdAt: updatedPlayer.createdAt,
       avatar: updatedPlayer.avatar,
       team: updatedPlayer.team,
+      isOnline: updatedPlayer.isOnline,
+      lastOnline: updatedPlayer.lastOnline
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -148,9 +151,12 @@ router.patch('/join', verifyAuth, async (req, res) => {
     return res.json({
       _id: updatedPlayer._id,
       name: updatedPlayer.name,
+      role: updatedPlayer.role,
       createdAt: updatedPlayer.createdAt,
       avatar: updatedPlayer.avatar,
       team: updatedPlayer.team,
+      isOnline: updatedPlayer.isOnline,
+      lastOnline: updatedPlayer.lastOnline
     });
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -179,9 +185,12 @@ router.patch('/leave', verifyAuth, async (req, res) => {
     return res.json({
       _id: updatedPlayer._id,
       name: updatedPlayer.name,
+      role: updatedPlayer.role,
       createdAt: updatedPlayer.createdAt,
       avatar: updatedPlayer.avatar,
       team: updatedPlayer.team,
+      isOnline: updatedPlayer.isOnline,
+      lastOnline: updatedPlayer.lastOnline
     });
   } catch (error) {
     return res.status(500).json({ error: error.message });

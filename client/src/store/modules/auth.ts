@@ -31,7 +31,7 @@ export const authModule: Module<AuthState, RootState> = {
       if (res.success) {
         const profile = res.success;
         localStorage.setItem('profile', JSON.stringify(profile));
-        dispatch('setProfile', profile);
+        await dispatch('setProfile', profile);
         return { success: profile };
       } else {
         return { error: res.error };
@@ -43,11 +43,10 @@ export const authModule: Module<AuthState, RootState> = {
     setProfile({ commit }, profile: Player) {
       commit(SET_PROFILE, profile);
       commit(SET_STATUS, profile.team ? Status.LOGGED_IN_WITH_TEAM : Status.LOGGED_IN_NO_TEAM);
-      console.log(profile);
       if (profile.team) {
         WebSocketService.getInstance().connect();
       } else {
-        WebSocketService.getInstance().disconnect();
+        WebSocketService.getInstance().disconnect(); // TODO: maybe find a way to call this earlier, because socket update will cause console error
       }
     },
     async login({ commit, dispatch }, { email, password }) {
@@ -55,7 +54,8 @@ export const authModule: Module<AuthState, RootState> = {
       if (res.success) {
         commit(SET_TOKEN, res.success);
         localStorage.setItem('token', res.success);
-        dispatch('fetchProfile');
+        await dispatch('fetchProfile');
+        dispatch('app/showToast', { id: 'auth/login', text: 'Logged in successfully.' }, { root: true });
         return { success: 'Logged in successfully.' };
       } else {
         return { error: res.error };
@@ -67,10 +67,11 @@ export const authModule: Module<AuthState, RootState> = {
       WebSocketService.getInstance().disconnect();
       dispatch('app/showToast', { id: 'auth/logout', text: 'Logged out successfully.' }, { root: true });
     },
-    async register(_, formData) {
+    async register({ dispatch }, formData: Partial<Player>) {
       const res = await APIService.register(formData);
       if (res.success) {
-        return { success: 'Registered successfully. A confirmation email has been sent.' };
+        dispatch('app/showToast', { id: 'auth/register', text: 'Registered successfully. A confirmation email has been sent.' }, { root: true });
+        return { success: 'Registered successfully. A confirmation email has been sent.' }; // TODO: probably remove all these
       } else {
         return { error: res.error };
       }

@@ -1,7 +1,15 @@
 <template>
   <div class="join-team-view">
-    <team-create-form @create-clicked="createTeamRequest" ref="create-form" />
-    <join-team-form @join-clicked="joinTeamRequest" ref="join-form" />
+    <team-create-form
+      @create-clicked="createTeamRequest"
+      @update-form-error="updateCreateFormError"
+      :formError="createFormError"
+    />
+    <join-team-form
+      @join-clicked="joinTeamRequest"
+      @update-form-error="updateJoinFormError"
+      :formError="joinFormError"
+    />
   </div>
 </template>
 

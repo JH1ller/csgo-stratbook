@@ -103,7 +103,7 @@ class APIService {
       const { data } = await axiosInstance.get(Endpoints.Maps);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -115,7 +115,7 @@ class APIService {
       const { data } = await axiosInstance.get(target);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -130,7 +130,7 @@ class APIService {
       return { success: data };
     } catch (error) {
       store.dispatch('app/hideLoader');
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -144,7 +144,7 @@ class APIService {
       return { success: data };
     } catch (error) {
       store.dispatch('app/hideLoader');
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -154,7 +154,7 @@ class APIService {
       const { data } = await axiosInstance.patch(target, payload);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -168,7 +168,7 @@ class APIService {
       });
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -178,7 +178,7 @@ class APIService {
       const { data } = await axiosInstance.delete(target);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -188,7 +188,7 @@ class APIService {
       const { data } = await axiosInstance.post(target, strat);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -199,7 +199,7 @@ class APIService {
       const { data } = await axiosInstance.patch(target, payload);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -212,7 +212,7 @@ class APIService {
       });
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -223,7 +223,7 @@ class APIService {
       const { data } = await axiosInstance.patch(target, payload);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -234,7 +234,7 @@ class APIService {
       const { data } = await axiosInstance.post(target, step);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -244,7 +244,7 @@ class APIService {
       const { data } = await axiosInstance.delete(target);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -254,7 +254,7 @@ class APIService {
       const { data } = await axiosInstance.post(target, formData);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -264,7 +264,7 @@ class APIService {
       const { data } = await axiosInstance.patch(target, { code });
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -274,7 +274,7 @@ class APIService {
       const { data } = await axiosInstance.patch(target);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -284,7 +284,7 @@ class APIService {
       const { data } = await axiosInstance.get(target);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -294,7 +294,7 @@ class APIService {
       const { data } = await axiosInstance.get(target);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 }

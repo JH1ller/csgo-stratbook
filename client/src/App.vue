@@ -37,13 +37,15 @@ export default class App extends Vue {}
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   background-color: $color--light;
+  height: 100%;
+  overflow: hidden;
 }
 
 .main-menu {
   z-index: 10;
 }
 
-.view-wrapper {
+.router-view {
   background-color: $color--light;
   margin-left: 70px;
   margin-right: 70px;

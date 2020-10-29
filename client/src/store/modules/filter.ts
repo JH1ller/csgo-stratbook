@@ -8,13 +8,15 @@ const SET_SIDE_FILTER = 'SET_SIDE_FILTER';
 const SET_NAME_FILTER = 'SET_NAME_FILTER';
 const RESET_STATE = 'RESET_STATE';
 
+export interface Filters {
+  name: string;
+  player: string;
+  side: Sides | null;
+  type: StratTypes | null;
+}
+
 export interface FilterState {
-  filters: {
-    name: string;
-    player: string;
-    side: Sides | null;
-    type: StratTypes | null;
-  };
+  filters: Filters
 }
 
 const filterInitialState = (): FilterState => ({
