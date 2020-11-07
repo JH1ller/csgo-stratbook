@@ -14,5 +14,5 @@
   </transition-group>
 </template>
 
-<script lang="ts" src="./strat-list.ts"></script>
-<style lang="scss" src="./strat-list.scss"></style>
+<script lang="ts" src="./StratList.ts"></script>
+<style lang="scss" src="./StratList.scss"></style>

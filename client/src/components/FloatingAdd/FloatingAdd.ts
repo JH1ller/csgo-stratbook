@@ -1,4 +1,4 @@
-import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
+import { Component, Vue, Emit } from 'vue-property-decorator';
 
 @Component({})
 export default class FloatingAdd extends Vue {

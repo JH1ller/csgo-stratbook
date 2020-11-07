@@ -1,7 +1,7 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
-import { Dialog } from '@/components/dialog-wrapper/dialog-wrapper.models';
-import { Toast } from '@/components/toast-wrapper/toast-wrapper.models';
+import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
+import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 
 const SET_LOADER_VISIBLE = 'SET_LOADER_VISIBLE';
 const SET_LOADER_TEXT = 'SET_LOADER_TEXT';

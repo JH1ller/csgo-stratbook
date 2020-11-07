@@ -1,7 +1,7 @@
 import { Component, Vue, Ref } from 'vue-property-decorator';
-import TeamCreateForm from '@/components/team-create-form/team-create-form.vue';
-import JoinTeamForm from '@/components/join-team-form/join-team-form.vue';
-import { TeamCreateFormData } from '@/components/team-create-form/team-create-form';
+import TeamCreateForm from '@/components/TeamCreateForm/TeamCreateForm.vue';
+import JoinTeamForm from '@/components/JoinTeamForm/JoinTeamForm.vue';
+import { TeamCreateFormData } from '@/components/TeamCreateForm/TeamCreateForm';
 import { Response } from '@/services/models';
 import { teamModule } from '@/store/namespaces';
 import { Routes } from '@/router/router.models';

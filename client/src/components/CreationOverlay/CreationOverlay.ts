@@ -1,4 +1,4 @@
-import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
+import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
 import { Strat, StratTypes, Sides } from '@/services/models';
 
 @Component({})

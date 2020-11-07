@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import urljoin from 'url-join';
 import { Map, Strat, Step, Player, Team, Status } from '@/services/models';
-import { TeamCreateFormData } from '@/components/team-create-form/team-create-form';
+import { TeamCreateFormData } from '@/components/TeamCreateForm/TeamCreateForm';
 import store from '@/store';
 import router from '@/router';
 import jwtDecode from 'jwt-decode';

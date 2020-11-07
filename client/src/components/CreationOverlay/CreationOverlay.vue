@@ -115,5 +115,5 @@
   </div>
 </template>
 
-<script lang="ts" src="./creation-overlay.ts"></script>
-<style lang="scss" src="./creation-overlay.scss"></style>
+<script lang="ts" src="./CreationOverlay.ts"></script>
+<style lang="scss" src="./CreationOverlay.scss"></style>

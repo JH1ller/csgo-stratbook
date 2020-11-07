@@ -26,5 +26,5 @@
   </div>
 </template>
 
-<script lang="ts" src="./main-menu.ts"></script>
-<style lang="scss" src="./main-menu.scss"></style>
+<script lang="ts" src="./MainMenu.ts"></script>
+<style lang="scss" src="./MainMenu.scss"></style>

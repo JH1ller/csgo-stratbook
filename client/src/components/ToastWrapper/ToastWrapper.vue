@@ -6,5 +6,5 @@
   </transition-group>
 </template>
 
-<script lang="ts" src="./toast-wrapper.ts"></script>
-<style scoped lang="scss" src="./toast-wrapper.scss"></style>
+<script lang="ts" src="./ToastWrapper.ts"></script>
+<style scoped lang="scss" src="./ToastWrapper.scss"></style>

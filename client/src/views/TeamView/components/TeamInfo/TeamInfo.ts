@@ -1,6 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { Team } from '@/services/models';
-import { Toast } from '@/components/toast-wrapper/toast-wrapper.models';
+import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { appModule, teamModule } from '@/store/namespaces';
 
 const { remote } = require('electron');

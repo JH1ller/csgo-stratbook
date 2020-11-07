@@ -16,5 +16,5 @@
   </div>
 </template>
 
-<script lang="ts" src="./confirm-dialog.ts"></script>
-<style lang="scss" src="./confirm-dialog.scss"></style>
+<script lang="ts" src="./ConfirmDialog.ts"></script>
+<style lang="scss" src="./ConfirmDialog.scss"></style>

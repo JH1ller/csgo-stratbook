@@ -1,8 +1,8 @@
 import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
 const { shell } = require('electron').remote;
 import { Strat, Sides, StratTypes, Step } from '@/services/models';
-import StepItem from '@/components/step-item/step-item.vue';
-import { IStepItem } from '@/components/step-item/step-item';
+import StepItem from '@/components/StepItem/StepItem.vue';
+import { IStepItem } from '@/components/StepItem/StepItem';
 import { filterModule } from '@/store/namespaces';
 
 @Component({

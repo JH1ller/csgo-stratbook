@@ -1,5 +1,5 @@
 import { Component, Vue } from 'vue-property-decorator';
-import { Toast } from './toast-wrapper.models';
+import { Toast } from './ToastWrapper.models';
 import { appModule } from '@/store/namespaces';
 
 @Component({})

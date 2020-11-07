@@ -1,6 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator';
-import ConfirmDialog from '@/components/confirm-dialog/confirm-dialog.vue';
-import { Dialog } from './dialog-wrapper.models';
+import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.vue';
+import { Dialog } from './DialogWrapper.models';
 import { appModule } from '@/store/namespaces';
 
 @Component({

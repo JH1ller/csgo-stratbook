@@ -1,4 +1,4 @@
-import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
+import { Component, Vue, Emit } from 'vue-property-decorator';
 import { Map } from '@/services/models';
 import { mapModule } from '@/store/namespaces';
 

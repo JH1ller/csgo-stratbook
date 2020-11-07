@@ -15,5 +15,5 @@
   </div>
 </template>
 
-<script lang="ts" src="./map-picker.ts"></script>
-<style lang="scss" src="./map-picker.scss"></style>
+<script lang="ts" src="./MapPicker.ts"></script>
+<style lang="scss" src="./MapPicker.scss"></style>

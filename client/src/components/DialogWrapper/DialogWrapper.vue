@@ -11,5 +11,5 @@
   </div>
 </template>
 
-<script lang="ts" src="./dialog-wrapper.ts"></script>
-<style lang="scss" src="./dialog-wrapper.scss"></style>
+<script lang="ts" src="./DialogWrapper.ts"></script>
+<style lang="scss" src="./DialogWrapper.scss"></style>

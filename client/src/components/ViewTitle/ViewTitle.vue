@@ -9,5 +9,5 @@
   </div>
 </template>
 
-<script lang="ts" src="./view-title.ts"></script>
-<style lang="scss" src="./view-title.scss"></style>
+<script lang="ts" src="./ViewTitle.ts"></script>
+<style lang="scss" src="./ViewTitle.scss"></style>

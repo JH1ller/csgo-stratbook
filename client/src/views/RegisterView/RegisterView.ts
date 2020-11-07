@@ -1,6 +1,6 @@
 import { Component, Vue, Ref } from 'vue-property-decorator';
-import RegisterForm from '@/components/register-form/register-form.vue';
-import { RegisterFormData } from '@/components/register-form/register-form';
+import RegisterForm from '@/components/RegisterForm/RegisterForm.vue';
+import { RegisterFormData } from '@/components/RegisterForm/RegisterForm';
 import { Response } from '@/services/models';
 import { Routes } from '@/router/router.models';
 import { authModule } from '@/store/namespaces';

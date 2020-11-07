@@ -57,5 +57,5 @@
   </div>
 </template>
 
-<script lang="ts" src="./team-create-form.ts"></script>
-<style lang="scss" src="./team-create-form.scss"></style>
+<script lang="ts" src="./TeamCreateForm.ts"></script>
+<style lang="scss" src="./TeamCreateForm.scss"></style>

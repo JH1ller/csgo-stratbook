@@ -63,5 +63,5 @@
   </div>
 </template>
 
-<script lang="ts" src="./filter-menu.ts"></script>
-<style lang="scss" src="./filter-menu.scss"></style>
+<script lang="ts" src="./FilterMenu.ts"></script>
+<style lang="scss" src="./FilterMenu.scss"></style>

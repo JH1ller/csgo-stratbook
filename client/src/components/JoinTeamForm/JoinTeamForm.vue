@@ -18,5 +18,5 @@
   </div>
 </template>
 
-<script lang="ts" src="./join-team-form.ts"></script>
-<style lang="scss" src="./join-team-form.scss"></style>
+<script lang="ts" src="./JoinTeamForm.ts"></script>
+<style lang="scss" src="./JoinTeamForm.scss"></style>

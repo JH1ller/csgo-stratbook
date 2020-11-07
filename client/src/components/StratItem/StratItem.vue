@@ -64,5 +64,5 @@
   </div>
 </template>
 
-<script lang="ts" src="./strat-item.ts"></script>
-<style lang="scss" src="./strat-item.scss"></style>
+<script lang="ts" src="./StratItem.ts"></script>
+<style lang="scss" src="./StratItem.scss"></style>

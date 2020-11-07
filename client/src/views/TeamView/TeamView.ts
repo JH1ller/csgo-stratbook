@@ -2,7 +2,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import MemberList from './components/MemberList/MemberList.vue';
 import TeamInfo from './components/TeamInfo/TeamInfo.vue';
 import { appModule, teamModule } from '@/store/namespaces';
-import { Dialog } from '@/components/dialog-wrapper/dialog-wrapper.models';
+import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { Response } from '@/services/models';
 import { Routes } from '@/router/router.models';
 

@@ -6,5 +6,5 @@
   </div>
 </template>
 
-<script lang="ts" src="./floating-add.ts"></script>
-<style lang="scss" src="./floating-add.scss"></style>
+<script lang="ts" src="./FloatingAdd.ts"></script>
+<style lang="scss" src="./FloatingAdd.scss"></style>

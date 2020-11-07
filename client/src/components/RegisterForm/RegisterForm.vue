@@ -53,5 +53,5 @@
   </div>
 </template>
 
-<script lang="ts" src="./register-form.ts"></script>
-<style lang="scss" src="./register-form.scss"></style>
+<script lang="ts" src="./RegisterForm.ts"></script>
+<style lang="scss" src="./RegisterForm.scss"></style>

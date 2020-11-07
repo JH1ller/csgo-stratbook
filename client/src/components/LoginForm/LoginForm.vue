@@ -28,5 +28,5 @@
   </div>
 </template>
 
-<script lang="ts" src="./login-form.ts"></script>
-<style lang="scss" src="./login-form.scss"></style>
+<script lang="ts" src="./LoginForm.ts"></script>
+<style lang="scss" src="./LoginForm.scss"></style>

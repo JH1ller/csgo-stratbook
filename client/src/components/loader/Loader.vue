@@ -6,6 +6,6 @@
   </div>
 </template>#
 
-<script lang="ts" src="./loader.ts"></script>
-<style lang="scss" src="./loader.scss"></style>
+<script lang="ts" src="./Loader.ts"></script>
+<style lang="scss" src="./Loader.scss"></style>
 

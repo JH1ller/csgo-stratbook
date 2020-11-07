@@ -1,11 +1,11 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
-import MapPicker from '@/components/map-picker/map-picker.vue';
-import StratList from '@/components/strat-list/strat-list.vue';
-import FloatingAdd from '@/components/floating-add/floating-add.vue';
-import CreationOverlay from '@/components/creation-overlay/creation-overlay.vue';
-import FilterMenu from '@/components/filter-menu/filter-menu.vue';
+import MapPicker from '@/components/MapPicker/MapPicker.vue';
+import StratList from '@/components/StratList/StratList.vue';
+import FloatingAdd from '@/components/FloatingAdd/FloatingAdd.vue';
+import CreationOverlay from '@/components/CreationOverlay/CreationOverlay.vue';
+import FilterMenu from '@/components/FilterMenu/FilterMenu.vue';
 import { Strat, StratTypes, Sides, Player, Step } from '@/services/models';
-import { Dialog } from '@/components/dialog-wrapper/dialog-wrapper.models';
+import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { appModule, mapModule, stratModule, filterModule, teamModule } from '@/store/namespaces';
 import { Filters } from '@/store/modules/filter';
 

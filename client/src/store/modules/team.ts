@@ -2,7 +2,7 @@ import { Module } from 'vuex';
 import { RootState } from '..';
 import { Player, Team, Status } from '@/services/models';
 import APIService, { APIResponse } from '@/services/APIService';
-import { TeamCreateFormData } from '@/components/team-create-form/team-create-form';
+import { TeamCreateFormData } from '@/components/TeamCreateForm/TeamCreateForm';
 
 const SET_TEAM_INFO = 'SET_TEAM_INFO';
 const SET_TEAM_MEMBERS = 'SET_TEAM_MEMBERS';

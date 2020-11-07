@@ -73,7 +73,7 @@
   </div>
 </template>
 
-<script lang="ts" src="./step-item.ts"></script>
+<script lang="ts" src="./StepItem.ts"></script>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
-<style lang="scss" src="./step-item.scss"></style>
+<style lang="scss" src="./StepItem.scss"></style>
