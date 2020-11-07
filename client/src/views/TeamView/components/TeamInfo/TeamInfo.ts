@@ -3,8 +3,6 @@ import { Team } from '@/services/models';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { appModule, teamModule } from '@/store/namespaces';
 
-const { remote } = require('electron');
-
 @Component({})
 export default class TeamInfo extends Vue {
   @appModule.Action private showToast!: (toast: Toast) => void;
@@ -12,7 +10,12 @@ export default class TeamInfo extends Vue {
   @teamModule.Getter private connectionString!: string;
 
   private openWebsite() {
-    if (this.teamInfo.website) remote.shell.openExternal(this.teamInfo.website);
+    if (process?.versions?.electron) {
+      const { remote } = require('electron');
+      remote.shell.openExternal(this.teamInfo.website as string);
+    } else {
+      window.open(this.teamInfo.website, '_blank');
+    }
   }
 
   private copyCode() {
@@ -26,8 +29,14 @@ export default class TeamInfo extends Vue {
   }
 
   private runServer() {
-    const currentWindow = remote.getCurrentWindow();
-    currentWindow.loadURL(`steam://connect/${this.teamInfo.server?.ip}/${this.teamInfo.server?.password}`);
+    if (process?.versions?.electron) {
+      const { remote } = require('electron');
+      const currentWindow = remote.getCurrentWindow();
+      currentWindow.loadURL(`steam://connect/${this.teamInfo.server?.ip}/${this.teamInfo.server?.password}`);
+    } else {
+      window.open(`steam://connect/${this.teamInfo.server?.ip}/${this.teamInfo.server?.password}`, '_blank');
+    }
+  
     this.showToast({ id: 'teamInfo/runServer', text: `Launching game and connecting to ${this.teamInfo.server?.ip}` });
   }
 }
