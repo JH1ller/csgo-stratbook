@@ -3,6 +3,20 @@
   border: 2px solid $color--navyblue-80;
   border-radius: 8px;
   position: relative;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &__header {
+    margin-bottom: 12px;
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
 
   &__leave {
     @include tooltip;

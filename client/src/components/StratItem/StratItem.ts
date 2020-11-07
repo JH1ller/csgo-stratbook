@@ -1,5 +1,4 @@
 import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
-const { shell } = require('electron').remote;
 import { Strat, Sides, StratTypes, Step } from '@/services/models';
 import StepItem from '@/components/StepItem/StepItem.vue';
 import { IStepItem } from '@/components/StepItem/StepItem';
@@ -40,7 +39,12 @@ export default class StratItem extends Vue {
   }
 
   private openVideo() {
-    shell.openExternal(this.strat.videoLink as string);
+    if (process?.versions?.electron) {
+      const { shell } = require('electron').remote;
+      shell.openExternal(this.strat.videoLink as string);
+    } else {
+      window.open(this.strat.videoLink, '_blank');
+    }
   }
 
   @Emit()

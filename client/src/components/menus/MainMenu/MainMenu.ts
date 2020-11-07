@@ -1,7 +1,7 @@
 import { Component, Vue } from 'vue-property-decorator';
-const remote = require('electron').remote;
+// const remote = require('electron').remote;
 import { Player } from '@/services/models';
-import { BrowserWindow } from 'electron';
+// import { BrowserWindow } from 'electron';
 import { authModule } from '@/store/namespaces';
 
 @Component({})
@@ -28,13 +28,16 @@ export default class MainMenu extends Vue {
   ];
 
   private async mounted() {
-    const win: BrowserWindow = remote.getCurrentWindow();
-    // win?.setMinimumSize(660, this.calculateMinHeight());
-    document.addEventListener('keydown', e => {
-      if (e.key === 'd' && e.ctrlKey) {
-        win.webContents.openDevTools();
-      }
-    });
+    if (process?.versions?.electron) {
+      const remote = require('electron').remote;
+      const win = remote.getCurrentWindow();
+      // win?.setMinimumSize(660, this.calculateMinHeight());
+      document.addEventListener('keydown', e => {
+        if (e.key === 'd' && e.ctrlKey) {
+          win.webContents.openDevTools();
+        }
+      });
+    }
   }
 
   get avatarUrl() {
@@ -47,7 +50,7 @@ export default class MainMenu extends Vue {
     }
   }
 
-  private calculateMinHeight() {
-    return (this.menuItems.length + 1) * 70 + 30;
-  }
+  // private calculateMinHeight() {
+  //   return (this.menuItems.length + 1) * 70 + 30;
+  // }
 }

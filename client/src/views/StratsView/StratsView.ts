@@ -22,7 +22,6 @@ export default class StratsView extends Vue {
   private creationOverlayOpen: boolean = false;
   private creationOverlayEditMode: boolean = false;
   private editStrat: Strat | null = null;
-  private refreshInterval!: NodeJS.Timeout;
   @mapModule.State currentMap!: string;
   @stratModule.State strats!: Strat[];
   @filterModule.State filters!: Filters;
@@ -42,14 +41,6 @@ export default class StratsView extends Vue {
   @stratModule.Action deleteStep!: (stepID: string) => Promise<void>;
   @filterModule.Action clearFilters!: () => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
-
-  // private mounted() {
-  //   this.refreshInterval = setInterval(() => this.fetchStrats(), 15000); // TODO: move interval value to cfg
-  // }
-
-  private beforeDestroy() {
-    clearInterval(this.refreshInterval);
-  }
 
   private creationOverlaySubmitted(data: Partial<Strat>) {
     if (data._id) {
