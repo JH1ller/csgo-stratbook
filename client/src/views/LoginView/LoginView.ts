@@ -1,8 +1,8 @@
 import { Component, Vue, Ref } from 'vue-property-decorator';
-import LoginForm from '@/components/login-form/login-form.vue';
-import { FormComponent } from '@/interfaces';
+import LoginForm from '@/components/LoginForm/LoginForm.vue';
 import { Response } from '@/services/models';
 import { authModule } from '@/store/namespaces';
+import { Routes } from '@/router/router.models';
 
 @Component({
   components: {
@@ -10,8 +10,8 @@ import { authModule } from '@/store/namespaces';
   },
 })
 export default class LoginView extends Vue {
-  @Ref('login-form') loginForm!: FormComponent;
   @authModule.Action login!: (credentials: { email: string; password: string }) => Promise<Response>;
+  private formError: string = '';
 
   private async loginRequest(payload: any) {
     const res = await this.login({
@@ -19,13 +19,14 @@ export default class LoginView extends Vue {
       password: payload.password,
     });
     if (res.error) {
-      this.loginForm.updateFormMessage(res.error, 'error');
+      this.updateFormError(res.error);
     } else if (res.success) {
-      this.loginForm.updateFormMessage(res.success, 'success');
-      setTimeout(() => {
-        this.loginForm.updateFormMessage(null, null);
-        this.$router.push({ name: 'Strats', query: { toast: 'false' } });
-      }, 3000);
+      this.updateFormError('');
+      this.$router.push(Routes.JoinTeam);
     }
+  }
+
+  private updateFormError(text: string): void {
+    this.formError = text;
   }
 }

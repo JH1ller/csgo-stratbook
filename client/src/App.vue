@@ -12,11 +12,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import ViewTitle from '@/components/view-title/view-title.vue';
-import Loader from '@/components/loader/loader.vue';
-import ToastWrapper from '@/components/toast-wrapper/toast-wrapper.vue';
-import MainMenu from '@/components/menus/main-menu/main-menu.vue';
-import DialogWrapper from './components/dialog-wrapper/dialog-wrapper.vue';
+import ViewTitle from '@/components/ViewTitle/ViewTitle.vue';
+import Loader from '@/components/Loader/Loader.vue';
+import ToastWrapper from '@/components/ToastWrapper/ToastWrapper.vue';
+import MainMenu from '@/components/menus/MainMenu/MainMenu.vue';
+import DialogWrapper from './components/DialogWrapper/DialogWrapper.vue';
 
 @Component({
   components: {
@@ -37,13 +37,15 @@ export default class App extends Vue {}
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   background-color: $color--light;
+  height: 100%;
+  overflow: hidden;
 }
 
 .main-menu {
   z-index: 10;
 }
 
-.view-wrapper {
+.router-view {
   background-color: $color--light;
   margin-left: 70px;
   margin-right: 70px;

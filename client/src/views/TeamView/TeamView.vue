@@ -1,17 +1,16 @@
 <template>
-  <div class="view-wrapper">
     <div class="team-view">
-      <transition name="fade">
-        <div v-if="!teamInfo._id" class="team-view__create-wrapper">
-          <team-create-form @create-clicked="createTeamRequest" ref="create-form" />
-          <join-team-form @join-clicked="joinTeamRequest" ref="join-form" />
+      <div class="team-view__content">
+        <team-info />
+        <div class="team-view__right-wrapper">
+          <img :src="teamAvatarUrl" alt class="team-view__avatar" />
+          <member-list 
+            class="team-view__member-list" 
+            @leave-team="requestTeamLeave" 
+          />
         </div>
-        <div v-else class="team-view__info-wrapper">
-          <team-info @leave-team="leaveTeamRequest" />
-        </div>
-      </transition>
+      </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts" src="./TeamView.ts"></script>

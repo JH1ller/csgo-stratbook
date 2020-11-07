@@ -14,6 +14,18 @@
 		"trailing-comma": false,
 		"no-console": false,
 		"max-line-length": 400,
-		"no-empty": [true, "allow-empty-catch"]
+		"no-empty": [true, "allow-empty-catch"],
+		"array-type": false,
+		"arrow-return-shorthand": true,
+		"member-ordering": [
+			true,
+			{
+				"order": ["static-field", "instance-field", "static-method", "instance-method"]
+			}
+		],
+		"semicolon": {
+			"options": ["always"]
+		},
+		"typedef": [true, "call-signature"]
 	}
 }

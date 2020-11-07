@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import urljoin from 'url-join';
 import { Map, Strat, Step, Player, Team, Status } from '@/services/models';
-import { TeamCreateFormData } from '@/components/team-create-form/team-create-form';
+import { TeamCreateFormData } from '@/components/TeamCreateForm/TeamCreateForm';
 import store from '@/store';
 import router from '@/router';
 import jwtDecode from 'jwt-decode';
@@ -43,7 +43,7 @@ axiosInstance.interceptors.response.use(
     log.error('axios::interceptor', error.response.data.error);
     if (error.response.status === 401) {
       if (router.currentRoute.name !== RouteNames.Login) router.push(Routes.Login);
-      store.dispatch('auth/resetState');
+      store.dispatch('resetState');
       store.dispatch('app/showToast', {
         id: 'axiosInterceptor/401',
         text: 'Authorization expired. Please login again.',
@@ -103,7 +103,7 @@ class APIService {
       const { data } = await axiosInstance.get(Endpoints.Maps);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -115,7 +115,7 @@ class APIService {
       const { data } = await axiosInstance.get(target);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -130,7 +130,7 @@ class APIService {
       return { success: data };
     } catch (error) {
       store.dispatch('app/hideLoader');
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -144,7 +144,7 @@ class APIService {
       return { success: data };
     } catch (error) {
       store.dispatch('app/hideLoader');
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -154,7 +154,7 @@ class APIService {
       const { data } = await axiosInstance.patch(target, payload);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -168,7 +168,7 @@ class APIService {
       });
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -178,7 +178,7 @@ class APIService {
       const { data } = await axiosInstance.delete(target);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -188,7 +188,7 @@ class APIService {
       const { data } = await axiosInstance.post(target, strat);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -199,7 +199,7 @@ class APIService {
       const { data } = await axiosInstance.patch(target, payload);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -212,7 +212,7 @@ class APIService {
       });
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -223,7 +223,7 @@ class APIService {
       const { data } = await axiosInstance.patch(target, payload);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -234,7 +234,7 @@ class APIService {
       const { data } = await axiosInstance.post(target, step);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -244,7 +244,7 @@ class APIService {
       const { data } = await axiosInstance.delete(target);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -254,7 +254,7 @@ class APIService {
       const { data } = await axiosInstance.post(target, formData);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -264,7 +264,7 @@ class APIService {
       const { data } = await axiosInstance.patch(target, { code });
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -274,7 +274,7 @@ class APIService {
       const { data } = await axiosInstance.patch(target);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -284,7 +284,7 @@ class APIService {
       const { data } = await axiosInstance.get(target);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 
@@ -294,7 +294,7 @@ class APIService {
       const { data } = await axiosInstance.get(target);
       return { success: data };
     } catch (error) {
-      return { error: error.response.data.error };
+      return { error: error.response?.data?.error };
     }
   }
 }

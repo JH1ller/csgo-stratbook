@@ -35,6 +35,9 @@ export const stratModule: Module<StratState, RootState> = {
       if (res.success) {
         commit(SET_STRATS, res.success);
         dispatch('saveStratsToStorage');
+        return { success: res.success };
+      } else {
+        return { error: res.error };
       }
     },
     async fetchStepsOfStrat({ commit }, stratID: string) {

@@ -28,6 +28,9 @@ export const mapModule: Module<MapState, RootState> = {
         commit(SET_MAPS, res.success);
         localStorage.setItem('maps', JSON.stringify(state.maps));
         dispatch('updateCurrentMap', res.success[0]._id);
+        return { success: res.success };
+      } else {
+        return { error: res.error };
       }
     },
     updateCurrentMap({ commit, dispatch }, mapID: string) {

@@ -1,7 +1,11 @@
 <template>
   <div class="view-wrapper">
     <div class="register-view">
-      <register-form @register-clicked="registerRequest" ref="register-form" />
+      <register-form 
+        @register-clicked="registerRequest"
+        @update-form-error="updateFormError"
+        :formError="formError" 
+      />
     </div>
   </div>
 </template>

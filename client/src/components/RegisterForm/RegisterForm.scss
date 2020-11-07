@@ -1,0 +1,126 @@
+.register-form {
+  &__form {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    background-color: white;
+    box-shadow: $shadow-subtle;
+    transition: height 0.3s ease;
+    border-radius: 8px;
+  }
+
+  &__label {
+    font-size: 1em;
+    display: block;
+    &:not(:first-of-type) {
+      margin-top: 12px;
+    }
+    transition: color 0.2s ease;
+  }
+
+  &__input {
+    @include input_default;
+
+    &:not(:first-of-type) {
+      margin-top: 20px;
+    }
+  }
+
+  &__file {
+    margin-top: 24px;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    height: 2.5rem;
+
+    & > input {
+      min-width: 14rem;
+      margin: 0;
+      opacity: 0;
+    }
+
+    & > span {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      height: 2.5rem;
+      padding: 0.5rem 1rem;
+      line-height: 1.5;
+      color: #555;
+      background-color: white;
+      border: 2px solid $color--navyblue-50;
+      border-radius: 0.25rem;
+      box-shadow: $shadow-subtle;
+      user-select: none;
+      cursor: pointer;
+
+      &:hover {
+        &:before {
+          background-color: #ddd;
+        }
+      }
+
+      &:before {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        border: 2px solid $color--navyblue-50;
+        border-left: none;
+        bottom: -2px;
+        content: 'Browse';
+        padding: 0.5rem 1rem;
+        line-height: 1.5;
+        color: #555;
+        background-color: $color--light;
+        border-radius: 0 0.25rem 0.25rem 0;
+        transition: background-color 0.3s ease;
+      }
+
+      &:after {
+        content: attr(file-input-value);
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  &__submit {
+    margin-top: 16px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    text-transform: uppercase;
+    color: white;
+    border-radius: 2px;
+    padding: 4px 8px;
+    letter-spacing: 1px;
+    font-size: 0.9em;
+    height: 32px;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+    background-color: $color--green;
+  }
+
+  &__register-text {
+    margin-top: 8px;
+  }
+
+  &__register-link {
+    font-weight: bold;
+    margin-left: 4px;
+    color: $color--green;
+    cursor: pointer;
+  }
+
+  &__error {
+    color: $color--red;
+    max-width: 300px;
+    margin-bottom: 12px;
+    padding: 8px;
+    border-radius: 6px;
+    background-color: $color--red-25;
+  }
+}

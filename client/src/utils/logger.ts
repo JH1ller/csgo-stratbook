@@ -2,7 +2,8 @@ export class log {
   private static log(color: string, ns: string, ...data: any[]): void {
     if (process.env.NODE_ENV === 'development')
       console.log(
-        `%c${new Date().toLocaleTimeString()} | ${ns.padEnd(15, ' ')} >>`,
+        `%c${new Date().toLocaleTimeString()}%c${ns.padEnd(15, ' ')} >>`,
+        `color: #c3c3c3; background: #141418; border: 1px solid ${color}; border-right: none; padding: 2px 8px;`,
         `color: ${color}; background: #141418; border: 1px solid ${color}; padding: 2px 8px;`,
         ...data
       );

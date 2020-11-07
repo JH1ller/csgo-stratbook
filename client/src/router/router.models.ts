@@ -6,6 +6,7 @@ export enum RouteNames {
   Login = 'Login',
   Register = 'Register',
   Team = 'Team',
+  JoinTeam = 'JoinTeam',
   Profile = 'Profile'
 }
 
@@ -15,5 +16,6 @@ export const Routes: Record<RouteNames, Location> = {
   Login: { name: RouteNames.Login },
   Register: { name: RouteNames.Register },
   Team: { name: RouteNames.Team },
+  JoinTeam: { name: RouteNames.JoinTeam },
   Profile: { name: RouteNames.Profile }
 };
