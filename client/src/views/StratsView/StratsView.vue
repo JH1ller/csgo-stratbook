@@ -14,9 +14,7 @@
       @delete-strat="deleteStratRequest"
       @edit-strat="showCreationOverlay"
       @toggle-active="toggleStratActive"
-      @update-step="updateStep"
-      @add-step="createStep"
-      @delete-step="deleteStep"
+      @update-content="updateContent"
       :strats="strats"
       :filters="filters"
     />

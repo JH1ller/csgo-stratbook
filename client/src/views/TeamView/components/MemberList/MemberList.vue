@@ -1,28 +1,39 @@
 <template>
   <ol class="member-list">
     <p class="member-list__header">Members</p>
-    <li
+    <MemberItem
       class="member-list__member"
-      :class="{ '-self': player._id === profile._id, '-online': player.isOnline }"
-      v-for="player in teamMembers"
-      :key="player._id"
+      v-for="member in teamMembers"
+      :key="member._id"
+      :member="member"
+      :profile="profile"
+      :teamInfo="teamInfo"
+      @open-menu="openMenu"
     >
-      <div class="member-list__member-text">
-        <span class="member-list__member-name">
-          <font-awesome-icon
-            v-if="player._id === teamInfo.manager"
-            icon="crown"
-            class="member-list__captain-icon"
-          />
-          {{ player.name }}
-        </span>
-        <p
-          class="member-list__member-last-online"
-        >{{ player.isOnline ? 'online' : lastOnlineString(player.lastOnline) }}</p>
-        </div>
-        <img class="member-list__member-avatar" :src="resolveAvatar(player.avatar)" />
-      </li> 
-    <span class="member-list__leave" @click="leaveTeam" data-tooltip="Leave the team">Leave team</span>
+    </MemberItem> 
+    <vue-context ref="menu" v-slot="{ data }">
+      <li>
+        <a 
+          v-if="data && isManager && data.member._id !== teamInfo.manager" 
+          @click.prevent="transferManager(data.member._id)">
+          Transfer leadership
+        </a>
+      </li>
+      <li>
+        <a 
+          v-if="data && isManager && data.member._id !== profile._id" 
+          @click.prevent="kickMember(data.member._id)">
+          Kick member
+        </a>
+      </li>
+      <li>
+        <a 
+          v-if="data && data.member._id === profile._id" 
+          @click.prevent="leaveTeam">
+          Leave team
+        </a>
+      </li>
+    </vue-context>
   </ol>
 </template>
 

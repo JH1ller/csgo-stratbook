@@ -27,7 +27,17 @@ router.get('/', verifyAuth, async (req, res) => {
 router.get('/players', verifyAuth, async (req, res) => {
   try {
     const players = await Player.find({ team: res.player.team });
-    res.json(players);
+    const sanitizedPlayers = players.map((player) => ({
+      _id: player._id,
+      name: player.name,
+      role: player.role,
+      createdAt: player.createdAt,
+      avatar: player.avatar,
+      team: player.team,
+      isOnline: player.isOnline,
+      lastOnline: player.lastOnline,
+    }));
+    res.json(sanitizedPlayers);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -83,7 +93,7 @@ router.post('/', verifyAuth, uploadMiddleware, async (req, res) => {
       avatar: updatedPlayer.avatar,
       team: updatedPlayer.team,
       isOnline: updatedPlayer.isOnline,
-      lastOnline: updatedPlayer.lastOnline
+      lastOnline: updatedPlayer.lastOnline,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -156,7 +166,7 @@ router.patch('/join', verifyAuth, async (req, res) => {
       avatar: updatedPlayer.avatar,
       team: updatedPlayer.team,
       isOnline: updatedPlayer.isOnline,
-      lastOnline: updatedPlayer.lastOnline
+      lastOnline: updatedPlayer.lastOnline,
     });
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -166,17 +176,27 @@ router.patch('/join', verifyAuth, async (req, res) => {
 // * Leave team
 router.patch('/leave', verifyAuth, async (req, res) => {
   const team = await Team.findById(res.player.team);
+  const members = await Player.find({ team: team._id });
 
-  let code;
+  if (members.length > 1) {
 
-  while (true) {
-    code = crypto.randomBytes(3).toString('hex');
-    if (!(await Team.findOne({ code }))) break;
+    if (team.manager.equals(res.player._id)) {
+      return res.status(400).json({ error: 'You need to transfer leadership first.' });
+    }
+    
+    let code;
+
+    while (true) {
+      code = crypto.randomBytes(3).toString('hex');
+      if (!(await Team.findOne({ code }))) break;
+    }
+
+    team.code = code;
+
+    await team.save();
+  } else {
+    await team.delete();
   }
-
-  team.code = code;
-
-  await team.save();
 
   res.player.team = undefined;
 
@@ -190,8 +210,68 @@ router.patch('/leave', verifyAuth, async (req, res) => {
       avatar: updatedPlayer.avatar,
       team: updatedPlayer.team,
       isOnline: updatedPlayer.isOnline,
-      lastOnline: updatedPlayer.lastOnline
+      lastOnline: updatedPlayer.lastOnline,
     });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+// * Transfer leader
+router.patch('/transfer', verifyAuth, async (req, res) => {
+  const team = await Team.findById(res.player.team);
+  
+  if (!res.player._id.equals(team.manager)) {
+    return res.status(403).json({ error: 'Only a team manager can transfer leadership.' });
+  }
+
+  if (team.manager.equals(req.body._id)) {
+    return res.status(400).json({ error: 'Selected player is already team manager.' });
+  }
+
+  team.manager = req.body._id;
+  
+  try {
+    const updatedTeam = await team.save();
+    return res.json(updatedTeam);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+// * Kick member
+router.patch('/kick', verifyAuth, async (req, res) => {
+  const team = await Team.findById(res.player.team);
+  const target = await Player.findById(req.body._id);
+
+  if (!res.player._id.equals(team.manager)) {
+    return res.status(400).json({ error: 'Only a team manager can kick players.' });
+  }
+
+  if (!target.team.equals(team._id)) {
+    return res.status(400).json({ error: 'Cannot kick player from another team.' });
+  }
+
+  if (target._id.equals(team.manager)) {
+    return res.status(400).json({ error: 'Cannot kick the team manager.' });
+  }
+    
+  //* move generate new code logic into util function
+  let code;
+
+  while (true) {
+    code = crypto.randomBytes(3).toString('hex');
+    if (!(await Team.findOne({ code }))) break;
+  }
+
+  team.code = code;
+
+  target.team = undefined;
+  
+  try {
+    await target.save();
+    await team.save();
+    return res.json({ success: `Player ${target.name} was kicked from the team.`});
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

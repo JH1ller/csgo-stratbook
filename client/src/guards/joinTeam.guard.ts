@@ -1,5 +1,5 @@
 import { Routes } from '@/router/router.models';
-import { Status } from '@/services/models';
+import { Status } from '@/api/models';
 import store from '@/store';
 import { NavigationGuard } from 'vue-router';
 

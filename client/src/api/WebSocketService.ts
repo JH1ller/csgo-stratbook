@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import { BASE_URL } from '@/config';
 import store from '@/store';
-import { Player, Strat, Step, Team } from './models';
+import { Player, Strat, Team } from './models';
 import { log } from '@/utils/logger';
 
 class WebSocketService {
@@ -59,21 +59,6 @@ class WebSocketService {
     this.socket.on('deleted-strat', (data: { stratID: string }) => {
       log.info('ws::deleted', data);
       store.dispatch('strat/deleteStratLocally', data);
-    });
-
-    this.socket.on('created-step', (data: { step: Strat }) => {
-      log.info('ws::created', data);
-      store.dispatch('strat/addStepLocally', data);
-    });
-
-    this.socket.on('updated-step', (data: { step: Step }) => {
-      log.info('ws::updated', data);
-      store.dispatch('strat/updateStepLocally', data);
-    });
-
-    this.socket.on('deleted-step', (data: { stepID: string }) => {
-      log.info('ws::deleted', data);
-      store.dispatch('strat/deleteStepLocally', data);
     });
 
     this.socket.on('deleted-player', (data: { playerID: string }) => {

@@ -1,5 +1,5 @@
 import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
-import { Player, Sides } from '@/services/models';
+import { Player, Sides } from '@/api/models';
 import Multiselect from 'vue-multiselect';
 import { Filters } from '@/store/modules/filter';
 

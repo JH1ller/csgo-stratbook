@@ -44,6 +44,11 @@ const stratSchema = new mongoose.Schema({
     type: String,
   },
 
+  content: {
+    type: String,
+    default: ''
+  },
+
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'players',

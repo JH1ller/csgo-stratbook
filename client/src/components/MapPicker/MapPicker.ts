@@ -1,5 +1,5 @@
 import { Component, Vue, Emit } from 'vue-property-decorator';
-import { Map } from '@/services/models';
+import { Map } from '@/api/models';
 import { mapModule } from '@/store/namespaces';
 
 @Component({})

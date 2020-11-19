@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import urljoin from 'url-join';
-import { Map, Strat, Step, Player, Team, Status } from '@/services/models';
+import { Map, Strat, Player, Team, Status } from '@/api/models';
 import { TeamCreateFormData } from '@/components/TeamCreateForm/TeamCreateForm';
 import store from '@/store';
 import router from '@/router';
@@ -64,7 +64,6 @@ enum Endpoints {
   Maps = '/maps',
   Strats = '/strats',
   Players = '/players',
-  Steps = '/steps',
   Teams = '/teams',
   Auth = '/auth',
 }
@@ -78,6 +77,8 @@ enum Actions {
   Register = 'register',
   Join = 'join',
   Leave = 'leave',
+  Kick = 'kick',
+  Transfer = 'transfer',
 }
 
 interface APIResponseSuccess<T> {
@@ -203,51 +204,6 @@ class APIService {
     }
   }
 
-  static async getStepsOfStrat(stratID: string): Promise<APIResponse<Step[]>> {
-    try {
-      const { data } = await axiosInstance.get(Endpoints.Steps, {
-        params: {
-          strat: stratID,
-        },
-      });
-      return { success: data };
-    } catch (error) {
-      return { error: error.response?.data?.error };
-    }
-  }
-
-  static async updateStep(payload: Partial<Step>): Promise<APIResponse<Step>> {
-    const target = urljoin(Endpoints.Steps);
-
-    try {
-      const { data } = await axiosInstance.patch(target, payload);
-      return { success: data };
-    } catch (error) {
-      return { error: error.response?.data?.error };
-    }
-  }
-
-  static async createStep(step: Partial<Step>): Promise<APIResponse<Step>> {
-    const target = urljoin(Endpoints.Steps);
-
-    try {
-      const { data } = await axiosInstance.post(target, step);
-      return { success: data };
-    } catch (error) {
-      return { error: error.response?.data?.error };
-    }
-  }
-
-  static async deleteStep(stepID: string): Promise<APIResponse<Message>> {
-    const target = urljoin(Endpoints.Steps, stepID);
-    try {
-      const { data } = await axiosInstance.delete(target);
-      return { success: data };
-    } catch (error) {
-      return { error: error.response?.data?.error };
-    }
-  }
-
   static async createTeam(formData: TeamCreateFormData): Promise<APIResponse<Team>> {
     const target = urljoin(Endpoints.Teams);
     try {
@@ -272,6 +228,26 @@ class APIService {
     const target = urljoin(Endpoints.Teams, Actions.Leave);
     try {
       const { data } = await axiosInstance.patch(target);
+      return { success: data };
+    } catch (error) {
+      return { error: error.response?.data?.error };
+    }
+  }
+
+  static async transferManager(memberID: string): Promise<APIResponse<Team>> {
+    const target = urljoin(Endpoints.Teams, Actions.Transfer);
+    try {
+      const { data } = await axiosInstance.patch(target, { _id: memberID });
+      return { success: data };
+    } catch (error) {
+      return { error: error.response?.data?.error };
+    }
+  }
+
+  static async kickMember(memberID: string): Promise<APIResponse<string>> {
+    const target = urljoin(Endpoints.Teams, Actions.Kick);
+    try {
+      const { data } = await axiosInstance.patch(target, { _id: memberID });
       return { success: data };
     } catch (error) {
       return { error: error.response?.data?.error };

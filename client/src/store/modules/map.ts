@@ -1,7 +1,7 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
-import { Map } from '@/services/models';
-import APIService from '@/services/APIService';
+import { Map } from '@/api/models';
+import APIService from '@/api/APIService';
 
 const SET_MAPS = 'SET_MAPS';
 const SET_CURRENT_MAP = 'SET_CURRENT_MAP';

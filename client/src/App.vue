@@ -32,7 +32,7 @@ export default class App extends Vue {}
 
 <style lang="scss">
 #app {
-  font-family: Open Sans, Avenir, Helvetica, Arial, sans-serif;
+  font-family: $font_ubuntu-regular;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
@@ -46,7 +46,8 @@ export default class App extends Vue {}
 }
 
 .router-view {
-  background-color: $color--light;
+  //background-color: $color--light;
+  background-color: #4c4c53;
   margin-left: 70px;
   margin-right: 70px;
   margin-top: 50px;

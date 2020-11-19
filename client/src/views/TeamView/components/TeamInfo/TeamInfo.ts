@@ -1,5 +1,5 @@
 import { Component, Vue } from 'vue-property-decorator';
-import { Team } from '@/services/models';
+import { Team } from '@/api/models';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { appModule, teamModule } from '@/store/namespaces';
 

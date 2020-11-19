@@ -9,13 +9,6 @@ export enum Sides {
   T = 'T',
 }
 
-export enum Roles {
-  IGL = 'IGL',
-  RIFLE = 'RIFLE',
-  ENTRY = 'ENTRY',
-  AWP = 'AWP',
-}
-
 export interface Map {
   _id: string;
   name: string;
@@ -45,25 +38,12 @@ export interface Strat {
   createdAt: Date;
   modifiedBy: string;
   modifiedAt: Date;
-  steps: Step[];
+  content: string;
 }
-
-export interface Step {
-  _id: string;
-  createdBy: string;
-  createdAt: Date;
-  strat: string;
-  equipment: Equipment;
-  description?: string;
-  note?: string;
-  actor?: string;
-}
-
 export interface Player {
   _id: string;
   name: string;
   email: string;
-  role?: Roles;
   avatar?: string;
   team?: string;
   isOnline?: boolean;

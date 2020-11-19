@@ -1,6 +1,6 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import Loader from '@/components/Loader/Loader.vue';
-import { Team } from '@/services/models';
+import { Team } from '@/api/models';
 import { appModule, teamModule } from '@/store/namespaces';
 
 @Component({
