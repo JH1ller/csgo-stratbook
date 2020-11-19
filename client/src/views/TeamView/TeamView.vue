@@ -6,7 +6,9 @@
           <img :src="teamAvatarUrl" alt class="team-view__avatar" />
           <member-list 
             class="team-view__member-list" 
-            @leave-team="requestTeamLeave" 
+            @leave-team="requestTeamLeave"
+            @transfer-manager="requestTransferManager"
+            @kick-member="requestKickMember"
           />
         </div>
       </div>

@@ -1,0 +1,50 @@
+.member-item {
+  &__wrapper {
+    display: flex;
+    align-items: center;
+    width: 250px;
+    justify-content: space-between;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &.-self {
+      background-color: $color--navyblue-20;
+    }
+  
+    &.-online {
+      border: 1px solid $color--green;
+    }
+  }
+
+  &__last-online {
+    font-size: 0.8em;
+    font-style: italic;
+    color: rgba($color--navyblue, 0.8);
+    margin-left: 3px;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__name {
+    display: flex;
+    align-items: center;
+    max-width: 200px;
+  }
+
+  &__captain-icon {
+    width: 20px;
+    height: 20px;
+    color: $color--navyblue-80;
+    margin-right: 6px;
+  }
+
+  &__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+  }
+}

@@ -4,7 +4,7 @@ import StratList from '@/components/StratList/StratList.vue';
 import FloatingAdd from '@/components/FloatingAdd/FloatingAdd.vue';
 import CreationOverlay from '@/components/CreationOverlay/CreationOverlay.vue';
 import FilterMenu from '@/components/FilterMenu/FilterMenu.vue';
-import { Strat, StratTypes, Sides, Player, Step } from '@/services/models';
+import { Strat, StratTypes, Sides, Player } from '@/api/models';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { appModule, mapModule, stratModule, filterModule, teamModule } from '@/store/namespaces';
 import { Filters } from '@/store/modules/filter';
@@ -36,9 +36,6 @@ export default class StratsView extends Vue {
   @stratModule.Action updateStrat!: (payload: Partial<Strat>) => Promise<void>;
   @stratModule.Action createStrat!: (payload: Partial<Strat>) => Promise<void>;
   @stratModule.Action deleteStrat!: (stratId: string) => Promise<void>;
-  @stratModule.Action updateStep!: (payload: Partial<Step>) => Promise<void>;
-  @stratModule.Action createStep!: (payload: Partial<Step>) => Promise<void>;
-  @stratModule.Action deleteStep!: (stepID: string) => Promise<void>;
   @filterModule.Action clearFilters!: () => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
 
@@ -70,5 +67,10 @@ export default class StratsView extends Vue {
       key: 'strats-view/confirm-delete',
       text: 'Are you sure you want to delete this strat?'
     }).then(() => this.deleteStrat(stratID));
+  }
+
+  private updateContent(payload: Partial<Strat>) {
+    console.log(payload);
+    this.updateStrat(payload);
   }
 }

@@ -1,6 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator';
 // const remote = require('electron').remote;
-import { Player } from '@/services/models';
+import { Player } from '@/api/models';
 // import { BrowserWindow } from 'electron';
 import { authModule } from '@/store/namespaces';
 
@@ -14,6 +14,11 @@ export default class MainMenu extends Vue {
       label: 'Strats',
       icon: 'chess',
       link: '/strats',
+    },
+    {
+      label: 'Grenades',
+      icon: 'bomb',
+      link: '/nadebook',
     },
     {
       label: 'Team',

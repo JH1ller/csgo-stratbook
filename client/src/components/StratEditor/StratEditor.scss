@@ -1,0 +1,132 @@
+.strat-editor {
+
+  &__editor {
+    transition: box-shadow 0.3s ease;
+    border-radius: 6px;
+    border: 1px solid $color--light;
+    font-family: $font_ubuntu-regular;
+   // font-weight: bold;
+    padding: 10px 18px;
+    color: $color--dark;
+    background-color: white;
+    font-size: 1.1rem;
+    line-height: 1.8rem;
+
+    &:focus {
+      box-shadow: $shadow-subtle, $shadow-subtle;
+    }
+  }
+
+  &__mention,
+  &__utility {
+    box-shadow: $shadow-subtle;
+    border-radius: 2px;
+    padding: 3px 4px;
+   // font-weight: bold;
+    font-family: $font_ubuntu-bold;
+    font-size: 1rem;
+    cursor: pointer;
+    color: $color--emperor;
+    transition: background-color 0.3s ease-out;
+  }
+
+  &__mention {
+    background-color: $color--light-purple;
+
+    &:hover {
+      background-color: darken($color--light-purple, 7%);
+    }
+
+    &.-is-user {
+      background-color: $color--aero;
+
+      &:hover {
+        background-color: darken($color--aero, 7%);
+      }
+    }
+
+    &.-is-spawn {
+      background-color: $color--sand;
+
+      &:hover {
+        background-color: darken($color--sand, 7%);
+      }
+    }
+  }
+
+  &__utility {
+    background-color: white;
+
+    &:hover {
+      background-color: darken(white, 7%);
+    }
+  }
+
+  &__utility-img {
+    width: 20px;
+    height: 20px;
+    opacity: 50%;
+    margin-right: 2px;
+    transform: translateY(4px);
+  }
+
+  &__mention-item {
+    font-family: $font_ubuntu-bold;
+    padding: 12px;
+    color: $color--dark;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    &:not(:first-of-type) {
+      border-top: 1px solid darken(white, 10%)  ;
+    }
+    &:first-of-type {
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+    }
+
+    &:last-of-type {
+      border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
+    }
+
+    &.-no-match {
+      font-family: $font_ubuntu-regular;
+    }
+  }
+
+  &__mention-container {
+    background-color: whitesmoke;
+    box-shadow: $shadow-subtle;
+    border-radius: 6px;
+  }
+
+  &__mention-selected {
+    background-color: darken(white, 10%);
+  }
+
+  &__mention-item-image {
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+  }
+
+  &__utility-item-image {
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+  }
+}
+
+[placeholder]:empty::before {
+  content: attr(placeholder);
+  color: $color--grey; 
+  cursor: text;
+}
+
+[placeholder]:empty:focus::before {
+  content: "";
+}

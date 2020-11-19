@@ -1,8 +1,8 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
-import { Status, Player } from '@/services/models';
-import APIService from '@/services/APIService';
-import WebSocketService from '@/services/WebSocketService';
+import { Status, Player } from '@/api/models';
+import APIService from '@/api/APIService';
+import WebSocketService from '@/api/WebSocketService';
 
 const SET_TOKEN = 'SET_TOKEN';
 const SET_PROFILE = 'SET_PROFILE';

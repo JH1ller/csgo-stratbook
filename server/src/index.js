@@ -67,9 +67,6 @@ app.use('/players', playersRouter);
 const stratsRouter = require('./routes/strats');
 app.use('/strats', stratsRouter);
 
-const stepsRouter = require('./routes/steps');
-app.use('/steps', stepsRouter);
-
 const teamsRouter = require('./routes/teams');
 app.use('/teams', teamsRouter);
 

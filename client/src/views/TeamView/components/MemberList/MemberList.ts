@@ -1,26 +1,52 @@
-import { Component, Emit, Vue } from 'vue-property-decorator';
-import { resolveAvatar } from '@/utils/resolveUrls';
-import ago from 's-ago';
+import { Component, Emit, Ref, Vue } from 'vue-property-decorator';
 import { authModule, teamModule } from '@/store/namespaces';
-import { Player, Team } from '@/services/models';
+import { Player, Team } from '@/api/models';
+import MemberItem from '../MemberItem/MemberItem.vue';
+import VueContext from 'vue-context';
 
-
-@Component({})
+@Component({
+  components: {
+    MemberItem,
+    VueContext
+  }
+})
 export default class MemberList extends Vue {
   @teamModule.State private teamInfo!: Team;
   @teamModule.State private teamMembers!: Player[];
   @authModule.State private profile!: Player;
-
-  private resolveAvatar: (url?: string) => string = resolveAvatar;
+  @Ref() menu!: any;
 
   @Emit()
   private leaveTeam(): void {
     return;
   }
 
-  private lastOnlineString(lastOnline: Date): string | undefined {
-    if (!lastOnline) return;
-    const date = new Date(lastOnline);
-    return ago(date);
+  @Emit()
+  private kickMember(id: string): string {
+    return id;
   }
+
+  @Emit()
+  private transferManager(to: string): string {
+    return to;
+  }
+
+  private openMenu({ event, member }: { event: MouseEvent; member: Player }): void {
+    if (this.shouldShowMenu(member)) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      this.menu.open(event, { member });
+    }
+  }
+  
+  private get isManager(): boolean {
+    return this.teamInfo.manager === this.profile._id;
+  }
+
+  private shouldShowMenu(member: Player): boolean {
+    return (this.isManager && member._id !== this.teamInfo.manager)
+    || (this.isManager && member._id !== this.profile._id)
+    || (member._id === this.profile._id);
+  }
+
 }

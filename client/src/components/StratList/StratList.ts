@@ -1,5 +1,5 @@
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
-import { Strat, Step } from '@/services/models';
+import { Strat } from '@/api/models';
 import StratItem from '@/components/StratItem/StratItem.vue';
 import { Filters } from '@/store/modules/filter';
 
@@ -25,6 +25,8 @@ export default class StratList extends Vue {
       });
   }
 
+  // TODO: solve this drilling with provide/inject
+
   // Emitted through from strat-item
   @Emit()
   private deleteStrat(stratID: string) {
@@ -39,25 +41,13 @@ export default class StratList extends Vue {
 
   // Emitted through from strat-item
   @Emit()
-  private updateStep(payload: Partial<Step>) {
-    return payload;
-  }
-
-  // Emitted through from strat-item
-  @Emit()
-  private addStep(payload: any) {
-    return payload;
-  }
-
-  // Emitted through from strat-item
-  @Emit()
   private editStrat(strat: Strat) {
     return strat;
   }
 
   // Emitted through from strat-item
   @Emit()
-  private deleteStep(stepID: string) {
-    return stepID;
+  private updateContent(payload: Partial<Strat>) {
+    return payload;
   }
 }

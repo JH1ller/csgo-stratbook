@@ -1,8 +1,9 @@
+@import '~vue-context/dist/css/vue-context.css';
+
 .member-list {
   padding: 16px;
   border: 2px solid $color--navyblue-80;
   border-radius: 8px;
-  position: relative;
   overflow-y: scroll;
   overflow-x: hidden;
   -ms-overflow-style: none;  /* IE and Edge */
@@ -18,71 +19,15 @@
     font-size: 1.1rem;
   }
 
-  &__leave {
-    @include tooltip;
-    font-size: 0.9em;
-    color: $color--red;
-    margin-top: 12px;
-    cursor: pointer;
-    line-height: 0.8;
-    position: absolute;
-    bottom: -18px;
-    right: 0;
-  }
-
   &__member {
-    display: flex;
-    align-items: center;
-    width: 200px;
-    justify-content: space-between;
-    padding: 6px 12px;
-    border-radius: 4px;
     &:not(:first-of-type) {
       margin-top: 12px;
     }
-
-    &.-self {
-      background-color: $color--navyblue-20;
-    }
-
-    &.-online {
-      border: 1px solid $color--green;
-    }
   }
+}
 
-  &__member-last-online {
-    font-size: 0.8em;
-    font-style: italic;
-    color: rgba($color--navyblue, 0.8);
-    margin-left: 3px;
-  }
-
-  &__member-text {
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__member-name {
-    display: flex;
-    align-items: center;
-  }
-
-  &__captain-icon {
-    width: 20px;
-    height: 20px;
-    color: $color--navyblue-80;
-    margin-right: 6px;
-  }
-
-  &__member-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 4px;
-  }
-
-  &__member-header {
-    font-size: 1.2em;
-    font-weight: bold;
-    margin-bottom: 16px;
+.v-context {
+  & > li {
+    cursor: pointer;
   }
 }

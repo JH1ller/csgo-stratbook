@@ -19,6 +19,8 @@ import {
   faCopy,
   faCrown,
   faGamepad,
+  faBomb,
+  faSave,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -38,7 +40,9 @@ library.add(
   faChess,
   faCopy,
   faCrown,
-  faGamepad
+  faGamepad,
+  faBomb,
+  faSave
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

@@ -6,10 +6,8 @@
       :strat="strat"
       @delete-strat="deleteStrat"
       @toggle-active="toggleActive"
-      @update-step="updateStep"
       @edit-strat="editStrat"
-      @add-step="addStep"
-      @delete-step="deleteStep"
+      @update-content="updateContent"
     />
   </transition-group>
 </template>

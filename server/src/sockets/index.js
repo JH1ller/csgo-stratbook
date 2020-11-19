@@ -1,4 +1,3 @@
-const { stepSchema: Step } = require('../models/step');
 const Strat = require('../models/strat');
 const Player = require('../models/player');
 const Team = require('../models/team');
@@ -37,30 +36,8 @@ const initWS = (io) => {
     });
   });
 
-  Step.watch(null, { fullDocument: 'updateLookup' }).on('change', async (data) => {
-    if (data.operationType === 'delete') return;
-
-    try {
-      const strat = await Strat.findById(data.fullDocument.strat);
-      switch (data.operationType) {
-        case 'insert':
-          io.to(strat.team).emit('created-step', { step: data.fullDocument });
-          break;
-        case 'update':
-          data.updateDescription.updatedFields.deleted
-            ? io.to(strat.team).emit('deleted-step', { stepID: data.fullDocument._id })
-            : io.to(strat.team).emit('updated-step', { step: data.fullDocument });
-          break;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  });
-
   Strat.watch(null, { fullDocument: 'updateLookup' }).on('change', async (data) => {
     if (data.operationType === 'delete') return;
-
-    console.log(data); // TODO: remove
 
     switch (data.operationType) {
       case 'insert':

@@ -1,16 +1,14 @@
-import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
-import { Strat, Sides, StratTypes, Step } from '@/services/models';
-import StepItem from '@/components/StepItem/StepItem.vue';
-import { IStepItem } from '@/components/StepItem/StepItem';
+import { Component, Prop, Vue, Emit, Ref, Watch } from 'vue-property-decorator';
+import { Strat, Sides, StratTypes } from '@/api/models';
+import StratEditor from '@/components/StratEditor/StratEditor.vue';
 import { filterModule } from '@/store/namespaces';
 
 @Component({
-  components: { StepItem },
+  components: { StratEditor },
 })
 export default class StratItem extends Vue {
   @Prop() private strat!: Strat;
-  @Ref('step-elements') stepElements!: IStepItem[];
-  @Ref('add-step') addStepElement!: IStepItem;
+  @Ref() editor!: any;
   @filterModule.State filters!: {
     // TODO: create interface for Filter
     name: string;
@@ -18,24 +16,11 @@ export default class StratItem extends Vue {
     side: Sides | null;
     type: StratTypes | null;
   };
+  private editMode: boolean = false;
+  private editorKey: string = Math.random().toString(36).substring(2);
 
   private get isCtSide(): boolean {
     return this.strat.side === Sides.CT;
-  }
-
-  private get filteredSteps() {
-    return this.strat.steps
-      ? this.strat.steps.filter(step => {
-          return this.filters.player ? step.actor === this.filters.player : true;
-        })
-      : [];
-  }
-
-  private handleStepEditEnabled() {
-    if (this.stepElements) {
-      this.stepElements.forEach(stepElement => stepElement.cancelEdit());
-    }
-    this.addStepElement.cancelEdit();
   }
 
   private openVideo() {
@@ -57,23 +42,28 @@ export default class StratItem extends Vue {
     return this.strat;
   }
 
+  private editorUpdated(content: string) {
+    if (content !== this.strat.content) {
+      this.editMode = true;
+    } else {
+      this.editMode = false;
+    }
+  }
+
   @Emit()
   private toggleActive(): Partial<Strat> {
     return { _id: this.strat._id, active: !this.strat.active };
   }
 
   @Emit()
-  private updateStep(payload: Partial<Step>) {
-    return { ...payload, strat: this.strat._id };
+  private updateContent(): Partial<Strat> {
+    this.editMode = false;
+    return { _id: this.strat._id, content: this.editor.textarea.innerHTML };
   }
 
-  @Emit()
-  private addStep(payload: Partial<Step>) {
-    return { ...payload, strat: this.strat._id };
-  }
-
-  @Emit()
-  private deleteStep(stepID: string) {
-    return { stepID, stratID: this.strat._id };
+  private discardContent(): void {
+    this.editMode = false;
+    // * force refresh of editor
+    this.editorKey = Math.random().toString(36).substring(2);
   }
 }

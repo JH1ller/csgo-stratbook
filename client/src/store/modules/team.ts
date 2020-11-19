@@ -1,7 +1,7 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
-import { Player, Team, Status } from '@/services/models';
-import APIService, { APIResponse } from '@/services/APIService';
+import { Player, Team, Status } from '@/api/models';
+import APIService, { APIResponse } from '@/api/APIService';
 import { TeamCreateFormData } from '@/components/TeamCreateForm/TeamCreateForm';
 
 const SET_TEAM_INFO = 'SET_TEAM_INFO';
@@ -98,6 +98,26 @@ export const teamModule: Module<TeamState, RootState> = {
         //localStorage.clear(); // TODO: clear everything except auth data
         // TODO: create team/resetState and call it here
         return { success: 'Successfully left team.' };
+      } else {
+        return { error: res.error };
+      }
+    },
+    async transferManager({ dispatch, commit }, memberID: string) {
+      const res = await APIService.transferManager(memberID);
+      if (res.success) {
+        commit(SET_TEAM_INFO, res.success);
+        dispatch('app/showToast', { id: 'team/transferManager', text: 'Leadership successfully transfered' }, { root: true });
+        return { success: 'Successfully transfered.' };
+      } else {
+        return { error: res.error };
+      }
+    },
+    async kickMember({ dispatch }, memberID: string) {
+      const res = await APIService.kickMember(memberID);
+      if (res.success) {
+        dispatch('fetchTeamMembers');
+        dispatch('app/showToast', { id: 'team/kickMember', text: 'Player successfully kicked' }, { root: true });
+        return { success: 'Successfully kicked.' };
       } else {
         return { error: res.error };
       }

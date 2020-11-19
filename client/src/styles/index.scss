@@ -30,8 +30,7 @@ body {
   }
 }
 
-p,
-span {
+* {
   user-select: none;
 
   &::selection {

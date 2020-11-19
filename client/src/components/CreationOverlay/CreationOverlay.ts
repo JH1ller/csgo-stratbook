@@ -1,5 +1,5 @@
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
-import { Strat, StratTypes, Sides } from '@/services/models';
+import { Strat, StratTypes, Sides } from '@/api/models';
 
 @Component({})
 export default class CreationOverlay extends Vue {
