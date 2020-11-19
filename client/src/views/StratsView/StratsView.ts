@@ -70,7 +70,6 @@ export default class StratsView extends Vue {
   }
 
   private updateContent(payload: Partial<Strat>) {
-    console.log(payload);
     this.updateStrat(payload);
   }
 }

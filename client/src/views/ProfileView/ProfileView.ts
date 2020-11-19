@@ -11,7 +11,6 @@ import StratEditor from '@/components/StratEditor/StratEditor.vue';
 })
 export default class ProfileView extends Vue {
   @authModule.Action private logout!: () => Promise<void>;
-  @teamModule.State private teamMembers!: Player[];
 
   private async logoutRequest() {
     await this.logout();
