@@ -1,8 +1,7 @@
 import { Component, Vue } from 'vue-property-decorator';
-// const remote = require('electron').remote;
 import { Player } from '@/api/models';
-// import { BrowserWindow } from 'electron';
 import { authModule } from '@/store/namespaces';
+import { resolveAvatar } from '@/utils/resolveUrls';
 
 @Component({})
 export default class MainMenu extends Vue {
@@ -46,16 +45,6 @@ export default class MainMenu extends Vue {
   }
 
   get avatarUrl() {
-    if (this.profile?.avatar) {
-      return process.env.NODE_ENV === 'development'
-        ? `http://localhost:3000/public/upload/${this.profile.avatar}`
-        : `https://csgo-stratbook.s3.amazonaws.com/${this.profile.avatar}`;
-    } else {
-      return require('@/assets/images/default.jpg');
-    }
+    return resolveAvatar(this.profile?.avatar);
   }
-
-  // private calculateMinHeight() {
-  //   return (this.menuItems.length + 1) * 70 + 30;
-  // }
 }

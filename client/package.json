@@ -41,7 +41,6 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.12.1",
-    "@types/sanitize-html": "^1.27.0",
     "@types/socket.io-client": "^1.4.33",
     "@types/url-join": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^2.18.0",

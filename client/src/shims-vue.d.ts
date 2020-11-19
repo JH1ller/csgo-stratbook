@@ -6,3 +6,4 @@ declare module '*.vue' {
 declare module 'vue-context';
 declare module 'vue-mention';
 declare module 'vue-tribute';
+declare module 'sanitize-html';

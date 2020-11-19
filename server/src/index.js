@@ -8,6 +8,7 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const mongoose = require('mongoose');
+const history = require('connect-history-api-fallback');
 const cors = require('cors');
 const port = process.env.PORT || 3000;
 const { initWS } = require('./sockets/index');
@@ -31,9 +32,16 @@ const limiter = rateLimit({
 /**
  * Middleware
  */
+const staticFileMiddleware = express.static('dist');
+
 app.use(express.json());
 app.use(cors());
-app.use('/public', express.static('public'));
+app.use('/', express.static('public'));
+app.use(staticFileMiddleware);
+app.use(history({
+  index: '/dist/index.html'
+}));
+app.use(staticFileMiddleware);
 app.use(helmet());
 
 if (process.env.NODE_ENV === 'production') {
