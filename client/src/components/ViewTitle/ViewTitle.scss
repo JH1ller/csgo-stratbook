@@ -1,21 +1,35 @@
 .view-title {
   position: fixed;
-  width: calc(100% - 70px);
+  width: 100%;
   top: 0;
-  left: 70px;
-  background-color: white;
-  //margin-left: 70px;
+  left: 0;
+  background-color: $color--dark;
   height: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 9;
+  transition: background-color 0.3s ease;
+
+  @include viewport_mq3 {
+    left: 70px;
+    width: calc(100% - 70px);
+    background-color: white;
+  }
 
   &__text {
     font-size: 1.3em;
     font-family: 'Open Sans', sans-serif;
     font-weight: bold;
-    margin-left: 30px;
+    margin: 0 auto;
+    transition: color 0.3s ease;
+    color: white;
+
+    @include viewport_mq3 {
+      margin-left: 30px;
+      color: $color--navyblue;
+    }
   }
 
   &__loader {

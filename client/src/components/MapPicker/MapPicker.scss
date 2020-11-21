@@ -1,55 +1,74 @@
 .map-picker {
   width: 100%;
 
-  &__map {
-    &-container {
-      display: flex;
-      background: white;
-      box-shadow: $shadow-subtle;
+  &__container {
+    display: flex;
+    background: white;
+    box-shadow: $shadow-subtle;
+    padding: 12px;
+    border-radius: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    @include viewport_mq3 {
+      justify-content: flex-start;
       padding: 20px;
-      border-radius: 10px;
-      flex-wrap: wrap;
+    }
+  }
+
+  &__map {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0 5px;
+
+    &:hover {
+      background: $color--light-active;
+
+      .map-picker__image {
+        transform: scale3d(1.05, 1.05, 1.05);
+      }
     }
 
-    &-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    &.-current {
+      background: $color--light-active;
+    }
+
+    @include viewport_mq3 {
       padding: 15px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      margin: 0 5px;
-
-      &:hover {
-        background: $color--light-active;
-
-        .map-picker__map-image {
-          transform: scale3d(1.05, 1.05, 1.05);
-        }
-      }
-
-      &.-current {
-        background: $color--light-active;
-      }
     }
+  }
 
-    &-image {
+  &__image {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid $color--light-active;
+    transition: all 0.3s ease;
+
+    @include viewport_mq3 {
       width: 100px;
       height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 5px solid $color--light-active;
-      transition: all 0.3s ease;
+      border-width: 5px;
     }
+  }
 
-    &-label {
-      margin-top: 10px;
-      font-weight: bold;
-      border-radius: 5px;
-      padding: 2px 5px;
-      background: $color--light-active;
-      transition: all 0.3s ease;
+  &__label {
+    margin-top: 10px;
+    font-family: $font_ubuntu-bold;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    padding: 2px 5px;
+    background: $color--light-active;
+    transition: all 0.3s ease;
+
+    @include viewport_mq3 {
+      font-size: 1rem;
     }
   }
 }

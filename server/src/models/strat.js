@@ -8,8 +8,8 @@ const stratSchema = new mongoose.Schema({
   },
 
   map: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'maps',
+    type: String,
+    enum: ['DUST_2', 'MIRAGE', 'OVERPASS', 'NUKE', 'VERTIGO', 'INFERNO', 'TRAIN'],
     required: true,
   },
 
@@ -70,13 +70,19 @@ const stratSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+
+  shared: {
+    type: Boolean,
+    default: false
+  }
 });
 
 stratSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
 
-stratSchema.pre('save', function (next) {
+stratSchema.pre('save', function (next, res) {
   if (this.isModified()) {
     this.modifiedAt = Date.now();
+    if (res && res.player) this.modifiedBy = res.player._id;
   }
   next();
 });

@@ -1,32 +1,40 @@
-// TODO: refactor this stuff, it's almost unreadable
+@import 'Burger.scss';
 
 .main-menu {
-  width: 70px;
-  height: 100vh;
-  position: absolute;
-  transition: width $transition--speed ease;
-  left: 0;
-  top: 0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-
-  &:hover {
-    width: 220px;
-
-    .main-menu__list-item-label,
-    .main-menu__profile-label {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
+  z-index: 10;
 
   &__list {
-    width: 100%;
-    height: 100%;
     background: $color--darkblue;
-    display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    width: 0;
+    height: 100vh;
+    position: absolute;
+    transition: width $transition--speed ease;
+    left: 0;
+    top: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+
+    @include viewport_mq3 {
+      display: flex;
+      width: 70px;
+    }
+
+    &:hover,
+    &.-open {
+      width: 220px;
+  
+      .main-menu__label,
+      .main-menu__profile-label,
+      .main-menu__icon,
+      .main-menu__avatar,
+      .main-menu__logo {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
   }
 
   &__list-item,
@@ -38,51 +46,72 @@
     justify-content: flex-start;
     align-items: center;
 
-    &:first-of-type {
-      padding-left: 16px;
-      background: $color--black;
-
-      .main-menu__list-item-label {
-        color: white;
-        font-weight: bold;
-        transform: translateX(0);
-      }
-    }
-
     &:hover {
       background: $color--black;
     }
 
-    &-label {
-      font-family: Open Sans, sans-serif;
-      white-space: nowrap;
-      margin-left: 1.5rem;
-      opacity: 0;
-      overflow: hidden;
-      transition: opacity 0.5s ease-out;
-      color: $color--grey;
-      transform: translateX(-20px);
-      transition: all 0.5s ease-out;
-
-      &.-logo {
-        margin-left: 16px;
+    &.router-link-exact-active {
+      .main-menu__icon {
+        transform: scale3d(1.2, 1.2, 1.2);
+        & path {
+          fill: white;
+        }
+      }
+      .main-menu__label {
+        color: white;
       }
     }
+  }
 
-    &-icon {
-      width: 30px;
-      height: 30px;
+  &__icon {
+    width: 30px;
+    height: 30px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
 
-      & path {
-        fill: $color--grey;
-      }
-
-      &.-logo {
-        width: 40px;
-        height: 40px;
-        object-fit: contain;
-      }
+    @include viewport_mq3 {
+      opacity: 1;
     }
+
+    & path {
+      transition: fill 0.3s ease;
+      fill: $color--grey;
+    }
+  }
+
+  &__logo-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+  }
+
+  &__label {
+    font-family: Open Sans, sans-serif;
+    white-space: nowrap;
+    margin-left: 1.5rem;
+    opacity: 0;
+    overflow: hidden;
+    color: $color--grey;
+    transform: translateX(-20px);
+    transition: opacity 0.5s ease-out, color 0.3s ease, transform 0.5s ease-out;
+  }
+
+  &__logo {
+    padding-left: 16px;
+    background: $color--black;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    @include viewport_mq3 {
+      opacity: 1;
+    }
+  }
+
+  &__logo-label {
+    color: white;
+    font-weight: bold;
+    transform: translateX(0);
+    margin-left: 16px;
   }
 
   &__profile {
@@ -90,16 +119,40 @@
     padding: 12px;
   }
 
-  &__profile-avatar {
+  &__avatar {
     border-radius: 50%;
     width: 45px;
     min-width: 45px; // fixes weird size glitch on first load
     height: 45px;
     border: 2px solid $color--grey;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    @include viewport_mq3 {
+      opacity: 1;
+    }
   }
 
   &__profile-label {
     margin-left: 1rem;
     color: white;
   }
+
+  &__mobile {
+    position: fixed;
+    left: 20px;
+    bottom: 16px;
+    width: 48px;
+    height: 48px;
+    z-index: 10;
+    padding: 4px;
+    border-radius: 50%;
+    background-color: $color--dark;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+
+    @include viewport_mq3 {
+      display: none;
+    }
+  }
+
 }

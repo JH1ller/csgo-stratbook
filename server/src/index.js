@@ -8,6 +8,7 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const mongoose = require('mongoose');
+const history = require('connect-history-api-fallback');
 const cors = require('cors');
 const port = process.env.PORT || 3000;
 const { initWS } = require('./sockets/index');
@@ -31,9 +32,17 @@ const limiter = rateLimit({
 /**
  * Middleware
  */
+const staticFileMiddleware = express.static('dist');
+
 app.use(express.json());
 app.use(cors());
-app.use('/public', express.static('public'));
+app.use('/', express.static('public'));
+app.use('/.well-known/pki-validation/', express.static('cert'));
+app.use(staticFileMiddleware);
+app.use(history({
+  index: '/dist/index.html'
+}));
+app.use(staticFileMiddleware);
 app.use(helmet());
 
 if (process.env.NODE_ENV === 'production') {
@@ -57,9 +66,6 @@ app.get('/error', (req, res) => {
 
 const authRouter = require('./routes/auth');
 app.use('/auth', authRouter);
-
-const mapsRouter = require('./routes/maps');
-app.use('/maps', mapsRouter);
 
 const playersRouter = require('./routes/players');
 app.use('/players', playersRouter);

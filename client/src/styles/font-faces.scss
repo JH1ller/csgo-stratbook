@@ -1,27 +1,22 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+// TODO: serve Open Sans locally
+
 @font-face {
   font-family: 'FjallaOne-Regular';
   src: url('~@/assets/fonts/FjallaOne-Regular.ttf') format('truetype');
 }
-
-$font_fjallaone-regular: 'FjallaOne-Regular', arial, sans-serif;
 
 @font-face {
   font-family: 'Ubuntu-Light';
   src: url('~@/assets/fonts/Ubuntu-Light.ttf') format('truetype');
 }
 
-$font_ubuntu-light: 'Ubuntu-Light', sans-serif;
-
 @font-face {
   font-family: 'Ubuntu-Regular';
   src: url('~@/assets/fonts/Ubuntu-Regular.ttf') format('truetype');
 }
 
-$font_ubuntu-regular: 'Ubuntu-Regular', sans-serif;
-
 @font-face {
   font-family: 'Ubuntu-Bold';
   src: url('~@/assets/fonts/Ubuntu-Bold.ttf') format('truetype');
 }
-
-$font_ubuntu-bold: 'Ubuntu-Bold', sans-serif;

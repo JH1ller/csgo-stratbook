@@ -31,6 +31,14 @@
         >
           <font-awesome-icon icon="film" />
         </div>
+        <div
+          class="strat-item__btn --share"
+          :class="{ '-shared': strat.shared }"
+          @click="strat.shared ? unshareStrat() : shareStrat()"
+          data-tooltip="Create share link"
+        >
+          <font-awesome-icon icon="share-alt" />
+        </div>
         <div class="strat-item__btn --edit" @click="editStrat" data-tooltip="Edit strat">
           <font-awesome-icon icon="edit" />
         </div>

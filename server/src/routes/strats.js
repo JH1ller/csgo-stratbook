@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Strat = require('../models/strat');
-const Player = require('../models/player');
-const { getStrat, getPlayer } = require('./utils/getters');
+const { getStrat } = require('./utils/getters');
 const { verifyAuth } = require('./utils/verifyToken');
 
 router.get('/', verifyAuth, async (req, res) => {
@@ -23,7 +22,7 @@ router.get('/', verifyAuth, async (req, res) => {
 // * Create One
 router.post('/', verifyAuth, async (req, res) => {
   if (!res.player.team) {
-    return res.status(400).json({ error: "Authenticated user doesn't have a team" });
+    return res.status(400).json({ error: 'Authenticated user doesn\'t have a team' });
   }
 
   const strat = new Strat({
@@ -47,32 +46,52 @@ router.post('/', verifyAuth, async (req, res) => {
   }
 });
 
+// * Add shared
+router.post('/share/:id', verifyAuth, async (req, res) => {
+  if (!res.player.team) {
+    return res.status(400).json({ error: 'Authenticated user doesn\'t have a team' });
+  }
+
+  try {
+    const strat = await Strat.findById(req.params.id);
+    if (!strat || !strat.shared) {
+      return res.status(400).json({ error: 'Strat doesn\'t exist or hasn\'t been shared by owner.' });
+    }
+
+    if (strat.team.equals(res.player.team)) {
+      return res.status(400).json({ error: 'This strat already exists in your teams stratbook' });
+    }
+
+    const stratCopy = new Strat({ 
+      team: res.player.team,
+      name: strat.name,
+      content: strat.content,
+      note: strat.note,
+      videoLink: strat.videoLink,
+      side: strat.side,
+      type: strat.type,
+      map: strat.map,
+      createdBy: res.player._id,
+      createdAt: Date.now(),
+    });
+  
+    await stratCopy.save();
+    res.status(201).json(stratCopy);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // * Update One
-router.patch('/', getStrat, async (req, res) => {
-  if (req.body.name != null) {
-    res.strat.name = req.body.name;
+router.patch('/', verifyAuth, getStrat, async (req, res) => {
+  if (!res.player.team.equals(res.strat.team)) {
+    return res.status(400).json({ error: 'Cannot update a strat of another team.'})
   }
-  if (req.body.type != null) {
-    res.strat.type = req.body.type;
-  }
-  if (req.body.map != null) {
-    res.strat.map = req.body.map;
-  }
-  if (req.body.side != null) {
-    res.strat.side = req.body.side;
-  }
-  if (req.body.active != null) {
-    res.strat.active = req.body.active;
-  }
-  if (req.body.videoLink != null) {
-    res.strat.videoLink = req.body.videoLink;
-  }
-  if (req.body.note != null) {
-    res.strat.note = req.body.note;
-  }
-  if (req.body.content != null) {
-    res.strat.content = req.body.content;
-  }
+  const updatableFields = ['name', 'map', 'side', 'type', 'active', 'videoLink', 'note', 'content', 'shared'];
+  Object.entries(req.body).forEach(([key, value]) => {
+    // check for undefined / null, but accept empty string ''
+    if (value != null && updatableFields.includes(key)) res.strat[key] = value;
+  });
   try {
     const updatedStrat = await res.strat.save();
     res.json(updatedStrat);
@@ -82,7 +101,10 @@ router.patch('/', getStrat, async (req, res) => {
 });
 
 // * Delete One
-router.delete('/:strat_id', getStrat, async (req, res) => {
+router.delete('/:strat_id', verifyAuth, getStrat, async (req, res) => {
+  if (!res.player.team.equals(res.strat.team)) {
+    return res.status(400).json({ error: 'Cannot delete a strat of another team.'})
+  }
   try {
     await res.strat.delete();
     res.json({ message: 'Deleted strat successfully' });

@@ -1,8 +1,8 @@
 .strat-item {
   &__container {
-    background-color: white;
+    background-color: $color--smoke;
     box-shadow: $shadow-subtle;
-    padding: 12px 20px;
+    padding: 12px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -16,6 +16,10 @@
       .strat-item__field-title {
         text-decoration: line-through;
       }
+    }
+
+    @include viewport_mq3 {
+      padding: 12px 20px;
     }
   }
 
@@ -35,7 +39,7 @@
     border-bottom-right-radius: 4px;
     transform: scaleY(0.8);
     position: absolute;
-    right: 120px;
+    right: 13px;
     top: -4px;
     border-top: 2px solid $color--navyblue-50;
     font-family: $font_fjallaone-regular;
@@ -49,6 +53,10 @@
     }
     &.-force {
       background-color: $color--red;
+    }
+
+    @include viewport_mq3 {
+      right: 120px;
     }
   }
 
@@ -69,16 +77,31 @@
   &__editor {
     margin-bottom: 30px;
     margin-top: 8px;
-    width: calc(100% - 100px);
+    width: 100%;
+    @include viewport_mq3 {
+      width: calc(100% - 100px);
+    }
   }
 
   &__side-badge {
     position: absolute;
-    right: 16px;
-    top: 16px;
-    width: 64px;
+    right: 0;
+    top: 50%;
+    width: 28px;
     height: 64px;
-    opacity: 0.6;
+    opacity: 0.3;
+    object-fit: cover;
+    object-position: left;
+    transform: translateY(-50%);
+
+    @include viewport_mq3 {
+      opacity: 0.6;
+      right: 16px;
+      top: 16px;
+      width: 64px;
+      height: 64px;
+      transform: none;
+    }
   }
 
   &__deletion {
@@ -97,13 +120,6 @@
 
     :not(:first-child) {
       margin-left: 8px;
-    }
-
-    &.-deleting {
-      .strat-item__btn-delete {
-        margin-left: 0;
-        color: #8b0000;
-      }
     }
   }
 
@@ -136,10 +152,19 @@
       }
     }
 
+    &.--share {
+      &.-shared {
+        box-shadow: 0 0 2px $color--green;
+        & > svg > path {
+          fill: $color--green;
+        }
+      }
+    }
+
     &.--discard {
       width: 90px;
 
-      &>svg {
+      & > svg {
         margin-right: 4px;
       }
     }

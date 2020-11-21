@@ -1,15 +1,15 @@
 <template>
   <div class="creation-overlay">
     <div class="creation-overlay__wrapper">
-      <div class="creation-overlay__form-container">
-        <fieldset class="creation-overlay__form-fieldset">
+      <div class="creation-overlay__form">
+        <fieldset class="creation-overlay__fieldset">
           <label
-            class="creation-overlay__form-label"
+            class="creation-overlay__label"
             :class="{'-invalid': isInvalid}"
             for="name"
           >Name</label>
           <input
-            class="creation-overlay__form-input"
+            class="creation-overlay__input"
             type="text"
             name="name"
             v-model="name"
@@ -17,11 +17,11 @@
             :class="{'-invalid': isInvalid}"
           />
         </fieldset>
-        <fieldset class="creation-overlay__form-fieldset">
-          <label class="creation-overlay__form-label" for="type">Type</label>
-          <div class="creation-overlay__form-radio-wrapper">
+        <fieldset class="creation-overlay__fieldset">
+          <label class="creation-overlay__label" for="type">Type</label>
+          <div class="creation-overlay__radio-wrapper">
             <input
-              class="creation-overlay__form-radio"
+              class="creation-overlay__radio"
               type="radio"
               name="type"
               value="PISTOL"
@@ -29,12 +29,12 @@
               v-model="type"
             />
             <label
-              class="creation-overlay__form-radio-label"
+              class="creation-overlay__radio-label"
               for="PISTOL"
               :class="{'-selected': type === 'PISTOL'}"
             >pistol</label>
             <input
-              class="creation-overlay__form-radio"
+              class="creation-overlay__radio"
               type="radio"
               name="type"
               value="FORCE"
@@ -42,12 +42,12 @@
               v-model="type"
             />
             <label
-              class="creation-overlay__form-radio-label"
+              class="creation-overlay__radio-label"
               for="FORCE"
               :class="{'-selected': type === 'FORCE'}"
             >force</label>
             <input
-              class="creation-overlay__form-radio"
+              class="creation-overlay__radio"
               type="radio"
               name="type"
               value="BUYROUND"
@@ -55,14 +55,14 @@
               v-model="type"
             />
             <label
-              class="creation-overlay__form-radio-label"
+              class="creation-overlay__radio-label"
               for="BUYROUND"
               :class="{'-selected': type === 'BUYROUND'}"
             >buyround</label>
           </div>
         </fieldset>
-        <fieldset class="creation-overlay__form-fieldset">
-          <label class="creation-overlay__form-label">Side</label>
+        <fieldset class="creation-overlay__fieldset">
+          <label class="creation-overlay__label">Side</label>
           <div class="creation-overlay__side-wrapper">
             <img
               src="@/assets/icons/t_badge.png"
@@ -80,18 +80,18 @@
             />
           </div>
         </fieldset>
-        <fieldset class="creation-overlay__form-fieldset">
-          <label class="creation-overlay__form-label">Note</label>
+        <fieldset class="creation-overlay__fieldset">
+          <label class="creation-overlay__label">Note</label>
           <input
-            class="creation-overlay__form-input"
+            class="creation-overlay__input"
             type="text"
             name="note"
             id="note"
             v-model="note"
           />
-          <label class="creation-overlay__form-label">Video Link</label>
+          <label class="creation-overlay__label">Video Link</label>
           <input
-            class="creation-overlay__form-input"
+            class="creation-overlay__input"
             type="text"
             name="videoLink"
             id="videoLink"

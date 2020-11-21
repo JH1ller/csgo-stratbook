@@ -79,6 +79,7 @@ enum Actions {
   Leave = 'leave',
   Kick = 'kick',
   Transfer = 'transfer',
+  Share = 'share'
 }
 
 interface APIResponseSuccess<T> {
@@ -159,14 +160,10 @@ class APIService {
     }
   }
 
-  static async getStratsOfMap(mapId: string): Promise<APIResponse<Strat[]>> {
+  static async getStrats(): Promise<APIResponse<Strat[]>> {
     const target = urljoin(Endpoints.Strats);
     try {
-      const { data } = await axiosInstance.get(target, {
-        params: {
-          map: mapId,
-        },
-      });
+      const { data } = await axiosInstance.get(target);
       return { success: data };
     } catch (error) {
       return { error: error.response?.data?.error };
@@ -198,6 +195,17 @@ class APIService {
 
     try {
       const { data } = await axiosInstance.patch(target, payload);
+      return { success: data };
+    } catch (error) {
+      return { error: error.response?.data?.error };
+    }
+  }
+
+  static async addSharedStrat(stratID: string): Promise<APIResponse<Strat>> {
+    const target = urljoin(Endpoints.Strats, Actions.Share, stratID);
+
+    try {
+      const { data } = await axiosInstance.post(target);
       return { success: data };
     } catch (error) {
       return { error: error.response?.data?.error };

@@ -23,10 +23,14 @@ const stratInitialState = (): StratState => ({
 export const stratModule: Module<StratState, RootState> = {
   namespaced: true,
   state: stratInitialState(),
-  getters: {},
+  getters: {
+    stratsOfCurrentMap(state, _getters, rootState) {
+      return state.strats.filter(strat => strat.map === rootState.map.stratMap);
+    }
+  },
   actions: {
-    async fetchStrats({ commit, rootState, dispatch }) {
-      const res = await APIService.getStratsOfMap(rootState.map.currentMap);
+    async fetchStrats({ commit, dispatch }) {
+      const res = await APIService.getStrats();
       if (res.success) {
         commit(SET_STRATS, res.success);
         dispatch('saveStratsToStorage');
@@ -40,7 +44,7 @@ export const stratModule: Module<StratState, RootState> = {
       if (res.success) dispatch('app/showToast', { id: 'strat/deleteStrat', text: 'Deleted strat.' }, { root: true });
     },
     async createStrat({ dispatch, rootState }, payload: Partial<Strat>) {
-      const newStrat = { ...payload, map: rootState.map.currentMap };
+      const newStrat = { ...payload, map: rootState.map.stratMap };
       const res = await APIService.createStrat(newStrat);
       if (res.success) dispatch('app/showToast', { id: 'strat/createStrat', text: 'Added strat.' }, { root: true });
     },
@@ -49,17 +53,33 @@ export const stratModule: Module<StratState, RootState> = {
       if (res.success)
         dispatch('app/showToast', { id: 'strat/updateStrat', text: 'Successfully updated the strat.' }, { root: true });
     },
-    addStratLocally({ commit, rootState, dispatch }, payload: { strat: Strat }) {
-      if (rootState.map.currentMap === payload.strat.map) {
-        commit(ADD_STRAT, payload.strat);
-        dispatch('saveStratsToStorage');
+    async shareStrat({ dispatch }, stratID: string) {
+      const res = await APIService.updateStrat({ _id: stratID, shared: true });
+      if (res.success) {
+        const shareLink = `${window.location.origin}/#/share/${stratID}`;
+        navigator.clipboard.writeText(shareLink);
+        dispatch('app/showToast', { id: 'strat/shareStrat', text: 'Copied share link to clipboard.' }, { root: true });
       }
     },
-    updateStratLocally({ commit, rootState, dispatch }, payload: { strat: Strat }) {
-      if (rootState.map.currentMap === payload.strat.map) {
-        commit(UPDATE_STRAT, payload);
-        dispatch('saveStratsToStorage');
+    async unshareStrat({ dispatch }, stratID: string) {
+      const res = await APIService.updateStrat({ _id: stratID, shared: false });
+      if (res.success) {
+        dispatch('app/showToast', { id: 'strat/unshareStrat', text: 'Strat is no longer shared.' }, { root: true });
       }
+    },
+    async addSharedStrat({ dispatch }, stratID: string) {
+      const res = await APIService.addSharedStrat(stratID);
+      if (res.success) {
+        dispatch('app/showToast', { id: 'strat/addedShared', text: 'Strat successfully added to your stratbook.' }, { root: true });
+      }
+    },
+    addStratLocally({ commit, dispatch }, payload: { strat: Strat }) {
+      commit(ADD_STRAT, payload.strat);
+      dispatch('saveStratsToStorage');
+    },
+    updateStratLocally({ commit, rootState, dispatch }, payload: { strat: Strat }) {
+      commit(UPDATE_STRAT, payload);
+      dispatch('saveStratsToStorage');
     },
     deleteStratLocally({ commit, dispatch }, payload: { stratID: string }) {
       commit(DELETE_STRAT, payload.stratID);

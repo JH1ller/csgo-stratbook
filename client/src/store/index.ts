@@ -37,8 +37,8 @@ export default new Vuex.Store({
     loadDataFromStorage({ dispatch }) {
       dispatch('auth/loadTokenFromStorage');
       dispatch('auth/loadProfileFromStorage');
-      dispatch('map/loadMapsFromStorage');
-      dispatch('map/loadCurrentMapFromStorage');
+      dispatch('map/loadStratMapFromStorage');
+      dispatch('map/loadUtilityMapFromStorage');
       dispatch('team/loadTeamInfoFromStorage');
       dispatch('team/loadTeamMembersFromStorage');
       dispatch('strat/loadStratsFromStorage');

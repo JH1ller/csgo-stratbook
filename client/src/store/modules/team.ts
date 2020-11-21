@@ -3,6 +3,7 @@ import { RootState } from '..';
 import { Player, Team, Status } from '@/api/models';
 import APIService, { APIResponse } from '@/api/APIService';
 import { TeamCreateFormData } from '@/components/TeamCreateForm/TeamCreateForm';
+import { resolveAvatar } from '@/utils/resolveUrls';
 
 const SET_TEAM_INFO = 'SET_TEAM_INFO';
 const SET_TEAM_MEMBERS = 'SET_TEAM_MEMBERS';
@@ -26,13 +27,7 @@ export const teamModule: Module<TeamState, RootState> = {
   state: teamInitialState(),
   getters: {
     teamAvatarUrl(state): string {
-      if ((state.teamInfo as Team).avatar) {
-        return process.env.NODE_ENV === 'development'
-          ? `http://localhost:3000/public/upload/${(state.teamInfo as Team).avatar}`
-          : `https://csgo-stratbook.s3.amazonaws.com/${(state.teamInfo as Team).avatar}`;
-      } else {
-        return require('@/assets/images/default.jpg');
-      }
+      return resolveAvatar((state.teamInfo as Team).avatar);
     },
     connectionString(state) {
       return `connect ${(state.teamInfo as Team).server?.ip}; ${

@@ -1,23 +1,26 @@
 .floating-add {
-  &__wrapper {
-    background-color: $color--green;
-    border-radius: 50%;
-    width: 48px;
-    height: 48px;
-    position: fixed;
+
+  background-color: $color--green;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  position: fixed;
+  right: 20px;
+  bottom: 16px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  &:hover {
+    transform: scale(1.05);
+    background-color: darken($color--green, 15%);
+  }
+
+  @include viewport_mq3 {
     right: 36px;
-    bottom: 16px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    z-index: 10;
-    transition: transform 0.2s ease, background-color 0.2s ease;
-    &:hover {
-      transform: scale(1.05);
-      background-color: darken($color--green, 15%);
-    }
   }
 
   &__icon {

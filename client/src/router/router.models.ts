@@ -7,7 +7,8 @@ export enum RouteNames {
   Register = 'Register',
   Team = 'Team',
   JoinTeam = 'JoinTeam',
-  Profile = 'Profile'
+  Profile = 'Profile',
+  Share = 'Share'
 }
 
 export const Routes: Record<RouteNames, Location> = {
@@ -17,5 +18,6 @@ export const Routes: Record<RouteNames, Location> = {
   Register: { name: RouteNames.Register },
   Team: { name: RouteNames.Team },
   JoinTeam: { name: RouteNames.JoinTeam },
-  Profile: { name: RouteNames.Profile }
+  Profile: { name: RouteNames.Profile },
+  Share: { name: RouteNames.Share }
 };
