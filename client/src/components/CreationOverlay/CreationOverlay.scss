@@ -4,8 +4,12 @@
     height: 100%;
     position: fixed;
     top: 0;
-    left: 70px;
+    left: 0;
     background-color: rgba(0, 0, 0, 0.5);
+
+    @include viewport_mq3 {
+      left: 70px;
+    }
   }
 
   &__side-wrapper {
@@ -63,85 +67,84 @@
   }
 
   &__form {
-    &-container {
-      border-radius: 10px;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 24px;
-      background-color: rgba(255, 255, 255, 0.8);
-    }
+    border-radius: 10px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 24px;
+    background-color: $color--smoke;
+  }
 
-    &-fieldset {
-      padding: 16px;
-      box-shadow: $shadow-subtle;
-      background-color: white;
-      &:not(:first-of-type) {
-        margin-top: 12px;
-      }
-
-      border-radius: 8px;
-    }
-    &-label {
-      font-size: 1em;
-      display: block;
-      &:not(:first-of-type) {
-        margin-top: 12px;
-      }
-      transition: color 0.2s ease;
-      &.-invalid {
-        color: $color--red;
-      }
-    }
-
-    &-radio-label {
-      &:not(:first-of-type) {
-        margin-left: 12px;
-      }
-      padding: 3px 5px;
-      border-radius: 4px;
-      font-variant: small-caps;
-      font-size: 1.1em;
-      transform: scaleY(0.8);
-      cursor: pointer;
-      background-color: rgba($color--grey, 0.5);
-      transition: background-color 0.3s ease;
-      text-align: center;
-      min-width: 68px;
-      font-family: $font_fjallaone-regular;
-
-      &[for='BUYROUND'].-selected {
-        background-color: $color--blue;
-      }
-      &[for='PISTOL'].-selected {
-        background-color: $color--yellow;
-      }
-      &[for='FORCE'].-selected {
-        background-color: $color--red;
-      }
-    }
-
-    &-radio-wrapper {
+  &__fieldset {
+    padding: 16px;
+    box-shadow: $shadow-subtle;
+    background-color: white;
+    &:not(:first-of-type) {
       margin-top: 12px;
     }
 
-    &-input {
-      @include input_default;
+    border-radius: 8px;
+  }
 
-      margin-top: 6px;
-
-      &.-invalid {
-        border: 3px solid $color--red;
-      }
+  &__label {
+    font-size: 1em;
+    display: block;
+    &:not(:first-of-type) {
+      margin-top: 12px;
     }
-
-    &-radio {
-      cursor: pointer;
-      &:not(:first-of-type) {
-        margin-left: 12px;
-      }
-      display: none;
+    transition: color 0.2s ease;
+    &.-invalid {
+      color: $color--red;
     }
+  }
+
+  &__radio-label {
+    &:not(:first-of-type) {
+      margin-left: 12px;
+    }
+    padding: 3px 5px;
+    border-radius: 4px;
+    font-variant: small-caps;
+    font-size: 1.1em;
+    transform: scaleY(0.8);
+    cursor: pointer;
+    background-color: rgba($color--grey, 0.5);
+    transition: background-color 0.3s ease;
+    text-align: center;
+    min-width: 68px;
+    font-family: $font_fjallaone-regular;
+
+    &[for='BUYROUND'].-selected {
+      background-color: $color--blue;
+    }
+    &[for='PISTOL'].-selected {
+      background-color: $color--yellow;
+    }
+    &[for='FORCE'].-selected {
+      background-color: $color--red;
+    }
+  }
+
+  &__radio-wrapper {
+    margin-top: 12px;
+  }
+
+  &__input {
+    @include input_default;
+
+    margin-top: 6px;
+
+    &.-invalid {
+      border: 3px solid $color--red;
+    }
+  }
+
+  &__radio {
+    cursor: pointer;
+    &:not(:first-of-type) {
+      margin-left: 12px;
+    }
+    display: none;
   }
 }

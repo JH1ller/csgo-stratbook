@@ -29,12 +29,6 @@ const playerSchema = new mongoose.Schema({
     default: false,
   },
 
-  role: {
-    type: String,
-    enum: ['AWP', 'IGL', 'ENTRY', 'SUPPORT', 'RIFLE'],
-    required: false,
-  },
-
   avatar: {
     type: String,
   },

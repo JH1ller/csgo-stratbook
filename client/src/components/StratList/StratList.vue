@@ -1,5 +1,5 @@
 <template>
-  <transition-group name="fade" tag="div" class="strat-list" mode="out-in">
+  <div class="strat-list">
     <strat-item
       v-for="strat in filteredStrats"
       :key="strat._id"
@@ -8,8 +8,11 @@
       @toggle-active="toggleActive"
       @edit-strat="editStrat"
       @update-content="updateContent"
+      @share-strat="shareStrat"
+      @unshare-strat="unshareStrat"
     />
-  </transition-group>
+  </div>
+  <!-- :style="{'animation-delay': 0.1 * index + 's'}" -->
 </template>
 
 <script lang="ts" src="./StratList.ts"></script>

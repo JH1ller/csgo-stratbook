@@ -42,6 +42,16 @@ export default class StratItem extends Vue {
     return this.strat;
   }
 
+  @Emit()
+  private shareStrat() {
+    return this.strat._id;
+  }
+
+  @Emit()
+  private unshareStrat() {
+    return this.strat._id;
+  }
+
   private editorUpdated(content: string) {
     if (content !== this.strat.content) {
       this.editMode = true;

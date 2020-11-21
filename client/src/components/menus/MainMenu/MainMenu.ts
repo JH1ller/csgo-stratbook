@@ -1,4 +1,4 @@
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 import { Player } from '@/api/models';
 import { authModule } from '@/store/namespaces';
 import { resolveAvatar } from '@/utils/resolveUrls';
@@ -7,6 +7,7 @@ import { resolveAvatar } from '@/utils/resolveUrls';
 export default class MainMenu extends Vue {
   private appName: string = 'CSGO Stratbook'; // TODO: dynamic
   @authModule.State profile!: Player;
+  @Prop() private menuOpen!: boolean;
 
   private menuItems = [
     {
@@ -46,5 +47,10 @@ export default class MainMenu extends Vue {
 
   get avatarUrl() {
     return resolveAvatar(this.profile?.avatar);
+  }
+
+  @Emit()
+  private toggleMenu() {
+    return;
   }
 }

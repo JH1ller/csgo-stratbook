@@ -21,18 +21,11 @@ router.get('/:player_id', verifyAuth, getPlayer, (req, res) => {
 
 // * Update One
 router.patch('/', verifyAuth, async (req, res) => {
-  if (req.body.name != null) {
-    res.player.name = req.body.name;
-  }
-  if (req.body.role != null) {
-    res.player.role = req.body.role;
-  }
-  if (req.body.avatar != null) {
-    res.player.avatar = req.body.avatar;
-  }
-  if (req.body.team != null) {
-    res.player.team = req.body.team;
-  }
+  const updatableFields = ['name',  'avatar', 'team'];
+  Object.entries(req.body).forEach(([key, value]) => {
+    // check for undefined / null, but accept empty string ''
+    if (value != null && updatableFields.includes(key)) res.strat[key] = value;
+  });
   try {
     const updatedPlayer = await res.player.save();
     res.json(updatedPlayer);

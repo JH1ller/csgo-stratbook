@@ -37,6 +37,7 @@ const staticFileMiddleware = express.static('dist');
 app.use(express.json());
 app.use(cors());
 app.use('/', express.static('public'));
+app.use('/.well-known/pki-validation/', express.static('cert'));
 app.use(staticFileMiddleware);
 app.use(history({
   index: '/dist/index.html'
@@ -65,9 +66,6 @@ app.get('/error', (req, res) => {
 
 const authRouter = require('./routes/auth');
 app.use('/auth', authRouter);
-
-const mapsRouter = require('./routes/maps');
-app.use('/maps', mapsRouter);
 
 const playersRouter = require('./routes/players');
 app.use('/players', playersRouter);

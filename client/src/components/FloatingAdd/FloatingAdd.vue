@@ -1,8 +1,6 @@
 <template>
-  <div class="floating-add">
-    <div class="floating-add__wrapper" @click="onClick">
-      <font-awesome-icon icon="plus" class="floating-add__icon" />
-    </div>
+  <div class="floating-add" @click="onClick">
+    <font-awesome-icon icon="plus" class="floating-add__icon" />
   </div>
 </template>
 

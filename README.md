@@ -4,7 +4,8 @@
 
 ## CSGO Stratbook
 
-Vue-Electron-Typescript application to manage strategies in Valve's popular competitive FPS Counterstrike: Global Offensive
+Vue-Typescript application to manage strategies in Valve's popular competitive FPS Counterstrike: Global Offensive
+Also available as desktop client
 
 ![electron](https://img.shields.io/badge/electron-8.3.2-blue.svg)
 ![vue](https://img.shields.io/badge/vue-2.6.11-blue.svg)

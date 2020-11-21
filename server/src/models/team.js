@@ -37,19 +37,39 @@ const teamSchema = new mongoose.Schema({
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'players',
+    required: true,
+  },
+
+  createdAt: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+
+  modifiedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'players',
+  },
+
+  modifiedAt: {
+    type: Date,
+    default: Date.now,
   },
 
   manager: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'players',
-  },
-
-  date: {
-    type: Date,
-    default: Date.now,
-  },
+  }
 });
 
 teamSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
+
+teamSchema.pre('save', function (next) {
+  if (this.isModified()) {
+    this.modifiedAt = Date.now();
+  }
+  next();
+});
+
 
 module.exports = mongoose.model('Team', teamSchema);

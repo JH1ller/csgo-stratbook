@@ -35,6 +35,18 @@ export default class StratList extends Vue {
 
   // Emitted through from strat-item
   @Emit()
+  private shareStrat(stratID: string) {
+    return stratID;
+  }
+
+  // Emitted through from strat-item
+  @Emit()
+  private unshareStrat(stratID: string) {
+    return stratID;
+  }
+
+  // Emitted through from strat-item
+  @Emit()
   private toggleActive(payload: Partial<Strat>) {
     return payload;
   }

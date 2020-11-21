@@ -1,6 +1,6 @@
 <template>
   <div class="view-wrapper">
-    <map-picker @map-clicked="updateCurrentMap" />
+    <map-picker @map-clicked="updateStratMap" :currentMap="stratMap" />
     <filter-menu
       @player-selected="updatePlayerFilter"
       @type-filter-selected="updateTypeFilter"
@@ -11,15 +11,17 @@
       :filters="filters"
     />
     <strat-list
-      @delete-strat="deleteStratRequest"
+      @delete-strat="requestDeleteStrat"
       @edit-strat="showCreationOverlay"
       @toggle-active="toggleStratActive"
       @update-content="updateContent"
-      :strats="strats"
+      @share-strat="requestShareStrat"
+      @unshare-strat="unshareStrat"
+      :strats="stratsOfCurrentMap"
       :filters="filters"
     />
     <transition name="fade">
-      <floating-add @on-click="showCreationOverlay" v-if="currentMap" />
+      <floating-add @on-click="showCreationOverlay" v-if="stratMap" />
     </transition>
     <transition name="fade">
       <creation-overlay

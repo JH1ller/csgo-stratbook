@@ -1,6 +1,11 @@
 .strat-list {
   padding-bottom: 64px;
-  .strat-item:not(:first-of-type) {
-    margin-top: 12px;
+
+  .strat-item {
+    animation: simple-stagger 0.5s ease both;
+
+    &:not(:first-of-type) {
+      margin-top: 12px;
+    }
   }
 }

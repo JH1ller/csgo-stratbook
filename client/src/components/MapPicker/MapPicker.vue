@@ -1,15 +1,15 @@
 <template>
   <div class="map-picker">
-    <div class="map-picker__map-container">
+    <div class="map-picker__container">
       <div
-        class="map-picker__map-wrapper"
-        v-for="(map) in maps"
-        :key="map.name"
+        class="map-picker__map"
+        v-for="map in maps"
+        :key="map._id"
         @click="mapClicked(map._id)"
         :class="{'-current': isCurrentMap(map._id)}"
       >
-        <img :src="map.image" alt class="map-picker__map-image" draggable="false" />
-        <p class="map-picker__map-label">{{ map.name }}</p>
+        <img :src="getMapImage(map._id)" alt class="map-picker__image" draggable="false" />
+        <p class="map-picker__label">{{ map.name }}</p>
       </div>
     </div>
   </div>

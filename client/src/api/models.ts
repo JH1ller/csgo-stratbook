@@ -4,16 +4,25 @@ export enum StratTypes {
   BUYROUND = 'BUYROUND',
 }
 
+export enum MapID {
+  Dust2 = 'DUST_2',
+  Mirage = 'MIRAGE',
+  Overpass = 'OVERPASS',
+  Nuke = 'NUKE',
+  Vertigo = 'VERTIGO',
+  Inferno = 'INFERNO',
+  Train = 'TRAIN',
+}
+
 export enum Sides {
   CT = 'CT',
   T = 'T',
 }
 
 export interface Map {
-  _id: string;
+  _id: MapID;
   name: string;
   active: boolean;
-  image?: string;
 }
 
 export interface Equipment {
@@ -39,6 +48,7 @@ export interface Strat {
   modifiedBy: string;
   modifiedAt: Date;
   content: string;
+  shared: boolean;
 }
 export interface Player {
   _id: string;

@@ -13,17 +13,6 @@ export const stratsResolver: NavigationGuard = async (to, from, next) => {
   const teamGuardResult: boolean = await teamGuard(to, from, next);
   if (!teamGuardResult) return;
 
-  //* if there are maps loaded from localStorage load strats async, otherwise wait for result
-  if (store.state.map.maps.length) {
-    store.dispatch('map/fetchMaps');
-  } else {
-    const mapResponse: Response = await store.dispatch('map/fetchMaps');
-    if (!mapResponse.success) {
-      next(false);
-      return;
-    }
-  }
-
   //* if there are strats loaded from localStorage load strats async, otherwise wait for result
   if (store.state.strat.strats.length) {
     store.dispatch('strat/fetchStrats');

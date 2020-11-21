@@ -2,9 +2,13 @@
   position: fixed;
   bottom: 0;
   right: 0;
-  width: calc(100% - 70px);
+  width: 100%;
   z-index: 5;
   pointer-events: none;
+
+  @include viewport_mq3 {
+    width: calc(100% - 70px);
+  }
 
   &__container {
     position: relative;

@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import VueRouter from 'vue-router';
+import VueRouter, { Route } from 'vue-router';
 import StratsView from '../views/StratsView/StratsView.vue';
 import LoginView from '../views/LoginView/LoginView.vue';
 import RegisterView from '../views/RegisterView/RegisterView.vue';
@@ -10,6 +10,7 @@ import JoinTeamView from '@/views/JoinTeamView/JoinTeamView.vue';
 import { stratsResolver } from '@/views/StratsView/StratsView.resolver';
 import { teamResolver } from '@/views/TeamView/TeamView.resolver';
 import { joinTeamResolver } from '@/views/JoinTeamView/JoinTeamView.resolver';
+import store from '@/store';
 
 Vue.use(VueRouter);
 
@@ -53,6 +54,14 @@ const routes = [
     path: '/profile',
     name: RouteNames.Profile,
     component: ProfileView,
+  },
+  {
+    path: '/share/:id',
+    name: RouteNames.Share,
+    redirect: (to: Route) => {
+      store.dispatch('strat/addSharedStrat', to.params.id);
+      return Routes.Strats;
+    }
   },
 ];
 
