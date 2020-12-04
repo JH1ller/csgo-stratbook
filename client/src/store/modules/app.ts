@@ -3,30 +3,26 @@ import { RootState } from '..';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 
-const SET_LOADER_VISIBLE = 'SET_LOADER_VISIBLE';
-const SET_LOADER_TEXT = 'SET_LOADER_TEXT';
+const SET_LOADING = 'SET_LOADING';
 const SHOW_TOAST = 'SHOW_TOAST';
 const HIDE_TOAST = 'HIDE_TOAST';
 const OPEN_DIALOG = 'OPEN_DIALOG';
 const CLOSE_DIALOG = 'CLOSE_DIALOG';
+const SET_LATENCY = 'SET_LATENCY';
 const RESET_STATE = 'RESET_STATE';
 
 export interface AppState {
-  ui: {
-    showLoader: boolean;
-    loaderText: string;
-    toasts: Toast[];
-  };
+  loading: boolean;
+  toasts: Toast[];
   openDialogs: Dialog[];
+  latency: number;
 }
 
 const appInitialState = (): AppState => ({
-  ui: {
-    showLoader: false,
-    loaderText: '',
-    toasts: [],
-  },
+  loading: false,
+  toasts: [],
   openDialogs: [],
+  latency: 0,
 });
 
 export const appModule: Module<AppState, RootState> = {
@@ -35,7 +31,7 @@ export const appModule: Module<AppState, RootState> = {
   getters: {},
   actions: {
     showToast({ commit, state }, toast: Toast) {
-      if (!state.ui.toasts.find(item => item.id === toast.id)) {
+      if (!state.toasts.find(item => item.id === toast.id)) {
         commit(SHOW_TOAST, toast);
         setTimeout(() => {
           commit(HIDE_TOAST, toast.id);
@@ -45,11 +41,8 @@ export const appModule: Module<AppState, RootState> = {
     hideToast({ commit }) {
       commit(HIDE_TOAST);
     },
-    showLoader({ commit }) {
-      commit(SET_LOADER_VISIBLE, true);
-    },
-    hideLoader({ commit }) {
-      commit(SET_LOADER_VISIBLE, false);
+    updateLoading({ commit }, value: boolean) {
+      commit(SET_LOADING, value);
     },
     showDialog({ commit, state }, dialogData: Partial<Dialog>) {
       return new Promise<void>((resolve, reject) => {
@@ -67,22 +60,22 @@ export const appModule: Module<AppState, RootState> = {
     closeDialog({ commit }, key: string) {
       commit(CLOSE_DIALOG, key);
     },
+    updateLatency({ commit }, latency: number) {
+      commit(SET_LATENCY, latency);
+    },
     resetState({ commit }) {
       commit(RESET_STATE);
     },
   },
   mutations: {
-    [SET_LOADER_VISIBLE](state, payload) {
-      state.ui.showLoader = payload;
-    },
-    [SET_LOADER_TEXT](state, payload) {
-      state.ui.loaderText = payload;
+    [SET_LOADING](state, payload) {
+      state.loading = payload;
     },
     [SHOW_TOAST](state, toast: Toast) {
-      state.ui.toasts.push(toast);
+      state.toasts.push(toast);
     },
     [HIDE_TOAST](state, toastID: string) {
-      state.ui.toasts = state.ui.toasts.filter(toast => toast.id !== toastID);
+      state.toasts = state.toasts.filter(toast => toast.id !== toastID);
     },
     [OPEN_DIALOG](state, dialog: Dialog) {
       state.openDialogs.push(dialog);
@@ -90,7 +83,9 @@ export const appModule: Module<AppState, RootState> = {
     [CLOSE_DIALOG](state, key: string) {
       state.openDialogs = [...state.openDialogs.filter(dialog => dialog.key !== key)];
     },
-
+    [SET_LATENCY](state, latency: number) {
+      state.latency = latency;
+    },
     [RESET_STATE](state) {
       Object.assign(state, appInitialState());
     },

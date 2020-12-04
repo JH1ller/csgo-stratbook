@@ -12,13 +12,12 @@ const s3 = new AWS.S3({
 
 const fileStorage = multer.diskStorage({
   destination: function (req, file, next) {
+    console.log(file);
     next(null, 'public/upload/');
   },
   filename: function (req, file, next) {
-    next(
-      null,
-      crypto.randomBytes(20).toString('hex') + path.extname(file.originalname)
-    );
+    console.log(file);
+    next(null, crypto.randomBytes(20).toString('hex') + path.extname(file.originalname));
   },
 });
 
@@ -36,14 +35,25 @@ const fileFilter = (req, file, next) => {
   }
 };
 
-const upload = multer({
+const multerInstance = multer({
   storage: fileStorage,
   limits: fileLimits,
   fileFilter: fileFilter,
-}).single('avatar');
+});
 
-const uploadMiddleware = (req, res, next) => {
-  upload(req, res, (error) => {
+const uploadSingle = (field) => (req, res, next) => {
+  multerInstance.single(field)(req, res, (error) => {
+    if (error instanceof multer.MulterError) {
+      return res.status(400).send({ error: error.message });
+    } else if (error) {
+      return res.status(400).send({ error: error });
+    }
+    next();
+  });
+};
+
+const uploadMultiple = (field) => (req, res, next) => {
+  multerInstance.array(field)(req, res, (error) => {
     if (error instanceof multer.MulterError) {
       return res.status(400).send({ error: error.message });
     } else if (error) {
@@ -55,23 +65,17 @@ const uploadMiddleware = (req, res, next) => {
 
 const processImage = async (file) => {
   try {
-    await sharp(file.path)
-      .resize(256, 256)
-      .toFile(path.resolve(file.destination, 'temp', file.filename));
+    await sharp(file.path).resize(256, 256).toFile(path.resolve(file.destination, 'temp', file.filename));
     fs.unlinkSync(file.path);
-    fs.renameSync(
-      path.resolve(file.destination, 'temp', file.filename),
-      file.path
-    );
-    if (process.env.NODE_ENV !== 'development')
-      await uploadFile(file.path, file.filename);
+    fs.renameSync(path.resolve(file.destination, 'temp', file.filename), file.path);
+    if (process.env.NODE_ENV !== 'development') await uploadFile(file.path, file.filename);
   } catch (error) {
     throw new Error(error);
   }
 };
 
 function uploadFile(filepath, filename) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const fileContent = fs.readFileSync(filepath);
       const params = {
@@ -80,18 +84,16 @@ function uploadFile(filepath, filename) {
         Body: fileContent,
       };
 
-      s3.upload(params, function (err, data) {
-        if (err) {
-          throw err;
-        }
-        console.log(`File uploaded successfully. ${data.Location}`);
-        resolve(data.Location);
-      });
+      const data = await s3.upload(params).promise();
+      console.log(`File uploaded successfully. ${data.Location}`);
+      resolve(data.Location);
     } catch (error) {
       reject(error);
     }
   });
 }
 
-module.exports.uploadMiddleware = uploadMiddleware;
+module.exports.uploadSingle = uploadSingle;
+module.exports.uploadMultiple = uploadMultiple;
 module.exports.processImage = processImage;
+module.exports.uploadFile = uploadFile;

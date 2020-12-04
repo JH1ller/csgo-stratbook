@@ -1,4 +1,5 @@
 const Strat = require('../models/strat');
+const Utility = require('../models/utility');
 const Player = require('../models/player');
 const Team = require('../models/team');
 
@@ -25,11 +26,18 @@ const initWS = (io) => {
 
     socket.on('disconnecting', async (data) => {
       try {
-        const player = await Player.findById(clients.get(socket.id).playerID);
-        player.isOnline = false;
-        player.lastOnline = Date.now();
-        player.save();
+        const playerID = clients.get(socket.id).playerID;
         clients.delete(socket.id);
+
+        const playerInClientList = [...clients].find(([_key, value]) => value.playerID === playerID);
+
+        if (!playerInClientList) {
+          const player = await Player.findById(playerID);
+          player.isOnline = false;
+          player.lastOnline = Date.now();
+          player.save();
+          console.log(`Websocket client disconnected with id: ${socket.id}`);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -47,6 +55,21 @@ const initWS = (io) => {
         data.updateDescription.updatedFields.deleted
           ? io.to(data.fullDocument.team).emit('deleted-strat', { stratID: data.fullDocument._id })
           : io.to(data.fullDocument.team).emit('updated-strat', { strat: data.fullDocument });
+        break;
+    }
+  });
+
+  Utility.watch(null, { fullDocument: 'updateLookup' }).on('change', async (data) => {
+    if (data.operationType === 'delete') return;
+
+    switch (data.operationType) {
+      case 'insert':
+        io.to(data.fullDocument.team).emit('created-utility', { utility: data.fullDocument });
+        break;
+      case 'update':
+        data.updateDescription.updatedFields.deleted
+          ? io.to(data.fullDocument.team).emit('deleted-utility', { utilityID: data.fullDocument._id })
+          : io.to(data.fullDocument.team).emit('updated-utility', { utility: data.fullDocument });
         break;
     }
   });
@@ -74,19 +97,18 @@ const initWS = (io) => {
       case 'update':
         data.updateDescription.updatedFields.deleted
           ? io.to(data.fullDocument.team).emit('deleted-player', { playerID: data.fullDocument._id })
-          : io.to(data.fullDocument.team).emit('updated-player', 
-          { 
-            player: {
-              _id: data.fullDocument._id,
-              name: data.fullDocument.name,
-              role: data.fullDocument.role,
-              avatar: data.fullDocument.avatar,
-              team: data.fullDocument.team,
-              createdAt: data.fullDocument.createdAt,
-              isOnline: data.fullDocument.isOnline,
-              lastOnline: data.fullDocument.lastOnline
-            }
-          });
+          : io.to(data.fullDocument.team).emit('updated-player', {
+              player: {
+                _id: data.fullDocument._id,
+                name: data.fullDocument.name,
+                role: data.fullDocument.role,
+                avatar: data.fullDocument.avatar,
+                team: data.fullDocument.team,
+                createdAt: data.fullDocument.createdAt,
+                isOnline: data.fullDocument.isOnline,
+                lastOnline: data.fullDocument.lastOnline,
+              },
+            });
         break;
     }
   });

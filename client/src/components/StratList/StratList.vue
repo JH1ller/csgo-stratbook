@@ -1,7 +1,7 @@
 <template>
   <div class="strat-list">
     <strat-item
-      v-for="strat in filteredStrats"
+      v-for="(strat, index) in filteredStrats"
       :key="strat._id"
       :strat="strat"
       @delete-strat="deleteStrat"
@@ -10,9 +10,9 @@
       @update-content="updateContent"
       @share-strat="shareStrat"
       @unshare-strat="unshareStrat"
+      :style="{'animation-delay': 0.1 * index + 's'}"
     />
   </div>
-  <!-- :style="{'animation-delay': 0.1 * index + 's'}" -->
 </template>
 
 <script lang="ts" src="./StratList.ts"></script>

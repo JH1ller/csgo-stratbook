@@ -1,7 +1,7 @@
 import { Component, Vue } from 'vue-property-decorator';
-import { Team } from '@/api/models';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { appModule, teamModule } from '@/store/namespaces';
+import { Team } from '@/api/models/Team';
 
 @Component({})
 export default class TeamInfo extends Vue {

@@ -1,6 +1,19 @@
 import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
-import { Map, MapID } from '@/api/models';
-import { mapModule } from '@/store/namespaces';
+
+export enum MapID {
+  Dust2 = 'DUST_2',
+  Mirage = 'MIRAGE',
+  Overpass = 'OVERPASS',
+  Nuke = 'NUKE',
+  Vertigo = 'VERTIGO',
+  Inferno = 'INFERNO',
+  Train = 'TRAIN',
+}
+export interface Map {
+  _id: MapID;
+  name: string;
+  active: boolean;
+}
 
 @Component({})
 export default class MapPicker extends Vue {

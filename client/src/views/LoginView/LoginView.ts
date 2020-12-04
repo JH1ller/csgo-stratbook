@@ -1,6 +1,6 @@
 import { Component, Vue, Ref } from 'vue-property-decorator';
 import LoginForm from '@/components/LoginForm/LoginForm.vue';
-import { Response } from '@/api/models';
+import { Response } from '@/store';
 import { authModule } from '@/store/namespaces';
 import { Routes } from '@/router/router.models';
 

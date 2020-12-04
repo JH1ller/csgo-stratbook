@@ -4,6 +4,7 @@ export interface RegisterFormData {
   name: string;
   email: string;
   password: string;
+  key: string;
 }
 @Component({})
 export default class RegisterForm extends Vue {
@@ -12,12 +13,14 @@ export default class RegisterForm extends Vue {
   @Ref('email') emailInput!: HTMLInputElement;
   @Ref('password') passwordInput!: HTMLInputElement;
   @Ref('password-repeat') passwordRepeatInput!: HTMLInputElement;
+  @Ref('key') keyInput!: HTMLInputElement;
   @Prop() formError!: string;
 
   private formData: RegisterFormData = {
     name: '',
     email: '',
     password: '',
+    key: ''
   };
   private imageFile: File | null = null;
   private pwRegex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$/);
@@ -49,6 +52,11 @@ export default class RegisterForm extends Vue {
       this.updateFormError('Passwords don\'t match.');
       return false;
     }
+    if (this.keyInput.value.length !== 20) {
+      this.updateFormError('Access Key has invalid format.');
+      return false;
+    }
+
     return true;
   }
 

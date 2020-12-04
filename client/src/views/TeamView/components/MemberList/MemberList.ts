@@ -1,8 +1,9 @@
 import { Component, Emit, Ref, Vue } from 'vue-property-decorator';
 import { authModule, teamModule } from '@/store/namespaces';
-import { Player, Team } from '@/api/models';
 import MemberItem from '../MemberItem/MemberItem.vue';
 import VueContext from 'vue-context';
+import { Team } from '@/api/models/Team';
+import { Player } from '@/api/models/Player';
 
 @Component({
   components: {

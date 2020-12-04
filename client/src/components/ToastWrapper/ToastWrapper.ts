@@ -4,5 +4,5 @@ import { appModule } from '@/store/namespaces';
 
 @Component({})
 export default class ToastWrapper extends Vue {
-  @appModule.State(state => state.ui.toasts) private toasts!: Toast[];
+  @appModule.State private toasts!: Toast[];
 }

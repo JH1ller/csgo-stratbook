@@ -40,6 +40,13 @@
         placeholder="Repeat password"
         ref="password-repeat"
       />
+      <input
+        type="text"
+        class="register-form__input"
+        placeholder="Access Key"
+        v-model="formData.key"
+        ref="key"
+      />
       <label class="register-form__file">
         <input type="file" id="file" @change="fileSelected" accept="image/*" />
         <span ref="file-input" file-input-value="Choose avatar..."></span>

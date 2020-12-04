@@ -1,0 +1,14 @@
+.mouse-button-display {
+  position: relative;
+  width: 42px;
+  height: 36px;
+  cursor: pointer;
+
+  &__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}

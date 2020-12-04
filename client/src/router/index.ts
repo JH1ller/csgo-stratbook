@@ -1,16 +1,11 @@
 import Vue from 'vue';
 import VueRouter, { Route } from 'vue-router';
-import StratsView from '../views/StratsView/StratsView.vue';
-import LoginView from '../views/LoginView/LoginView.vue';
-import RegisterView from '../views/RegisterView/RegisterView.vue';
-import TeamView from '../views/TeamView/TeamView.vue';
-import ProfileView from '@/views/ProfileView/ProfileView.vue';
 import { RouteNames, Routes } from './router.models';
-import JoinTeamView from '@/views/JoinTeamView/JoinTeamView.vue';
 import { stratsResolver } from '@/views/StratsView/StratsView.resolver';
 import { teamResolver } from '@/views/TeamView/TeamView.resolver';
 import { joinTeamResolver } from '@/views/JoinTeamView/JoinTeamView.resolver';
 import store from '@/store';
+import { utilityResolver } from '@/views/UtilityView/UtilityView.resolver';
 
 Vue.use(VueRouter);
 
@@ -25,35 +20,41 @@ const routes = [
   {
     path: '/strats',
     name: RouteNames.Strats,
-    component: StratsView,
+    component: () => import('@/views/StratsView/StratsView.vue'),
     beforeEnter: stratsResolver,
+  },
+  {
+    path: '/utility',
+    name: RouteNames.Utilities,
+    component: () => import('@/views/UtilityView/UtilityView.vue'),
+    beforeEnter: utilityResolver,
   },
   {
     path: '/login',
     name: RouteNames.Login,
-    component: LoginView,
+    component: () =>  import('@/views/LoginView/LoginView.vue'),
   },
   {
     path: '/register',
     name: RouteNames.Register,
-    component: RegisterView,
+    component: () => import('@/views/RegisterView/RegisterView.vue'),
   },
   {
     path: '/team',
     name: RouteNames.Team,
-    component: TeamView,
+    component: () => import('@/views/TeamView/TeamView.vue'),
     beforeEnter: teamResolver,
   },
   {
     path: '/team/join',
     name: RouteNames.JoinTeam,
-    component: JoinTeamView,
+    component: () => import('@/views/JoinTeamView/JoinTeamView.vue'),
     beforeEnter: joinTeamResolver,
   },
   {
     path: '/profile',
     name: RouteNames.Profile,
-    component: ProfileView,
+    component: () => import('@/views/ProfileView/ProfileView.vue'),
   },
   {
     path: '/share/:id',
@@ -62,6 +63,11 @@ const routes = [
       store.dispatch('strat/addSharedStrat', to.params.id);
       return Routes.Strats;
     }
+  },
+  {
+    path: '/faq',
+    name: RouteNames.Faq,
+    component: () => import('@/views/FaqView/FaqView.vue')
   },
 ];
 

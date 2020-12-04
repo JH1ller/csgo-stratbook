@@ -3,7 +3,7 @@ import MemberList from './components/MemberList/MemberList.vue';
 import TeamInfo from './components/TeamInfo/TeamInfo.vue';
 import { appModule, teamModule } from '@/store/namespaces';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
-import { Response } from '@/api/models';
+import { Response } from '@/store';
 import { Routes } from '@/router/router.models';
 
 @Component({

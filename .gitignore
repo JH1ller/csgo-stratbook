@@ -4,3 +4,4 @@ node_modules
 server/public/upload
 server/dist
 server/cert
+static-site

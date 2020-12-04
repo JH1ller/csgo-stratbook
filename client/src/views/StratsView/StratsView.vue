@@ -1,7 +1,7 @@
 <template>
-  <div class="view-wrapper">
-    <map-picker @map-clicked="updateStratMap" :currentMap="stratMap" />
-    <filter-menu
+  <div class="strats-view">
+    <MapPicker @map-clicked="updateCurrentMap" :currentMap="currentMap" />
+    <FilterMenu
       @player-selected="updatePlayerFilter"
       @type-filter-selected="updateTypeFilter"
       @side-filter-selected="updateSideFilter"
@@ -10,26 +10,29 @@
       :teamMembers="teamMembers"
       :filters="filters"
     />
-    <strat-list
+    <StratList
       @delete-strat="requestDeleteStrat"
-      @edit-strat="showCreationOverlay"
+      @edit-strat="showStratForm"
       @toggle-active="toggleStratActive"
       @update-content="updateContent"
       @share-strat="requestShareStrat"
       @unshare-strat="unshareStrat"
-      :strats="stratsOfCurrentMap"
+      :strats="sortedStrats"
       :filters="filters"
     />
     <transition name="fade">
-      <floating-add @on-click="showCreationOverlay" v-if="stratMap" />
+      <FloatingAdd @on-click="showStratForm" v-if="!stratFormOpen" />
     </transition>
     <transition name="fade">
-      <creation-overlay
-        v-if="creationOverlayOpen"
-        :isEdit="creationOverlayEditMode"
+      <UtilityLightbox v-if="lightboxOpen" :utility="currentLightboxUtility" @close="hideLightbox" />
+    </transition>
+    <transition name="fade">
+      <StratForm
+        v-if="stratFormOpen"
+        :isEdit="stratFormEditMode"
         :strat="editStrat"
-        @submit-clicked="creationOverlaySubmitted"
-        @cancel-clicked="hideCreationOverlay"
+        @submit-strat="stratFormSubmitted"
+        @cancel-clicked="hideStratForm"
       />
     </transition>
   </div>

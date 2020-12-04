@@ -5,6 +5,7 @@
 
   &__list {
     background: $color--darkblue;
+    // background: $color--dark;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
@@ -16,23 +17,50 @@
     top: 0;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     z-index: 10;
+    pointer-events: none;
 
     @include viewport_mq3 {
       display: flex;
       width: 70px;
+      pointer-events: all;
     }
 
-    &:hover,
     &.-open {
       width: 220px;
-  
+      pointer-events: all;
+
       .main-menu__label,
       .main-menu__profile-label,
       .main-menu__icon,
-      .main-menu__avatar,
+      .main-menu__profile,
       .main-menu__logo {
         transform: translateX(0);
         opacity: 1;
+        pointer-events: all;
+      }
+
+      .main-menu__link {
+        opacity: 1;
+        pointer-events: all;
+      }
+    }
+
+    &:hover {
+      @include viewport_mq3 {
+        width: 220px;
+
+        .main-menu__label,
+        .main-menu__profile-label,
+        .main-menu__icon,
+        .main-menu__profile,
+        .main-menu__logo {
+          transform: translateX(0);
+          opacity: 1;
+        }
+
+        .main-menu__link {
+          opacity: 1;
+        }
       }
     }
   }
@@ -40,14 +68,21 @@
   &__list-item,
   &__profile {
     width: 100%;
-    padding: 20px;
+    padding: 15px 20px;
     cursor: pointer;
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    transition: background-color 0.3s ease;
+
+    @include viewport_mq3 {
+      padding: 20px;
+    }
 
     &:hover {
-      background: $color--black;
+      @include viewport_mq3 {
+        background-color: $color--black;
+      }
     }
 
     &.router-link-exact-active {
@@ -68,9 +103,11 @@
     height: 30px;
     transition: transform 0.3s ease, opacity 0.3s ease;
     opacity: 0;
+    pointer-events: none;
 
     @include viewport_mq3 {
       opacity: 1;
+      pointer-events: all;
     }
 
     & path {
@@ -83,6 +120,28 @@
     width: 40px;
     height: 40px;
     object-fit: contain;
+    position: relative;
+    transform: scale(1);
+
+    &.-loading {
+      animation: pulse-scale 2s infinite;
+
+      &::after {
+        animation: pulse-shadow 2s infinite;
+      }
+    }
+
+    &::after {
+      content: '';
+      box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
+      background-color: black;
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
   }
 
   &__label {
@@ -108,15 +167,65 @@
   }
 
   &__logo-label {
-    color: white;
-    font-weight: bold;
+    color: $color--orange;
+    font-family: $font_ubuntu-bold;
     transform: translateX(0);
     margin-left: 16px;
+    font-size: 1.1rem;
+  }
+
+  &__link {
+    color: $color--grey;
+    align-items: center;
+    font-size: 0.8em;
+    opacity: 0;
+    padding: 8px 24px;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity 0.3s ease, background-color 0.3s ease;
+    // display: none;
+
+    // @include viewport_mq3 {
+    display: flex;
+    // }
+
+    & > svg {
+      margin-right: 6px;
+      width: 14px;
+      height: 14px;
+    }
+
+    &.--twitter {
+      margin-top: auto;
+      &:hover {
+        & > svg > path {
+          fill: #1da1f2;
+          transition: fill 0.3s ease;
+        }
+      }
+    }
+    &.--download {
+      &:hover {
+        & > svg > path {
+          fill: $color--green;
+          transition: fill 0.3s ease;
+        }
+      }
+    }
+    &.--feedback {
+      margin-bottom: 24px;
+    }
   }
 
   &__profile {
-    margin-top: auto;
     padding: 12px;
+    background: $color--black;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    @include viewport_mq3 {
+      opacity: 1;
+    }
   }
 
   &__avatar {
@@ -125,12 +234,6 @@
     min-width: 45px; // fixes weird size glitch on first load
     height: 45px;
     border: 2px solid $color--grey;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-
-    @include viewport_mq3 {
-      opacity: 1;
-    }
   }
 
   &__profile-label {
@@ -149,10 +252,15 @@
     border-radius: 50%;
     background-color: $color--dark;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.3s ease;
+    opacity: 1;
+
+    &.-open {
+      opacity: 0;
+    }
 
     @include viewport_mq3 {
       display: none;
     }
   }
-
 }

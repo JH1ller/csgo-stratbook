@@ -1,13 +1,19 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
-import { Status, Player } from '@/api/models';
 import APIService from '@/api/APIService';
 import WebSocketService from '@/api/WebSocketService';
+import { Player } from '@/api/models/Player';
 
 const SET_TOKEN = 'SET_TOKEN';
 const SET_PROFILE = 'SET_PROFILE';
 const SET_STATUS = 'SET_STATUS';
 const RESET_STATE = 'RESET_STATE';
+
+export enum Status {
+  NO_AUTH = 'NO_AUTH',
+  LOGGED_IN_NO_TEAM = 'LOGGED_IN_NO_TEAM',
+  LOGGED_IN_WITH_TEAM = 'LOGGED_IN_WITH_TEAM',
+}
 
 export interface AuthState {
   status: Status;

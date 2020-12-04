@@ -6,6 +6,12 @@ import { MapState, mapModule } from './modules/map';
 import { StratState, stratModule } from './modules/strat';
 import { authModule, AuthState } from './modules/auth';
 import { TeamState, teamModule } from './modules/team';
+import { utilityModule, UtilityState } from './modules/utility';
+
+export interface Response {
+  success?: string;
+  error?: string;
+}
 
 export interface RootState {
   app: AppState;
@@ -14,6 +20,7 @@ export interface RootState {
   strat: StratState;
   auth: AuthState;
   team: TeamState;
+  utility: UtilityState;
 }
 
 Vue.use(Vuex);
@@ -26,6 +33,7 @@ export default new Vuex.Store({
     strat: stratModule,
     auth: authModule,
     team: teamModule,
+    utility: utilityModule
   },
   state: undefined,
   mutations: {},
@@ -37,11 +45,11 @@ export default new Vuex.Store({
     loadDataFromStorage({ dispatch }) {
       dispatch('auth/loadTokenFromStorage');
       dispatch('auth/loadProfileFromStorage');
-      dispatch('map/loadStratMapFromStorage');
-      dispatch('map/loadUtilityMapFromStorage');
+      dispatch('map/loadCurrentMapFromStorage');
       dispatch('team/loadTeamInfoFromStorage');
       dispatch('team/loadTeamMembersFromStorage');
       dispatch('strat/loadStratsFromStorage');
+      dispatch('utility/loadUtilitiesFromStorage');
     },
   },
   getters: {},

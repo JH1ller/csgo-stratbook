@@ -1,0 +1,40 @@
+.text-input {
+  $root: &;
+  position: relative;
+
+  &__input {
+    @include input_default;
+
+    width: 100%;
+
+    &.-error {
+      border: 1px solid $color--red;
+    }
+
+    &:focus,
+    &.-has-content {
+      & + #{$root}__label {
+        font-size: 0.6rem;
+        top: 7px;
+
+        @include viewport_mq3 {
+          font-size: 0.7rem;
+        }
+      }
+    }
+  }
+
+  &__label {
+    position: absolute;
+    top: 16px;
+    left: 12px;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    opacity: 0.7;
+    font-size: 0.9rem;
+
+    @include viewport_mq3 {
+      font-size: 1rem;
+    }
+  }
+}

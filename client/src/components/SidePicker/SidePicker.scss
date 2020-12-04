@@ -1,0 +1,24 @@
+.side-picker {
+  display: flex;
+  justify-content: space-evenly;
+
+  &__side-badge {
+    width: 48px;
+    height: 48px;
+    opacity: 0.4;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: opacity 0.3s ease, filter 0.3s ease;
+    filter: grayscale(60%);
+
+    &.-selected {
+      opacity: 1;
+      filter: grayscale(0%);
+    }
+
+    @include viewport_mq3 {
+      width: 64px;
+      height: 64px;
+    }
+  }
+}

@@ -13,7 +13,7 @@
         @click="copyServer"
         data-tooltip="Copy server connection string"
       >
-        <font-awesome-icon icon="copy" />
+        <fa-icon icon="copy" />
       </div>
       <div
         class="team-info__server-run"
@@ -21,13 +21,13 @@
         @click="runServer"
         data-tooltip="Run game and join server"
       >
-        <font-awesome-icon icon="gamepad" />
+        <fa-icon icon="gamepad" />
       </div>
     </div>
     <span class="team-info__code">
       {{teamInfo.code}}
       <div class="team-info__code-copy" @click="copyCode" data-tooltip="Copy join code">
-        <font-awesome-icon icon="copy" />
+        <fa-icon icon="copy" />
       </div>
     </span>
   </div>

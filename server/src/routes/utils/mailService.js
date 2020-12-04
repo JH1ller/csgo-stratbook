@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 const Email = require('email-templates');
 const path = require('path');
-
-console.log(process.env.NODE_ENV);
+const urljoin = require('url-join');
+const { API_URL } = require('../../config');
 
 const transporter = nodemailer.createTransport({
   host: process.env.MAIL_HOST,
@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 
 const email = new Email({
   message: {
-    from: 'CS Stratbook <csstratbook@jhiller.me>',
+    from: 'Stratbook <support@stratbook.live>',
   },
   send: true,
   transport: transporter,
@@ -32,10 +32,7 @@ const email = new Email({
 });
 
 const sendMail = async (to, token, name) => {
-  const link =
-    process.env.NODE_ENV === 'development'
-      ? `http://localhost:3000/auth/confirmation/${token}`
-      : `https://csgo-stratbook.herokuapp.com/auth/confirmation/${token}`;
+  const link = urljoin(API_URL, `/auth/confirmation/${token}`);
   try {
     const res = await email.send({
       template: path.join(__dirname, 'templates', 'verify'),

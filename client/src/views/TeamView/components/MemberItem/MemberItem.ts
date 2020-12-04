@@ -1,17 +1,18 @@
-import { Component, Emit, Prop, Ref, Vue } from 'vue-property-decorator';
-import { resolveAvatar } from '@/utils/resolveUrls';
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
+import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import ago from 's-ago';
-import { Player, Team } from '@/api/models';
+import { Player } from '@/api/models/Player';
+import { Team } from '@/api/models/Team';
 
 @Component({
-  components: {}
+  components: {},
 })
 export default class MemberList extends Vue {
   @Prop() private member!: Player;
   @Prop() private profile!: Player;
   @Prop() private teamInfo!: Team;
 
-  private resolveAvatar: (url?: string) => string = resolveAvatar;
+  private resolveStaticImageUrl: (url?: string) => string = resolveStaticImageUrl;
 
   @Emit()
   private openMenu($event: MouseEvent): { event: MouseEvent; member: Player } {

@@ -5,14 +5,14 @@ const teamSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    max: 24,
-    min: 3,
+    maxlength: 24,
+    minlength: 3,
   },
 
   website: {
     type: String,
-    min: 6,
-    max: 100,
+    minlength: 6,
+    maxlength: 100,
   },
 
   server: {
@@ -20,14 +20,13 @@ const teamSchema = new mongoose.Schema({
       ip: String,
       password: String,
     },
-    min: 6,
-    max: 200,
+    minlength: 6,
+    maxlength: 200,
   },
 
   code: {
     type: String,
     required: true,
-    min: 20,
   },
 
   avatar: {

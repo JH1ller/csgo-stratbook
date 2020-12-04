@@ -1,7 +1,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import Loader from '@/components/Loader/Loader.vue';
-import { Team } from '@/api/models';
 import { appModule, teamModule } from '@/store/namespaces';
+import { Team } from '@/api/models/Team';
 
 @Component({
   components: {
@@ -10,7 +10,7 @@ import { appModule, teamModule } from '@/store/namespaces';
 })
 export default class ViewTitle extends Vue {
   @teamModule.State private teamInfo!: Team;
-  @appModule.State(state => state.ui.showLoader) private showLoader!: boolean;
+  @appModule.State private loading!: boolean;
   private showLoaderCopy: boolean = false;
 
   private get title() {
@@ -19,11 +19,11 @@ export default class ViewTitle extends Vue {
       : this.$route.name;
   }
 
-  @Watch('showLoader')
+  @Watch('loading')
   private showLoaderChanged(to: boolean) {
     if (to) {
       setTimeout(() => {
-        this.showLoaderCopy = this.showLoader;
+        this.showLoaderCopy = this.loading;
       }, 500);
     } else {
       this.showLoaderCopy = false;

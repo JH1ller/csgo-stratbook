@@ -5,6 +5,7 @@ const stratSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    maxlength: 50
   },
 
   map: {
@@ -42,6 +43,7 @@ const stratSchema = new mongoose.Schema({
 
   note: {
     type: String,
+    maxlength: 100
   },
 
   content: {

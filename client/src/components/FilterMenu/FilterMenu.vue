@@ -1,7 +1,7 @@
 <template>
   <div class="filter-menu">
     <div class="filter-menu__container">
-      <font-awesome-icon icon="filter" class="filter-menu__icon-filter" />
+      <fa-icon icon="filter" class="filter-menu__icon-filter" />
       <button class="filter-menu__btn-clear" @click="clearFilters">Clear filters</button>
       <fieldset class="filter-menu__fieldset">
         <label class="filter-menu__label" for="name">Strat name</label>

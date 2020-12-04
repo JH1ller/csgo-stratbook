@@ -1,0 +1,68 @@
+.type-picker {
+  display: flex;
+  justify-content: space-evenly;
+  
+  &__button {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    opacity: 0.4;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: opacity 0.3s ease, border-color 0.3s ease;
+    background-color: $color--smoke;
+    border: 2px solid $color--grey;
+
+    &.-selected {
+      opacity: 1;
+      filter: grayscale(0%);
+    }
+
+    &.--buyround.-selected {
+      background-color: $color--blue;
+      border-color: darken($color--blue, 10%);
+    }
+    &.--pistol.-selected {
+      background-color: $color--yellow;
+      border-color: #d8d970;
+    }
+    &.--force.-selected {
+      background-color: $color--red;
+      border-color: darken($color--red, 10%);
+    }
+
+    &:not(:first-of-type) {
+      margin-left: 12px;
+    }
+  }
+
+  &__label {
+    font-family: $font_ubuntu-bold;
+    color: $color--abbey;
+    font-size: 0.8rem;
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-variant: small-caps;
+    letter-spacing: -0.3px;
+  }
+
+  &__icon {
+    position: absolute;
+    left: 50%;
+    top: 10px;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 24px;
+    opacity: 0.6;
+    object-fit: contain;
+
+    &.--buyround {
+      width: 28px;
+      height: 28px;
+      top: 6px;
+    }
+  }
+}

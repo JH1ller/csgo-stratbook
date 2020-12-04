@@ -1,0 +1,18 @@
+@mixin grid($column-count: 12) {
+  display: grid;
+  gap: 12px;
+
+  @include viewport_mq3 {
+    gap: 24px;
+  }
+
+  grid-template-columns: repeat(#{$column-count}, minmax(0, 1fr));
+}
+
+@mixin grid-cell($column-count, $start: null) {
+  @if $start == null {
+    grid-column: span #{$column-count};
+  } @else {
+    grid-column: #{$start} / span #{$column-count};
+  }
+}

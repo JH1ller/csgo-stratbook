@@ -1,0 +1,17 @@
+.utility-type-display {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: white;
+  border: 1px solid $color--grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__icon {
+    width: 70%;
+    height: 70%;
+    opacity: 0.6;
+    object-fit: contain;
+  }
+}

@@ -5,11 +5,11 @@
       <div class="confirm-dialog__buttons">
         <button class="confirm-dialog__btn-confirm" @click="confirmClicked">
           Confirm
-          <font-awesome-icon icon="check" />
+          <fa-icon icon="check" />
         </button>
         <button class="confirm-dialog__btn-cancel" @click="cancelClicked">
           Cancel
-          <font-awesome-icon icon="ban" />
+          <fa-icon icon="ban" />
         </button>
       </div>
     </div>

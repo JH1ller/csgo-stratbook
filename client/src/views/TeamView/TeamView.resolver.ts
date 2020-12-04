@@ -1,7 +1,6 @@
 import { NavigationGuard } from 'vue-router';
 import store from '@/store';
-import { APIResponse } from '@/api/APIService';
-import { Response, Team } from '@/api/models';
+import { Response } from '@/store';
 import { authGuard } from '@/guards/auth.guard';
 import { teamGuard } from '@/guards/team.guard';
 import { isEmpty } from '@/utils/objectEmpty';
