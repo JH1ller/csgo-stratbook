@@ -1,0 +1,51 @@
+.type-badge {
+  width: 32px;
+  height: 32px;
+  opacity: 0.3;
+  border: 2px solid $color--abbey;
+  border-radius: 50%;
+  padding: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @include viewport_mq3 {
+    opacity: 0.5;
+    width: 36px;
+    height: 36px;
+  }
+
+  &.--buyround {
+    background-color: $color--blue;
+    border-color: darken($color--blue, 10%);
+  }
+  &.--pistol {
+    background-color: $color--yellow;
+    border-color: darken($color--yellow, 10%);
+  }
+  &.--force {
+    background-color: $color--red;
+    border-color: darken($color--red, 10%);
+  }
+
+  &__icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+
+    @include viewport_mq3 {
+      width: 20px;
+      height: 20px;
+
+      &.--buyround {
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    &.--buyround {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}

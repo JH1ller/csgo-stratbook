@@ -1,11 +1,10 @@
 <p align="center">
-  <img src=".readme/logo_dark.png" width="128">
+  <img src=".readme/logo.png" width="256">
 </p>
 
-## CSGO Stratbook
 
-Vue-Typescript application to manage strategies in Valve's popular competitive FPS Counterstrike: Global Offensive
-Also available as desktop client
+__Vue-Typescript application to manage strategies in Valve's popular competitive FPS Counterstrike: Global Offensive
+Also available as desktop client__
 
 ![electron](https://img.shields.io/badge/electron-8.3.2-blue.svg)
 ![vue](https://img.shields.io/badge/vue-2.6.11-blue.svg)
@@ -17,13 +16,12 @@ Also available as desktop client
 
 ### Table of Content
 
-- [CSGO Stratbook](#csgo-stratbook)
-  - [Table of Content](#table-of-content)
-  - [Technologies](#technologies)
-    - [Client/Frontend](#clientfrontend)
-    - [Server/Backend](#serverbackend)
-  - [Goals](#goals)
-  - [Minimum OS Version requirements](#minimum-os-version-requirements)
+- [Table of Content](#table-of-content)
+- [Technologies](#technologies)
+  - [Client/Frontend](#clientfrontend)
+  - [Server/Backend](#serverbackend)
+- [Features](#features)
+- [Minimum OS Version requirements](#minimum-os-version-requirements)
 
 ### Technologies
 

@@ -1,6 +1,7 @@
 const Strat = require('../../models/strat');
 const Player = require('../../models/player');
 const Team = require('../../models/team');
+const Utility = require('../../models/utility');
 
 async function getStrat(req, res, next) {
   const stratID = req.params.strat_id || req.body._id;
@@ -30,6 +31,20 @@ async function getTeam(req, res, next) {
   }
 }
 
+async function getUtility(req, res, next) {
+  const utilityID = req.params.utility_id || req.body._id;
+  try {
+    const utility = await Utility.findById(utilityID);
+    if (!utility) {
+      return res.status(404).json({ error: 'Cannot find utility' });
+    }
+    res.utility = utility;
+    next();
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
 async function getPlayer(req, res, next) {
   if (res.player) next();
   const playerID = req.params.player_id;
@@ -48,3 +63,4 @@ async function getPlayer(req, res, next) {
 exports.getStrat = getStrat;
 exports.getPlayer = getPlayer;
 exports.getTeam = getTeam;
+exports.getUtility = getUtility;

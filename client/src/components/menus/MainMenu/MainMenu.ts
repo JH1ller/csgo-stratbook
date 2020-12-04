@@ -1,12 +1,20 @@
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
-import { Player } from '@/api/models';
-import { authModule } from '@/store/namespaces';
-import { resolveAvatar } from '@/utils/resolveUrls';
+import { appModule, authModule } from '@/store/namespaces';
+import { resolveStaticImageUrl } from '@/utils/resolveUrls';
+import { Player } from '@/api/models/Player';
+import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
+import { FeedbackFish } from '@feedback-fish/vue';
 
-@Component({})
+@Component({
+  components: {
+    FeedbackFish,
+  },
+})
 export default class MainMenu extends Vue {
-  private appName: string = 'CSGO Stratbook'; // TODO: dynamic
+  private appName: string = 'stratbook'; // TODO: dynamic
   @authModule.State profile!: Player;
+  @appModule.Action private showToast!: (toast: Toast) => void;
+  @appModule.State private loading!: boolean;
   @Prop() private menuOpen!: boolean;
 
   private menuItems = [
@@ -18,7 +26,7 @@ export default class MainMenu extends Vue {
     {
       label: 'Grenades',
       icon: 'bomb',
-      link: '/nadebook',
+      link: '/utility',
     },
     {
       label: 'Team',
@@ -46,11 +54,20 @@ export default class MainMenu extends Vue {
   }
 
   get avatarUrl() {
-    return resolveAvatar(this.profile?.avatar);
+    return resolveStaticImageUrl(this.profile?.avatar);
+  }
+
+  private downloadDesktopClient(): void {
+    this.showToast({ id: 'mainMenu/downloadDesktopClient', text: 'Coming soon!' });
   }
 
   @Emit()
   private toggleMenu() {
+    return;
+  }
+
+  @Emit()
+  private closeMenu() {
     return;
   }
 }

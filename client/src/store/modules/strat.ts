@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import { Module } from 'vuex';
 import { RootState } from '..';
-import { Strat } from '@/api/models';
 import APIService from '@/api/APIService';
+import { Strat } from '@/api/models/Strat';
 
 const SET_STRATS = 'SET_STRATS';
 
@@ -25,7 +25,7 @@ export const stratModule: Module<StratState, RootState> = {
   state: stratInitialState(),
   getters: {
     stratsOfCurrentMap(state, _getters, rootState) {
-      return state.strats.filter(strat => strat.map === rootState.map.stratMap);
+      return state.strats.filter(strat => strat.map === rootState.map.currentMap);
     }
   },
   actions: {
@@ -44,7 +44,7 @@ export const stratModule: Module<StratState, RootState> = {
       if (res.success) dispatch('app/showToast', { id: 'strat/deleteStrat', text: 'Deleted strat.' }, { root: true });
     },
     async createStrat({ dispatch, rootState }, payload: Partial<Strat>) {
-      const newStrat = { ...payload, map: rootState.map.stratMap };
+      const newStrat = { ...payload, map: rootState.map.currentMap };
       const res = await APIService.createStrat(newStrat);
       if (res.success) dispatch('app/showToast', { id: 'strat/createStrat', text: 'Added strat.' }, { root: true });
     },
@@ -77,7 +77,7 @@ export const stratModule: Module<StratState, RootState> = {
       commit(ADD_STRAT, payload.strat);
       dispatch('saveStratsToStorage');
     },
-    updateStratLocally({ commit, rootState, dispatch }, payload: { strat: Strat }) {
+    updateStratLocally({ commit, dispatch }, payload: { strat: Strat }) {
       commit(UPDATE_STRAT, payload);
       dispatch('saveStratsToStorage');
     },

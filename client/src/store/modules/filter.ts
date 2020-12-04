@@ -1,6 +1,7 @@
+import { Sides } from '@/api/models/Sides';
+import { StratTypes } from '@/api/models/StratTypes';
 import { Module } from 'vuex';
 import { RootState } from '..';
-import { Sides, StratTypes } from '@/api/models';
 
 const SET_PLAYER_FILTER = 'SET_PLAYER_FILTER';
 const SET_TYPE_FILTER = 'SET_TYPE_FILTER';

@@ -22,9 +22,36 @@ import {
   faGamepad,
   faBomb,
   faSave,
-  faShareAlt
+  faShareAlt,
+  faDownload,
+  faQuestionCircle,
+  faInfoCircle,
+  faTimes,
+  faComment,
+  faWifi,
+  faChevronLeft,
+  faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
+import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import VueTippy, { TippyComponent } from 'vue-tippy';
+
+Vue.use(VueTippy, {
+  directive: 'tippy',
+  animateFill: true,
+  distance: 5,
+  duration: [300, 100],
+  delay: [500, 0],
+  animation: 'scale',
+  popperOptions: {
+    modifiers: {
+      // preventOverflow: {
+      //   enabled: false,
+      // },
+    },
+  },
+});
+Vue.component('tippy', TippyComponent);
 
 config.autoAddCss = false;
 library.add(
@@ -45,9 +72,18 @@ library.add(
   faGamepad,
   faBomb,
   faSave,
-  faShareAlt
+  faShareAlt,
+  faTwitter,
+  faDownload,
+  faQuestionCircle,
+  faInfoCircle,
+  faTimes,
+  faComment,
+  faWifi,
+  faChevronLeft,
+  faChevronRight
 );
-Vue.component('font-awesome-icon', FontAwesomeIcon);
+Vue.component('fa-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 

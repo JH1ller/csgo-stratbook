@@ -1,9 +1,11 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
-import { Player, Team, Status } from '@/api/models';
-import APIService, { APIResponse } from '@/api/APIService';
+import APIService from '@/api/APIService';
 import { TeamCreateFormData } from '@/components/TeamCreateForm/TeamCreateForm';
-import { resolveAvatar } from '@/utils/resolveUrls';
+import { resolveStaticImageUrl } from '@/utils/resolveUrls';
+import { Team } from '@/api/models/Team';
+import { Player } from '@/api/models/Player';
+import { Status } from './auth';
 
 const SET_TEAM_INFO = 'SET_TEAM_INFO';
 const SET_TEAM_MEMBERS = 'SET_TEAM_MEMBERS';
@@ -27,7 +29,7 @@ export const teamModule: Module<TeamState, RootState> = {
   state: teamInitialState(),
   getters: {
     teamAvatarUrl(state): string {
-      return resolveAvatar((state.teamInfo as Team).avatar);
+      return resolveStaticImageUrl((state.teamInfo as Team).avatar);
     },
     connectionString(state) {
       return `connect ${(state.teamInfo as Team).server?.ip}; ${
@@ -59,11 +61,14 @@ export const teamModule: Module<TeamState, RootState> = {
       const res = await APIService.createTeam(formData);
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
-        dispatch('app/showToast', 
-        { 
-          id: 'team/createTeam', 
-          text: 'Team successfully created. You can now visit the strats page and start creating strats!' 
-        }, { root: true });
+        dispatch(
+          'app/showToast',
+          {
+            id: 'team/createTeam',
+            text: 'Team successfully created. You can now visit the strats page and start creating strats!',
+          },
+          { root: true }
+        );
         return { success: 'Team successfully created. You can now visit the strats page and start creating strats!' }; // TODO: probably obsolete. remove
       } else {
         return { error: res.error };
@@ -73,11 +78,14 @@ export const teamModule: Module<TeamState, RootState> = {
       const res = await APIService.joinTeam(code);
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
-        dispatch('app/showToast', 
-        { 
-          id: 'team/createTeam', 
-          text: 'Successfully joined team.' 
-        }, { root: true });
+        dispatch(
+          'app/showToast',
+          {
+            id: 'team/createTeam',
+            text: 'Successfully joined team.',
+          },
+          { root: true }
+        );
         return { success: 'Successfully joined team.' };
       } else {
         return { error: res.error };
@@ -101,7 +109,11 @@ export const teamModule: Module<TeamState, RootState> = {
       const res = await APIService.transferManager(memberID);
       if (res.success) {
         commit(SET_TEAM_INFO, res.success);
-        dispatch('app/showToast', { id: 'team/transferManager', text: 'Leadership successfully transfered' }, { root: true });
+        dispatch(
+          'app/showToast',
+          { id: 'team/transferManager', text: 'Leadership successfully transfered' },
+          { root: true }
+        );
         return { success: 'Successfully transfered.' };
       } else {
         return { error: res.error };

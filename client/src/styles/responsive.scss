@@ -6,6 +6,7 @@ $mq3Min: 768px;
 $mq4Min: 1024px;
 $mq5Min: 1280px;
 $mq6Min: 1440px;
+$mq7Min: 1920px;
 
 $minWidths: (
   mq1: $mq1Min,
@@ -13,7 +14,8 @@ $minWidths: (
   mq3: $mq3Min,
   mq4: $mq4Min,
   mq5: $mq5Min,
-  mq6: $mq6Min
+  mq6: $mq6Min,
+  mq7: $mq7Min,
 );
 
 // $breakpoints
@@ -25,7 +27,8 @@ $breakpoints: (
   mq3: map-get($minWidths, mq3),
   mq4: map-get($minWidths, mq4),
   mq5: map-get($minWidths, mq5),
-  mq6: map-get($minWidths, mq6)
+  mq6: map-get($minWidths, mq6),
+  mq7: map-get($minWidths, mq7),
 );
 
 // $mediaQueries
@@ -35,33 +38,38 @@ $mediaQueries: (
   mq3: 'only screen and (min-width: #{$mq3Min})',
   mq4: 'only screen and (min-width: #{$mq4Min})',
   mq5: 'only screen and (min-width: #{$mq5Min})',
-  mq6: 'only screen and (min-width: #{$mq6Min})'
+  mq6: 'only screen and (min-width: #{$mq6Min})',
+  mq7: 'only screen and (min-width: #{$mq7Min})',
 );
 
 $ranges: (
   mq1: (
     min: 'only screen and (min-width: #{$mq1Min})',
-    max: '(max-width: #{$mq2Min - 1px})'
+    max: '(max-width: #{$mq2Min - 1px})',
   ),
   mq2: (
     min: 'only screen and (min-width: #{$mq2Min})',
-    max: '(max-width: #{$mq3Min - 1px})'
+    max: '(max-width: #{$mq3Min - 1px})',
   ),
   mq3: (
     min: 'only screen and (min-width: #{$mq3Min})',
-    max: '(max-width: #{$mq4Min - 1px})'
+    max: '(max-width: #{$mq4Min - 1px})',
   ),
   mq4: (
     min: 'only screen and (min-width: #{$mq4Min})',
-    max: '(max-width: #{$mq5Min - 1px})'
+    max: '(max-width: #{$mq5Min - 1px})',
   ),
   mq5: (
     min: 'only screen and (min-width: #{$mq5Min})',
-    max: '(max-width: #{$mq6Min - 1px})'
+    max: '(max-width: #{$mq6Min - 1px})',
   ),
   mq6: (
-    min: 'only screen and (min-width: #{$mq6Min})'
-  )
+    min: 'only screen and (min-width: #{$mq6Min})',
+    max: '(max-width: #{$mq7Min - 1px})',
+  ),
+  mq7: (
+    min: 'only screen and (min-width: #{$mq7Min})',
+  ),
 );
 
 @mixin viewport_mq1 {
@@ -96,6 +104,12 @@ $ranges: (
 
 @mixin viewport_mq6 {
   @media #{map-get($mediaQueries, mq6)} {
+    @content;
+  }
+}
+
+@mixin viewport_mq7 {
+  @media #{map-get($mediaQueries, mq7)} {
     @content;
   }
 }

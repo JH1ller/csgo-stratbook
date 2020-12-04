@@ -1,6 +1,6 @@
 import { Routes, RouteNames } from '@/router/router.models';
-import { Status } from '@/api/models';
 import store from '@/store';
+import { Status } from '@/store/modules/auth';
 import { NavigationGuard } from 'vue-router';
 
 export const authGuard: NavigationGuard = (to, _from, next): boolean => {

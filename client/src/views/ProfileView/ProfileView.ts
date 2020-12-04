@@ -1,7 +1,6 @@
-import { Component, Ref, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import { Routes } from '@/router/router.models';
-import { authModule, teamModule } from '@/store/namespaces';
-import { Player } from '@/api/models';
+import { authModule } from '@/store/namespaces';
 import StratEditor from '@/components/StratEditor/StratEditor.vue';
 
 @Component({

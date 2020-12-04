@@ -1,10 +1,18 @@
-import { Component, Prop, Vue, Emit, Ref, Watch } from 'vue-property-decorator';
-import { Strat, Sides, StratTypes } from '@/api/models';
+import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
 import StratEditor from '@/components/StratEditor/StratEditor.vue';
+import TypeBadge from '@/components/TypeBadge/TypeBadge.vue';
+import SideBadge from '@/components/SideBadge/SideBadge.vue';
 import { filterModule } from '@/store/namespaces';
+import { Strat } from '@/api/models/Strat';
+import { Sides } from '@/api/models/Sides';
+import { StratTypes } from '@/api/models/StratTypes';
 
 @Component({
-  components: { StratEditor },
+  components: {
+    StratEditor,
+    TypeBadge,
+    SideBadge,
+  },
 })
 export default class StratItem extends Vue {
   @Prop() private strat!: Strat;
@@ -17,7 +25,9 @@ export default class StratItem extends Vue {
     type: StratTypes | null;
   };
   private editMode: boolean = false;
-  private editorKey: string = Math.random().toString(36).substring(2);
+  private editorKey: string = Math.random()
+    .toString(36)
+    .substring(2);
 
   private get isCtSide(): boolean {
     return this.strat.side === Sides.CT;
@@ -74,6 +84,8 @@ export default class StratItem extends Vue {
   private discardContent(): void {
     this.editMode = false;
     // * force refresh of editor
-    this.editorKey = Math.random().toString(36).substring(2);
+    this.editorKey = Math.random()
+      .toString(36)
+      .substring(2);
   }
 }

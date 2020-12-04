@@ -14,7 +14,7 @@ body {
   overflow: overlay;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
+  background-color: $color--abbey;
   * {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
@@ -30,7 +30,12 @@ body {
 }
 
 img {
+  user-drag: none;
   user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 ::-webkit-scrollbar {
@@ -44,4 +49,8 @@ img {
 
 ::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.1);
+}
+
+.tippy-popper {
+  font-family: $font_ubuntu-regular;
 }

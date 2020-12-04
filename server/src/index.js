@@ -1,17 +1,20 @@
 require('dotenv').config();
 
 const express = require('express');
+require('express-async-errors');
 const path = require('path');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const app = express();
 const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, { pingInterval: 10000 });
 const mongoose = require('mongoose');
 const history = require('connect-history-api-fallback');
 const cors = require('cors');
 const port = process.env.PORT || 3000;
-const { initWS } = require('./sockets/index');
+const { initWS } = require('./sockets');
+const subdomain = require('express-subdomain');
+const apiRouter = require('./routes/api');
 
 mongoose.connect(process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : process.env.DATABASE_URL_DEV, {
   useNewUrlParser: true,
@@ -32,49 +35,40 @@ const limiter = rateLimit({
 /**
  * Middleware
  */
-const staticFileMiddleware = express.static('dist');
 
 app.use(express.json());
 app.use(cors());
-app.use('/', express.static('public'));
-app.use('/.well-known/pki-validation/', express.static('cert'));
-app.use(staticFileMiddleware);
-app.use(history({
-  index: '/dist/index.html'
-}));
-app.use(staticFileMiddleware);
 app.use(helmet());
+
+app.use(subdomain('static', express.static('public')));
+
+app.use('/.well-known/pki-validation/', express.static('cert'));
+
+app.use(subdomain('app', express.static('dist')));
+app.use('/', express.static('dist'));
+app.use(
+  history({
+    index: '/dist/index.html',
+  })
+);
+
+// app.use(subdomain('app', express.static('dist')));
+
+app.use(subdomain('api', apiRouter));
 
 if (process.env.NODE_ENV === 'production') {
   app.use(limiter);
   app.set('trust proxy', 1);
 }
 
-app.set('views', path.join(__dirname, 'templates'));
-app.set('view engine', 'pug');
+app.use((error, req, res, next) => {
+  console.error('Error handler >>> ', error.message);
+  res.status(500).json({ error: 'An error occured on the server.' });
+});
 
 /**
  * Routes
  */
-app.get('/success', (req, res) => {
-  res.render('success');
-});
-
-app.get('/error', (req, res) => {
-  res.render('error');
-});
-
-const authRouter = require('./routes/auth');
-app.use('/auth', authRouter);
-
-const playersRouter = require('./routes/players');
-app.use('/players', playersRouter);
-
-const stratsRouter = require('./routes/strats');
-app.use('/strats', stratsRouter);
-
-const teamsRouter = require('./routes/teams');
-app.use('/teams', teamsRouter);
 
 initWS(io);
 

@@ -1,7 +1,7 @@
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
-import { Strat } from '@/api/models';
 import StratItem from '@/components/StratItem/StratItem.vue';
 import { Filters } from '@/store/modules/filter';
+import { Strat } from '@/api/models/Strat';
 
 @Component({
   components: {

@@ -1,0 +1,28 @@
+.utility-list {
+  margin-top: 24px;
+  padding-bottom: 64px;
+
+  @include grid;
+
+  &__item {
+    @include grid-cell(12);
+
+    animation: simple-stagger 0.5s ease both;
+
+    @include viewport_mq3 {
+      @include grid-cell(6);
+    }
+
+    @include viewport_mq4 {
+      @include grid-cell(4);
+    }
+
+    @include viewport_mq4 {
+      @include grid-cell(3);
+    }
+
+    @include viewport_mq7 {
+      @include grid-cell(2);
+    }
+  }
+}

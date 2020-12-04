@@ -1,9 +1,10 @@
 <template>
-  <div id="app">
+  <div class="app">
+    <span class="app__version">Beta {{ appVersion }}</span>
+    <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi" /></span>
     <dialog-wrapper />
     <toast-wrapper />
-    <view-title ref="ViewTitle"></view-title>
-    <main-menu :menuOpen="menuOpen" @toggle-menu="toggleMenu" />
+    <main-menu :menuOpen="menuOpen" @toggle-menu="toggleMenu" @close-menu="closeMenu" />
     <transition name="fade" mode="out-in">
       <router-view @click.native="closeMenu" class="router-view"></router-view>
     </transition>
@@ -17,6 +18,8 @@ import Loader from '@/components/Loader/Loader.vue';
 import ToastWrapper from '@/components/ToastWrapper/ToastWrapper.vue';
 import MainMenu from '@/components/menus/MainMenu/MainMenu.vue';
 import DialogWrapper from './components/DialogWrapper/DialogWrapper.vue';
+import pkg from '../package.json';
+import { appModule } from './store/namespaces';
 
 @Component({
   components: {
@@ -28,7 +31,9 @@ import DialogWrapper from './components/DialogWrapper/DialogWrapper.vue';
   },
 })
 export default class App extends Vue {
+  @appModule.State latency!: number;
   private menuOpen: boolean = false;
+  private appVersion: string = pkg.version;
 
   private closeMenu() {
     this.menuOpen = false;
@@ -41,25 +46,51 @@ export default class App extends Vue {
 </script>
 
 <style lang="scss">
-#app {
+.app {
   font-family: $font_ubuntu-regular;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  background-color: $color--light;
   height: 100%;
   overflow: hidden;
+
+  &__version {
+    position: absolute;
+    font-size: 0.8rem;
+    top: 0;
+    right: 10px;
+    background-color: $color--smoke;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    padding: 0 4px;
+    opacity: 0.1;
+  }
+
+  &__latency {
+    position: absolute;
+    font-size: 0.8rem;
+    top: 1px;
+    right: 80px;
+    color: $color--smoke;
+    display: flex;
+    align-items: center;
+
+    & > * {
+      width: 14px;
+      height: 14px;
+    }
+  }
 }
 
 .router-view {
   //background-color: $color--light;
-  background-color: #4c4c53;
-  margin-top: 50px;
+
+  //margin-top: 50px;
   padding-top: 15px;
   padding-left: 15px;
   padding-right: 15px;
-  height: calc(100% - 50px);
-  max-height: calc(100vh - 50px);
+  height: 100%;
+  //max-height: calc(100vh - 50px);
   // width: calc(100% - 70px);
   // height: calc(100% - 50px);
   padding-bottom: 30px;

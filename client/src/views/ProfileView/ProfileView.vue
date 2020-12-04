@@ -1,8 +1,6 @@
 <template>
-  <div class="view-wrapper">
-    <div class="profile-view">
-      <button @click="logoutRequest" class="profile-view__btn-logout">Logout</button>
-    </div>
+  <div class="profile-view">
+    <button @click="logoutRequest" class="profile-view__btn-logout">Logout</button>
   </div>
 </template>
 

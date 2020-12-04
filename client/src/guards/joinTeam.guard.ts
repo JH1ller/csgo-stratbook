@@ -1,6 +1,6 @@
 import { Routes } from '@/router/router.models';
-import { Status } from '@/api/models';
 import store from '@/store';
+import { Status } from '@/store/modules/auth';
 import { NavigationGuard } from 'vue-router';
 
 export const joinTeamGuard: NavigationGuard = async (_to, _from, next) => {

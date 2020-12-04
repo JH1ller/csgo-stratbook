@@ -1,8 +1,11 @@
 import io from 'socket.io-client';
 import { BASE_URL } from '@/config';
 import store from '@/store';
-import { Player, Strat, Team } from './models';
 import { log } from '@/utils/logger';
+import { Player } from './models/Player';
+import { Strat } from './models/Strat';
+import { Team } from './models/Team';
+import { Utility } from './models/Utility';
 
 class WebSocketService {
   private static instance: WebSocketService;
@@ -38,6 +41,8 @@ class WebSocketService {
       });
     });
 
+    this.socket.on('pong', (ms: number) => store.dispatch('app/updateLatency', ms));
+
     this.socket.on('room-joined', (data: { roomID: string }) => {
       log.info('ws::joined', `Connected to room ${data.roomID}`);
     });
@@ -59,6 +64,21 @@ class WebSocketService {
     this.socket.on('deleted-strat', (data: { stratID: string }) => {
       log.info('ws::deleted', data);
       store.dispatch('strat/deleteStratLocally', data);
+    });
+
+    this.socket.on('created-utility', (data: { utility: Utility }) => {
+      log.info('ws::created', data);
+      store.dispatch('utility/addUtilityLocally', data);
+    });
+
+    this.socket.on('updated-utility', (data: { utility: Utility }) => {
+      log.info('ws::updated', data);
+      store.dispatch('utility/updateUtilityLocally', data);
+    });
+
+    this.socket.on('deleted-utility', (data: { utilityID: string }) => {
+      log.info('ws::deleted', data);
+      store.dispatch('utility/deleteUtilityLocally', data);
     });
 
     this.socket.on('deleted-player', (data: { playerID: string }) => {

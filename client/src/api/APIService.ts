@@ -1,16 +1,20 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import urljoin from 'url-join';
-import { Map, Strat, Player, Team, Status } from '@/api/models';
 import { TeamCreateFormData } from '@/components/TeamCreateForm/TeamCreateForm';
 import store from '@/store';
 import router from '@/router';
 import jwtDecode from 'jwt-decode';
 import { Routes, RouteNames } from '@/router/router.models';
-import { BASE_URL } from '@/config';
+import { API_URL } from '@/config';
 import { log } from '@/utils/logger';
+import { Status } from '@/store/modules/auth';
+import { Player } from './models/Player';
+import { Strat } from './models/Strat';
+import { Team } from './models/Team';
+import { Utility } from './models/Utility';
 
 const axiosInstance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_URL,
   timeout: 30000,
   headers: {
     Accept: 'application/json',
@@ -21,7 +25,7 @@ axiosInstance.interceptors.request.use(
   config => {
     if (store.state.auth.token) {
       config.headers['Authorization'] = store.state.auth.token;
-      store.dispatch('app/showLoader');
+      store.dispatch('app/updateLoading', true);
       return config;
     } else {
       log.error('axios::interceptor', 'User not authenticated. Request cancelled.');
@@ -35,11 +39,11 @@ axiosInstance.interceptors.request.use(
 );
 axiosInstance.interceptors.response.use(
   response => {
-    store.dispatch('app/hideLoader');
+    store.dispatch('app/updateLoading', false);
     return response;
   },
   error => {
-    store.dispatch('app/hideLoader');
+    store.dispatch('app/updateLoading', false);
     log.error('axios::interceptor', error.response.data.error);
     if (error.response.status === 401) {
       if (router.currentRoute.name !== RouteNames.Login) router.push(Routes.Login);
@@ -66,6 +70,7 @@ enum Endpoints {
   Players = '/players',
   Teams = '/teams',
   Auth = '/auth',
+  Utilities = '/utilities',
 }
 
 // TODO: obsolete, remove
@@ -79,7 +84,7 @@ enum Actions {
   Leave = 'leave',
   Kick = 'kick',
   Transfer = 'transfer',
-  Share = 'share'
+  Share = 'share',
 }
 
 interface APIResponseSuccess<T> {
@@ -100,15 +105,6 @@ interface JWTData {
 }
 
 class APIService {
-  static async getMaps(): Promise<APIResponse<Map[]>> {
-    try {
-      const { data } = await axiosInstance.get(Endpoints.Maps);
-      return { success: data };
-    } catch (error) {
-      return { error: error.response?.data?.error };
-    }
-  }
-
   static async getPlayer(): Promise<APIResponse<Player>> {
     try {
       const decodedToken: JWTData = jwtDecode(store.state.auth.token);
@@ -122,30 +118,30 @@ class APIService {
   }
 
   static async login(email: string, password: string): Promise<APIResponse<string>> {
-    const target = urljoin(BASE_URL, Endpoints.Auth, Actions.Login);
+    const target = urljoin(API_URL, Endpoints.Auth, Actions.Login);
 
     try {
-      store.dispatch('app/showLoader');
+      store.dispatch('app/updateLoading', true);
       // * not using axiosInstance here, because login doesn't require authorization
       const { data } = await axios.post(target, { email, password });
-      store.dispatch('app/hideLoader');
+      store.dispatch('app/updateLoading', false);
       return { success: data };
     } catch (error) {
-      store.dispatch('app/hideLoader');
+      store.dispatch('app/updateLoading', false);
       return { error: error.response?.data?.error };
     }
   }
 
   static async register(formData: Partial<Player>): Promise<APIResponse<{ _id: string; email: string }>> {
-    const target = urljoin(BASE_URL, Endpoints.Auth, Actions.Register);
+    const target = urljoin(API_URL, Endpoints.Auth, Actions.Register);
     try {
-      store.dispatch('app/showLoader');
+      store.dispatch('app/updateLoading', true);
       // * not using axiosInstance here, because register doesn't require authorization
       const { data } = await axios.post(target, formData);
-      store.dispatch('app/hideLoader');
+      store.dispatch('app/updateLoading', false);
       return { success: data };
     } catch (error) {
-      store.dispatch('app/hideLoader');
+      store.dispatch('app/updateLoading', false);
       return { error: error.response?.data?.error };
     }
   }
@@ -203,6 +199,60 @@ class APIService {
 
   static async addSharedStrat(stratID: string): Promise<APIResponse<Strat>> {
     const target = urljoin(Endpoints.Strats, Actions.Share, stratID);
+
+    try {
+      const { data } = await axiosInstance.post(target);
+      return { success: data };
+    } catch (error) {
+      return { error: error.response?.data?.error };
+    }
+  }
+
+  static async getUtilities(): Promise<APIResponse<Utility[]>> {
+    const target = urljoin(Endpoints.Utilities);
+    try {
+      const { data } = await axiosInstance.get(target);
+      return { success: data };
+    } catch (error) {
+      return { error: error.response?.data?.error };
+    }
+  }
+
+  static async deleteUtility(utilityID: string): Promise<APIResponse<Message>> {
+    const target = urljoin(Endpoints.Utilities, utilityID);
+    try {
+      const { data } = await axiosInstance.delete(target);
+      return { success: data };
+    } catch (error) {
+      return { error: error.response?.data?.error };
+    }
+  }
+
+  static async createUtility(utility: FormData): Promise<APIResponse<Utility>> {
+    const target = urljoin(Endpoints.Utilities);
+    try {
+      const { data } = await axiosInstance.post(target, utility, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      return { success: data };
+    } catch (error) {
+      return { error: error.response?.data?.error };
+    }
+  }
+
+  static async updateUtility(payload: FormData): Promise<APIResponse<Utility>> {
+    const target = urljoin(Endpoints.Utilities);
+
+    try {
+      const { data } = await axiosInstance.patch(target, payload);
+      return { success: data };
+    } catch (error) {
+      return { error: error.response?.data?.error };
+    }
+  }
+
+  static async addSharedUtility(utilityID: string): Promise<APIResponse<Utility>> {
+    const target = urljoin(Endpoints.Utilities, Actions.Share, utilityID);
 
     try {
       const { data } = await axiosInstance.post(target);
