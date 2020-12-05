@@ -55,6 +55,7 @@
         class="strat-item__editor"
         ref="editor"
         :htmlContent="strat.content"
+        :stratSide="strat.side"
         @update="editorUpdated"
       />
     </div>

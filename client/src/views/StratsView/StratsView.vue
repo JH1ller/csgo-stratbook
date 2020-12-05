@@ -1,14 +1,15 @@
 <template>
   <div class="strats-view">
     <MapPicker @map-clicked="updateCurrentMap" :currentMap="currentMap" />
-    <FilterMenu
-      @player-selected="updatePlayerFilter"
-      @type-filter-selected="updateTypeFilter"
-      @side-filter-selected="updateSideFilter"
-      @name-filter-selected="updateNameFilter"
-      @clear-filters="clearFilters"
-      :teamMembers="teamMembers"
-      :filters="filters"
+    <StratsFilterMenu
+      @content-filter-change="updateStratContentFilter"
+      @type-filter-change="updateStratTypeFilter"
+      @side-filter-change="updateStratSideFilter"
+      @name-filter-change="updateStratNameFilter"
+      @clear-filters="clearStratFilters"
+      @close="toggleFilterMenu"
+      :filters="stratFilters"
+      :open="filterMenuOpen"
     />
     <StratList
       @delete-strat="requestDeleteStrat"
@@ -18,11 +19,16 @@
       @share-strat="requestShareStrat"
       @unshare-strat="unshareStrat"
       :strats="sortedStrats"
-      :filters="filters"
+      :filters="stratFilters"
     />
     <transition name="fade">
-      <FloatingAdd @on-click="showStratForm" v-if="!stratFormOpen" />
+      <FloatingAdd class="strats-view__floating-add" @click="showStratForm" v-if="!stratFormOpen" />
     </transition>
+
+    <transition name="fade">
+      <FilterButton class="strats-view__filter-button" @click="toggleFilterMenu" v-if="!filterMenuOpen" />
+    </transition>
+
     <transition name="fade">
       <UtilityLightbox v-if="lightboxOpen" :utility="currentLightboxUtility" @close="hideLightbox" />
     </transition>

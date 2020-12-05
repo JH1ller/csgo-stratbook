@@ -2,7 +2,7 @@
   <div class="utility-list">
     <UtilityItem
       class="utility-list__item"
-      v-for="(utility, index) in utilities"
+      v-for="(utility, index) in filteredUtilities"
       :utility="utility"
       :key="utility.id"
       :style="{ 'animation-delay': 0.1 * index + 's' }"

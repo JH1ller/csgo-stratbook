@@ -6,6 +6,7 @@ import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import sanitizeHtml from 'sanitize-html';
 import { Player } from '@/api/models/Player';
 import { Utility } from '@/api/models/Utility';
+import { Sides } from '@/api/models/Sides';
 
 @Component({
   components: {
@@ -14,7 +15,7 @@ import { Utility } from '@/api/models/Utility';
 })
 export default class StratEditor extends Vue {
   @Inject('lightbox') readonly showLightboxFunc!: (utility: Utility) => void;
-
+  @Prop() stratSide!: Sides;
   @Prop() htmlContent!: string;
   @Ref() textarea!: HTMLDivElement;
   @teamModule.State teamMembers!: Player[];
@@ -22,10 +23,12 @@ export default class StratEditor extends Vue {
   @utilityModule.Getter utilitiesOfCurrentMap!: Utility[];
 
   private get utilityOptionList() {
-    return this.utilitiesOfCurrentMap.map(utility => ({
-      ...utility,
-      query: `${utility.type} ${utility.name}`,
-    }));
+    return this.utilitiesOfCurrentMap
+      .filter(utility => utility.side === this.stratSide)
+      .map(utility => ({
+        ...utility,
+        query: `${utility.type} ${utility.name}`,
+      }));
   }
 
   private get mentionOptionList() {
@@ -49,9 +52,11 @@ export default class StratEditor extends Vue {
           lookup: 'name',
           fillAttr: 'name',
           selectTemplate: item =>
-            `<span contenteditable="false" class="strat-editor__mention ${
-              item.original._id === this.profile._id ? '-is-user' : ''
-            } ${item.original._id?.startsWith('spawn') ? '-is-spawn' : ''}">@${item.original.name}</span>`,
+            `<span contenteditable="false" class="strat-editor__mention${
+              item.original._id === this.profile._id ? ' -is-user' : ''
+            }${item.original._id?.startsWith('spawn') ? ' -is-spawn' : ''}" data-player-id="${item.original._id}">${
+              item.original.name
+            }</span>`,
           itemClass: 'strat-editor__mention-item',
           containerClass: 'strat-editor__mention-container',
           selectClass: 'strat-editor__mention-selected',
@@ -70,7 +75,7 @@ export default class StratEditor extends Vue {
           lookup: 'query',
           fillAttr: 'name',
           selectTemplate: item =>
-            `<span contenteditable="false" data-id="${
+            `<span contenteditable="false" data-util-id="${
               item.original._id
             }" class="strat-editor__utility"><img class="strat-editor__utility-img" src="utility/${(item.original as Utility).type.toLowerCase()}.png" />${
               item.original.name
@@ -113,9 +118,9 @@ export default class StratEditor extends Vue {
   }
 
   private addClickListeners() {
-    const nodes = this.textarea.querySelectorAll('[data-id]');
+    const nodes = this.textarea.querySelectorAll('[data-util-id]');
     nodes.forEach(node => {
-      const id = node.getAttribute('data-id');
+      const id = node.getAttribute('data-util-id');
       if (!(node as HTMLElement).onclick) (node as HTMLElement).onclick = () => this.utilClicked(id as string);
     });
   }

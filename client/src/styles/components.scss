@@ -1,9 +1,14 @@
-@mixin input_default($widthValue: 300px) {
+@mixin input_default($placeholder: false) {
   font-size: 1em;
-  padding: 18px 10px 8px 10px;
+  @if ($placeholder == true) {
+    padding: 18px 10px 8px 10px;
+  } @else {
+    padding: 8px 10px;
+  }
+
+  background-color: white;
   border: 1px solid $color--navyblue-50;
   border-radius: 4px;
-  width: $widthValue;
   box-shadow: $shadow-subtle;
   transition: border 0.2s ease;
 
@@ -12,7 +17,10 @@
   }
 
   @include viewport_mq3 {
-    padding: 22px 12px 10px 12px;
+    @if ($placeholder == true) {
+      padding: 10px 12px;
+    } @else {
+    }
   }
 }
 

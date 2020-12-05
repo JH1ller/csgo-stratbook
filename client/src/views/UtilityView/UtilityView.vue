@@ -1,9 +1,29 @@
 <template>
   <div class="utility-view">
     <map-picker @map-clicked="updateCurrentMap" :currentMap="currentMap" />
-    <UtilityList class="" :utilities="utilitiesOfCurrentMap" @open-in-lightbox="showLightbox" />
+    <UtilityList :filters="utilityFilters" :utilities="utilitiesOfCurrentMap" @open-in-lightbox="showLightbox" />
+    <UtilityFilterMenu
+      @type-filter-change="updateUtilityTypeFilter"
+      @side-filter-change="updateUtilitySideFilter"
+      @name-filter-change="updateUtilityNameFilter"
+      @clear-filters="clearUtilityFilters"
+      @close="toggleFilterMenu"
+      :filters="utilityFilters"
+      :open="filterMenuOpen"
+    />
     <transition name="fade">
-      <FloatingAdd @on-click="showUtilityForm" v-if="!utilityFormOpen" />
+      <FloatingAdd
+        class="utility-view__floating-add"
+        @click="showUtilityForm"
+        v-if="!utilityFormOpen && !filterMenuOpen"
+      />
+    </transition>
+    <transition name="fade">
+      <FilterButton
+        class="utility-view__filter-button"
+        @click="toggleFilterMenu"
+        v-if="!utilityFormOpen && !filterMenuOpen"
+      />
     </transition>
     <transition name="fade">
       <UtilityLightbox v-if="lightboxOpen" :utility="currentLightboxUtility" @close="hideLightbox" />

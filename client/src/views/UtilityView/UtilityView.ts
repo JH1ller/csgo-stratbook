@@ -4,10 +4,15 @@ import FloatingAdd from '@/components/FloatingAdd/FloatingAdd.vue';
 import UtilityForm from '@/components/UtilityForm/UtilityForm.vue';
 import UtilityList from '@/components/UtilityList/UtilityList.vue';
 import UtilityLightbox from '@/components/UtilityLightbox/UtilityLightbox.vue';
-import { appModule, mapModule, utilityModule } from '@/store/namespaces';
+import FilterButton from '@/components/FilterButton/FilterButton.vue';
+import UtilityFilterMenu from '@/components/UtilityFilterMenu/UtilityFilterMenu.vue';
+import { appModule, filterModule, mapModule, utilityModule } from '@/store/namespaces';
 import { MapID } from '@/components/MapPicker/MapPicker';
 import { Utility } from '@/api/models/Utility';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
+import { UtilityTypes } from '@/api/models/UtilityTypes';
+import { Sides } from '@/api/models/Sides';
+import { UtilityFilters } from '@/store/modules/filter';
 
 @Component({
   components: {
@@ -16,6 +21,8 @@ import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
     UtilityForm,
     UtilityList,
     UtilityLightbox,
+    FilterButton,
+    UtilityFilterMenu,
   },
 })
 export default class UtilityView extends Vue {
@@ -23,16 +30,29 @@ export default class UtilityView extends Vue {
   @utilityModule.Getter utilitiesOfCurrentMap!: Utility[];
   @mapModule.Action updateCurrentMap!: (mapID: MapID) => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
+
+  @filterModule.State utilityFilters!: UtilityFilters;
+  @filterModule.Action updateUtilityTypeFilter!: (type: UtilityTypes | null) => Promise<void>;
+  @filterModule.Action updateUtilityNameFilter!: (name: string) => Promise<void>;
+  @filterModule.Action updateUtilitySideFilter!: (side: Sides | null) => Promise<void>;
+  @filterModule.Action clearUtilityFilters!: () => Promise<void>;
+
   @utilityModule.Action updateUtility!: (payload: FormData) => Promise<void>;
   @utilityModule.Action createUtility!: (payload: FormData) => Promise<void>;
   @utilityModule.Action deleteUtility!: (utilityID: string) => Promise<void>;
   @utilityModule.Action shareUtility!: (utilityID: string) => Promise<void>;
   @utilityModule.Action unshareUtility!: (utilityID: string) => Promise<void>;
+
   private utilityFormOpen: boolean = false;
   private utilityFormEditMode: boolean = false;
   private editUtility: Utility | null = null;
   private lightboxOpen: boolean = false;
   private currentLightboxUtility: Utility | null = null;
+  private filterMenuOpen: boolean = false;
+
+  private toggleFilterMenu() {
+    this.filterMenuOpen = !this.filterMenuOpen;
+  }
 
   private utilityFormSubmitted(data: FormData) {
     if (data.has('_id')) {

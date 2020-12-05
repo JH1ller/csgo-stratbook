@@ -1,5 +1,5 @@
 <template>
-  <div class="floating-add" @click="onClick">
+  <div class="floating-add" @click="click">
     <fa-icon icon="plus" class="floating-add__icon" />
   </div>
 </template>
