@@ -1,18 +1,18 @@
 import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
 import SidePicker from '@/components/SidePicker/SidePicker.vue';
-import TypePicker from '@/components/TypePicker/TypePicker.vue';
-import { FilterState } from '@/store/modules/filter';
+import UtilityPicker from '@/components/UtilityPicker/UtilityPicker.vue';
+import { UtilityFilters } from '@/store/modules/filter';
 import { Sides } from '@/api/models/Sides';
-import { StratTypes } from '@/api/models/StratTypes';
+import { UtilityTypes } from '@/api/models/UtilityTypes';
 
 @Component({
   components: {
     SidePicker,
-    TypePicker,
+    UtilityPicker,
   },
 })
-export default class FilterMenu extends Vue {
-  @Prop() filters!: FilterState;
+export default class UtilityFilterMenu extends Vue {
+  @Prop() filters!: UtilityFilters;
   @Prop() open!: boolean;
 
   private get nameFilter() {
@@ -23,19 +23,11 @@ export default class FilterMenu extends Vue {
     this.$emit('name-filter-change', value);
   }
 
-  private get contentFilter() {
-    return this.filters.content;
-  }
-
-  private set contentFilter(value: string) {
-    this.$emit('content-filter-change', value);
-  }
-
   private get typeFilter() {
     return this.filters.type;
   }
 
-  private set typeFilter(type: StratTypes | null) {
+  private set typeFilter(type: UtilityTypes | null) {
     if (this.filters.type === type) {
       this.$emit('type-filter-change', null);
     } else {

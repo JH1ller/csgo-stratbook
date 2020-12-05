@@ -1,71 +1,111 @@
 import { Sides } from '@/api/models/Sides';
 import { StratTypes } from '@/api/models/StratTypes';
+import { UtilityTypes } from '@/api/models/UtilityTypes';
 import { Module } from 'vuex';
 import { RootState } from '..';
 
-const SET_CONTENT_FILTER = 'SET_CONTENT_FILTER';
-const SET_TYPE_FILTER = 'SET_TYPE_FILTER';
-const SET_SIDE_FILTER = 'SET_SIDE_FILTER';
-const SET_NAME_FILTER = 'SET_NAME_FILTER';
+const SET_STRAT_CONTENT_FILTER = 'SET_STRAT_CONTENT_FILTER';
+const SET_STRAT_TYPE_FILTER = 'SET_STRAT_TYPE_FILTER';
+const SET_STRAT_SIDE_FILTER = 'SET_STRAT_SIDE_FILTER';
+const SET_STRAT_NAME_FILTER = 'SET_STRAT_NAME_FILTER';
+const SET_UTILITY_TYPE_FILTER = 'SET_UTILITY_TYPE_FILTER';
+const SET_UTILITY_SIDE_FILTER = 'SET_UTILITY_STRAT_SIDE_FILTER';
+const SET_UTILITY_NAME_FILTER = 'SET_UTILITY_STRAT_NAME_FILTER';
 const RESET_STATE = 'RESET_STATE';
 
-export interface FilterState {
+export interface StratFilters {
   name: string;
   content: string;
   side: Sides | null;
   type: StratTypes | null;
 }
+export interface UtilityFilters {
+  name: string;
+  side: Sides | null;
+  type: UtilityTypes | null;
+}
+
+export interface FilterState {
+  stratFilters: StratFilters;
+  utilityFilters: UtilityFilters;
+}
 
 const filterInitialState = (): FilterState => ({
-  name: '',
-  content: '',
-  side: null,
-  type: null,
+  stratFilters: {
+    name: '',
+    content: '',
+    side: null,
+    type: null,
+  },
+  utilityFilters: {
+    name: '',
+    side: null,
+    type: null,
+  },
 });
 
 export const filterModule: Module<FilterState, RootState> = {
   namespaced: true,
   state: filterInitialState(),
-  getters: {
-    filterStateObject(state: FilterState) {
-      return state;
-    },
-  },
+  getters: {},
   actions: {
-    updateContentFilter({ commit }, value: string) {
-      commit(SET_CONTENT_FILTER, value);
+    updateStratContentFilter({ commit }, value: string) {
+      commit(SET_STRAT_CONTENT_FILTER, value);
     },
-    updateTypeFilter({ commit }, value: StratTypes | null) {
-      commit(SET_TYPE_FILTER, value);
+    updateStratTypeFilter({ commit }, value: StratTypes | null) {
+      commit(SET_STRAT_TYPE_FILTER, value);
     },
-    updateSideFilter({ commit }, value: Sides | null) {
-      commit(SET_SIDE_FILTER, value);
+    updateStratSideFilter({ commit }, value: Sides | null) {
+      commit(SET_STRAT_SIDE_FILTER, value);
     },
-    updateNameFilter({ commit }, value: string) {
-      commit(SET_NAME_FILTER, value);
+    updateStratNameFilter({ commit }, value: string) {
+      commit(SET_STRAT_NAME_FILTER, value);
     },
-    clearFilters({ commit }) {
-      commit(SET_CONTENT_FILTER, '');
-      commit(SET_TYPE_FILTER, null);
-      commit(SET_SIDE_FILTER, null);
-      commit(SET_NAME_FILTER, '');
+    clearStratFilters({ commit }) {
+      commit(SET_STRAT_CONTENT_FILTER, '');
+      commit(SET_STRAT_TYPE_FILTER, null);
+      commit(SET_STRAT_SIDE_FILTER, null);
+      commit(SET_STRAT_NAME_FILTER, '');
+    },
+    updateUtilityTypeFilter({ commit }, value: UtilityTypes | null) {
+      commit(SET_UTILITY_TYPE_FILTER, value);
+    },
+    updateUtilitySideFilter({ commit }, value: Sides | null) {
+      commit(SET_UTILITY_SIDE_FILTER, value);
+    },
+    updateUtilityNameFilter({ commit }, value: string) {
+      commit(SET_UTILITY_NAME_FILTER, value);
+    },
+    clearUtilityFilters({ commit }) {
+      commit(SET_UTILITY_TYPE_FILTER, null);
+      commit(SET_UTILITY_SIDE_FILTER, null);
+      commit(SET_UTILITY_NAME_FILTER, '');
     },
     resetState({ commit }) {
       commit(RESET_STATE);
     },
   },
   mutations: {
-    [SET_CONTENT_FILTER](state, value: string) {
-      state.content = value;
+    [SET_STRAT_CONTENT_FILTER](state, value: string) {
+      state.stratFilters.content = value;
     },
-    [SET_TYPE_FILTER](state, value: StratTypes | null) {
-      state.type = value;
+    [SET_STRAT_TYPE_FILTER](state, value: StratTypes | null) {
+      state.stratFilters.type = value;
     },
-    [SET_SIDE_FILTER](state, value: Sides | null) {
-      state.side = value;
+    [SET_STRAT_SIDE_FILTER](state, value: Sides | null) {
+      state.stratFilters.side = value;
     },
-    [SET_NAME_FILTER](state, value: string) {
-      state.name = value;
+    [SET_STRAT_NAME_FILTER](state, value: string) {
+      state.stratFilters.name = value;
+    },
+    [SET_UTILITY_TYPE_FILTER](state, value: UtilityTypes | null) {
+      state.utilityFilters.type = value;
+    },
+    [SET_UTILITY_SIDE_FILTER](state, value: Sides | null) {
+      state.utilityFilters.side = value;
+    },
+    [SET_UTILITY_NAME_FILTER](state, value: string) {
+      state.utilityFilters.name = value;
     },
     [RESET_STATE](state) {
       Object.assign(state, filterInitialState());

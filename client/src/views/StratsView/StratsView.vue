@@ -1,14 +1,14 @@
 <template>
   <div class="strats-view">
     <MapPicker @map-clicked="updateCurrentMap" :currentMap="currentMap" />
-    <FilterMenu
-      @content-filter-change="updateContentFilter"
-      @type-filter-change="updateTypeFilter"
-      @side-filter-change="updateSideFilter"
-      @name-filter-change="updateNameFilter"
-      @clear-filters="clearFilters"
+    <StratsFilterMenu
+      @content-filter-change="updateStratContentFilter"
+      @type-filter-change="updateStratTypeFilter"
+      @side-filter-change="updateStratSideFilter"
+      @name-filter-change="updateStratNameFilter"
+      @clear-filters="clearStratFilters"
       @close="toggleFilterMenu"
-      :filters="filterStateObject"
+      :filters="stratFilters"
       :open="filterMenuOpen"
     />
     <StratList
@@ -19,7 +19,7 @@
       @share-strat="requestShareStrat"
       @unshare-strat="unshareStrat"
       :strats="sortedStrats"
-      :filters="filterStateObject"
+      :filters="stratFilters"
     />
     <transition name="fade">
       <FloatingAdd class="strats-view__floating-add" @click="showStratForm" v-if="!stratFormOpen" />

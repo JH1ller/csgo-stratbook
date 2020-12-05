@@ -3,11 +3,11 @@ import MapPicker from '@/components/MapPicker/MapPicker.vue';
 import StratList from '@/components/StratList/StratList.vue';
 import FloatingAdd from '@/components/FloatingAdd/FloatingAdd.vue';
 import StratForm from '@/components/StratForm/StratForm.vue';
-import FilterMenu from '@/components/FilterMenu/FilterMenu.vue';
+import StratsFilterMenu from '@/components/StratsFilterMenu/StratsFilterMenu.vue';
 import FilterButton from '@/components/FilterButton/FilterButton.vue';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { appModule, mapModule, stratModule, filterModule, teamModule } from '@/store/namespaces';
-import { FilterState } from '@/store/modules/filter';
+import { StratFilters } from '@/store/modules/filter';
 import { Strat } from '@/api/models/Strat';
 import { Player } from '@/api/models/Player';
 import { StratTypes } from '@/api/models/StratTypes';
@@ -22,7 +22,7 @@ import { Utility } from '@/api/models/Utility';
     StratList,
     FloatingAdd,
     StratForm,
-    FilterMenu,
+    StratsFilterMenu,
     FilterButton,
     UtilityLightbox,
   },
@@ -32,13 +32,14 @@ export default class StratsView extends Vue {
 
   @mapModule.State currentMap!: MapID;
   @stratModule.Getter stratsOfCurrentMap!: Strat[];
-  @filterModule.Getter filterStateObject!: FilterState;
+  @filterModule.State stratFilters!: StratFilters;
   @teamModule.State teamMembers!: Player[];
 
-  @filterModule.Action updateContentFilter!: (value: string) => Promise<void>;
-  @filterModule.Action updateTypeFilter!: (type: StratTypes | null) => Promise<void>;
-  @filterModule.Action updateNameFilter!: (name: string) => Promise<void>;
-  @filterModule.Action updateSideFilter!: (side: Sides | null) => Promise<void>;
+  @filterModule.Action updateStratContentFilter!: (value: string) => Promise<void>;
+  @filterModule.Action updateStratTypeFilter!: (type: StratTypes | null) => Promise<void>;
+  @filterModule.Action updateStratNameFilter!: (name: string) => Promise<void>;
+  @filterModule.Action updateStratSideFilter!: (side: Sides | null) => Promise<void>;
+  @filterModule.Action clearStratFilters!: () => Promise<void>;
 
   @mapModule.Action updateCurrentMap!: (mapID: MapID) => Promise<void>;
   @stratModule.Action updateStrat!: (payload: Partial<Strat>) => Promise<void>;
@@ -46,7 +47,6 @@ export default class StratsView extends Vue {
   @stratModule.Action deleteStrat!: (stratID: string) => Promise<void>;
   @stratModule.Action shareStrat!: (stratID: string) => Promise<void>;
   @stratModule.Action unshareStrat!: (stratID: string) => Promise<void>;
-  @filterModule.Action clearFilters!: () => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
 
   private stratFormOpen: boolean = false;

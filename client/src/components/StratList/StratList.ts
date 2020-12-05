@@ -1,6 +1,6 @@
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
 import StratItem from '@/components/StratItem/StratItem.vue';
-import { FilterState } from '@/store/modules/filter';
+import { StratFilters } from '@/store/modules/filter';
 import { Strat } from '@/api/models/Strat';
 import { extractTextFromHTML } from '@/utils/extractTextFromHTML';
 @Component({
@@ -10,7 +10,7 @@ import { extractTextFromHTML } from '@/utils/extractTextFromHTML';
 })
 export default class StratList extends Vue {
   @Prop() strats!: Strat[];
-  @Prop() filters!: FilterState;
+  @Prop() filters!: StratFilters;
 
   private get filteredStrats() {
     return this.strats

@@ -1,2 +1,23 @@
 .utility-view {
+  &__floating-add {
+    position: fixed;
+    right: 20px;
+    bottom: 16px;
+    z-index: 10;
+
+    @include viewport_mq3 {
+      right: 36px;
+    }
+  }
+
+  &__filter-button {
+    position: fixed;
+    right: 72px;
+    bottom: 16px;
+    z-index: 10;
+
+    @include viewport_mq3 {
+      right: 96px;
+    }
+  }
 }
