@@ -2,9 +2,8 @@
   display: flex;
   padding: 6px 11px;
   border-radius: 3px;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  width: 95px;
   background-color: white;
   cursor: pointer;
   box-shadow: $shadow-subtle;
@@ -16,6 +15,7 @@
   }
 
   & > svg {
+    margin-left: 6px;
     width: 14px;
     height: 14px;
     color: $color--navyblue;

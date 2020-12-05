@@ -1,173 +1,65 @@
 .filter-menu {
+  height: 100%;
   position: fixed;
-  bottom: 0;
+  padding: 24px;
+  z-index: 11;
   right: 0;
-  width: 100%;
-  z-index: 5;
-  pointer-events: none;
+  top: 0;
+  bottom: 0;
+  background-color: $color--smoke;
+  width: 350px;
+  transform: translateX(100%);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid $color--grey;
 
-  @include viewport_mq3 {
-    width: calc(100% - 70px);
+  &.-open {
+    transform: translateX(0);
+    box-shadow: 0 0 8px rgba(black, 0.3);
   }
 
-  &__container {
-    position: relative;
-    pointer-events: all;
-    height: 200px;
-    display: flex;
-    background: white;
-    box-shadow: $shadow-subtle;
-    padding: 20px;
-    border-radius: 10px;
-    transform: translateY(200px);
-    justify-content: center;
-    transition: transform 0.5s ease;
-    z-index: 1;
-    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.5);
-    &:hover {
-      transform: translateY(0);
-    }
-
-    &::before {
-      content: 'Filters';
-      height: 30px;
-      position: absolute;
-      left: 50%;
-      top: -30px;
-      transform: translateX(-50%);
-      color: $color--dark;
-      padding: 5px 60px 5px 30px;
-      font-size: 14px;
-      font-weight: bold;
-      z-index: -1;
-      background: $color--light-active;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.5);
-    }
-
-    &::after {
-      height: 100%;
-      width: 100%;
-      display: block;
-      background: white;
-      position: absolute;
-      top: -0;
-      left: 0;
-      content: '';
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-    }
-  }
-
-  &__icon-filter {
-    position: absolute;
-    left: calc(50% + 25px);
-    top: -21px;
-    color: lighten($color--dark, 30%);
-    z-index: 7;
-    width: 14px;
-    height: 14px;
-  }
-
-  &__btn-clear {
-    position: absolute;
-    bottom: 6px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 7;
-    width: 100px;
-    background-color: $color--green;
-    color: white;
-    border-radius: 4px;
-    height: 30px;
-    cursor: pointer;
-    &:hover {
-      background-color: lighten($color--green, 10%);
-    }
-  }
-
-  &__filter-player {
-    @include input_default;
-    padding: 0;
-    z-index: 6;
-    max-width: 200px;
-    width: 200px;
-    max-height: 35px;
-
-    & > div {
-      margin-top: 3px;
-    }
-  }
-
-  &__fieldset {
-    min-width: 265px;
-    max-height: 135px;
-    z-index: 6;
-    padding: 16px;
-    box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.2);
-    border-radius: 6px;
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    &:not(:first-of-type) {
-      margin-left: 12px;
-    }
-  }
-
-  &__label {
-    font-size: 1em;
-    margin-bottom: 12px;
-  }
-
-  &__filter-type {
-    &:not(:first-of-type) {
-      margin-left: 12px;
-    }
-    padding: 3px 5px;
-    display: inline-block;
-    border-radius: 4px;
-    font-variant: small-caps;
-    font-size: 1.1em;
-    transform: scaleY(0.8);
-    cursor: pointer;
-    background-color: rgba($color--grey, 0.5);
-    transition: background-color 0.3s ease;
-    text-align: center;
-    min-width: 68px;
-    font-family: $font_fjallaone-regular;
-
-    &--buyround.-selected {
-      background-color: $color--blue;
-    }
-    &--pistol.-selected {
-      background-color: $color--yellow;
-    }
-    &--force.-selected {
-      background-color: $color--red;
-    }
+  &__title {
+    font-family: $font_ubuntu-bold;
+    font-size: 1.3rem;
+    margin-bottom: 24px;
   }
 
   &__input {
-    @include input_default(auto);
+    @include input_default;
   }
 
-  &__side-wrapper {
+  &__label {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+
+    &:not(:first-of-type) {
+      padding-top: 24px;
+      border-top: 1px solid $color--grey;
+    }
+  }
+
+  &__picker {
+    margin-bottom: 24px;
     margin-top: 8px;
-    display: flex;
-    justify-content: space-evenly;
   }
 
-  &__side-badge {
-    width: 64px;
-    height: 64px;
-    opacity: 0.4;
-    cursor: pointer;
-    border-radius: 50%;
-    transition: opacity 0.3s ease;
+  &__btn {
+    @include button-default;
+    padding: 12px 6px;
 
-    &.-selected {
-      opacity: 1;
+    &.--clear {
+      margin-top: 24px;
+      background-color: $color--green;
+      color: white;
+
+      & > svg {
+        color: white;
+      }
+    }
+
+    &.--close {
+      margin-top: auto;
     }
   }
 }

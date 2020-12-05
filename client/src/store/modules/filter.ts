@@ -3,39 +3,37 @@ import { StratTypes } from '@/api/models/StratTypes';
 import { Module } from 'vuex';
 import { RootState } from '..';
 
-const SET_PLAYER_FILTER = 'SET_PLAYER_FILTER';
+const SET_CONTENT_FILTER = 'SET_CONTENT_FILTER';
 const SET_TYPE_FILTER = 'SET_TYPE_FILTER';
 const SET_SIDE_FILTER = 'SET_SIDE_FILTER';
 const SET_NAME_FILTER = 'SET_NAME_FILTER';
 const RESET_STATE = 'RESET_STATE';
 
-export interface Filters {
+export interface FilterState {
   name: string;
-  player: string;
+  content: string;
   side: Sides | null;
   type: StratTypes | null;
 }
 
-export interface FilterState {
-  filters: Filters
-}
-
 const filterInitialState = (): FilterState => ({
-  filters: {
-    name: '',
-    player: '',
-    side: null,
-    type: null,
-  },
+  name: '',
+  content: '',
+  side: null,
+  type: null,
 });
 
 export const filterModule: Module<FilterState, RootState> = {
   namespaced: true,
   state: filterInitialState(),
-  getters: {},
+  getters: {
+    filterStateObject(state: FilterState) {
+      return state;
+    },
+  },
   actions: {
-    updatePlayerFilter({ commit }, value: string) {
-      commit(SET_PLAYER_FILTER, value);
+    updateContentFilter({ commit }, value: string) {
+      commit(SET_CONTENT_FILTER, value);
     },
     updateTypeFilter({ commit }, value: StratTypes | null) {
       commit(SET_TYPE_FILTER, value);
@@ -47,7 +45,7 @@ export const filterModule: Module<FilterState, RootState> = {
       commit(SET_NAME_FILTER, value);
     },
     clearFilters({ commit }) {
-      commit(SET_PLAYER_FILTER, '');
+      commit(SET_CONTENT_FILTER, '');
       commit(SET_TYPE_FILTER, null);
       commit(SET_SIDE_FILTER, null);
       commit(SET_NAME_FILTER, '');
@@ -57,17 +55,17 @@ export const filterModule: Module<FilterState, RootState> = {
     },
   },
   mutations: {
-    [SET_PLAYER_FILTER](state, value: string) {
-      state.filters.player = value;
+    [SET_CONTENT_FILTER](state, value: string) {
+      state.content = value;
     },
     [SET_TYPE_FILTER](state, value: StratTypes | null) {
-      state.filters.type = value;
+      state.type = value;
     },
     [SET_SIDE_FILTER](state, value: Sides | null) {
-      state.filters.side = value;
+      state.side = value;
     },
     [SET_NAME_FILTER](state, value: string) {
-      state.filters.name = value;
+      state.name = value;
     },
     [RESET_STATE](state) {
       Object.assign(state, filterInitialState());

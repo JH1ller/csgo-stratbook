@@ -1,54 +1,67 @@
 import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
-import Multiselect from 'vue-multiselect';
-import { Filters } from '@/store/modules/filter';
-import { Player } from '@/api/models/Player';
+import SidePicker from '@/components/SidePicker/SidePicker.vue';
+import TypePicker from '@/components/TypePicker/TypePicker.vue';
+import { FilterState } from '@/store/modules/filter';
 import { Sides } from '@/api/models/Sides';
+import { StratTypes } from '@/api/models/StratTypes';
 
 @Component({
   components: {
-    Multiselect,
+    SidePicker,
+    TypePicker,
   },
 })
 export default class FilterMenu extends Vue {
-  @Prop() filters!: Filters
-  @Prop() teamMembers!: Player[];
+  @Prop() filters!: FilterState;
+  @Prop() open!: boolean;
 
-  private get playerOptions() {
-    const teamMemberNames = this.teamMembers.map(member => member.name);
-    return ['', ...teamMemberNames];
-  }
-
-  private get nameFilterValue() {
+  private get nameFilter() {
     return this.filters.name;
   }
 
-  private set nameFilterValue(value: string) {
-    this.$emit('name-filter-selected', value);
+  private set nameFilter(value: string) {
+    this.$emit('name-filter-change', value);
   }
 
-  @Emit()
-  private playerSelected(option: string) {
-    return option;
+  private get contentFilter() {
+    return this.filters.content;
   }
 
-  private selectTypeFilter(type: string) {
+  private set contentFilter(value: string) {
+    this.$emit('content-filter-change', value);
+  }
+
+  private get typeFilter() {
+    return this.filters.type;
+  }
+
+  private set typeFilter(type: StratTypes | null) {
     if (this.filters.type === type) {
-      this.$emit('type-filter-selected', null);
+      this.$emit('type-filter-change', null);
     } else {
-      this.$emit('type-filter-selected', type);
+      this.$emit('type-filter-change', type);
     }
   }
 
-  private selectSideFilter(side: Sides) {
+  private get sideFilter() {
+    return this.filters.side;
+  }
+
+  private set sideFilter(side: Sides | null) {
     if (this.filters.side === side) {
-      this.$emit('side-filter-selected', null);
+      this.$emit('side-filter-change', null);
     } else {
-      this.$emit('side-filter-selected', side);
+      this.$emit('side-filter-change', side);
     }
   }
 
   @Emit()
   private clearFilters() {
+    return;
+  }
+
+  @Emit()
+  private close() {
     return;
   }
 }

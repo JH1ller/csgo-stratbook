@@ -4,9 +4,10 @@ import StratList from '@/components/StratList/StratList.vue';
 import FloatingAdd from '@/components/FloatingAdd/FloatingAdd.vue';
 import StratForm from '@/components/StratForm/StratForm.vue';
 import FilterMenu from '@/components/FilterMenu/FilterMenu.vue';
+import FilterButton from '@/components/FilterButton/FilterButton.vue';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { appModule, mapModule, stratModule, filterModule, teamModule } from '@/store/namespaces';
-import { Filters } from '@/store/modules/filter';
+import { FilterState } from '@/store/modules/filter';
 import { Strat } from '@/api/models/Strat';
 import { Player } from '@/api/models/Player';
 import { StratTypes } from '@/api/models/StratTypes';
@@ -22,24 +23,23 @@ import { Utility } from '@/api/models/Utility';
     FloatingAdd,
     StratForm,
     FilterMenu,
+    FilterButton,
     UtilityLightbox,
   },
 })
 export default class StratsView extends Vue {
   @Provide('lightbox') showLightboxFunc = this.showLightbox;
 
-  private stratFormOpen: boolean = false;
-  private stratFormEditMode: boolean = false;
-  private editStrat: Strat | null = null;
   @mapModule.State currentMap!: MapID;
   @stratModule.Getter stratsOfCurrentMap!: Strat[];
-  @filterModule.State filters!: Filters;
+  @filterModule.Getter filterStateObject!: FilterState;
   @teamModule.State teamMembers!: Player[];
 
-  @filterModule.Action updatePlayerFilter!: (value: string) => Promise<void>;
+  @filterModule.Action updateContentFilter!: (value: string) => Promise<void>;
   @filterModule.Action updateTypeFilter!: (type: StratTypes | null) => Promise<void>;
   @filterModule.Action updateNameFilter!: (name: string) => Promise<void>;
   @filterModule.Action updateSideFilter!: (side: Sides | null) => Promise<void>;
+
   @mapModule.Action updateCurrentMap!: (mapID: MapID) => Promise<void>;
   @stratModule.Action updateStrat!: (payload: Partial<Strat>) => Promise<void>;
   @stratModule.Action createStrat!: (payload: Partial<Strat>) => Promise<void>;
@@ -49,8 +49,12 @@ export default class StratsView extends Vue {
   @filterModule.Action clearFilters!: () => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
 
+  private stratFormOpen: boolean = false;
+  private stratFormEditMode: boolean = false;
+  private editStrat: Strat | null = null;
   private lightboxOpen: boolean = false;
   private currentLightboxUtility: Utility | null = null;
+  private filterMenuOpen: boolean = false;
 
   private stratFormSubmitted(data: Partial<Strat>) {
     if (data._id) {
@@ -73,6 +77,10 @@ export default class StratsView extends Vue {
 
   private toggleStratActive(data: Partial<Strat>) {
     this.updateStrat(data);
+  }
+
+  private toggleFilterMenu() {
+    this.filterMenuOpen = !this.filterMenuOpen;
   }
 
   private requestDeleteStrat(stratID: string) {
