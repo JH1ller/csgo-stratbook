@@ -3,4 +3,6 @@ export interface Dialog {
   text: string;
   resolve: () => void;
   reject: () => void;
+  resolveBtn?: string;
+  rejectBtn?: string;
 }

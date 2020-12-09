@@ -3,7 +3,8 @@ import MapPicker from '@/components/MapPicker/MapPicker.vue';
 import StratList from '@/components/StratList/StratList.vue';
 import FloatingAdd from '@/components/FloatingAdd/FloatingAdd.vue';
 import StratForm from '@/components/StratForm/StratForm.vue';
-import StratsFilterMenu from '@/components/StratsFilterMenu/StratsFilterMenu.vue';
+import StratFilterForm from '@/components/StratFilterForm/StratFilterForm.vue';
+import FilterMenu from '@/components/FilterMenu/FilterMenu.vue';
 import FilterButton from '@/components/FilterButton/FilterButton.vue';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { appModule, mapModule, stratModule, filterModule, teamModule } from '@/store/namespaces';
@@ -22,9 +23,10 @@ import { Utility } from '@/api/models/Utility';
     StratList,
     FloatingAdd,
     StratForm,
-    StratsFilterMenu,
+    StratFilterForm,
     FilterButton,
     UtilityLightbox,
+    FilterMenu,
   },
 })
 export default class StratsView extends Vue {

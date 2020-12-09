@@ -7,7 +7,8 @@ import TypePicker from '@/components/TypePicker/TypePicker.vue';
 import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
 import FormFieldSet from '@/components/FormFieldSet/FormFieldSet.vue';
 import TextInput from '@/components/TextInput/TextInput.vue';
-import { FormFieldData, validate, Validators } from '@/utils/validation';
+import { validateForm, Validators } from '@/utils/validation';
+import FormField from '@/utils/FormField';
 
 @Component({
   components: {
@@ -22,31 +23,10 @@ export default class StratForm extends Vue {
   @Prop() strat!: Strat;
   @Prop() isEdit!: boolean;
 
-  private formFields: Record<string, FormFieldData> = {
-    name: {
-      label: 'Name',
-      required: true,
-      value: '',
-      hasError: false,
-      autocompleteTag: '',
-      validators: [Validators.notEmpty(), Validators.maxLength(50)],
-    },
-    note: {
-      label: 'Note',
-      required: false,
-      value: '',
-      hasError: false,
-      autocompleteTag: '',
-      validators: [Validators.maxLength(100)],
-    },
-    videoLink: {
-      label: 'Video Link',
-      required: false,
-      value: '',
-      hasError: false,
-      autocompleteTag: '',
-      validators: [Validators.maxLength(100), Validators.isURL()],
-    },
+  private formFields: Record<string, FormField> = {
+    name: new FormField('Name', true, [Validators.notEmpty(), Validators.maxLength(50)]),
+    note: new FormField('Note', false, [Validators.maxLength(100)]),
+    videoLink: new FormField('Video Link', false, [Validators.isURL()]),
   };
 
   private type: StratTypes = StratTypes.BUYROUND;
@@ -59,7 +39,7 @@ export default class StratForm extends Vue {
   }
 
   private submitClicked() {
-    if (this.isValid()) {
+    if (validateForm(this.formFields)) {
       this.submitStrat();
     }
   }
@@ -79,21 +59,6 @@ export default class StratForm extends Vue {
   @Emit()
   private cancelClicked() {
     return;
-  }
-
-  private isValid(): boolean {
-    let valid = true;
-
-    const fields = Object.entries(this.formFields);
-
-    fields.forEach(([fieldName, fieldData]) => {
-      if (!validate(fieldData)) {
-        valid = false;
-        this.formFields[fieldName].hasError = true;
-      }
-    });
-
-    return valid;
   }
 
   private mapToFields() {

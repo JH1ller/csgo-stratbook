@@ -1,16 +1,15 @@
 <template>
   <div class="strats-view">
     <MapPicker @map-clicked="updateCurrentMap" :currentMap="currentMap" />
-    <StratsFilterMenu
-      @content-filter-change="updateStratContentFilter"
-      @type-filter-change="updateStratTypeFilter"
-      @side-filter-change="updateStratSideFilter"
-      @name-filter-change="updateStratNameFilter"
-      @clear-filters="clearStratFilters"
-      @close="toggleFilterMenu"
-      :filters="stratFilters"
-      :open="filterMenuOpen"
-    />
+    <FilterMenu :open="filterMenuOpen" @close="toggleFilterMenu" @clear-filters="clearStratFilters">
+      <StratFilterForm
+        @content-filter-change="updateStratContentFilter"
+        @type-filter-change="updateStratTypeFilter"
+        @side-filter-change="updateStratSideFilter"
+        @name-filter-change="updateStratNameFilter"
+        :filters="stratFilters"
+      />
+    </FilterMenu>
     <StratList
       @delete-strat="requestDeleteStrat"
       @edit-strat="showStratForm"
@@ -22,11 +21,15 @@
       :filters="stratFilters"
     />
     <transition name="fade">
-      <FloatingAdd class="strats-view__floating-add" @click="showStratForm" v-if="!stratFormOpen" />
+      <FloatingAdd class="strats-view__floating-add" @click="showStratForm" v-if="!filterMenuOpen && !stratFormOpen" />
     </transition>
 
     <transition name="fade">
-      <FilterButton class="strats-view__filter-button" @click="toggleFilterMenu" v-if="!filterMenuOpen" />
+      <FilterButton
+        class="strats-view__filter-button"
+        @click="toggleFilterMenu"
+        v-if="!filterMenuOpen && !stratFormOpen"
+      />
     </transition>
 
     <transition name="fade">

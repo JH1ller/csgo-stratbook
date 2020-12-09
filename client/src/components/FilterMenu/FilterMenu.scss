@@ -1,4 +1,4 @@
-.utility-filter-menu {
+.filter-menu {
   height: 100%;
   position: fixed;
   padding: 24px;
@@ -25,27 +25,8 @@
     margin-bottom: 24px;
   }
 
-  &__input {
-    @include input_default;
-  }
-
-  &__label {
-    font-size: 1.1rem;
-    margin-bottom: 8px;
-
-    &:not(:first-of-type) {
-      margin-top: 24px;
-      padding-top: 24px;
-      border-top: 1px solid $color--grey;
-    }
-  }
-
-  &__picker {
-    margin-top: 8px;
-  }
-
   &__btn {
-    @include button-default;
+    @include button_default;
     padding: 12px 6px;
 
     &.--clear {

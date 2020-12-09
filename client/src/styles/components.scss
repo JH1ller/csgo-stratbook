@@ -18,8 +18,9 @@
 
   @include viewport_mq3 {
     @if ($placeholder == true) {
-      padding: 10px 12px;
+      padding: 22px 12px 10px 12px;
     } @else {
+      padding: 10px 12px;
     }
   }
 }

@@ -72,8 +72,14 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/confirmation/:token', async (req, res) => {
-  const { _id } = jwt.verify(req.params.token, process.env.EMAIL_SECRET);
+  const { _id, email } = jwt.verify(req.params.token, process.env.EMAIL_SECRET);
   const targetUser = await Player.findById(_id);
+
+  if (email) {
+    targetUser.email = email;
+    await targetUser.save();
+    return res.redirect(urljoin(APP_URL, `/#/profile?confirmed=1`));
+  }
 
   if (targetUser.confirmed) {
     return res.redirect(urljoin(APP_URL, `/#/login?already_confirmed=${targetUser.email}`));

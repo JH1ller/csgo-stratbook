@@ -1,10 +1,11 @@
-import { FormFieldData } from '@/utils/validation';
+import FormField from '@/utils/FormField';
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
 
 @Component({})
 export default class TextInput extends Vue {
-  @Prop() fieldData!: FormFieldData;
-  @Prop() fieldName!: string;
+  @Prop() field!: FormField;
+  @Prop() name!: string | undefined;
+  @Prop({ default: 'text' }) type!: string;
 
   @Emit()
   private input(e: InputEvent) {
@@ -17,6 +18,6 @@ export default class TextInput extends Vue {
   }
 
   private get formattedLabel() {
-    return this.fieldData.required ? `${this.fieldData.label}*` : this.fieldData.label;
+    return this.field.required ? `${this.field.label}*` : this.field.label;
   }
 }

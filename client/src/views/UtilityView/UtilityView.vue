@@ -2,15 +2,14 @@
   <div class="utility-view">
     <map-picker @map-clicked="updateCurrentMap" :currentMap="currentMap" />
     <UtilityList :filters="utilityFilters" :utilities="utilitiesOfCurrentMap" @open-in-lightbox="showLightbox" />
-    <UtilityFilterMenu
-      @type-filter-change="updateUtilityTypeFilter"
-      @side-filter-change="updateUtilitySideFilter"
-      @name-filter-change="updateUtilityNameFilter"
-      @clear-filters="clearUtilityFilters"
-      @close="toggleFilterMenu"
-      :filters="utilityFilters"
-      :open="filterMenuOpen"
-    />
+    <FilterMenu :open="filterMenuOpen" @close="toggleFilterMenu" @clear-filters="clearUtilityFilters">
+      <UtilityFilterForm
+        @type-filter-change="updateUtilityTypeFilter"
+        @side-filter-change="updateUtilitySideFilter"
+        @name-filter-change="updateUtilityNameFilter"
+        :filters="utilityFilters"
+      />
+    </FilterMenu>
     <transition name="fade">
       <FloatingAdd
         class="utility-view__floating-add"

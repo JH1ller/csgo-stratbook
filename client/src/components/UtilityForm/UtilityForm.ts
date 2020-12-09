@@ -8,11 +8,12 @@ import PosePicker from '@/components/PosePicker/PosePicker.vue';
 import FormFieldSet from '@/components/FormFieldSet/FormFieldSet.vue';
 import TextInput from '@/components/TextInput/TextInput.vue';
 import MouseButtonPicker from '@/components/MouseButtonPicker/MouseButtonPicker.vue';
-import { FormFieldData, validate, Validators } from '@/utils/validation';
+import { validateForm, Validators } from '@/utils/validation';
 import { Utility } from '@/api/models/Utility';
 import { UtilityTypes } from '@/api/models/UtilityTypes';
 import { MouseButtons } from '@/api/models/MouseButtons';
 import { UtilityMovement } from '@/api/models/UtilityMovement';
+import FormField from '@/utils/FormField';
 
 @Component({
   components: {
@@ -30,31 +31,10 @@ export default class UtilityForm extends Vue {
   @Prop() utility!: Utility;
   @Prop() isEdit!: boolean;
 
-  private formFields: Record<string, FormFieldData> = {
-    name: {
-      label: 'Name',
-      required: true,
-      value: '',
-      hasError: false,
-      autocompleteTag: '',
-      validators: [Validators.notEmpty(), Validators.maxLength(50)],
-    },
-    description: {
-      label: 'Description',
-      required: false,
-      value: '',
-      hasError: false,
-      autocompleteTag: '',
-      validators: [Validators.maxLength(200)],
-    },
-    videoLink: {
-      label: 'Video Link',
-      required: false,
-      value: '',
-      hasError: false,
-      autocompleteTag: '',
-      validators: [Validators.maxLength(100), Validators.isURL()],
-    },
+  private formFields: Record<string, FormField> = {
+    name: new FormField('Name', true, [Validators.notEmpty(), Validators.maxLength(50)]),
+    description: new FormField('Description', false, [Validators.maxLength(200)]),
+    videoLink: new FormField('Video Link', false, [Validators.isURL()]),
   };
 
   private type: UtilityTypes = UtilityTypes.SMOKE;
@@ -71,7 +51,7 @@ export default class UtilityForm extends Vue {
   }
 
   private submitClicked() {
-    if (this.isValid()) {
+    if (validateForm(this.formFields)) {
       this.submitUtility();
     }
   }
@@ -98,21 +78,6 @@ export default class UtilityForm extends Vue {
   @Emit()
   private cancelClicked() {
     return;
-  }
-
-  private isValid(): boolean {
-    let valid = true;
-
-    const fields = Object.entries(this.formFields);
-
-    fields.forEach(([fieldName, fieldData]) => {
-      if (!validate(fieldData)) {
-        valid = false;
-        this.formFields[fieldName].hasError = true;
-      }
-    });
-
-    return valid;
   }
 
   private mapToFields() {

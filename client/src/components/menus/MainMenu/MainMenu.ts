@@ -17,28 +17,30 @@ export default class MainMenu extends Vue {
   @appModule.State private loading!: boolean;
   @Prop() private menuOpen!: boolean;
 
-  private menuItems = [
-    {
-      label: 'Strats',
-      icon: 'chess',
-      link: '/strats',
-    },
-    {
-      label: 'Grenades',
-      icon: 'bomb',
-      link: '/utility',
-    },
-    {
-      label: 'Team',
-      icon: 'users',
-      link: '/team',
-    },
-    {
-      label: 'Settings',
-      icon: 'tools',
-      link: '/settings',
-    },
-  ];
+  private get menuItems() {
+    return [
+      {
+        label: 'Strats',
+        icon: 'chess',
+        link: '/strats',
+      },
+      {
+        label: 'Grenades',
+        icon: 'bomb',
+        link: '/utility',
+      },
+      {
+        label: 'Team',
+        icon: 'users',
+        link: this.profile.team ? '/team' : '/team/join', // TODO: check if this works!
+      },
+      {
+        label: 'Settings',
+        icon: 'tools',
+        link: '/settings',
+      },
+    ];
+  }
 
   private async mounted() {
     if (process?.versions?.electron) {

@@ -72,15 +72,18 @@
       line-height: 1.5;
       color: #555;
       background-color: white;
-      border: 2px solid $color--navyblue-50;
+      border: 2px solid rgba($color--navyblue, 0.2);
       border-radius: 0.25rem;
       box-shadow: $shadow-subtle;
       user-select: none;
       cursor: pointer;
+      transition: border-color 0.3s ease;
 
       &:hover {
+        border-color: rgba($color--navyblue, 0.4);
         &:before {
           background-color: #ddd;
+          border-color: rgba($color--navyblue, 0.4);
         }
       }
 
@@ -88,7 +91,7 @@
         position: absolute;
         top: -2px;
         right: -2px;
-        border: 2px solid $color--navyblue-50;
+        border: 2px solid rgba($color--navyblue, 0.2);
         border-left: none;
         bottom: -2px;
         content: 'Browse';
@@ -97,7 +100,7 @@
         color: #555;
         background-color: $color--light;
         border-radius: 0 0.25rem 0.25rem 0;
-        transition: background-color 0.3s ease;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
       }
 
       &:after {

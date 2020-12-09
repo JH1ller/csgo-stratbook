@@ -107,10 +107,7 @@ interface JWTData {
 class APIService {
   static async getPlayer(): Promise<APIResponse<Player>> {
     try {
-      const decodedToken: JWTData = jwtDecode(store.state.auth.token);
-      if (!decodedToken?._id) return { error: 'Could not fetch player info: No token in storage.' };
-      const target = urljoin(Endpoints.Players, decodedToken._id);
-      const { data } = await axiosInstance.get(target);
+      const { data } = await axiosInstance.get(Endpoints.Players);
       return { success: data };
     } catch (error) {
       return { error: error.response?.data?.error };
@@ -146,10 +143,14 @@ class APIService {
     }
   }
 
-  static async updatePlayer(payload: Partial<Player>): Promise<APIResponse<Player>> {
+  static async updatePlayer(payload: FormData, updateStrats: boolean = false): Promise<APIResponse<Player>> {
     const target = urljoin(Endpoints.Players);
     try {
-      const { data } = await axiosInstance.patch(target, payload);
+      const { data } = await axiosInstance.patch(target, payload, {
+        params: {
+          updateStrats,
+        },
+      });
       return { success: data };
     } catch (error) {
       return { error: error.response?.data?.error };

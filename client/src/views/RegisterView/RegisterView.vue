@@ -1,10 +1,6 @@
 <template>
   <div class="register-view">
-    <register-form 
-      @register-clicked="registerRequest"
-      @update-form-error="updateFormError"
-      :formError="formError" 
-    />
+    <register-form @submit="registerRequest" @update-form-error="updateFormError" :formError="formError" />
   </div>
 </template>
 
