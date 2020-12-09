@@ -31,11 +31,11 @@ const email = new Email({
   },
 });
 
-const sendMail = async (to, token, name) => {
+const sendMail = async (to, token, name, isChange) => {
   const link = urljoin(API_URL, `/auth/confirmation/${token}`);
   try {
     const res = await email.send({
-      template: path.join(__dirname, 'templates', 'verify'),
+      template: path.join(__dirname, 'templates', isChange ? 'verifyChange' : 'verifyNew'),
       message: {
         to,
       },
@@ -44,9 +44,7 @@ const sendMail = async (to, token, name) => {
         link,
       },
     });
-    console.log(
-      'Successfully sent verification mail with id: ' + res.messageId
-    );
+    console.log('Successfully sent verification mail with id: ' + res.messageId);
   } catch (error) {
     console.log(error);
     throw new Error(error);

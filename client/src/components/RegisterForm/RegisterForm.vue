@@ -1,63 +1,27 @@
 <template>
-  <div class="register-form">
-    <form
-      class="register-form__form"
-      @submit="registerClicked"
-      enctype="multipart/form-data"
-      ref="form"
-      novalidate
-    >
-      <transition name="fade">
-        <span
-          class="register-form__error"
-          v-if="formError"
-        >{{ formError }}</span>
-      </transition>
-      <input
-        type="text"
-        class="register-form__input"
-        placeholder="Username"
-        v-model="formData.name"
-        ref="name"
-      />
-      <input
-        type="email"
-        class="register-form__input"
-        placeholder="Email"
-        v-model="formData.email"
-        ref="email"
-      />
-      <input
-        type="password"
-        class="register-form__input"
-        placeholder="Password"
-        v-model="formData.password"
-        ref="password"
-      />
-      <input
-        type="password"
-        class="register-form__input"
-        placeholder="Repeat password"
-        ref="password-repeat"
-      />
-      <input
-        type="text"
-        class="register-form__input"
-        placeholder="Access Key"
-        v-model="formData.key"
-        ref="key"
-      />
-      <label class="register-form__file">
-        <input type="file" id="file" @change="fileSelected" accept="image/*" />
-        <span ref="file-input" file-input-value="Choose avatar..."></span>
-      </label>
-      <input type="submit" class="register-form__submit" value="Register" @click="registerClicked" />
-      <span class="register-form__register-text">
-        Already registered?
-        <router-link :to="{name: 'Login'}" class="register-form__register-link">Login</router-link>
-      </span>
-    </form>
-  </div>
+  <form class="register-form" @submit.prevent="registerClicked" novalidate>
+    <img src="@/assets/icons/new_logo_a.png" class="register-form__logo" />
+    <transition name="fade">
+      <span class="register-form__error" v-if="formError">{{ formError }}</span>
+    </transition>
+    <TextInput class="register-form__input" v-model="formFields.name.value" :field="formFields.name" />
+    <TextInput class="register-form__input" v-model="formFields.email.value" :field="formFields.email" />
+    <TextInput
+      type="password"
+      class="register-form__input"
+      v-model="formFields.password.value"
+      :field="formFields.password"
+    />
+    <TextInput type="password" class="register-form__input" v-model="passwordRepeat.value" :field="passwordRepeat" />
+    <TextInput type="text" class="register-form__input" v-model="formFields.key.value" :field="formFields.key" />
+    <p class="register-form__label">Avatar:</p>
+    <ImageUploader class="register-form__image-uploader" v-model="files" :limit="1" />
+    <input type="submit" class="register-form__submit" value="Register" />
+    <span class="register-form__register-text">
+      Already registered?
+      <router-link :to="{ name: 'Login' }" class="register-form__register-link">Login</router-link>
+    </span>
+  </form>
 </template>
 
 <script lang="ts" src="./RegisterForm.ts"></script>

@@ -1,0 +1,29 @@
+.profile-form {
+  &__btn-save {
+    @include button_default;
+
+    padding: 12px 6px;
+    margin-top: 16px;
+  }
+
+  &__input {
+    &:not(:first-of-type) {
+      margin-top: 24px;
+    }
+  }
+
+  &__label {
+    margin-top: 24px;
+    font-size: 0.9rem;
+  }
+
+  &__uploader {
+    margin-top: 8px;
+  }
+
+  &__headline {
+    font-family: $font_ubuntu-bold;
+    font-size: 1.3rem;
+    margin-bottom: 24px;
+  }
+}

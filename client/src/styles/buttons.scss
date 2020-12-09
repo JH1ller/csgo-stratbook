@@ -1,17 +1,18 @@
-@mixin button-default {
+@mixin button_default($color: white) {
   display: flex;
   padding: 6px 11px;
   border-radius: 3px;
   justify-content: center;
   align-items: center;
-  background-color: white;
+  background-color: $color;
   cursor: pointer;
   box-shadow: $shadow-subtle;
-  transition: border-color 0.3s ease;
-  border: 1px solid white;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  border: 2px solid rgba($color--navyblue, 0.2);
 
   &:hover {
-    border-color: rgba($color--navyblue, 0.2);
+    border-color: rgba($color--navyblue, 0.4);
+    background-color: darken($color, 2%);
   }
 
   & > svg {
@@ -20,4 +21,11 @@
     height: 14px;
     color: $color--navyblue;
   }
+}
+
+@mixin button_big($color: white) {
+  @include button_default($color);
+
+  padding: 12px 6px;
+  width: 100%;
 }

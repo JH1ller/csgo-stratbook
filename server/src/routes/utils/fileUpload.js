@@ -12,11 +12,9 @@ const s3 = new AWS.S3({
 
 const fileStorage = multer.diskStorage({
   destination: function (req, file, next) {
-    console.log(file);
     next(null, 'public/upload/');
   },
   filename: function (req, file, next) {
-    console.log(file);
     next(null, crypto.randomBytes(20).toString('hex') + path.extname(file.originalname));
   },
 });
@@ -68,7 +66,7 @@ const processImage = async (file) => {
     await sharp(file.path).resize(256, 256).toFile(path.resolve(file.destination, 'temp', file.filename));
     fs.unlinkSync(file.path);
     fs.renameSync(path.resolve(file.destination, 'temp', file.filename), file.path);
-    if (process.env.NODE_ENV !== 'development') await uploadFile(file.path, file.filename);
+    await uploadFile(file.path, file.filename);
   } catch (error) {
     throw new Error(error);
   }
@@ -93,7 +91,26 @@ function uploadFile(filepath, filename) {
   });
 }
 
+function deleteFile(filename) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const params = {
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: filename, // filename on S3
+      };
+
+      const data = await s3.deleteObject(params).promise();
+
+      console.log(`File deleted successfully. ${data.Location}`);
+      resolve(data.Location);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 module.exports.uploadSingle = uploadSingle;
 module.exports.uploadMultiple = uploadMultiple;
 module.exports.processImage = processImage;
 module.exports.uploadFile = uploadFile;
+module.exports.deleteFile = deleteFile;

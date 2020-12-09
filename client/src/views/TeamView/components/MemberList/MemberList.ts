@@ -8,8 +8,8 @@ import { Player } from '@/api/models/Player';
 @Component({
   components: {
     MemberItem,
-    VueContext
-  }
+    VueContext,
+  },
 })
 export default class MemberList extends Vue {
   @teamModule.State private teamInfo!: Team;
@@ -39,15 +39,20 @@ export default class MemberList extends Vue {
       this.menu.open(event, { member });
     }
   }
-  
+
   private get isManager(): boolean {
     return this.teamInfo.manager === this.profile._id;
   }
 
   private shouldShowMenu(member: Player): boolean {
-    return (this.isManager && member._id !== this.teamInfo.manager)
-    || (this.isManager && member._id !== this.profile._id)
-    || (member._id === this.profile._id);
+    return (
+      (this.isManager && member._id !== this.teamInfo.manager) ||
+      (this.isManager && member._id !== this.profile._id) ||
+      member._id === this.profile._id
+    );
   }
 
+  private get sortedMembers() {
+    return this.teamMembers.sort((a, b) => new Date(b.lastOnline!).getTime() - new Date(a.lastOnline!).getTime());
+  }
 }

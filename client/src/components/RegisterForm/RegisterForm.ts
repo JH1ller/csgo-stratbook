@@ -1,79 +1,51 @@
-import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
+import FormField from '@/utils/FormField';
+import { validateForm, Validators } from '@/utils/validation';
+import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
+import ImageUploader from '@/components/ImageUploader/ImageUploader.vue';
+import TextInput from '@/components/TextInput/TextInput.vue';
 
-export interface RegisterFormData {
-  name: string;
-  email: string;
-  password: string;
-  key: string;
-}
-@Component({})
+@Component({
+  components: {
+    ImageUploader,
+    TextInput,
+  },
+})
 export default class RegisterForm extends Vue {
-  @Ref('file-input') fileInput!: HTMLInputElement;
-  @Ref('name') nameInput!: HTMLInputElement;
-  @Ref('email') emailInput!: HTMLInputElement;
-  @Ref('password') passwordInput!: HTMLInputElement;
-  @Ref('password-repeat') passwordRepeatInput!: HTMLInputElement;
-  @Ref('key') keyInput!: HTMLInputElement;
   @Prop() formError!: string;
 
-  private formData: RegisterFormData = {
-    name: '',
-    email: '',
-    password: '',
-    key: ''
+  private formFields: Record<string, FormField> = {
+    name: new FormField('Username', true, [Validators.notEmpty(), Validators.minLength(2), Validators.maxLength(20)]),
+    email: new FormField('Email', true, [Validators.notEmpty(), Validators.isEmail()]),
+    password: new FormField('Password', true, [Validators.notEmpty(), Validators.minLength(8)]),
+    key: new FormField('Beta Key', true, [Validators.notEmpty(), Validators.exactLength(20)]),
   };
-  private imageFile: File | null = null;
-  private pwRegex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$/);
 
-  private fileSelected(e: any) {
-    const file = e.target.files[0];
-    if (file) {
-      this.imageFile = file;
-      this.fileInput.setAttribute('file-input-value', file.name.slice(-30));
+  private passwordRepeat = new FormField('Repeat password', true, [
+    Validators.notEmpty(),
+    Validators.matches(this.formFields.password),
+  ]);
+
+  private files: File[] = [];
+
+  private registerClicked() {
+    if (validateForm(this.formFields) && this.passwordRepeat.validate()) {
+      this.submit();
     }
   }
 
-  private validateForm(): boolean {
-    if (this.nameInput.value.length < 3 || this.nameInput.value.length > 20) {
-      this.updateFormError('Name must be between 3 and 20 characters.');
-      return false;
-    }
-    if (this.emailInput.value.length < 6 || !this.emailInput.checkValidity()) {
-      this.updateFormError('Please enter a valid email address.');
-      return false;
-    }
-    if (!this.pwRegex.test(this.passwordInput.value)) {
-      this.updateFormError(
-        'Password must be at least 8 characters long and contain uppercase, lowercase and number characters.'
-      );
-      return false;
-    }
-    if (this.passwordRepeatInput.value !== this.passwordInput.value) {
-      this.updateFormError('Passwords don\'t match.');
-      return false;
-    }
-    if (this.keyInput.value.length !== 20) {
-      this.updateFormError('Access Key has invalid format.');
-      return false;
+  @Emit()
+  private submit() {
+    const requestFormData = new FormData();
+
+    if (this.files.length) {
+      requestFormData.append('avatar', this.files[0], this.files[0].name);
     }
 
-    return true;
-  }
-
-  private registerClicked(e: Event) {
-    e.preventDefault();
-
-    if (!this.validateForm()) return;
-
-    let requestFormData = new FormData();
-    if (this.imageFile) {
-      requestFormData.append('avatar', this.imageFile, this.imageFile.name);
+    for (const [key, data] of Object.entries(this.formFields)) {
+      requestFormData.append(key, data.value);
     }
 
-    for (const [key, value] of Object.entries(this.formData)) {
-      requestFormData.append(key, value);
-    }
-    this.$emit('register-clicked', requestFormData);
+    return requestFormData;
   }
 
   @Emit()

@@ -1,15 +1,22 @@
 .login-form {
-  &__fieldset {
-    display: flex;
-    flex-direction: column;
-    padding: 24px;
-    background-color: white;
-    box-shadow: $shadow-subtle;
-    &:not(:first-of-type) {
-      margin-top: 12px;
-    }
-    transition: height 0.3s ease;
-    border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  background-color: $color--smoke;
+  box-shadow: $shadow-subtle;
+  transition: height 0.3s ease;
+  border-radius: 8px;
+  width: 100%;
+
+  @include viewport_mq2 {
+    width: 320px;
+  }
+
+  &__logo {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 48px;
   }
 
   &__label {
@@ -22,33 +29,26 @@
   }
 
   &__input {
-    @include input_default;
+    width: 100%;
 
     &:not(:first-of-type) {
-      margin-top: 20px;
+      margin-top: 16px;
     }
   }
 
   &__submit {
+    @include button_big($color--green);
+
+    color: white;
     box-shadow: $shadow-subtle;
     margin-top: 16px;
     width: 100%;
-    display: flex;
-    justify-content: center;
-    text-transform: uppercase;
-    color: white;
-    border-radius: 2px;
-    padding: 4px 8px;
-    letter-spacing: 1px;
-    font-size: 0.9em;
-    height: 32px;
-    transition: background-color 0.2s ease;
-    cursor: pointer;
-    background-color: $color--green;
+    font-size: 1rem;
   }
 
   &__register-text {
     margin-top: 8px;
+    align-self: flex-start;
   }
 
   &__register-link {
@@ -60,7 +60,8 @@
 
   &__error {
     color: $color--red;
-    max-width: 300px;
+    width: 100%;
+    text-align: center;
     margin-bottom: 12px;
     padding: 8px;
     border-radius: 6px;

@@ -14,6 +14,18 @@ const registerValidation = (formData) => {
   return schema.validate(formData);
 };
 
+// Register validation
+const profileUpdateValidation = (formData) => {
+  const schema = Joi.object({
+    name: Joi.string().min(2).max(20),
+    email: Joi.string().email(),
+    password: Joi.string()
+      .min(6)
+      .pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$/),
+  });
+  return schema.validate(formData);
+};
+
 // Login validation ? remove
 const loginValidation = (formData) => {
   const schema = Joi.object({
@@ -39,3 +51,4 @@ const teamValidation = (formData) => {
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
 module.exports.teamValidation = teamValidation;
+module.exports.profileUpdateValidation = profileUpdateValidation;

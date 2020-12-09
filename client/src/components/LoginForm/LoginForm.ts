@@ -1,19 +1,31 @@
 import { appModule } from '@/store/namespaces';
 import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
-
-@Component({})
+import TextInput from '@/components/TextInput/TextInput.vue';
+import { Validators } from '@/utils/validation';
+import FormField from '@/utils/FormField';
+@Component({
+  components: {
+    TextInput,
+  },
+})
 export default class LoginForm extends Vue {
   @appModule.Action private showToast!: (toast: Toast) => void;
-
-  private email: string = '';
-  private password: string = '';
   @Prop() formError!: string;
 
+  private email: FormField = new FormField('Email', true, [Validators.notEmpty(), Validators.isEmail()], 'email');
+
+  private password: FormField = new FormField('Password', true, [Validators.notEmpty()], 'password');
+
+  private loginClicked() {
+    if (this.email.validate() && this.password.validate()) {
+      this.submit();
+    }
+  }
+
   @Emit()
-  private loginClicked(e: Event) {
-    e.preventDefault();
-    return { email: this.email, password: this.password };
+  private submit() {
+    return { email: this.email.value, password: this.password.value };
   }
 
   @Emit()
@@ -24,12 +36,13 @@ export default class LoginForm extends Vue {
   private mounted() {
     const email = this.$route.query.confirmed ?? this.$route.query.already_confirmed;
     if (email) {
-      this.showToast({ id: 'loginForm/emailConfirmed', 
-        text: this.$route.query.already_confirmed 
+      this.showToast({
+        id: 'loginForm/emailConfirmed',
+        text: this.$route.query.already_confirmed
           ? 'You email has already been confirmed.'
-          : 'Your email has been confirmed. You can now login and start creating strats!'
+          : 'Your email has been confirmed. You can now login and start creating strats!',
       });
-      this.email = email as string;
+      this.email.value = email as string;
     }
   }
 }

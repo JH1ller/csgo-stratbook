@@ -1,6 +1,5 @@
 import { Component, Vue } from 'vue-property-decorator';
 import RegisterForm from '@/components/RegisterForm/RegisterForm.vue';
-import { RegisterFormData } from '@/components/RegisterForm/RegisterForm';
 import { Routes } from '@/router/router.models';
 import { authModule } from '@/store/namespaces';
 import { Response } from '@/store';
@@ -11,10 +10,10 @@ import { Response } from '@/store';
   },
 })
 export default class RegisterView extends Vue {
-  @authModule.Action private register!: (formData: RegisterFormData) => Promise<Response>;
+  @authModule.Action private register!: (formData: FormData) => Promise<Response>;
   private formError: string = '';
 
-  private async registerRequest(formData: RegisterFormData) {
+  private async registerRequest(formData: FormData) {
     const res = await this.register(formData);
     if (res.error) {
       this.updateFormError(res.error);

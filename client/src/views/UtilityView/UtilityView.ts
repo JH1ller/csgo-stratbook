@@ -5,7 +5,8 @@ import UtilityForm from '@/components/UtilityForm/UtilityForm.vue';
 import UtilityList from '@/components/UtilityList/UtilityList.vue';
 import UtilityLightbox from '@/components/UtilityLightbox/UtilityLightbox.vue';
 import FilterButton from '@/components/FilterButton/FilterButton.vue';
-import UtilityFilterMenu from '@/components/UtilityFilterMenu/UtilityFilterMenu.vue';
+import UtilityFilterForm from '@/components/UtilityFilterForm/UtilityFilterForm.vue';
+import FilterMenu from '@/components/FilterMenu/FilterMenu.vue';
 import { appModule, filterModule, mapModule, utilityModule } from '@/store/namespaces';
 import { MapID } from '@/components/MapPicker/MapPicker';
 import { Utility } from '@/api/models/Utility';
@@ -22,7 +23,8 @@ import { UtilityFilters } from '@/store/modules/filter';
     UtilityList,
     UtilityLightbox,
     FilterButton,
-    UtilityFilterMenu,
+    UtilityFilterForm,
+    FilterMenu,
   },
 })
 export default class UtilityView extends Vue {

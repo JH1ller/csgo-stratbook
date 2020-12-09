@@ -1,5 +1,53 @@
 .profile-view {
+  &__content {
+    background-color: white;
+    box-shadow: $shadow-subtle;
+    padding: 24px 24px 64px 24px;
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    flex-wrap: wrap;
+    min-height: 100%;
+
+    @include viewport_mq3 {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+  }
+
+  &__detail {
+    border-radius: 6px;
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    background-color: $color--smoke;
+    padding: 16px;
+    width: 100%;
+
+    @include viewport_mq3 {
+      width: 400px;
+    }
+  }
+
+  &__avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    box-shadow: $shadow-subtle;
+
+    @include viewport_mq4 {
+      width: 200px;
+      height: 200px;
+    }
+  }
+
   &__btn-logout {
+    position: absolute;
+    right: 24px;
+    bottom: 24px;
     background-color: $color--red;
     color: white;
     padding: 6px 12px;
@@ -8,4 +56,3 @@
     cursor: pointer;
   }
 }
-

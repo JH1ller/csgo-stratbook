@@ -43,6 +43,37 @@ export const authModule: Module<AuthState, RootState> = {
         return { error: res.error };
       }
     },
+    async updateProfile({ dispatch, commit }, data: FormData) {
+      let updateStrats = false;
+      if (data.has('name')) {
+        try {
+          await dispatch(
+            'app/showDialog',
+            {
+              key: 'auth/updateProfile',
+              text:
+                'Would you like to replace your name in all strat mentions? This will do a simple find/replace and may lead to errors in the strat.',
+              resolveBtn: 'Yes',
+              rejectBtn: 'No',
+            },
+            { root: true }
+          );
+          updateStrats = true;
+        } catch (error) {
+          updateStrats = false; // * not needed, but to prevent empty block statement
+        }
+      }
+
+      const res = await APIService.updatePlayer(data, updateStrats);
+      if (res.success) {
+        commit(SET_PROFILE, res.success);
+        const message = data.has('email')
+          ? 'Successfully updated your profile. A confirmation mail has been sent to confirm the new email address.'
+          : 'Successfully updated your profile.';
+
+        dispatch('app/showToast', { id: 'auth/updateProfile', text: message }, { root: true });
+      }
+    },
     updateStatus({ commit }, status: Status) {
       commit(SET_STATUS, status);
     },
@@ -76,7 +107,11 @@ export const authModule: Module<AuthState, RootState> = {
     async register({ dispatch }, formData: Partial<Player>) {
       const res = await APIService.register(formData);
       if (res.success) {
-        dispatch('app/showToast', { id: 'auth/register', text: 'Registered successfully. A confirmation email has been sent.' }, { root: true });
+        dispatch(
+          'app/showToast',
+          { id: 'auth/register', text: 'Registered successfully. A confirmation email has been sent.' },
+          { root: true }
+        );
         return { success: 'Registered successfully. A confirmation email has been sent.' }; // TODO: probably remove all these
       } else {
         return { error: res.error };

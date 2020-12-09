@@ -2,9 +2,9 @@
   <BackdropDialog>
     <div class="utility-form">
       <FormFieldSet>
-        <TextInput v-model="formFields.name.value" :fieldData="formFields.name" fieldName="name" />
-        <TextInput v-model="formFields.description.value" :fieldData="formFields.description" fieldName="description" />
-        <TextInput v-model="formFields.videoLink.value" :fieldData="formFields.videoLink" fieldName="videoLink" />
+        <TextInput v-model="formFields.name.value" :field="formFields.name" fieldName="name" />
+        <TextInput v-model="formFields.description.value" :field="formFields.description" fieldName="description" />
+        <TextInput v-model="formFields.videoLink.value" :field="formFields.videoLink" fieldName="videoLink" />
       </FormFieldSet>
       <FormFieldSet>
         <div class="utility-form__horizontal-wrapper">

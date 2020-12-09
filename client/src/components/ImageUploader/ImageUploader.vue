@@ -4,7 +4,7 @@
       <input
         type="file"
         id="file"
-        multiple
+        :multiple="limit > 1"
         @change="filesSelected"
         accept="image/*"
         :disabled="value.length >= limit"

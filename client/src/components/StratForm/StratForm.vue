@@ -2,7 +2,7 @@
   <BackdropDialog>
     <div class="strat-form">
       <FormFieldSet>
-        <TextInput v-model="formFields.name.value" :fieldData="formFields.name" fieldName="name" />
+        <TextInput v-model="formFields.name.value" :field="formFields.name" fieldName="name" />
       </FormFieldSet>
       <FormFieldSet>
         <label class="strat-form__label" for="type">Type</label>
@@ -13,8 +13,8 @@
         <SidePicker v-model="side" />
       </FormFieldSet>
       <FormFieldSet>
-        <TextInput v-model="formFields.note.value" :fieldData="formFields.note" fieldName="note" />
-        <TextInput v-model="formFields.videoLink.value" :fieldData="formFields.videoLink" fieldName="videoLink" />
+        <TextInput v-model="formFields.note.value" :field="formFields.note" fieldName="note" />
+        <TextInput v-model="formFields.videoLink.value" :field="formFields.videoLink" fieldName="videoLink" />
       </FormFieldSet>
       <div class="strat-form__btn-wrapper">
         <fa-icon icon="ban" class="strat-form__btn-cancel" @click="cancelClicked" />

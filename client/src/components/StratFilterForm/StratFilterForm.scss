@@ -1,0 +1,23 @@
+.strat-filter-form {
+  display: flex;
+  flex-direction: column;
+
+  &__input {
+    @include input_default;
+  }
+
+  &__label {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+
+    &:not(:first-of-type) {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid $color--grey;
+    }
+  }
+
+  &__picker {
+    margin-top: 8px;
+  }
+}

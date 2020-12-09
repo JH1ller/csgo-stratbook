@@ -139,8 +139,8 @@ router.patch('/join', verifyAuth, async (req, res) => {
   return res.json({
     _id: updatedPlayer._id,
     name: updatedPlayer.name,
-    role: updatedPlayer.role,
     createdAt: updatedPlayer.createdAt,
+    email: updatedPlayer.email,
     avatar: updatedPlayer.avatar,
     team: updatedPlayer.team,
     isOnline: updatedPlayer.isOnline,

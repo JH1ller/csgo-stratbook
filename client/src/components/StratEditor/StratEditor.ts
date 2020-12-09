@@ -101,7 +101,7 @@ export default class StratEditor extends Vue {
 
   private get sanitizedHtml(): string {
     return sanitizeHtml(this.htmlContent, {
-      allowedTags: ['span', 'img'],
+      allowedTags: ['span', 'img', 'div'],
       allowedAttributes: {
         span: ['contenteditable', 'class', 'data-*'],
         img: ['class', 'src'],

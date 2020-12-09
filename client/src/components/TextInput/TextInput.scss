@@ -37,4 +37,18 @@
       font-size: 1rem;
     }
   }
+
+  &__error {
+    position: absolute;
+    top: 7px;
+    right: 12px;
+    pointer-events: none;
+    opacity: 0.7;
+    font-size: 0.6rem;
+    color: $color--red;
+
+    @include viewport_mq3 {
+      font-size: 0.7rem;
+    }
+  }
 }

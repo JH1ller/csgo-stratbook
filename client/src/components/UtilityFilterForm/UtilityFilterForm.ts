@@ -1,19 +1,18 @@
-import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import SidePicker from '@/components/SidePicker/SidePicker.vue';
-import TypePicker from '@/components/TypePicker/TypePicker.vue';
-import { StratFilters } from '@/store/modules/filter';
+import UtilityPicker from '@/components/UtilityPicker/UtilityPicker.vue';
+import { UtilityFilters } from '@/store/modules/filter';
 import { Sides } from '@/api/models/Sides';
-import { StratTypes } from '@/api/models/StratTypes';
+import { UtilityTypes } from '@/api/models/UtilityTypes';
 
 @Component({
   components: {
     SidePicker,
-    TypePicker,
+    UtilityPicker,
   },
 })
-export default class StratsFilterMenu extends Vue {
-  @Prop() filters!: StratFilters;
-  @Prop() open!: boolean;
+export default class UtilityFilterForm extends Vue {
+  @Prop() filters!: UtilityFilters;
 
   private get nameFilter() {
     return this.filters.name;
@@ -23,19 +22,11 @@ export default class StratsFilterMenu extends Vue {
     this.$emit('name-filter-change', value);
   }
 
-  private get contentFilter() {
-    return this.filters.content;
-  }
-
-  private set contentFilter(value: string) {
-    this.$emit('content-filter-change', value);
-  }
-
   private get typeFilter() {
     return this.filters.type;
   }
 
-  private set typeFilter(type: StratTypes | null) {
+  private set typeFilter(type: UtilityTypes | null) {
     if (this.filters.type === type) {
       this.$emit('type-filter-change', null);
     } else {
@@ -53,15 +44,5 @@ export default class StratsFilterMenu extends Vue {
     } else {
       this.$emit('side-filter-change', side);
     }
-  }
-
-  @Emit()
-  private clearFilters() {
-    return;
-  }
-
-  @Emit()
-  private close() {
-    return;
   }
 }
