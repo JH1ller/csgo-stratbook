@@ -19,36 +19,27 @@ export default class MainMenu extends Vue {
   @appModule.State private loading!: boolean;
   @Prop() private menuOpen!: boolean;
 
-  private get menuItems() {
-    // TODO: refactor, felt braindead when writing this
-    const items = [];
-    if (this.status === Status.LOGGED_IN_NO_TEAM)
-      items.push({
+  private get _menuItems() {
+    return [
+      {
+        label: 'Strats',
+        icon: 'chess',
+        link: '/strats',
+        hide: this.status === Status.NO_AUTH,
+      },
+      {
+        label: 'Grenades',
+        icon: 'bomb',
+        link: '/utility',
+        hide: this.status === Status.NO_AUTH,
+      },
+      {
         label: 'Team',
         icon: 'users',
         link: this.profile.team ? '/team' : '/team/join', // TODO: check if this works!
-      });
-
-    if (this.status === Status.LOGGED_IN_WITH_TEAM)
-      items.push(
-        {
-          label: 'Strats',
-          icon: 'chess',
-          link: '/strats',
-        },
-        {
-          label: 'Grenades',
-          icon: 'bomb',
-          link: '/utility',
-        },
-        {
-          label: 'Team',
-          icon: 'users',
-          link: this.profile.team ? '/team' : '/team/join', // TODO: check if this works!
-        }
-      );
-
-    return items;
+        hide: this.status === Status.NO_AUTH,
+      },
+    ].filter(item => !item.hide);
   }
 
   private async mounted() {

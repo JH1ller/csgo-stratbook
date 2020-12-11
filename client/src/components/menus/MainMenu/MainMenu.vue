@@ -11,7 +11,7 @@
       </router-link>
 
       <router-link
-        v-for="(item, index) in menuItems"
+        v-for="(item, index) in _menuItems"
         :to="item.link"
         @click.native="closeMenu"
         class="main-menu__list-item"
