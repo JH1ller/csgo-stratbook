@@ -26,7 +26,7 @@
   }
 
   &__btn {
-    @include button_default;
+    @include button-default;
     padding: 12px 6px;
 
     &.--clear {

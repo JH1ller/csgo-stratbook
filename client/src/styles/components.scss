@@ -1,4 +1,4 @@
-@mixin input_default($placeholder: false) {
+@mixin input-default($placeholder: false) {
   font-size: 1em;
   @if ($placeholder == true) {
     padding: 18px 10px 8px 10px;
@@ -52,4 +52,11 @@
       opacity: 1;
     }
   }
+}
+
+@mixin form-header {
+  @include typo_hl2($color--abbey);
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid rgba($color--abbey, 0.4);
 }

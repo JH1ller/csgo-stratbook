@@ -32,7 +32,17 @@ const routes = [
   {
     path: '/login',
     name: RouteNames.Login,
-    component: () =>  import('@/views/LoginView/LoginView.vue'),
+    component: () => import('@/views/LoginView/LoginView.vue'),
+  },
+  {
+    path: '/reset',
+    name: RouteNames.ResetPassword,
+    component: () => import('@/views/ResetPasswordView/ResetPasswordView.vue'),
+  },
+  {
+    path: '/forgot-password',
+    name: RouteNames.ForgotPassword,
+    component: () => import('@/views/ForgotPasswordView/ForgotPasswordView.vue'),
   },
   {
     path: '/register',
@@ -62,12 +72,12 @@ const routes = [
     redirect: (to: Route) => {
       store.dispatch('strat/addSharedStrat', to.params.id);
       return Routes.Strats;
-    }
+    },
   },
   {
     path: '/faq',
     name: RouteNames.Faq,
-    component: () => import('@/views/FaqView/FaqView.vue')
+    component: () => import('@/views/FaqView/FaqView.vue'),
   },
 ];
 

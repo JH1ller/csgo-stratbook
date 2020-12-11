@@ -10,7 +10,9 @@ export enum RouteNames {
   Profile = 'Profile',
   Share = 'Share',
   Faq = 'Faq',
-  Utilities = 'Utilities'
+  Utilities = 'Utilities',
+  ResetPassword = 'ResetPassword',
+  ForgotPassword = 'ForgotPassword',
 }
 
 export const Routes: Record<RouteNames, Location> = {
@@ -23,5 +25,7 @@ export const Routes: Record<RouteNames, Location> = {
   Profile: { name: RouteNames.Profile },
   Share: { name: RouteNames.Share },
   Faq: { name: RouteNames.Faq },
-  Utilities: { name: RouteNames.Utilities }
+  Utilities: { name: RouteNames.Utilities },
+  ResetPassword: { name: RouteNames.ResetPassword },
+  ForgotPassword: { name: RouteNames.ForgotPassword },
 };

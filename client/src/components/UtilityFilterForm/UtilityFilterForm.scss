@@ -3,7 +3,7 @@
   flex-direction: column;
 
   &__input {
-    @include input_default;
+    @include input-default;
   }
 
   &__label {

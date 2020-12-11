@@ -104,6 +104,31 @@ export const authModule: Module<AuthState, RootState> = {
       WebSocketService.getInstance().disconnect();
       dispatch('app/showToast', { id: 'auth/logout', text: 'Logged out successfully.' }, { root: true });
     },
+    async forgotPassword({ dispatch }, email: string) {
+      const res = await APIService.forgotPassword(email);
+      if (res.success) {
+        dispatch(
+          'app/showToast',
+          { id: 'auth/forgotPassword', text: 'A mail has been sent to your email with a link to reset your password.' },
+          { root: true }
+        );
+      } else {
+        return { error: res.error };
+      }
+    },
+    async resetPassword({ dispatch }, payload: { token: string; password: string }) {
+      const res = await APIService.resetPassword(payload);
+      if (res.success) {
+        dispatch(
+          'app/showToast',
+          { id: 'auth/resetPassword', text: 'Your password has been changed successfully.' },
+          { root: true }
+        );
+        return { success: true };
+      } else {
+        return { error: res.error };
+      }
+    },
     async register({ dispatch }, formData: Partial<Player>) {
       const res = await APIService.register(formData);
       if (res.success) {

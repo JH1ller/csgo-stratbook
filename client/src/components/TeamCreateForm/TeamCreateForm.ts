@@ -1,59 +1,46 @@
-import { Component, Vue, Ref, Prop, Emit } from 'vue-property-decorator';
-export interface TeamCreateFormData {
-  name: string;
-  website?: string;
-  serverIp?: string;
-  serverPw?: string;
-  imageFile?: File;
-}
+import FormField from '@/utils/FormField';
+import TextInput from '@/components/TextInput/TextInput.vue';
+import ImageUploader from '@/components/ImageUploader/ImageUploader.vue';
+import { validateForm, Validators } from '@/utils/validation';
+import { Component, Vue, Prop, Emit } from 'vue-property-decorator';
 
-@Component({})
+@Component({
+  components: {
+    TextInput,
+    ImageUploader,
+  },
+})
 export default class TeamCreateForm extends Vue {
-  @Ref('file-input') fileInput!: HTMLInputElement;
-  @Ref('name') nameInput!: HTMLInputElement;
-  @Ref('website') websiteInput!: HTMLInputElement;
-  @Ref('server') serverInput!: HTMLInputElement;
-
   @Prop() formError!: string;
 
-  private formData: TeamCreateFormData = {
-    name: '',
-    website: '',
-    serverIp: '',
-    serverPw: '',
+  private formFields: Record<string, FormField> = {
+    name: new FormField('Team name', true, [Validators.notEmpty(), Validators.minLength(3), Validators.maxLength(24)]),
+    website: new FormField('Website', false, [Validators.isURL()]),
+    serverIp: new FormField('Server IP', false, [Validators.minLength(3), Validators.maxLength(200)]),
+    serverPw: new FormField('Password', false, []),
   };
-  private imageFile: File | null = null;
 
-  private fileSelected(e: any) {
-    const file = e.target.files[0];
-    if (file) {
-      this.imageFile = file;
-      this.fileInput.setAttribute('file-input-value', file.name.slice(-30));
+  private files: File[] = [];
+
+  private createClicked() {
+    if (validateForm(this.formFields)) {
+      this.submit();
     }
   }
 
-  private validateForm(): boolean {
-    if (this.nameInput.value.length < 3 || this.nameInput.value.length > 20) {
-      this.updateFormError('Team name must be between 3 and 24 characters.');
-      return false;
-    }
-    return true;
-  }
+  @Emit()
+  private submit() {
+    const requestFormData = new FormData();
 
-  private createClicked(e: Event) {
-    e.preventDefault();
-
-    if (!this.validateForm()) return;
-
-    let requestFormData = new FormData();
-    if (this.imageFile) {
-      requestFormData.append('avatar', this.imageFile, this.imageFile.name);
+    if (this.files.length) {
+      requestFormData.append('avatar', this.files[0], this.files[0].name);
     }
 
-    for (const [key, value] of Object.entries(this.formData)) {
-      requestFormData.append(key, value);
+    for (const [key, data] of Object.entries(this.formFields)) {
+      requestFormData.append(key, data.value);
     }
-    this.$emit('create-clicked', requestFormData);
+
+    return requestFormData;
   }
 
   @Emit()

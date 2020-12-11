@@ -10,9 +10,9 @@ export interface FormFieldData {
 }
 
 export default class FormField implements FormFieldData {
+  private _value: string = '';
   public label!: string;
   public required: boolean = false;
-  public value: string = '';
   public errors: string[] = [];
   public autocompleteTag: string = 'off';
   public validators: ValidatorFunction[] = [];
@@ -22,6 +22,17 @@ export default class FormField implements FormFieldData {
     this.required = required;
     this.autocompleteTag = autocompleteTag ?? 'off';
     this.validators = validators;
+  }
+
+  public get value() {
+    return this._value;
+  }
+
+  public set value(value: string) {
+    if (this.errors.length && value) {
+      this.clearErrors();
+    }
+    this._value = value;
   }
 
   public validate(): boolean {

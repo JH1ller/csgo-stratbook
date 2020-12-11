@@ -27,7 +27,7 @@ export default class RegisterForm extends Vue {
 
   private files: File[] = [];
 
-  private registerClicked() {
+  private handleSubmit() {
     if (validateForm(this.formFields) && this.passwordRepeat.validate()) {
       this.submit();
     }

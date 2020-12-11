@@ -1,5 +1,5 @@
 <template>
-  <form class="register-form" @submit.prevent="registerClicked" novalidate>
+  <form class="register-form" @submit.prevent="handleSubmit" novalidate>
     <img src="@/assets/icons/new_logo_a.png" class="register-form__logo" />
     <transition name="fade">
       <span class="register-form__error" v-if="formError">{{ formError }}</span>

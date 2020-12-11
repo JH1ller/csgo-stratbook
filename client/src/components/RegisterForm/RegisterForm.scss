@@ -39,7 +39,7 @@
   }
 
   &__submit {
-    @include button_big($color--green);
+    @include button-big($color--green);
 
     color: white;
     box-shadow: $shadow-subtle;

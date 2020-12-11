@@ -43,7 +43,7 @@ export default class ProfileForm extends Vue {
     this.files = [];
   }
 
-  private submitClicked() {
+  private handleSubmit() {
     if (this.repeatField.validate()) {
       this.submit();
     }

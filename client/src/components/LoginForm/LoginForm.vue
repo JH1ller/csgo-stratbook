@@ -1,5 +1,5 @@
 <template>
-  <div class="login-form">
+  <form class="login-form" @submit.prevent="handleSubmit" novalidate>
     <img src="@/assets/icons/new_logo_a.png" class="login-form__logo" />
     <transition name="fade">
       <span class="login-form__error" v-if="formError">{{ formError }}</span>
@@ -12,12 +12,13 @@
       :field="password"
       fieldName="password"
     />
-    <button class="login-form__submit" @click="loginClicked">Sign in</button>
+    <button type="submit" class="login-form__submit">Sign in</button>
     <span class="login-form__register-text">
       Not registered?
       <router-link :to="{ name: 'Register' }" class="login-form__register-link">Create an account</router-link>
     </span>
-  </div>
+    <router-link :to="{ name: 'ForgotPassword' }" class="login-form__forgot-password">Forgot password</router-link>
+  </form>
 </template>
 
 <script lang="ts" src="./LoginForm.ts"></script>

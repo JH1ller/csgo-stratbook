@@ -1,7 +1,6 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
 import APIService from '@/api/APIService';
-import { TeamCreateFormData } from '@/components/TeamCreateForm/TeamCreateForm';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import { Team } from '@/api/models/Team';
 import { Player } from '@/api/models/Player';
@@ -57,7 +56,7 @@ export const teamModule: Module<TeamState, RootState> = {
         dispatch('saveTeamMembersToStorage');
       }
     },
-    async createTeam({ dispatch }, formData: TeamCreateFormData) {
+    async createTeam({ dispatch }, formData: FormData) {
       const res = await APIService.createTeam(formData);
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });

@@ -6,7 +6,7 @@ const Player = require('../../../models/player');
 const Key = require('../../../models/key');
 const urljoin = require('url-join');
 const { registerValidation, loginValidation } = require('../../utils/validation');
-const { sendMail } = require('../../utils/mailService');
+const { sendMail, Templates } = require('../../utils/mailService');
 const { uploadSingle, processImage } = require('../../utils/fileUpload');
 const { APP_URL } = require('../../../config');
 
@@ -51,7 +51,7 @@ router.post('/register', uploadSingle('avatar'), async (req, res) => {
   targetKey.usedAt.push(Date.now());
   await targetKey.save();
   await user.save();
-  await sendMail(user.email, token, user.name);
+  await sendMail(user.email, token, user.name, Templates.verifyNew);
 
   res.json({ _id: user._id, email: user.email });
 });
@@ -88,6 +88,35 @@ router.get('/confirmation/:token', async (req, res) => {
     await targetUser.save();
     return res.redirect(urljoin(APP_URL, `/#/login?confirmed=${targetUser.email}`));
   }
+});
+
+router.post('/forgot-password', async (req, res) => {
+  const targetUser = await Player.findOne({ email: req.body.email });
+
+  if (!targetUser) {
+    return res.status(400).json({ error: 'Could not find user with that email address.' });
+  }
+
+  const token = jwt.sign({ _id: targetUser._id }, process.env.EMAIL_SECRET, { expiresIn: '2 days' });
+
+  await sendMail(targetUser.email, token, targetUser.name, Templates.resetPassword);
+
+  return res.json(true);
+});
+
+router.patch('/reset', async (req, res) => {
+  const { _id } = jwt.verify(req.body.token, process.env.EMAIL_SECRET);
+
+  const targetUser = await Player.findById(_id);
+  if (!targetUser) {
+    return res.status(401).json({ error: 'Player not found' });
+  }
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+  targetUser.password = hashedPassword;
+  await targetUser.save();
+  return res.json(true);
 });
 
 module.exports = router;

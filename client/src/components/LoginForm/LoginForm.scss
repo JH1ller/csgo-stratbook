@@ -37,7 +37,7 @@
   }
 
   &__submit {
-    @include button_big($color--green);
+    @include button-big($color--green);
 
     color: white;
     box-shadow: $shadow-subtle;
@@ -56,6 +56,20 @@
     margin-left: 4px;
     color: $color--green;
     cursor: pointer;
+  }
+
+  &__forgot-password {
+    align-self: flex-start;
+    cursor: pointer;
+    color: $color--grey;
+    margin-top: 4px;
+    transform: translateY(4px);
+    transition: color 0.3s ease;
+    font-size: 0.85rem;
+
+    &:hover {
+      color: darken($color--grey, 10%);
+    }
   }
 
   &__error {

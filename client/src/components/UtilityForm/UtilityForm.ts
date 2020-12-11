@@ -50,7 +50,7 @@ export default class UtilityForm extends Vue {
     }
   }
 
-  private submitClicked() {
+  private handleSubmit() {
     if (validateForm(this.formFields)) {
       this.submitUtility();
     }

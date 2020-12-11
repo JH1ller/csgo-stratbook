@@ -38,7 +38,7 @@ export default class StratForm extends Vue {
     }
   }
 
-  private submitClicked() {
+  private handleSubmit() {
     if (validateForm(this.formFields)) {
       this.submitStrat();
     }
