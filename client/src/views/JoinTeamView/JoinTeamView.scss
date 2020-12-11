@@ -1,9 +1,23 @@
 .join-team-view {
-  height: 100%;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: baseline;
-  
+  &__content {
+    background-color: white;
+    box-shadow: $shadow-subtle;
+    padding: 24px 24px 64px 24px;
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    flex-wrap: wrap;
+    min-height: 100%;
+
+    @include viewport_mq3 {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+  }
+
   > *:not(:first-child) {
     margin-left: 24px;
   }

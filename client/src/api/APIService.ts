@@ -1,6 +1,5 @@
 import axios from 'axios';
 import urljoin from 'url-join';
-import { TeamCreateFormData } from '@/components/TeamCreateForm/TeamCreateForm';
 import store from '@/store';
 import router from '@/router';
 import jwtDecode from 'jwt-decode';
@@ -85,6 +84,8 @@ enum Actions {
   Kick = 'kick',
   Transfer = 'transfer',
   Share = 'share',
+  ForgotPassword = 'forgot-password',
+  Reset = 'reset',
 }
 
 interface APIResponseSuccess<T> {
@@ -139,6 +140,26 @@ class APIService {
       return { success: data };
     } catch (error) {
       store.dispatch('app/updateLoading', false);
+      return { error: error.response?.data?.error };
+    }
+  }
+
+  static async forgotPassword(email: string): Promise<APIResponse<boolean>> {
+    const target = urljoin(API_URL, Endpoints.Auth, Actions.ForgotPassword);
+    try {
+      const { data } = await axios.post(target, { email });
+      return { success: data };
+    } catch (error) {
+      return { error: error.response?.data?.error };
+    }
+  }
+
+  static async resetPassword(payload: { token: string; password: string }): Promise<APIResponse<boolean>> {
+    const target = urljoin(API_URL, Endpoints.Auth, Actions.Reset);
+    try {
+      const { data } = await axios.patch(target, payload);
+      return { success: data };
+    } catch (error) {
       return { error: error.response?.data?.error };
     }
   }
@@ -263,7 +284,7 @@ class APIService {
     }
   }
 
-  static async createTeam(formData: TeamCreateFormData): Promise<APIResponse<Team>> {
+  static async createTeam(formData: FormData): Promise<APIResponse<Team>> {
     const target = urljoin(Endpoints.Teams);
     try {
       const { data } = await axiosInstance.post(target, formData);

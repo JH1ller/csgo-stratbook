@@ -1,6 +1,6 @@
 .profile-form {
   &__btn-save {
-    @include button_default;
+    @include button-default;
 
     padding: 12px 6px;
     margin-top: 16px;
@@ -22,8 +22,6 @@
   }
 
   &__headline {
-    font-family: $font_ubuntu-bold;
-    font-size: 1.3rem;
-    margin-bottom: 24px;
+    @include form-header;
   }
 }

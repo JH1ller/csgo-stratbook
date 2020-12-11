@@ -3,7 +3,7 @@
   position: relative;
 
   &__input {
-    @include input_default(true);
+    @include input-default(true);
 
     width: 100%;
 

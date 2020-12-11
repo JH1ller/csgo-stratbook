@@ -1,4 +1,4 @@
-@mixin button_default($color: white) {
+@mixin button-default($color: white) {
   display: flex;
   padding: 6px 11px;
   border-radius: 3px;
@@ -23,8 +23,8 @@
   }
 }
 
-@mixin button_big($color: white) {
-  @include button_default($color);
+@mixin button-big($color: white) {
+  @include button-default($color);
 
   padding: 12px 6px;
   width: 100%;

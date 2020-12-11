@@ -17,10 +17,15 @@ export default class LoginForm extends Vue {
 
   private password: FormField = new FormField('Password', true, [Validators.notEmpty()], 'password');
 
-  private loginClicked() {
+  private handleSubmit() {
     if (this.email.validate() && this.password.validate()) {
       this.submit();
     }
+  }
+
+  @Emit()
+  private resetPassword() {
+    return;
   }
 
   @Emit()

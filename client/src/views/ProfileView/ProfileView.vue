@@ -3,7 +3,7 @@
     <div class="profile-view__content">
       <ProfileForm :profile="profile" @submit="updateProfile" class="profile-view__detail" />
       <img :src="avatar" class="profile-view__avatar" />
-      <button @click="logoutRequest" class="profile-view__btn-logout">Logout</button>
+      <button @click="logoutRequest" class="profile-view__logout">Logout</button>
     </div>
   </div>
 </template>

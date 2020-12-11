@@ -12,7 +12,7 @@ const teamSchema = new mongoose.Schema({
   website: {
     type: String,
     minlength: 6,
-    maxlength: 100,
+    maxlength: 300,
   },
 
   server: {
@@ -20,8 +20,6 @@ const teamSchema = new mongoose.Schema({
       ip: String,
       password: String,
     },
-    minlength: 6,
-    maxlength: 200,
   },
 
   code: {
@@ -58,7 +56,7 @@ const teamSchema = new mongoose.Schema({
   manager: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'players',
-  }
+  },
 });
 
 teamSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
@@ -69,6 +67,5 @@ teamSchema.pre('save', function (next) {
   }
   next();
 });
-
 
 module.exports = mongoose.model('Team', teamSchema);

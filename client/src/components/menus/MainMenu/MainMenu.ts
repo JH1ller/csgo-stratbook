@@ -4,6 +4,7 @@ import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import { Player } from '@/api/models/Player';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { FeedbackFish } from '@feedback-fish/vue';
+import { Status } from '@/store/modules/auth';
 
 @Component({
   components: {
@@ -13,33 +14,41 @@ import { FeedbackFish } from '@feedback-fish/vue';
 export default class MainMenu extends Vue {
   private appName: string = 'stratbook'; // TODO: dynamic
   @authModule.State profile!: Player;
+  @authModule.State status!: Status;
   @appModule.Action private showToast!: (toast: Toast) => void;
   @appModule.State private loading!: boolean;
   @Prop() private menuOpen!: boolean;
 
   private get menuItems() {
-    return [
-      {
-        label: 'Strats',
-        icon: 'chess',
-        link: '/strats',
-      },
-      {
-        label: 'Grenades',
-        icon: 'bomb',
-        link: '/utility',
-      },
-      {
+    // TODO: refactor, felt braindead when writing this
+    const items = [];
+    if (this.status === Status.LOGGED_IN_NO_TEAM)
+      items.push({
         label: 'Team',
         icon: 'users',
         link: this.profile.team ? '/team' : '/team/join', // TODO: check if this works!
-      },
-      {
-        label: 'Settings',
-        icon: 'tools',
-        link: '/settings',
-      },
-    ];
+      });
+
+    if (this.status === Status.LOGGED_IN_WITH_TEAM)
+      items.push(
+        {
+          label: 'Strats',
+          icon: 'chess',
+          link: '/strats',
+        },
+        {
+          label: 'Grenades',
+          icon: 'bomb',
+          link: '/utility',
+        },
+        {
+          label: 'Team',
+          icon: 'users',
+          link: this.profile.team ? '/team' : '/team/join', // TODO: check if this works!
+        }
+      );
+
+    return items;
   }
 
   private async mounted() {

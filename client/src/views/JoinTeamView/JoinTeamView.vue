@@ -1,15 +1,13 @@
 <template>
   <div class="join-team-view">
-    <team-create-form
-      @create-clicked="createTeamRequest"
-      @update-form-error="updateCreateFormError"
-      :formError="createFormError"
-    />
-    <join-team-form
-      @join-clicked="joinTeamRequest"
-      @update-form-error="updateJoinFormError"
-      :formError="joinFormError"
-    />
+    <div class="join-team-view__content">
+      <team-create-form
+        @submit="createTeamRequest"
+        @update-form-error="updateCreateFormError"
+        :formError="createFormError"
+      />
+      <join-team-form @submit="joinTeamRequest" @update-form-error="updateJoinFormError" :formError="joinFormError" />
+    </div>
   </div>
 </template>
 

@@ -3,3 +3,9 @@ $font_fjallaone-regular: 'FjallaOne-Regular', arial, sans-serif;
 $font_ubuntu-light: 'Ubuntu-Light', sans-serif;
 $font_ubuntu-regular: 'Ubuntu-Regular', sans-serif;
 $font_ubuntu-bold: 'Ubuntu-Bold', sans-serif;
+
+@mixin typo_hl2($color: $color--abbey) {
+  font-family: $font_ubuntu-bold;
+  font-size: 1.2em;
+  color: $color;
+}

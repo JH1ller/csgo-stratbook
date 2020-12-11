@@ -1,6 +1,6 @@
 <template>
   <div class="login-view">
-    <login-form @submit="loginRequest" @update-form-error="updateFormError" :formError="formError" />
+    <LoginForm @submit="loginRequest" @update-form-error="updateFormError" :formError="formError" />
   </div>
 </template>
 

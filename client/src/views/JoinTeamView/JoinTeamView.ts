@@ -1,7 +1,6 @@
-import { Component, Vue, Ref } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import TeamCreateForm from '@/components/TeamCreateForm/TeamCreateForm.vue';
 import JoinTeamForm from '@/components/JoinTeamForm/JoinTeamForm.vue';
-import { TeamCreateFormData } from '@/components/TeamCreateForm/TeamCreateForm';
 import { Response } from '@/store';
 import { teamModule } from '@/store/namespaces';
 import { Routes } from '@/router/router.models';
@@ -13,15 +12,15 @@ import { Routes } from '@/router/router.models';
   },
 })
 export default class JoinTeamView extends Vue {
-  @teamModule.Action createTeam!: (formData: TeamCreateFormData) => Promise<Response>;
+  @teamModule.Action createTeam!: (formData: FormData) => Promise<Response>;
   @teamModule.Action joinTeam!: (code: string) => Promise<Response>;
   private createFormError: string = '';
   private joinFormError: string = '';
 
-  private async createTeamRequest(formData: TeamCreateFormData) {
+  private async createTeamRequest(formData: FormData) {
     const res = await this.createTeam(formData);
     if (res.error) {
-      this.updateCreateFormError(res.error); // TODO: refactor and redo with inputs and maybe error array
+      this.updateCreateFormError(res.error);
     } else if (res.success) {
       this.$router.push(Routes.Team);
     }

@@ -44,15 +44,12 @@
     }
   }
 
-  &__btn-logout {
+  &__logout {
+    @include button-default($color--red);
+
     position: absolute;
     right: 24px;
     bottom: 24px;
-    background-color: $color--red;
     color: white;
-    padding: 6px 12px;
-    font-size: 1.1em;
-    border-radius: 6px;
-    cursor: pointer;
   }
 }
