@@ -24,8 +24,14 @@
   &__avatar {
     width: 150px;
     height: 150px;
+    object-fit: cover;
     border-radius: 50%;
     box-shadow: $shadow-subtle;
+
+    @include viewport_mq4 {
+      width: 200px;
+      height: 200px;
+    }
   }
 
   &__member-list {

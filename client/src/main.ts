@@ -41,7 +41,7 @@ Vue.use(VueTippy, {
   animateFill: true,
   distance: 5,
   duration: [300, 100],
-  delay: [500, 0],
+  delay: [300, 0],
   animation: 'scale',
   popperOptions: {
     modifiers: {

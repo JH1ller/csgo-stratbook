@@ -19,12 +19,9 @@
   }
 
   &__detail {
-    border-radius: 6px;
+    @include fieldset;
+
     margin-top: 24px;
-    display: flex;
-    flex-direction: column;
-    background-color: $color--smoke;
-    padding: 16px;
     width: 100%;
 
     @include viewport_mq3 {
@@ -35,6 +32,7 @@
   &__avatar {
     width: 150px;
     height: 150px;
+    object-fit: cover;
     border-radius: 50%;
     box-shadow: $shadow-subtle;
 

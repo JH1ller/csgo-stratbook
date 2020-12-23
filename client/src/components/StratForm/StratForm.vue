@@ -1,6 +1,6 @@
 <template>
   <BackdropDialog>
-    <div class="strat-form">
+    <form class="strat-form" @submit.prevent="handleSubmit" novalidate>
       <FormFieldSet>
         <TextInput v-model="formFields.name.value" :field="formFields.name" fieldName="name" />
       </FormFieldSet>
@@ -17,10 +17,10 @@
         <TextInput v-model="formFields.videoLink.value" :field="formFields.videoLink" fieldName="videoLink" />
       </FormFieldSet>
       <div class="strat-form__btn-wrapper">
-        <button @click="cancelClicked"><fa-icon icon="ban" class="strat-form__btn-cancel" /></button>
-        <button @click="handleSubmit"><fa-icon icon="check" class="strat-form__btn-submit" /></button>
+        <button type="button" @click="cancelClicked"><fa-icon icon="ban" class="strat-form__btn-cancel" /></button>
+        <button type="submit"><fa-icon icon="check" class="strat-form__btn-submit" /></button>
       </div>
-    </div>
+    </form>
   </BackdropDialog>
 </template>
 

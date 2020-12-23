@@ -1,0 +1,43 @@
+.edit-team-form {
+  &__btn {
+    @include button-big;
+
+    flex: 1 0;
+
+    &:first-of-type {
+      margin-right: 16px;
+    }
+
+    &.--save {
+      @include button-big($color--green);
+
+      color: white;
+    }
+
+    &.--cancel {
+    }
+  }
+
+  &__button-wrapper {
+    display: flex;
+  }
+
+  &__input {
+    &:not(:first-of-type) {
+      margin-top: 24px;
+    }
+  }
+
+  &__label {
+    margin-top: 24px;
+    font-size: 0.9rem;
+  }
+
+  &__uploader {
+    margin-top: 8px;
+  }
+
+  &__headline {
+    @include form-header;
+  }
+}

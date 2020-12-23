@@ -93,15 +93,4 @@ router.delete('/:strat_id', verifyAuth, getStrat, async (req, res) => {
   res.json({ message: 'Deleted strat successfully' });
 });
 
-// * Delete All
-router.delete('/deleteAll', async (req, res) => {
-  if (res.player.isAdmin) {
-    await Strat.deleteMany({});
-    await Strat.collection.dropIndexes();
-    res.json({ message: 'Deleted all strats' });
-  } else {
-    res.status(403).json({ error: 'This action requires higher privileges.' });
-  }
-});
-
 module.exports = router;

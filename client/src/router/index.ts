@@ -7,6 +7,10 @@ import { joinTeamResolver } from '@/views/JoinTeamView/JoinTeamView.resolver';
 import store from '@/store';
 import { utilityResolver } from '@/views/UtilityView/UtilityView.resolver';
 
+// * not using lazy loading for these two views, as they are both entrypoints to the app
+import LoginView from '@/views/LoginView/LoginView.vue';
+import StratsView from '@/views/StratsView/StratsView.vue';
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -20,7 +24,7 @@ const routes = [
   {
     path: '/strats',
     name: RouteNames.Strats,
-    component: () => import('@/views/StratsView/StratsView.vue'),
+    component: StratsView,
     beforeEnter: stratsResolver,
   },
   {
@@ -32,7 +36,7 @@ const routes = [
   {
     path: '/login',
     name: RouteNames.Login,
-    component: () => import('@/views/LoginView/LoginView.vue'),
+    component: LoginView,
   },
   {
     path: '/reset',

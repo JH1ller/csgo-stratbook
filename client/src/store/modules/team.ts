@@ -68,7 +68,23 @@ export const teamModule: Module<TeamState, RootState> = {
           },
           { root: true }
         );
-        return { success: 'Team successfully created. You can now visit the strats page and start creating strats!' }; // TODO: probably obsolete. remove
+        return { success: true }; // TODO: probably obsolete. remove
+      } else {
+        return { error: res.error };
+      }
+    },
+    async updateTeam({ dispatch }, formData: FormData) {
+      const res = await APIService.updateTeam(formData);
+      if (res.success) {
+        dispatch(
+          'app/showToast',
+          {
+            id: 'team/updateTeam',
+            text: 'Team details updated.',
+          },
+          { root: true }
+        );
+        return { success: true };
       } else {
         return { error: res.error };
       }
@@ -134,8 +150,8 @@ export const teamModule: Module<TeamState, RootState> = {
     deleteMemberLocally({ commit }, payload: { playerID: string }) {
       commit(UPDATE_TEAM_MEMBER, payload.playerID);
     },
-    updateTeamLocally({ commit }, payload: { player: Player }) {
-      commit(UPDATE_TEAM_MEMBER, payload.player);
+    updateTeamLocally({ commit }, payload: { team: Team }) {
+      commit(SET_TEAM_INFO, payload.team);
     },
     deleteTeamLocally({ commit, dispatch }) {
       commit(SET_TEAM_INFO, {});

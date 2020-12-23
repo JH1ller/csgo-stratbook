@@ -14,32 +14,31 @@ import { Status } from '@/store/modules/auth';
 export default class MainMenu extends Vue {
   private appName: string = 'stratbook'; // TODO: dynamic
   @authModule.State profile!: Player;
-  @authModule.State status!: Status;
   @appModule.Action private showToast!: (toast: Toast) => void;
   @appModule.State private loading!: boolean;
   @Prop() private menuOpen!: boolean;
 
-  private get _menuItems() {
+  private get menuItems() {
     return [
       {
         label: 'Strats',
         icon: 'chess',
         link: '/strats',
-        hide: this.status === Status.NO_AUTH,
+        show: !!this.profile?.team,
       },
       {
         label: 'Grenades',
         icon: 'bomb',
         link: '/utility',
-        hide: this.status === Status.NO_AUTH,
+        show: !!this.profile?.team,
       },
       {
         label: 'Team',
         icon: 'users',
         link: this.profile.team ? '/team' : '/team/join', // TODO: check if this works!
-        hide: this.status === Status.NO_AUTH,
+        show: !!this.profile._id,
       },
-    ].filter(item => !item.hide);
+    ].filter(item => item.show);
   }
 
   private async mounted() {

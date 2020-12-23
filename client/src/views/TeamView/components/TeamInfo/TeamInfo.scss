@@ -1,12 +1,15 @@
 .team-info {
-
   display: flex;
-  flex-direction: column;
-  
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+  }
+
   &__title {
+    font-family: $font_ubuntu-bold;
     font-size: 2em;
     text-transform: uppercase;
-    font-weight: bold;
   }
 
   &__container {
@@ -22,10 +25,18 @@
   }
 
   &__server-wrapper {
-    display: flex;
     color: $color--navyblue-80;
+    display: flex;
     align-items: center;
     margin-top: 12px;
+  }
+
+  &__server-fieldset {
+    @include fieldset;
+  }
+
+  &__server-headline {
+    @include fieldset-header;
   }
 
   &__server-copy,
@@ -36,15 +47,46 @@
     border: 2px solid $color--navyblue-80;
     border-radius: 6px;
     cursor: pointer;
+    color: $color--abbey;
+    box-shadow: $shadow-subtle;
+    transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, border-color 0.3s ease, background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $color--smoke;
+
+    & > svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    &:hover {
+      border-color: $color--abbey;
+      background-color: darken($color--smoke, 10%);
+    }
+
+    &:active {
+      transform: translateY(2px);
+      box-shadow: none;
+    }
+
+    @include viewport_mq3 {
+      width: 60px;
+      height: 60px;
+      padding: 16px;
+      border-radius: 12px;
+      border-width: 3px;
+    }
   }
 
   &__server-run {
-    @include tooltip;
     margin-left: 8px;
+    @include viewport_mq3 {
+      padding: 12px;
+    }
   }
 
   &__server-copy {
-    @include tooltip;
     &::after {
       left: 70px;
     }
@@ -66,7 +108,6 @@
   }
 
   &__code-copy {
-    @include tooltip;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -78,5 +119,13 @@
       height: 24px;
       width: 24px;
     }
+  }
+
+  &__manage-team {
+    @include fieldset;
+  }
+
+  &__manage-team-headline {
+    @include fieldset-header;
   }
 }

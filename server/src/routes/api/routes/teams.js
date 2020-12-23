@@ -88,24 +88,31 @@ router.post('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
 });
 
 // * Update One
-router.patch('/', verifyAuth, getTeam, async (req, res) => {
-  if (req.body.name != null) {
-    res.team.name = req.body.name;
+router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
+  const team = await Team.findById(res.player.team);
+
+  if (!team) return res.status(400).json({ error: 'Could not find team with the provided ID.' });
+  if (!res.player._id.equals(team.manager))
+    return res.status(401).json({ error: 'Only the team manager can edit team details.' });
+
+  if (req.file) {
+    await processImage(req.file);
+    if (team.avatar) {
+      await deleteFile(team.avatar);
+    }
+    team.avatar = req.file.filename;
   }
-  if (req.body.code != null) {
-    res.team.code = req.body.code;
-  }
-  if (req.body.website != null) {
-    res.team.website = req.body.website;
-  }
-  if (req.body.server != null) {
-    res.team.server = req.body.server;
-  }
-  if (req.body.manager != null) {
-    res.team.manager = req.body.manager;
-  }
-  // TODO: add "edit avatar"
-  const updatedTeam = await res.team.save();
+
+  if (req.body.name) team.name = req.body.name;
+
+  if (req.body.website) team.website = req.body.website;
+
+  if (req.body.serverIp) team.server.ip = req.body.serverIp;
+
+  if (req.body.serverPw) team.server.password = req.body.serverPw;
+
+  const updatedTeam = await team.save();
+
   res.json(updatedTeam);
 });
 
@@ -237,17 +244,6 @@ router.patch('/kick', verifyAuth, async (req, res) => {
   await target.save();
   await team.save();
   return res.json({ success: `Player ${target.name} was kicked from the team.` });
-});
-
-// ! Delete All | admin
-router.delete('/deleteAll', verifyAuth, async (req, res) => {
-  if (res.player.isAdmin) {
-    await Team.deleteMany({});
-    await Team.collection.dropIndexes();
-    res.json({ message: 'Deleted all teams' });
-  } else {
-    res.status(403).json({ error: 'This action requires higher privileges.' });
-  }
 });
 
 module.exports = router;

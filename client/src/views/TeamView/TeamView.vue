@@ -1,7 +1,7 @@
 <template>
   <div class="team-view">
     <div class="team-view__content">
-      <team-info />
+      <TeamInfo :teamInfo="teamInfo" />
       <div class="team-view__right-wrapper">
         <img :src="teamAvatarUrl" alt class="team-view__avatar" />
         <member-list
@@ -12,6 +12,7 @@
         />
       </div>
     </div>
+    <EditTeamForm v-if="showEditForm" :teamInfo="teamInfo" @cancel="toggleEditForm" @submit="requestTeamUpdate" />
   </div>
 </template>
 

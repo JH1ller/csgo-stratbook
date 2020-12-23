@@ -60,3 +60,18 @@
   margin-bottom: 24px;
   border-bottom: 1px solid rgba($color--abbey, 0.4);
 }
+
+@mixin fieldset-header {
+  @include typo_hl3($color--abbey);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba($color--abbey, 0.4);
+}
+
+@mixin fieldset {
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  background-color: $color--smoke;
+  padding: 16px;
+}
