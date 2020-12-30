@@ -2,9 +2,9 @@
   <div class="app">
     <span class="app__version">Beta {{ appVersion }}</span>
     <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi" /></span>
-    <dialog-wrapper />
-    <toast-wrapper />
-    <main-menu :menuOpen="menuOpen" @toggle-menu="toggleMenu" @close-menu="closeMenu" />
+    <DialogWrapper />
+    <ToastWrapper />
+    <MainMenu :menuOpen="menuOpen" @toggle-menu="toggleMenu" @close-menu="closeMenu" />
     <transition name="fade" mode="out-in">
       <router-view @click.native="closeMenu" class="router-view"></router-view>
     </transition>

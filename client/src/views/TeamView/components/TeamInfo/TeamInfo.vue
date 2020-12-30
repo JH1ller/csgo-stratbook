@@ -9,18 +9,18 @@
       <div class="team-info__server-wrapper">
         <div
           class="team-info__server-copy"
-          v-if="teamInfo.server.ip"
+          :inactive="!teamInfo.server.ip"
           @click="copyServer"
-          content="Copy server connection string"
+          :content="teamInfo.server.ip ? 'Copy server connection string' : 'Add gameserver data to use these features'"
           v-tippy
         >
           <fa-icon icon="copy" />
         </div>
         <div
           class="team-info__server-run"
-          v-if="teamInfo.server.ip"
+          :inactive="!teamInfo.server.ip"
           @click="runServer"
-          content="Run game and join server"
+          :content="teamInfo.server.ip ? 'Run game and join server' : 'Add gameserver data to use these features'"
           v-tippy
         >
           <fa-icon icon="gamepad" />
@@ -29,11 +29,9 @@
     </div>
     <div class="team-info__manage-team">
       <h3 class="team-info__manage-team-headline">Manage team</h3>
-      <span class="team-info__code">
+      <span class="team-info__code" @click="copyCode" content="Copy join code" v-tippy>
         {{ teamInfo.code }}
-        <div class="team-info__code-copy" @click="copyCode" content="Copy join code" v-tippy>
-          <fa-icon icon="copy" />
-        </div>
+          <fa-icon class="team-info__code-copy" icon="copy" />
       </span>
     </div>
   </div>

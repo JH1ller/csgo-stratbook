@@ -24,7 +24,7 @@ export default class TeamView extends Vue {
   @teamModule.Action private updateTeam!: (data: FormData) => Promise<Response>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
 
-  private showEditForm: boolean = true;
+  private showEditForm: boolean = false;
 
   private requestTeamLeave() {
     this.showDialog({

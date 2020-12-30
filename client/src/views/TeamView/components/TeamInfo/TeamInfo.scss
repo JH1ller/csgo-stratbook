@@ -31,51 +31,16 @@
     margin-top: 12px;
   }
 
-  &__server-fieldset {
-    @include fieldset;
-  }
-
-  &__server-headline {
-    @include fieldset-header;
-  }
-
   &__server-copy,
   &__server-run {
+    @include icon-button;
+
     width: 36px;
     height: 36px;
-    padding: 6px;
-    border: 2px solid $color--navyblue-80;
-    border-radius: 6px;
-    cursor: pointer;
-    color: $color--abbey;
-    box-shadow: $shadow-subtle;
-    transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, border-color 0.3s ease, background-color 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: $color--smoke;
-
-    & > svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    &:hover {
-      border-color: $color--abbey;
-      background-color: darken($color--smoke, 10%);
-    }
-
-    &:active {
-      transform: translateY(2px);
-      box-shadow: none;
-    }
 
     @include viewport_mq3 {
       width: 60px;
       height: 60px;
-      padding: 16px;
-      border-radius: 12px;
-      border-width: 3px;
     }
   }
 
@@ -93,39 +58,25 @@
   }
 
   &__code {
-    text-transform: uppercase;
-    font-size: 1.4em;
-    font-weight: bold;
-    color: $color--navyblue-80;
-    padding: 4px 0 4px 12px;
-    border: 3px dashed $color--navyblue-80;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    margin-top: auto;
-    user-select: auto;
-    width: fit-content;
+    @include icon-button;
+
+    width: 200px;
+    height: 60px;
   }
 
   &__code-copy {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-
-    margin-left: 8px;
-    padding: 6px 16px 6px 12px;
-    & > svg {
-      height: 24px;
-      width: 24px;
-    }
+    
   }
 
-  &__manage-team {
+  &__manage-team,
+  &__server-fieldset {
     @include fieldset;
+
+    height: 150px;
   }
 
-  &__manage-team-headline {
+  &__manage-team-headline,
+  &__server-headline {
     @include fieldset-header;
   }
 }

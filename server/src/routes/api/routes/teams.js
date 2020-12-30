@@ -107,9 +107,9 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
 
   if (req.body.website) team.website = req.body.website;
 
-  if (req.body.serverIp) team.server.ip = req.body.serverIp;
+  if (req.body.serverIp) await Team.updateOne(team, { $set: { 'server.ip': req.body.serverIp }});
 
-  if (req.body.serverPw) team.server.password = req.body.serverPw;
+  if (req.body.serverPw) await Team.updateOne(team, { $set: { 'server.password': req.body.serverPw }});
 
   const updatedTeam = await team.save();
 

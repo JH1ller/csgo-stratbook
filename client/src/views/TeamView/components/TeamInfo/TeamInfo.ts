@@ -24,11 +24,15 @@ export default class TeamInfo extends Vue {
   }
 
   private copyServer() {
+    if (!this.teamInfo.server?.ip) return;
+    
     navigator.clipboard.writeText(this.connectionString);
     this.showToast({ id: 'teamInfo/copyServer', text: 'Connection string copied' });
   }
 
   private runServer() {
+    if (!this.teamInfo.server?.ip) return;
+
     if (process?.versions?.electron) {
       const { remote } = require('electron');
       const currentWindow = remote.getCurrentWindow();

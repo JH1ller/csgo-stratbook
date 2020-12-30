@@ -16,6 +16,7 @@ import { Sides } from '@/api/models/Sides';
 import { MapID } from '@/components/MapPicker/MapPicker';
 import UtilityLightbox from '@/components/UtilityLightbox/UtilityLightbox.vue';
 import { Utility } from '@/api/models/Utility';
+import { catchPromise } from '@/utils/catchPromise';
 
 @Component({
   components: {
@@ -86,17 +87,23 @@ export default class StratsView extends Vue {
   }
 
   private requestDeleteStrat(stratID: string) {
-    this.showDialog({
-      key: 'strats-view/confirm-delete',
-      text: 'Are you sure you want to delete this strat?',
-    }).then(() => this.deleteStrat(stratID));
+    catchPromise(
+      this.showDialog({
+        key: 'strats-view/confirm-delete',
+        text: 'Are you sure you want to delete this strat?',
+      }),
+      () => this.deleteStrat(stratID)
+    );
   }
 
   private requestShareStrat(stratID: string) {
-    this.showDialog({
-      key: 'strats-view/confirm-share',
-      text: 'Do you want to create a share-link to let other teams add this strat to their stratbook?',
-    }).then(() => this.shareStrat(stratID));
+    catchPromise(
+      this.showDialog({
+        key: 'strats-view/confirm-share',
+        text: 'Do you want to create a share-link to let other teams add this strat to their stratbook?',
+      }),
+      () => this.shareStrat(stratID)
+    );
   }
 
   private updateContent(payload: Partial<Strat>) {
