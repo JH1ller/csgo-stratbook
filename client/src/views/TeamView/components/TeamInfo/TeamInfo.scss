@@ -1,5 +1,6 @@
 .team-info {
   display: flex;
+  flex-direction: column;
 
   &__head {
     display: flex;
@@ -20,19 +21,12 @@
   &__website {
     font-size: 1.1em;
     font-style: italic;
-    margin-top: 4px;
+    margin-top: 12px;
     cursor: pointer;
   }
 
-  &__server-wrapper {
-    color: $color--navyblue-80;
-    display: flex;
-    align-items: center;
-    margin-top: 12px;
-  }
-
-  &__server-copy,
-  &__server-run {
+  &__button,
+  &__button {
     @include icon-button;
 
     width: 36px;
@@ -42,41 +36,56 @@
       width: 60px;
       height: 60px;
     }
-  }
 
-  &__server-run {
-    margin-left: 8px;
-    @include viewport_mq3 {
-      padding: 12px;
+    &.--server-run {
+      margin-left: 8px;
     }
-  }
 
-  &__server-copy {
-    &::after {
-      left: 70px;
+    &.--server-copy {
+      &::after {
+        left: 70px;
+      }
     }
   }
 
   &__code {
     @include icon-button;
 
-    width: 200px;
+    width: 180px;
     height: 60px;
+    display: flex;
+    justify-content: space-between;
+    text-transform: uppercase;
+    font-family: $font_ubuntu-bold;
+    font-size: 1.2rem;
   }
 
-  &__code-copy {
-    
+  &__manage-wrapper {
+    display: flex;
+    margin-top: auto;
+
+    & > :not(:first-of-type) {
+      margin-left: 12px;
+    }
   }
 
-  &__manage-team,
-  &__server-fieldset {
+  &__fieldset {
     @include fieldset;
 
     height: 150px;
   }
 
-  &__manage-team-headline,
-  &__server-headline {
+  &__fieldset-content {
+    display: flex;
+    align-items: center;
+    margin-top: 12px;
+
+    & > :not(:first-of-type) {
+      margin-left: 12px;
+    }
+  }
+
+  &__fieldset-headline {
     @include fieldset-header;
   }
 }

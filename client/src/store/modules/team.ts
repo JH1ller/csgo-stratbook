@@ -30,11 +30,14 @@ export const teamModule: Module<TeamState, RootState> = {
     teamAvatarUrl(state): string {
       return resolveStaticImageUrl((state.teamInfo as Team).avatar);
     },
-    connectionString(state) {
+    connectionString(state): string {
       return `connect ${(state.teamInfo as Team).server?.ip}; ${
         (state.teamInfo as Team).server?.password ? `password ${(state.teamInfo as Team).server?.password}` : ''
       }`;
     },
+    isManager(state, _getters, rootState): boolean {
+      return (state.teamInfo as Team).manager === (rootState.auth.profile as Player)._id;
+    }
   },
   actions: {
     async fetchTeamInfo({ commit, dispatch }) {

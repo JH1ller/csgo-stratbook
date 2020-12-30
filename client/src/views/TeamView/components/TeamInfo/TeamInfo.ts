@@ -1,4 +1,4 @@
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { appModule, teamModule } from '@/store/namespaces';
 import { Team } from '@/api/models/Team';
@@ -7,6 +7,7 @@ import { Team } from '@/api/models/Team';
 export default class TeamInfo extends Vue {
   @appModule.Action private showToast!: (toast: Toast) => void;
   @teamModule.Getter private connectionString!: string;
+  @teamModule.Getter private isManager!: boolean;
   @Prop() teamInfo!: Team;
 
   private openWebsite() {
@@ -42,5 +43,10 @@ export default class TeamInfo extends Vue {
     }
 
     this.showToast({ id: 'teamInfo/runServer', text: `Launching game and connecting to ${this.teamInfo.server?.ip}` });
+  }
+
+  @Emit()
+  private showEdit(): void {
+    return;
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="team-view">
     <div class="team-view__content">
-      <TeamInfo :teamInfo="teamInfo" />
+      <TeamInfo :teamInfo="teamInfo" @show-edit="toggleEditForm" />
       <div class="team-view__right-wrapper">
         <img :src="teamAvatarUrl" alt class="team-view__avatar" />
         <member-list
@@ -12,7 +12,9 @@
         />
       </div>
     </div>
-    <EditTeamForm v-if="showEditForm" :teamInfo="teamInfo" @cancel="toggleEditForm" @submit="requestTeamUpdate" />
+    <transition name="fade">
+      <EditTeamForm v-if="showEditForm" :teamInfo="teamInfo" @cancel="toggleEditForm" @submit="requestTeamUpdate" />
+    </transition>
   </div>
 </template>
 
