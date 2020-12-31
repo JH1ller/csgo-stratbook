@@ -54,6 +54,15 @@
           >
             <fa-icon icon="edit" />
           </div>
+          <div
+            class="team-info__button"
+            :inactive="!isManager"
+            @click="deleteTeam"
+            :content="isManager ? 'Delete team' : 'Only the manager can delete the team'"
+            v-tippy
+          >
+            <fa-icon icon="trash-alt" />
+          </div>
         </div>
       </div>
     </div>

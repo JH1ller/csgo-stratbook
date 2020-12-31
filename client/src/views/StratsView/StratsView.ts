@@ -36,6 +36,7 @@ export default class StratsView extends Vue {
   @mapModule.State currentMap!: MapID;
   @stratModule.Getter stratsOfCurrentMap!: Strat[];
   @filterModule.State stratFilters!: StratFilters;
+  @filterModule.Getter activeStratFilterCount!: number;
   @teamModule.State teamMembers!: Player[];
 
   @filterModule.Action updateStratContentFilter!: (value: string) => Promise<void>;

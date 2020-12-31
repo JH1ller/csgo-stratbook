@@ -30,7 +30,7 @@ export const teamModule: Module<TeamState, RootState> = {
     teamAvatarUrl(state): string {
       return resolveStaticImageUrl((state.teamInfo as Team).avatar);
     },
-    connectionString(state): string {
+    serverString(state): string {
       return `connect ${(state.teamInfo as Team).server?.ip}; ${
         (state.teamInfo as Team).server?.password ? `password ${(state.teamInfo as Team).server?.password}` : ''
       }`;
@@ -113,12 +113,24 @@ export const teamModule: Module<TeamState, RootState> = {
       const res = await APIService.leaveTeam();
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
-        //dispatch('resetState');
         dispatch('strat/resetState', null, { root: true });
         dispatch('app/showToast', { id: 'team/leaveTeam', text: 'You have left the team' }, { root: true });
         //localStorage.clear(); // TODO: clear everything except auth data
         // TODO: create team/resetState and call it here
         return { success: 'Successfully left team.' };
+      } else {
+        return { error: res.error };
+      }
+    },
+    async deleteTeam({ dispatch }) {
+      const res = await APIService.deleteTeam();
+      if (res.success) {
+        dispatch('auth/setProfile', res.success, { root: true });
+        dispatch('strat/resetState', null, { root: true });
+        dispatch('app/showToast', { id: 'team/deleteTeam', text: 'Team has been deleted' }, { root: true });
+        //localStorage.clear(); // TODO: clear everything except auth data
+        // TODO: create team/resetState and call it here
+        return { success: 'Successfully deleted team.' };
       } else {
         return { error: res.error };
       }

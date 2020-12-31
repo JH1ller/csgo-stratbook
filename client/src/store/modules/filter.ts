@@ -47,7 +47,14 @@ const filterInitialState = (): FilterState => ({
 export const filterModule: Module<FilterState, RootState> = {
   namespaced: true,
   state: filterInitialState(),
-  getters: {},
+  getters: {
+    activeUtilityFilterCount(state): number {
+      return Object.values(state.utilityFilters).filter(v => v).length;
+    },
+    activeStratFilterCount(state): number {
+      return Object.values(state.stratFilters).filter(v => v).length;
+    }
+  },
   actions: {
     updateStratContentFilter({ commit }, value: string) {
       commit(SET_STRAT_CONTENT_FILTER, value);

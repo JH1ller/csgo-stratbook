@@ -324,6 +324,16 @@ class APIService {
     }
   }
 
+  static async deleteTeam(): Promise<APIResponse<Player>> {
+    const target = urljoin(Endpoints.Teams, Actions.Delete);
+    try {
+      const { data } = await axiosInstance.delete(target);
+      return { success: data };
+    } catch (error) {
+      return { error: error.response?.data?.error };
+    }
+  }
+
   static async transferManager(memberID: string): Promise<APIResponse<Team>> {
     const target = urljoin(Endpoints.Teams, Actions.Transfer);
     try {

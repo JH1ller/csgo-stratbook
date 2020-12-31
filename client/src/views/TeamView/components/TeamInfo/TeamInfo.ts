@@ -6,9 +6,9 @@ import { Team } from '@/api/models/Team';
 @Component({})
 export default class TeamInfo extends Vue {
   @appModule.Action private showToast!: (toast: Toast) => void;
-  @teamModule.Getter private connectionString!: string;
-  @teamModule.Getter private isManager!: boolean;
-  @Prop() teamInfo!: Team;
+  @Prop() private serverString!: string;
+  @Prop() private isManager!: boolean;
+  @Prop() private teamInfo!: Team;
 
   private openWebsite() {
     if (process?.versions?.electron) {
@@ -27,7 +27,7 @@ export default class TeamInfo extends Vue {
   private copyServer() {
     if (!this.teamInfo.server?.ip) return;
     
-    navigator.clipboard.writeText(this.connectionString);
+    navigator.clipboard.writeText(this.serverString);
     this.showToast({ id: 'teamInfo/copyServer', text: 'Connection string copied' });
   }
 
@@ -47,6 +47,11 @@ export default class TeamInfo extends Vue {
 
   @Emit()
   private showEdit(): void {
+    return;
+  }
+
+  @Emit()
+  private deleteTeam(): void {
     return;
   }
 }

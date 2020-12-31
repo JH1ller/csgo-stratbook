@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Team = require('../../../models/team');
 const Player = require('../../../models/player');
+const Strat = require('../../../models/strat');
 const crypto = require('crypto');
 const { getTeam } = require('../../utils/getters');
 const { verifyAuth } = require('../../utils/verifyToken');
@@ -119,18 +120,25 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
 // * Delete One
 router.delete('/', verifyAuth, async (req, res) => {
   const team = await Team.findById(res.player.team);
-  if (team.manager === res.player._id) {
-    await res.team.delete();
-    const members = await Player.find({ team: res.team._id });
-    const memberPromises = members.map(async (member) => {
-      member.team = undefined;
-      return await member.save();
-    });
-    await Promise.all(memberPromises);
-    res.json({ message: 'Deleted team successfully' });
-  } else {
-    res.status(403).json({ error: 'This action requires higher privileges.' });
-  }
+  if (!team.manager.equals(res.player._id)) 
+    return res.status(403).json({ error: 'This action requires higher privileges.' });
+
+  await res.team.delete();
+
+  const members = await Player.find({ team: res.team._id });
+  const memberPromises = members.map(async (member) => {
+    member.team = undefined;
+    return member.save();
+  });
+  await Promise.all(memberPromises);
+
+  const strats = await Strat.find({ team: res.team._id });
+  const stratPromises = strats.map(async (strat) => {
+    return strat.delete();
+  });
+  await Promise.all(stratPromises);
+
+  res.json(res.player);
 });
 
 // * Join team
