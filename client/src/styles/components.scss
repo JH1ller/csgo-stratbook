@@ -73,7 +73,13 @@
   display: flex;
   flex-direction: column;
   background-color: $color--smoke;
-  padding: 16px;
+  padding: 12px;
+  width: 100%;
+
+  @include viewport_mq3 {
+    width: fit-content;
+    padding: 16px;
+  }
 }
 
 @mixin icon-button {

@@ -325,7 +325,7 @@ class APIService {
   }
 
   static async deleteTeam(): Promise<APIResponse<Player>> {
-    const target = urljoin(Endpoints.Teams, Actions.Delete);
+    const target = urljoin(Endpoints.Teams);
     try {
       const { data } = await axiosInstance.delete(target);
       return { success: data };

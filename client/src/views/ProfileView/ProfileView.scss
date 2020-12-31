@@ -2,7 +2,7 @@
   &__content {
     background-color: white;
     box-shadow: $shadow-subtle;
-    padding: 24px 24px 64px 24px;
+    padding: 16px 16px 48px 16px;
     border-radius: 8px;
     position: relative;
     display: flex;
@@ -15,6 +15,7 @@
       flex-direction: row;
       justify-content: space-between;
       align-items: flex-start;
+      padding: 24px 24px 64px 24px;
     }
   }
 
@@ -46,8 +47,13 @@
     @include button-default($color--red);
 
     position: absolute;
-    right: 24px;
-    bottom: 24px;
+    right: 16px;
+    bottom: 16px;
     color: white;
+
+    @include viewport_mq3 {
+      right: 24px;
+      bottom: 24px;
+    }
   }
 }

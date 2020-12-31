@@ -2,22 +2,29 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 24px;
+  padding: 16px;
   background-color: $color--smoke;
   box-shadow: $shadow-subtle;
   transition: height 0.3s ease;
   border-radius: 8px;
   width: 100%;
 
-  @include viewport_mq2 {
+  @include viewport_mq3 {
     width: 320px;
+    padding: 24px;
   }
 
   &__logo {
-    width: 150px;
-    height: 150px;
+    width: 130px;
+    height: 130px;
     object-fit: contain;
-    margin-bottom: 48px;
+    margin-bottom: 20px;
+
+    @include viewport_mq3 {
+      width: 150px;
+      height: 150px;
+      margin-bottom: 36px;
+    }
   }
 
   &__label {

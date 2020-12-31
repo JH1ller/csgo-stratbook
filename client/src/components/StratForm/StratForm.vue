@@ -17,8 +17,14 @@
         <TextInput v-model="formFields.videoLink.value" :field="formFields.videoLink" fieldName="videoLink" />
       </FormFieldSet>
       <div class="strat-form__btn-wrapper">
-        <button type="button" @click="cancelClicked"><fa-icon icon="ban" class="strat-form__btn-cancel" /></button>
-        <button type="submit"><fa-icon icon="check" class="strat-form__btn-submit" /></button>
+        <button type="button" @click="cancelClicked" class="strat-form__btn --cancel">
+          Cancel
+          <fa-icon icon="ban" />
+        </button>
+        <button type="submit" class="strat-form__btn --submit">
+          Save
+          <fa-icon icon="check" />
+        </button>
       </div>
     </form>
   </BackdropDialog>

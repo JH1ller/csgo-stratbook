@@ -36,8 +36,14 @@
       </FormFieldSet>
 
       <div class="utility-form__btn-wrapper">
-        <button type="button" @click="cancelClicked"><fa-icon icon="ban" class="utility-form__btn-cancel" /></button>
-        <button type="submit"><fa-icon icon="check" class="utility-form__btn-submit" /></button>
+        <button type="button" @click="cancelClicked" class="utility-form__btn --cancel">
+          Cancel
+          <fa-icon icon="ban" />
+        </button>
+        <button type="submit" class="utility-form__btn --submit">
+          Save
+          <fa-icon icon="check" />
+        </button>
       </div>
     </form>
   </BackdropDialog>

@@ -166,11 +166,14 @@
     position: absolute;
     top: 12px;
     right: 12px;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     color: white;
     transition: transform 0.3s ease;
     cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    background-color: rgba(black, 0.1);
 
     &:hover {
       transform: scale(1.05);

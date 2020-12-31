@@ -2,24 +2,36 @@
   &__preview {
     display: flex;
     margin-top: 12px;
-    height: 120px;
     align-items: flex-start;
     position: relative;
     overflow-x: auto;
     overflow-y: hidden;
+    height: 90px;
+
+    @include viewport_mq3 {
+      height: 120px;
+    }
   }
 
   &__image {
     object-fit: cover;
-    width: 150px;
-    height: 100px;
     border-radius: 4px;
+    width: 150px;
+    height: 75px;
+
+    @include viewport_mq3 {
+      height: 100px;
+    }
   }
 
   &__preview-item {
     background-color: $color--smoke;
     position: relative;
-    height: 100px;
+    height: 75px;
+
+    @include viewport_mq3 {
+      height: 100px;
+    }
 
     &:not(:first-of-type) {
       margin-left: 12px;

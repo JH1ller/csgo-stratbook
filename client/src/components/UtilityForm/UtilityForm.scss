@@ -1,42 +1,33 @@
 .utility-form {
-  width: 100%;
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  // overflow: auto;
-  // @include hidden-scrollbar;
 
   @include viewport_mq3 {
     width: 450px;
   }
 
-  &__btn-submit,
-  &__btn-cancel {
-    color: white;
-    border-radius: 2px;
-    padding: 4px 8px;
-    width: 64px;
-    height: 32px;
-    transition: background-color 0.2s ease;
-    cursor: pointer;
-  }
-
   &__btn-wrapper {
-    margin-top: 6px;
+    margin-top: auto;
     display: flex;
     justify-content: flex-end;
-    transform: translateY(10px);
-  }
-
-  &__btn-submit {
-    background-color: $color--green;
-    margin-left: 12px;
-    &:hover {
-      background-color: darken($color--green, 10%);
+    
+    @include viewport_mq3 {
+      transform: translateY(10px);
+      margin-top: 6px;
     }
   }
-  &__btn-cancel {
-    background-color: $color--red;
-    &:hover {
-      background-color: darken($color--red, 15%);
+
+  &__btn {
+    &.--submit {
+      @include button-default($color--green, white);
+    }
+    &.--cancel {
+      @include button-default($color--red, white);
+    }
+
+    &:not(:first-of-type) {
+      margin-left: 6px;
     }
   }
 

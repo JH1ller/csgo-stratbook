@@ -68,6 +68,7 @@ const processImage = async (file) => {
     fs.renameSync(path.resolve(file.destination, 'temp', file.filename), file.path);
     await uploadFile(file.path, file.filename);
   } catch (error) {
+    console.error(error);
     throw new Error(error);
   }
 };
@@ -86,6 +87,7 @@ function uploadFile(filepath, filename) {
       console.log(`File uploaded successfully. ${data.Location}`);
       resolve(data.Location);
     } catch (error) {
+      console.error(error);
       reject(error);
     }
   });

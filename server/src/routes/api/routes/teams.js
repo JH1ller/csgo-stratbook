@@ -123,16 +123,16 @@ router.delete('/', verifyAuth, async (req, res) => {
   if (!team.manager.equals(res.player._id)) 
     return res.status(403).json({ error: 'This action requires higher privileges.' });
 
-  await res.team.delete();
+  await team.delete();
 
-  const members = await Player.find({ team: res.team._id });
+  const members = await Player.find({ team: team._id });
   const memberPromises = members.map(async (member) => {
     member.team = undefined;
     return member.save();
   });
   await Promise.all(memberPromises);
 
-  const strats = await Strat.find({ team: res.team._id });
+  const strats = await Strat.find({ team: team._id });
   const stratPromises = strats.map(async (strat) => {
     return strat.delete();
   });

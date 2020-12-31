@@ -43,6 +43,8 @@ export default class TeamView extends Vue {
     );
   }
   private requestTeamDelete() {
+    if (!this.isManager) return;
+
     catchPromise(
       this.showDialog({
         key: 'team-view/confirm-delete',
@@ -83,6 +85,8 @@ export default class TeamView extends Vue {
   }
 
   private toggleEditForm() {
+    if (!this.isManager) return;
+    
     this.showEditForm = !this.showEditForm;
   }
 }

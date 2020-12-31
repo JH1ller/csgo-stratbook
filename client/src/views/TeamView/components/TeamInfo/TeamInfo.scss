@@ -23,6 +23,7 @@
     font-style: italic;
     margin-top: 12px;
     cursor: pointer;
+    width: fit-content;
   }
 
   &__button,
@@ -51,34 +52,58 @@
   &__code {
     @include icon-button;
 
-    width: 180px;
-    height: 60px;
     display: flex;
     justify-content: space-between;
     text-transform: uppercase;
     font-family: $font_ubuntu-bold;
     font-size: 1.2rem;
+    width: 120px;
+    height: 36px;
+
+    @include viewport_mq3 {
+      width: 180px;
+      height: 60px;
+    }
   }
 
   &__manage-wrapper {
     display: flex;
-    margin-top: auto;
+    flex-direction: column;
+    margin-top: 12px;
 
     & > :not(:first-of-type) {
-      margin-left: 12px;
+      margin-top: 12px;
     }
+
+    @include viewport_mq3 {
+      margin-top: auto;
+      flex-direction: row;
+
+      & > :not(:first-of-type) {
+        margin-left: 12px;
+        margin-top: 0;
+      }
+    }
+
   }
 
   &__fieldset {
     @include fieldset;
 
-    height: 150px;
+    height: 105px;
+
+    @include viewport_mq3 {
+      height: 150px;
+    }
   }
 
   &__fieldset-content {
     display: flex;
     align-items: center;
-    margin-top: 12px;
+
+    @include viewport_mq3 {
+      margin-top: 12px;
+    }
 
     & > :not(:first-of-type) {
       margin-left: 12px;

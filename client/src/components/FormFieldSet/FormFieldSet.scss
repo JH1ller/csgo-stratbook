@@ -1,10 +1,14 @@
 .form-field-set {
-  padding: 16px;
+  padding: 12px;
   box-shadow: $shadow-subtle;
   background-color: white;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
+
+  @include viewport_mq3 {
+    padding: 16px;
+  }
 
   &:not(:first-of-type) {
     margin-top: 12px;
