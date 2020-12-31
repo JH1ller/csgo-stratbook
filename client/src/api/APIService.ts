@@ -294,6 +294,16 @@ class APIService {
     }
   }
 
+  static async updateTeam(payload: FormData): Promise<APIResponse<Team>> {
+    const target = urljoin(Endpoints.Teams);
+    try {
+      const { data } = await axiosInstance.patch(target, payload);
+      return { success: data };
+    } catch (error) {
+      return { error: error.response?.data?.error };
+    }
+  }
+
   static async joinTeam(code: string): Promise<APIResponse<Player>> {
     const target = urljoin(Endpoints.Teams, Actions.Join);
     try {
@@ -308,6 +318,16 @@ class APIService {
     const target = urljoin(Endpoints.Teams, Actions.Leave);
     try {
       const { data } = await axiosInstance.patch(target);
+      return { success: data };
+    } catch (error) {
+      return { error: error.response?.data?.error };
+    }
+  }
+
+  static async deleteTeam(): Promise<APIResponse<Player>> {
+    const target = urljoin(Endpoints.Teams);
+    try {
+      const { data } = await axiosInstance.delete(target);
       return { success: data };
     } catch (error) {
       return { error: error.response?.data?.error };

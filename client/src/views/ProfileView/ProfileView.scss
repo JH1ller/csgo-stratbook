@@ -2,7 +2,7 @@
   &__content {
     background-color: white;
     box-shadow: $shadow-subtle;
-    padding: 24px 24px 64px 24px;
+    padding: 16px 16px 48px 16px;
     border-radius: 8px;
     position: relative;
     display: flex;
@@ -15,16 +15,14 @@
       flex-direction: row;
       justify-content: space-between;
       align-items: flex-start;
+      padding: 24px 24px 64px 24px;
     }
   }
 
   &__detail {
-    border-radius: 6px;
+    @include fieldset;
+
     margin-top: 24px;
-    display: flex;
-    flex-direction: column;
-    background-color: $color--smoke;
-    padding: 16px;
     width: 100%;
 
     @include viewport_mq3 {
@@ -35,6 +33,7 @@
   &__avatar {
     width: 150px;
     height: 150px;
+    object-fit: cover;
     border-radius: 50%;
     box-shadow: $shadow-subtle;
 
@@ -48,8 +47,13 @@
     @include button-default($color--red);
 
     position: absolute;
-    right: 24px;
-    bottom: 24px;
+    right: 16px;
+    bottom: 16px;
     color: white;
+
+    @include viewport_mq3 {
+      right: 24px;
+      bottom: 24px;
+    }
   }
 }

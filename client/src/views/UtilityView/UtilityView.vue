@@ -22,6 +22,7 @@
         class="utility-view__filter-button"
         @click="toggleFilterMenu"
         v-if="!utilityFormOpen && !filterMenuOpen"
+        :activeFilterCount="activeUtilityFilterCount"
       />
     </transition>
     <transition name="fade">

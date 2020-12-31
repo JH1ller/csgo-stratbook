@@ -52,8 +52,6 @@ app.use(
   })
 );
 
-// app.use(subdomain('app', express.static('dist')));
-
 app.use(subdomain('api', apiRouter));
 
 if (process.env.NODE_ENV === 'production') {

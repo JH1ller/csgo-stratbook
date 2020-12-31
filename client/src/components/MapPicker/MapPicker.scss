@@ -27,15 +27,14 @@
     margin: 0 5px;
 
     &:hover {
-      background: $color--light-active;
-
-      .map-picker__image {
-        transform: scale3d(1.05, 1.05, 1.05);
-      }
+      background-color: $color--smoke;
     }
 
     &.-current {
-      background: $color--light-active;
+      background-color: $color--smoke;
+      .map-picker__image {
+        transform: scale3d(1.05, 1.05, 1.05);
+      }
     }
 
     @include viewport_mq3 {
@@ -48,7 +47,7 @@
     height: 70px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid $color--light-active;
+    border: 3px solid $color--smoke;
     transition: all 0.3s ease;
 
     @include viewport_mq3 {
@@ -64,7 +63,7 @@
     font-size: 0.9rem;
     border-radius: 5px;
     padding: 2px 5px;
-    background: $color--light-active;
+    background-color: $color--smoke;
     transition: all 0.3s ease;
 
     @include viewport_mq3 {

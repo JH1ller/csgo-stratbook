@@ -1,4 +1,4 @@
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { appModule, teamModule } from '@/store/namespaces';
 import { Team } from '@/api/models/Team';
@@ -6,8 +6,9 @@ import { Team } from '@/api/models/Team';
 @Component({})
 export default class TeamInfo extends Vue {
   @appModule.Action private showToast!: (toast: Toast) => void;
-  @teamModule.State private teamInfo!: Team;
-  @teamModule.Getter private connectionString!: string;
+  @Prop() private serverString!: string;
+  @Prop() private isManager!: boolean;
+  @Prop() private teamInfo!: Team;
 
   private openWebsite() {
     if (process?.versions?.electron) {
@@ -24,11 +25,15 @@ export default class TeamInfo extends Vue {
   }
 
   private copyServer() {
-    navigator.clipboard.writeText(this.connectionString);
+    if (!this.teamInfo.server?.ip) return;
+    
+    navigator.clipboard.writeText(this.serverString);
     this.showToast({ id: 'teamInfo/copyServer', text: 'Connection string copied' });
   }
 
   private runServer() {
+    if (!this.teamInfo.server?.ip) return;
+
     if (process?.versions?.electron) {
       const { remote } = require('electron');
       const currentWindow = remote.getCurrentWindow();
@@ -36,7 +41,17 @@ export default class TeamInfo extends Vue {
     } else {
       window.open(`steam://connect/${this.teamInfo.server?.ip}/${this.teamInfo.server?.password}`, '_blank');
     }
-  
+
     this.showToast({ id: 'teamInfo/runServer', text: `Launching game and connecting to ${this.teamInfo.server?.ip}` });
+  }
+
+  @Emit()
+  private showEdit(): void {
+    return;
+  }
+
+  @Emit()
+  private deleteTeam(): void {
+    return;
   }
 }

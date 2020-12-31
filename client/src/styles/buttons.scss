@@ -1,25 +1,28 @@
-@mixin button-default($color: white) {
+@mixin button-default($bgcolor: white, $color: $color--navyblue) {
   display: flex;
   padding: 6px 11px;
   border-radius: 3px;
   justify-content: center;
   align-items: center;
-  background-color: $color;
+  background-color: $bgcolor;
   cursor: pointer;
   box-shadow: $shadow-subtle;
   transition: border-color 0.3s ease, background-color 0.3s ease;
-  border: 2px solid rgba($color--navyblue, 0.2);
+  border: 2px solid rgba(black, 0.1);
+  color: $color;
 
   &:hover {
-    border-color: rgba($color--navyblue, 0.4);
-    background-color: darken($color, 2%);
+    border-color: rgba(black, 0.2);
+    background-color: darken($bgcolor, 2%);
   }
 
   & > svg {
-    margin-left: 6px;
     width: 14px;
     height: 14px;
-    color: $color--navyblue;
+  }
+
+  & > :first-child {
+    margin-left: 6px;
   }
 }
 

@@ -4,8 +4,8 @@
 
   &__button {
     position: relative;
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
     object-fit: contain;
     opacity: 0.4;
     cursor: pointer;
@@ -14,27 +14,15 @@
     background-color: $color--smoke;
     border: 2px solid $color--grey;
 
+    @include viewport_mq3 {
+      width: 64px;
+      height: 64px;
+    }
+
     &.-selected {
       opacity: 1;
       filter: grayscale(0%);
     }
-
-    // &.--smoke.-selected {
-    //   background-color: $color--blue;
-    //   border-color: darken($color--blue, 10%);
-    // }
-    // &.--flash.-selected {
-    //   background-color: $color--yellow;
-    //   border-color: #d8d970;
-    // }
-    // &.--grenade.-selected {
-    //   background-color: $color--red;
-    //   border-color: darken($color--red, 10%);
-    // }
-    // &.--molotov.-selected {
-    //   background-color: $color--red;
-    //   border-color: darken($color--red, 10%);
-    // }
 
     &:not(:first-of-type) {
       margin-left: 12px;
@@ -51,6 +39,11 @@
     transform: translateX(-50%);
     font-variant: small-caps;
     letter-spacing: -0.3px;
+    display: none;
+    
+    @include viewport_mq3 {
+      display: block;
+    }
   }
 
   &__icon {

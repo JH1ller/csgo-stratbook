@@ -2,9 +2,9 @@
   <div class="app">
     <span class="app__version">Beta {{ appVersion }}</span>
     <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi" /></span>
-    <dialog-wrapper />
-    <toast-wrapper />
-    <main-menu :menuOpen="menuOpen" @toggle-menu="toggleMenu" @close-menu="closeMenu" />
+    <DialogWrapper />
+    <ToastWrapper />
+    <MainMenu :menuOpen="menuOpen" @toggle-menu="toggleMenu" @close-menu="closeMenu" />
     <transition name="fade" mode="out-in">
       <router-view @click.native="closeMenu" class="router-view"></router-view>
     </transition>
@@ -83,27 +83,16 @@ export default class App extends Vue {
 }
 
 .router-view {
-  //background-color: $color--light;
-
-  //margin-top: 50px;
-  padding-top: 15px;
-  padding-left: 15px;
-  padding-right: 15px;
+  
   height: 100%;
-  //max-height: calc(100vh - 50px);
-  // width: calc(100% - 70px);
-  // height: calc(100% - 50px);
-  padding-bottom: 30px;
-  // max-height: calc(100vh - 50px);
+  padding: 16px;
   overflow-y: scroll;
   overflow-x: hidden;
 
   @include viewport_mq3 {
     margin-left: 70px;
     width: calc(100% - 70px);
-    padding-top: 30px;
-    padding-left: 30px;
-    padding-right: 30px;
+    padding: 24px;
   }
 }
 </style>

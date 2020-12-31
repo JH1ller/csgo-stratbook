@@ -29,6 +29,7 @@
         class="strats-view__filter-button"
         @click="toggleFilterMenu"
         v-if="!filterMenuOpen && !stratFormOpen"
+        :activeFilterCount="activeStratFilterCount"
       />
     </transition>
 

@@ -1,6 +1,6 @@
 <template>
   <BackdropDialog>
-    <div class="utility-form">
+    <form class="utility-form" @submit.prevent="handleSubmit" novalidate>
       <FormFieldSet>
         <TextInput v-model="formFields.name.value" :field="formFields.name" fieldName="name" />
         <TextInput v-model="formFields.description.value" :field="formFields.description" fieldName="description" />
@@ -36,10 +36,16 @@
       </FormFieldSet>
 
       <div class="utility-form__btn-wrapper">
-        <button @click="cancelClicked"><fa-icon icon="ban" class="utility-form__btn-cancel" /></button>
-        <button @click="handleSubmit"><fa-icon icon="check" class="utility-form__btn-submit" /></button>
+        <button type="button" @click="cancelClicked" class="utility-form__btn --cancel">
+          Cancel
+          <fa-icon icon="ban" />
+        </button>
+        <button type="submit" class="utility-form__btn --submit">
+          Save
+          <fa-icon icon="check" />
+        </button>
       </div>
-    </div>
+    </form>
   </BackdropDialog>
 </template>
 

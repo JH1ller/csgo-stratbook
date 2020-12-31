@@ -1,8 +1,13 @@
 .mouse-button-picker {
   position: relative;
-  width: 36px;
-  height: 60px;
+  width: 30px;
+  height: 48px;
   cursor: pointer;
+
+  @include viewport_mq3 {
+    width: 36px;
+    height: 60px;
+  }
 
   &__image {
     position: absolute;

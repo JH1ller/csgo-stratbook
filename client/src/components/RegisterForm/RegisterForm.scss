@@ -8,16 +8,26 @@
   transition: height 0.3s ease;
   border-radius: 8px;
   width: 100%;
+  overflow: auto;
+  height: 100%;
 
-  @include viewport_mq2 {
+  @include viewport_mq3 {
     width: 400px;
     padding: 24px;
+    height: auto;
   }
 
   &__logo {
-    width: 150px;
-    height: 150px;
-    margin-bottom: 36px;
+    width: 130px;
+    height: 130px;
+    object-fit: contain;
+    margin-bottom: 20px;
+
+    @include viewport_mq3 {
+      width: 150px;
+      height: 150px;
+      margin-bottom: 36px;
+    }
   }
 
   &__label {
@@ -30,7 +40,34 @@
     width: 100%;
 
     &:not(:first-of-type) {
-      margin-top: 16px;
+      margin-top: 12px;
+
+      @include viewport_mq3 {
+        margin-top: 16px;
+      }
+    }
+
+    &.--key {
+      position: relative;
+
+      &::after {
+        content: '?';
+        border-radius: 50%;
+        border: 1px solid $color--abbey;
+        color: $color--abbey;
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        opacity: 0.4;
+        font-weight: bold;
+        width: 16px;
+        height: 16px;
+        display: flex;
+        font-size: 0.8rem;
+        justify-content: center;
+        align-items: center;
+        transform: translateY(-50%);
+      }
     }
   }
 

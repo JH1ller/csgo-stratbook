@@ -13,7 +13,15 @@
       :field="formFields.password"
     />
     <TextInput type="password" class="register-form__input" v-model="passwordRepeat.value" :field="passwordRepeat" />
-    <TextInput type="text" class="register-form__input" v-model="formFields.key.value" :field="formFields.key" />
+    <TextInput
+      type="text"
+      class="register-form__input --key"
+      v-model="formFields.key.value"
+      :field="formFields.key"
+      content="During beta phase, you can only create an account with a beta access key. To apply for beta access you can write an email to support@stratbook.live"
+      v-tippy
+    />
+
     <p class="register-form__label">Avatar:</p>
     <ImageUploader class="register-form__image-uploader" v-model="files" :limit="1" />
     <input type="submit" class="register-form__submit" value="Register" />

@@ -5,7 +5,6 @@
 
   &__list {
     background: $color--darkblue;
-    // background: $color--dark;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
@@ -18,9 +17,9 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     z-index: 10;
     pointer-events: none;
+    display: flex;
 
     @include viewport_mq3 {
-      display: flex;
       width: 70px;
       pointer-events: all;
     }

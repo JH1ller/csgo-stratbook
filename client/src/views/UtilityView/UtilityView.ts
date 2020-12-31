@@ -34,6 +34,7 @@ export default class UtilityView extends Vue {
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
 
   @filterModule.State utilityFilters!: UtilityFilters;
+  @filterModule.Getter activeUtilityFilterCount!: number;
   @filterModule.Action updateUtilityTypeFilter!: (type: UtilityTypes | null) => Promise<void>;
   @filterModule.Action updateUtilityNameFilter!: (name: string) => Promise<void>;
   @filterModule.Action updateUtilitySideFilter!: (side: Sides | null) => Promise<void>;

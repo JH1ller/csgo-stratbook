@@ -9,7 +9,7 @@ import { TeamState, teamModule } from './modules/team';
 import { utilityModule, UtilityState } from './modules/utility';
 
 export interface Response {
-  success?: string;
+  success?: string | boolean;
   error?: string;
 }
 
@@ -33,7 +33,7 @@ export default new Vuex.Store({
     strat: stratModule,
     auth: authModule,
     team: teamModule,
-    utility: utilityModule
+    utility: utilityModule,
   },
   state: undefined,
   mutations: {},

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const Strat = require('../../../models/strat');
 const Player = require('../../../models/player');
 const { uploadSingle, processImage, deleteFile } = require('../../utils/fileUpload');

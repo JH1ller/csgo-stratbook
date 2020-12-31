@@ -10,6 +10,7 @@
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.2s ease;
   border: 2px solid white;
+  position: relative;
 
   &:hover {
     transform: scale(1.05);
@@ -20,5 +21,23 @@
     width: 24px;
     height: 24px;
     color: white;
+  }
+
+  &__indicator {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    border-radius: 50%;
+    background-color: $color--orange;
+    width: 20px;
+    height: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-shadow: $shadow-subtle;
+    box-shadow: $shadow-subtle;
   }
 }

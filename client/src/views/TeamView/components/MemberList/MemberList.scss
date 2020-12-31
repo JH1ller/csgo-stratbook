@@ -8,6 +8,11 @@
   overflow-x: hidden;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;
+  width: 100%;
+  
+  @include viewport_mq3 {
+    width: 250px;
+  }
   
   &::-webkit-scrollbar {
     display: none;
