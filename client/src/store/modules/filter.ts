@@ -53,7 +53,7 @@ export const filterModule: Module<FilterState, RootState> = {
     },
     activeStratFilterCount(state): number {
       return Object.values(state.stratFilters).filter(v => v).length;
-    }
+    },
   },
   actions: {
     updateStratContentFilter({ commit }, value: string) {

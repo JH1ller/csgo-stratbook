@@ -34,7 +34,7 @@ export default class StratsView extends Vue {
   @Provide('lightbox') showLightboxFunc = this.showLightbox;
 
   @mapModule.State currentMap!: MapID;
-  @stratModule.Getter stratsOfCurrentMap!: Strat[];
+  @stratModule.Getter sortedStratsOfCurrentMap!: Strat[];
   @filterModule.State stratFilters!: StratFilters;
   @filterModule.Getter activeStratFilterCount!: number;
   @teamModule.State teamMembers!: Player[];
@@ -109,10 +109,6 @@ export default class StratsView extends Vue {
 
   private updateContent(payload: Partial<Strat>) {
     this.updateStrat(payload);
-  }
-
-  private get sortedStrats(): Strat[] {
-    return this.stratsOfCurrentMap.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }
 
   private showLightbox(utility: Utility) {

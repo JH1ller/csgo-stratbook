@@ -17,7 +17,7 @@
       @update-content="updateContent"
       @share-strat="requestShareStrat"
       @unshare-strat="unshareStrat"
-      :strats="sortedStrats"
+      :strats="sortedStratsOfCurrentMap"
       :filters="stratFilters"
     />
     <transition name="fade">

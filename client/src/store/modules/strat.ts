@@ -26,7 +26,12 @@ export const stratModule: Module<StratState, RootState> = {
   getters: {
     stratsOfCurrentMap(state, _getters, rootState) {
       return state.strats.filter(strat => strat.map === rootState.map.currentMap);
-    }
+    },
+    sortedStratsOfCurrentMap(_state, getters) {
+      return (getters.stratsOfCurrentMap as Strat[])
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .sort((a, b) => +b.active - +a.active);
+    },
   },
   actions: {
     async fetchStrats({ commit, dispatch }) {
@@ -70,7 +75,11 @@ export const stratModule: Module<StratState, RootState> = {
     async addSharedStrat({ dispatch }, stratID: string) {
       const res = await APIService.addSharedStrat(stratID);
       if (res.success) {
-        dispatch('app/showToast', { id: 'strat/addedShared', text: 'Strat successfully added to your stratbook.' }, { root: true });
+        dispatch(
+          'app/showToast',
+          { id: 'strat/addedShared', text: 'Strat successfully added to your stratbook.' },
+          { root: true }
+        );
       }
     },
     addStratLocally({ commit, dispatch }, payload: { strat: Strat }) {

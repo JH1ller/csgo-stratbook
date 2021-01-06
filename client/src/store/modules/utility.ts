@@ -26,6 +26,11 @@ export const utilityModule: Module<UtilityState, RootState> = {
     utilitiesOfCurrentMap(state, _getters, rootState) {
       return state.utilities.filter(utility => utility.map === rootState.map.currentMap);
     },
+    sortedUtilitiesOfCurrentMap(_state, getters) {
+      return (getters.utilitiesOfCurrentMap as Utility[]).sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    },
   },
   actions: {
     async fetchUtilities({ commit, dispatch }) {

@@ -10,7 +10,7 @@
       @update-content="updateContent"
       @share-strat="shareStrat"
       @unshare-strat="unshareStrat"
-      :style="{'animation-delay': 0.1 * index + 's'}"
+      :style="{ 'animation-delay': 0.05 * index + 's' }"
     />
   </div>
 </template>
