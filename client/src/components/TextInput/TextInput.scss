@@ -18,6 +18,10 @@
         top: 7px;
 
         @include viewport_mq3 {
+          font-size: 0.65rem;
+        }
+
+        @include viewport_mq7 {
           font-size: 0.7rem;
         }
       }
@@ -34,6 +38,10 @@
     font-size: 0.9rem;
 
     @include viewport_mq3 {
+      font-size: 0.95rem;
+    }
+
+    @include viewport_mq7 {
       font-size: 1rem;
     }
   }
@@ -48,6 +56,10 @@
     color: $color--red;
 
     @include viewport_mq3 {
+      font-size: 0.65rem;
+    }
+
+    @include viewport_mq7 {
       font-size: 0.7rem;
     }
   }

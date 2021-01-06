@@ -4,6 +4,10 @@
   height: 100%;
 
   @include viewport_mq3 {
+    width: 360px;
+  }
+
+  @include viewport_mq7 {
     width: 450px;
   }
 
@@ -11,7 +15,7 @@
     margin-top: auto;
     display: flex;
     justify-content: flex-end;
-    
+
     @include viewport_mq3 {
       transform: translateY(10px);
       margin-top: 6px;

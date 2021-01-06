@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Strat = require('../../../models/strat');
-const { getStrat } = require('../..//utils/getters');
+const { getStrat } = require('../../utils/getters');
 const { verifyAuth } = require('../../utils/verifyToken');
+const { sanitize } = require('../../utils/sanitizeHtml');
 
 router.get('/', verifyAuth, async (req, res) => {
   if (!res.player.team) {
@@ -78,7 +79,13 @@ router.patch('/', verifyAuth, getStrat, async (req, res) => {
   const updatableFields = ['name', 'map', 'side', 'type', 'active', 'videoLink', 'note', 'content', 'shared'];
   Object.entries(req.body).forEach(([key, value]) => {
     // check for undefined / null, but accept empty string ''
-    if (value != null && updatableFields.includes(key)) res.strat[key] = value;
+    if (value != null && updatableFields.includes(key)) {
+      if (key === 'content') {
+        res.strat[key] = sanitize(value);
+      } else {
+        res.strat[key] = value;
+      }
+    }
   });
   const updatedStrat = await res.strat.save();
   res.json(updatedStrat);

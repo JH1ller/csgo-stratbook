@@ -83,7 +83,6 @@ export default class App extends Vue {
 }
 
 .router-view {
-  
   height: 100%;
   padding: 16px;
   overflow-y: scroll;

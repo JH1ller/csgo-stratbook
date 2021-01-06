@@ -8,7 +8,7 @@
     overflow-y: hidden;
     height: 90px;
 
-    @include viewport_mq3 {
+    @include viewport_mq7 {
       height: 120px;
     }
   }
@@ -19,7 +19,7 @@
     width: 150px;
     height: 75px;
 
-    @include viewport_mq3 {
+    @include viewport_mq7 {
       height: 100px;
     }
   }
@@ -29,7 +29,7 @@
     position: relative;
     height: 75px;
 
-    @include viewport_mq3 {
+    @include viewport_mq7 {
       height: 100px;
     }
 

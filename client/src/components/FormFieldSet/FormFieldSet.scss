@@ -7,6 +7,10 @@
   flex-direction: column;
 
   @include viewport_mq3 {
+    padding: 12px;
+  }
+
+  @include viewport_mq7 {
     padding: 16px;
   }
 

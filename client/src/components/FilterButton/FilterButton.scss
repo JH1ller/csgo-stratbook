@@ -1,6 +1,6 @@
 .filter-button {
   background-color: $color--grey;
-  border-radius: 50%;
+  border-radius: 999px; // * some high value to ensure pill shape when long, and circle when short
   width: 48px;
   height: 48px;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
@@ -8,12 +8,16 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  transition: transform 0.2s ease, background-color 0.2s ease, width 0.2s ease;
   border: 2px solid white;
   position: relative;
 
+  @include viewport_mq3 {
+    width: 96px;
+  }
+
   &:hover {
-    transform: scale(1.05);
+    transform: scale(1.03);
     background-color: darken($color--grey, 15%);
   }
 
@@ -39,5 +43,15 @@
     color: white;
     text-shadow: $shadow-subtle;
     box-shadow: $shadow-subtle;
+  }
+
+  &__label {
+    display: none;
+    color: white;
+    margin-left: 6px;
+
+    @include viewport_mq3 {
+      display: block;
+    }
   }
 }

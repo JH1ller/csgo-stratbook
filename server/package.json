@@ -41,6 +41,7 @@
     "multer": "^1.4.2",
     "nodemailer": "^6.4.10",
     "pug": "^2.0.4",
+    "sanitize-html": "^2.3.0",
     "sharp": "^0.25.4",
     "socket.io": "^2.3.0",
     "url-join": "^4.0.1"

@@ -16,10 +16,15 @@
     height: 100%;
 
     @include viewport_mq3 {
-      padding: 24px;
+      padding: 20px;
       height: auto;
-      min-width: 360px;
+      min-width: 320px;
       border-radius: 10px;
+    }
+
+    @include viewport_mq7 {
+      padding: 24px;
+      min-width: 360px;
     }
   }
 }

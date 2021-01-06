@@ -15,6 +15,11 @@
     border: 2px solid $color--grey;
 
     @include viewport_mq3 {
+      width: 56px;
+      height: 56px;
+    }
+
+    @include viewport_mq7 {
       width: 64px;
       height: 64px;
     }
@@ -32,17 +37,22 @@
   &__label {
     font-family: $font_ubuntu-bold;
     color: $color--abbey;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     position: absolute;
-    bottom: 16px;
     left: 50%;
     transform: translateX(-50%);
     font-variant: small-caps;
     letter-spacing: -0.3px;
     display: none;
-    
+
     @include viewport_mq3 {
       display: block;
+      bottom: 10px;
+    }
+
+    @include viewport_mq7 {
+      font-size: 0.8rem;
+      bottom: 12px;
     }
   }
 
@@ -55,5 +65,13 @@
     height: 24px;
     opacity: 0.6;
     object-fit: contain;
+
+    @include viewport_mq3 {
+      top: 8px;
+    }
+
+    @include viewport_mq7 {
+      top: 10px;
+    }
   }
 }
