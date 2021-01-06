@@ -21,7 +21,7 @@
     "@types/async": "^3.2.0",
     "@types/jwt-decode": "^2.2.1",
     "@types/node": "12.12.47",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "core-js": "^3.6.4",
     "directory-tree": "^2.2.4",
     "dotenv": "^8.2.0",
