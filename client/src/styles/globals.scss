@@ -29,6 +29,10 @@ body {
   }
 }
 
+input {
+  user-select: text;
+}
+
 img {
   user-drag: none;
   user-select: none;

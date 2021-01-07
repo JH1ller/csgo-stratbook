@@ -11,7 +11,7 @@ const s3 = new AWS.S3({
 });
 
 const fileStorage = multer.diskStorage({
-  destination: function (req, file, next) {
+  destination: function (_req, _file, next) {
     next(null, 'public/upload/');
   },
   filename: function (req, file, next) {
@@ -20,10 +20,10 @@ const fileStorage = multer.diskStorage({
 });
 
 const fileLimits = {
-  fileSize: 1000000,
+  fileSize: 10_000_000, // * 10 MB
 };
 
-const fileFilter = (req, file, next) => {
+const fileFilter = (_req, file, next) => {
   const allowedFileTypes = ['.jpg', '.jpeg', '.png', '.webp'];
 
   if (allowedFileTypes.includes(path.extname(file.originalname))) {
