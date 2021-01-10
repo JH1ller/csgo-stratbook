@@ -23,7 +23,10 @@
       <a class="main-menu__list-item main-menu__link --twitter" href="https://twitter.com/csgostratbook" target="_blank"
         ><fa-icon :icon="['fab', 'twitter']" />twitter</a
       >
-      <a class="main-menu__list-item main-menu__link --download" @click="downloadDesktopClient"
+      <a
+        class="main-menu__list-item main-menu__link --download"
+        @click="downloadDesktopClient"
+        data-splitbee-event="Click: Get Desktop Client"
         ><fa-icon icon="download" />Get desktop client</a
       >
       <button

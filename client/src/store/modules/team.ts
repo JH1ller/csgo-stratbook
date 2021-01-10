@@ -1,10 +1,10 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
-import APIService from '@/api/APIService';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import { Team } from '@/api/models/Team';
 import { Player } from '@/api/models/Player';
 import { Status } from './auth';
+import api from '@/api/base';
 
 const SET_TEAM_INFO = 'SET_TEAM_INFO';
 const SET_TEAM_MEMBERS = 'SET_TEAM_MEMBERS';
@@ -37,11 +37,11 @@ export const teamModule: Module<TeamState, RootState> = {
     },
     isManager(state, _getters, rootState): boolean {
       return (state.teamInfo as Team).manager === (rootState.auth.profile as Player)._id;
-    }
+    },
   },
   actions: {
     async fetchTeamInfo({ commit, dispatch }) {
-      const res = await APIService.getTeam();
+      const res = await api.team.getTeam();
       if (res.success) {
         commit(SET_TEAM_INFO, res.success);
         dispatch('saveTeamInfoToStorage');
@@ -53,14 +53,14 @@ export const teamModule: Module<TeamState, RootState> = {
       }
     },
     async fetchTeamMembers({ commit, dispatch }) {
-      const res = await APIService.getMembersOfTeam();
+      const res = await api.team.getMembersOfTeam();
       if (res.success) {
         commit(SET_TEAM_MEMBERS, res.success);
         dispatch('saveTeamMembersToStorage');
       }
     },
     async createTeam({ dispatch }, formData: FormData) {
-      const res = await APIService.createTeam(formData);
+      const res = await api.team.createTeam(formData);
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
         dispatch(
@@ -77,7 +77,7 @@ export const teamModule: Module<TeamState, RootState> = {
       }
     },
     async updateTeam({ dispatch }, formData: FormData) {
-      const res = await APIService.updateTeam(formData);
+      const res = await api.team.updateTeam(formData);
       if (res.success) {
         dispatch(
           'app/showToast',
@@ -93,7 +93,7 @@ export const teamModule: Module<TeamState, RootState> = {
       }
     },
     async joinTeam({ dispatch }, code: string) {
-      const res = await APIService.joinTeam(code);
+      const res = await api.team.joinTeam(code);
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
         dispatch(
@@ -110,7 +110,7 @@ export const teamModule: Module<TeamState, RootState> = {
       }
     },
     async leaveTeam({ dispatch }) {
-      const res = await APIService.leaveTeam();
+      const res = await api.team.leaveTeam();
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
         dispatch('strat/resetState', null, { root: true });
@@ -123,7 +123,7 @@ export const teamModule: Module<TeamState, RootState> = {
       }
     },
     async deleteTeam({ dispatch }) {
-      const res = await APIService.deleteTeam();
+      const res = await api.team.deleteTeam();
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
         dispatch('strat/resetState', null, { root: true });
@@ -136,7 +136,7 @@ export const teamModule: Module<TeamState, RootState> = {
       }
     },
     async transferManager({ dispatch, commit }, memberID: string) {
-      const res = await APIService.transferManager(memberID);
+      const res = await api.team.transferManager(memberID);
       if (res.success) {
         commit(SET_TEAM_INFO, res.success);
         dispatch(
@@ -150,7 +150,7 @@ export const teamModule: Module<TeamState, RootState> = {
       }
     },
     async kickMember({ dispatch }, memberID: string) {
-      const res = await APIService.kickMember(memberID);
+      const res = await api.team.kickMember(memberID);
       if (res.success) {
         dispatch('fetchTeamMembers');
         dispatch('app/showToast', { id: 'team/kickMember', text: 'Player successfully kicked' }, { root: true });

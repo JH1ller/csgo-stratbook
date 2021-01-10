@@ -12,7 +12,8 @@
   border: 2px solid white;
 
   @include viewport_mq3 {
-    width: 132px;
+    width: auto;
+    padding: 0 10px;
   }
 
   &:hover {

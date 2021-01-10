@@ -13,7 +13,8 @@
   position: relative;
 
   @include viewport_mq3 {
-    width: 96px;
+    width: auto;
+    padding: 0 10px;
   }
 
   &:hover {

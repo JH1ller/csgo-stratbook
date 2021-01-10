@@ -1,11 +1,14 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const ms = require('ms');
+const nanoid = require('nanoid');
 const router = express.Router();
 const Player = require('../../../models/player');
+const Session = require('../../../models/session');
 const Key = require('../../../models/key');
 const urljoin = require('url-join');
-const { registerValidation, loginValidation } = require('../../utils/validation');
+const { registerValidation } = require('../../utils/validation');
 const { sendMail, Templates } = require('../../utils/mailService');
 const { uploadSingle, processImage } = require('../../utils/fileUpload');
 const { APP_URL } = require('../../../config');
@@ -67,8 +70,63 @@ router.post('/login', async (req, res) => {
 
   if (!targetUser.confirmed) return res.status(401).send({ error: 'Please confirm your email to log in.' });
 
-  const token = jwt.sign({ _id: targetUser._id }, process.env.TOKEN_SECRET); // TODO: make tokens expire & implement refresh tokens
-  res.header('Authorization', token).send(token);
+  const refreshToken = nanoid(64);
+  const refreshTokenExpiration = new Date(Date.now() + ms(process.env.REFRESH_TOKEN_TTL));
+
+  const session = new Session({
+    refreshToken,
+    player: targetUser._id,
+    expires: refreshTokenExpiration,
+    userAgent: req.get('User-Agent'),
+  });
+
+  await session.save();
+
+  const token = jwt.sign({ _id: targetUser._id }, process.env.TOKEN_SECRET, {
+    expiresIn: process.env.JWT_TOKEN_TTL,
+  });
+
+  res.send({
+    token,
+    refreshToken,
+  });
+});
+
+router.post('/refresh', async (req, res) => {
+  const session = await Session.findOne({ refreshToken: req.body.refreshToken });
+  if (!session) return res.status(400).json({ error: 'Invalid refresh token' });
+
+  if (session.expires < new Date()) {
+    session.remove();
+    return res.status(400).json({ error: 'Refresh token expired' });
+  }
+
+  const refreshToken = nanoid(64);
+  const refreshTokenExpiration = new Date(Date.now() + ms(process.env.REFRESH_TOKEN_TTL));
+
+  session.refreshToken = refreshToken;
+  session.expires = refreshTokenExpiration;
+  session.userAgent = req.get('User-Agent');
+
+  await session.save();
+
+  const token = jwt.sign({ _id: session.player }, process.env.TOKEN_SECRET, {
+    expiresIn: process.env.JWT_TOKEN_TTL,
+  });
+
+  res.send({
+    token,
+    refreshToken,
+  });
+});
+
+router.post('/logout', async (req, res) => {
+  const session = await Session.findOne({ refreshToken: req.body.refreshToken });
+  if (!session) return res.status(400).json({ error: 'Invalid refresh token' });
+
+  await Session.deleteOne(session._id);
+
+  res.send('Successfully logged out.');
 });
 
 router.get('/confirmation/:token', async (req, res) => {

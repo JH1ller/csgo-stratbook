@@ -1,11 +1,10 @@
 .strat-editor {
-
   &__editor {
+    user-select: text;
     transition: box-shadow 0.3s ease;
     border-radius: 6px;
     border: 1px solid $color--light;
     font-family: $font_ubuntu-regular;
-   // font-weight: bold;
     padding: 8px 12px;
     color: $color--dark;
     background-color: white;
@@ -26,7 +25,7 @@
     box-shadow: $shadow-subtle;
     border-radius: 2px;
     padding: 3px 4px;
-   // font-weight: bold;
+    // font-weight: bold;
     font-family: $font_ubuntu-bold;
     font-size: 1rem;
     cursor: pointer;
@@ -84,7 +83,7 @@
     align-items: center;
 
     &:not(:first-of-type) {
-      border-top: 1px solid darken(white, 10%)  ;
+      border-top: 1px solid darken(white, 10%);
     }
     &:first-of-type {
       border-top-left-radius: 6px;
@@ -128,10 +127,10 @@
 
 [placeholder]:empty::before {
   content: attr(placeholder);
-  color: $color--grey; 
+  color: $color--grey;
   cursor: text;
 }
 
 [placeholder]:empty:focus::before {
-  content: "";
+  content: '';
 }

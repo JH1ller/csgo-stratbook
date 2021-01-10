@@ -9,11 +9,11 @@
     justify-content: flex-start;
     align-items: center;
     width: 0;
-    height: 100vh;
-    position: absolute;
+    position: fixed;
     transition: width $transition--speed ease;
     left: 0;
     top: 0;
+    bottom: 0;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     z-index: 10;
     pointer-events: none;

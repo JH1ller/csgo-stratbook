@@ -1,6 +1,6 @@
 <template>
   <BackdropDialog>
-    <form class="strat-form" @submit.prevent="handleSubmit" novalidate>
+    <form class="strat-form" @submit.prevent="handleSubmit" novalidate data-splitbee-event="Submit: Strat">
       <FormFieldSet>
         <TextInput v-model="formFields.name.value" :field="formFields.name" fieldName="name" />
       </FormFieldSet>

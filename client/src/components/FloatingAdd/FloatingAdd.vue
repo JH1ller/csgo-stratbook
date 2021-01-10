@@ -1,6 +1,6 @@
 <template>
   <div class="floating-add" @click="click">
-    <fa-icon icon="plus" class="floating-add__icon" /><span class="floating-add__label">Add strat</span>
+    <fa-icon icon="plus" class="floating-add__icon" /><span class="floating-add__label">{{ label }}</span>
   </div>
 </template>
 

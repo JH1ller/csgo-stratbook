@@ -1,7 +1,8 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
-import APIService from '@/api/APIService';
+import APIService from '@/api/base';
 import { Utility } from '@/api/models/Utility';
+import api from '@/api/base';
 
 const SET_UTILITIES = 'SET_UTILITIES';
 
@@ -34,7 +35,7 @@ export const utilityModule: Module<UtilityState, RootState> = {
   },
   actions: {
     async fetchUtilities({ commit, dispatch }) {
-      const res = await APIService.getUtilities();
+      const res = await api.utility.getUtilities();
       if (res.success) {
         commit(SET_UTILITIES, res.success);
         dispatch('saveUtilitiesToStorage');
@@ -44,18 +45,18 @@ export const utilityModule: Module<UtilityState, RootState> = {
       }
     },
     async deleteUtility({ dispatch }, utilityID: string) {
-      const res = await APIService.deleteUtility(utilityID);
+      const res = await api.utility.deleteUtility(utilityID);
       if (res.success)
         dispatch('app/showToast', { id: 'utility/deleteUtility', text: 'Deleted utility.' }, { root: true });
     },
     async createUtility({ dispatch, rootState }, data: FormData) {
       data.append('map', rootState.map.currentMap);
-      const res = await APIService.createUtility(data);
+      const res = await api.utility.createUtility(data);
       if (res.success)
         dispatch('app/showToast', { id: 'utility/createUtility', text: 'Added utility.' }, { root: true });
     },
     async updateUtility({ dispatch }, data: FormData) {
-      const res = await APIService.updateUtility(data);
+      const res = await api.utility.updateUtility(data);
       if (res.success)
         dispatch(
           'app/showToast',
@@ -86,7 +87,7 @@ export const utilityModule: Module<UtilityState, RootState> = {
     //   }
     // },
     async addSharedUtility({ dispatch }, utilityID: string) {
-      const res = await APIService.addSharedUtility(utilityID);
+      const res = await api.utility.addSharedUtility(utilityID);
       if (res.success) {
         dispatch(
           'app/showToast',
@@ -99,7 +100,7 @@ export const utilityModule: Module<UtilityState, RootState> = {
       commit(ADD_UTILITY, payload.utility);
       dispatch('saveUtilitiesToStorage');
     },
-    updateUtilityLocally({ commit, rootState, dispatch }, payload: { utility: Utility }) {
+    updateUtilityLocally({ commit, dispatch }, payload: { utility: Utility }) {
       commit(UPDATE_UTILITY, payload);
       dispatch('saveUtilitiesToStorage');
     },

@@ -27,7 +27,7 @@
           @click="toggleFilterMenu"
           :activeFilterCount="activeStratFilterCount"
         />
-        <FloatingAdd class="strats-view__floating-add" @click="showStratForm" />
+        <FloatingAdd class="strats-view__floating-add" label="Add strat" @click="showStratForm" />
       </div>
     </transition>
 
