@@ -12,18 +12,23 @@
   &.-inactive {
     border: 2px dashed $color--navyblue-50;
     opacity: 0.5;
-    .strat-item__strat-title {
-      text-decoration: line-through;
-    }
   }
 
   @include viewport_mq3 {
     padding: 12px 20px;
   }
 
-  &__strat-title {
+  &__title {
     font-size: 1.2em;
     font-weight: bold;
+    display: inline;
+  }
+
+  &__inactive-label {
+    color: rgba($color--navyblue, 0.7);
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-left: 6px;
   }
 
   &__note {
@@ -103,6 +108,14 @@
     }
   }
 
+  &__action-buttons {
+    display: flex;
+
+    padding-right: 12px;
+    margin-right: 4px;
+    border-right: 1px solid $color--grey;
+  }
+
   &__btn {
     //@include tooltip;
     cursor: pointer;
@@ -115,6 +128,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
     &:hover {
       color: lighten($color--navyblue, 15%);
     }

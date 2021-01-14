@@ -29,6 +29,10 @@ body {
   }
 }
 
+input {
+  user-select: text;
+}
+
 img {
   user-drag: none;
   user-select: none;
@@ -44,11 +48,12 @@ img {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba($color--navyblue, 0.6);
+  //background: rgba($color--navyblue, 0.6);
+  background: $color--darkblue;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba($color--darkblue, 0.5);
 }
 
 .tippy-popper {

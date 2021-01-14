@@ -13,6 +13,8 @@ export default class StratList extends Vue {
   @Prop() filters!: StratFilters;
 
   private get filteredStrats() {
+    // TODO: cleanup and use only one filter() to improve performance
+    // TODO: also, move to vuex getter
     return this.strats
       .filter(strat => {
         return this.filters.side ? strat.side === this.filters.side : true;

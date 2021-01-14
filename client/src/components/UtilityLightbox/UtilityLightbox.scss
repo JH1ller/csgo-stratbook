@@ -6,11 +6,18 @@
   background-color: white;
   position: relative;
   border-radius: 6px;
-  width: calc(100% - 140px);
+  width: 100%;
   height: calc(100% - 100px);
   position: absolute;
   z-index: 9;
-  top: 30px;
+  top: 16px;
+  left: 0;
+
+  @include viewport_mq3 {
+    width: calc(100% - 128px);
+    top: 24px;
+    left: 94px;
+  }
 
   &__image-wrapper {
     width: 100%;

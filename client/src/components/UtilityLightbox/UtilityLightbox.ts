@@ -5,6 +5,7 @@ import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 import MouseButtonDisplay from '@/components/MouseButtonDisplay/MouseButtonDisplay.vue';
 import UtilityTypeDisplay from '@/components/UtilityTypeDisplay/UtilityTypeDisplay.vue';
+import isMobile from 'is-mobile';
 
 @Component({
   components: {
@@ -26,6 +27,24 @@ export default class UtilityLightbox extends Vue {
 
   private resolveImage(fileURL: string) {
     return resolveStaticImageUrl(fileURL);
+  }
+
+  private mounted() {
+    if (isMobile()) {
+      this.$el.requestFullscreen();
+      if ('lock' in screen.orientation) {
+        screen.orientation.lock('landscape');
+      }
+    }
+  }
+
+  private unmounted() {
+    if (isMobile()) {
+      document.exitFullscreen();
+      if ('unlock' in screen.orientation) {
+        screen.orientation.unlock();
+      }
+    }
   }
 
   @Emit()

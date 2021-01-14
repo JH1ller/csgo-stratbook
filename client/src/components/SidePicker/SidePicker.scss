@@ -17,6 +17,11 @@
     }
 
     @include viewport_mq3 {
+      width: 56px;
+      height: 56px;
+    }
+
+    @include viewport_mq7 {
       width: 64px;
       height: 64px;
     }

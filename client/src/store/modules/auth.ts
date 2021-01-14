@@ -1,8 +1,9 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
-import APIService from '@/api/APIService';
+import APIService from '@/api/base';
 import WebSocketService from '@/api/WebSocketService';
 import { Player } from '@/api/models/Player';
+import api from '@/api/base';
 
 const SET_TOKEN = 'SET_TOKEN';
 const SET_PROFILE = 'SET_PROFILE';
@@ -33,7 +34,7 @@ export const authModule: Module<AuthState, RootState> = {
   getters: {},
   actions: {
     async fetchProfile({ dispatch }) {
-      const res = await APIService.getPlayer();
+      const res = await api.player.getPlayer();
       if (res.success) {
         const profile = res.success;
         localStorage.setItem('profile', JSON.stringify(profile));
@@ -64,7 +65,7 @@ export const authModule: Module<AuthState, RootState> = {
         }
       }
 
-      const res = await APIService.updatePlayer(data, updateStrats);
+      const res = await api.player.updatePlayer(data, updateStrats);
       if (res.success) {
         commit(SET_PROFILE, res.success);
         const message = data.has('email')
@@ -87,7 +88,7 @@ export const authModule: Module<AuthState, RootState> = {
       }
     },
     async login({ commit, dispatch }, { email, password }) {
-      const res = await APIService.login(email, password);
+      const res = await api.auth.login(email, password);
       if (res.success) {
         commit(SET_TOKEN, res.success);
         localStorage.setItem('token', res.success);
@@ -105,7 +106,7 @@ export const authModule: Module<AuthState, RootState> = {
       dispatch('app/showToast', { id: 'auth/logout', text: 'Logged out successfully.' }, { root: true });
     },
     async forgotPassword({ dispatch }, email: string) {
-      const res = await APIService.forgotPassword(email);
+      const res = await api.auth.forgotPassword(email);
       if (res.success) {
         dispatch(
           'app/showToast',
@@ -117,7 +118,7 @@ export const authModule: Module<AuthState, RootState> = {
       }
     },
     async resetPassword({ dispatch }, payload: { token: string; password: string }) {
-      const res = await APIService.resetPassword(payload);
+      const res = await api.auth.resetPassword(payload);
       if (res.success) {
         dispatch(
           'app/showToast',
@@ -130,7 +131,7 @@ export const authModule: Module<AuthState, RootState> = {
       }
     },
     async register({ dispatch }, formData: Partial<Player>) {
-      const res = await APIService.register(formData);
+      const res = await api.auth.register(formData);
       if (res.success) {
         dispatch(
           'app/showToast',

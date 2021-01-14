@@ -16,7 +16,7 @@
     border-color: $color--navyblue-80;
   }
 
-  @include viewport_mq3 {
+  @include viewport_mq7 {
     @if ($placeholder == true) {
       padding: 22px 12px 10px 12px;
     } @else {

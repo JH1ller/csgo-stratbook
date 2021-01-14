@@ -5,7 +5,7 @@
       v-for="(utility, index) in filteredUtilities"
       :utility="utility"
       :key="utility.id"
-      :style="{ 'animation-delay': 0.1 * index + 's' }"
+      :style="{ 'animation-delay': 0.025 * index + 's' }"
       @open-in-lightbox="openInLightbox"
     />
   </div>

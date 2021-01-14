@@ -29,7 +29,7 @@ import { UtilityFilters } from '@/store/modules/filter';
 })
 export default class UtilityView extends Vue {
   @mapModule.State currentMap!: MapID;
-  @utilityModule.Getter utilitiesOfCurrentMap!: Utility[];
+  @utilityModule.Getter sortedUtilitiesOfCurrentMap!: Utility[];
   @mapModule.Action updateCurrentMap!: (mapID: MapID) => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
 
@@ -98,9 +98,5 @@ export default class UtilityView extends Vue {
   private hideLightbox() {
     this.currentLightboxUtility = null;
     this.lightboxOpen = false;
-  }
-
-  private get sortedUtilities(): Utility[] {
-    return this.utilitiesOfCurrentMap.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }
 }

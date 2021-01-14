@@ -1,21 +1,15 @@
 <template>
-  <div class="strat-item" :class="{ '-inactive': !strat.active }" @dblclick="toggleActive">
+  <div class="strat-item" :class="{ '-inactive': !strat.active }">
     <SideBadge class="strat-item__side" :side="strat.side" />
     <div class="strat-item__btn-wrapper">
       <transition name="fade">
-        <div v-if="editMode" class="strat-item__btn --save" @click="updateContent" content="Save strat changes" v-tippy>
-          <fa-icon icon="save" />Save
-        </div>
-      </transition>
-      <transition name="fade">
-        <div
-          v-if="editMode"
-          class="strat-item__btn --discard"
-          @click="discardContent"
-          content="Discard strat changes"
-          v-tippy
-        >
-          <fa-icon icon="ban" />Discard
+        <div class="strat-item__action-buttons" v-if="editMode">
+          <div class="strat-item__btn --save" @click="updateContent" content="Save strat changes" v-tippy>
+            <fa-icon icon="save" />Save
+          </div>
+          <div class="strat-item__btn --discard" @click="discardContent" content="Discard strat changes" v-tippy>
+            <fa-icon icon="ban" />Discard
+          </div>
         </div>
       </transition>
       <div
@@ -26,6 +20,15 @@
         v-tippy
       >
         <fa-icon icon="film" />
+      </div>
+      <div
+        class="strat-item__btn --toggle-active"
+        @click="toggleActive"
+        :content="strat.active ? 'Set inactive' : 'Set active'"
+        v-tippy
+      >
+        <fa-icon icon="check-circle" v-if="strat.active" />
+        <fa-icon icon="minus-circle" v-else />
       </div>
       <div
         class="strat-item__btn --share"
@@ -44,7 +47,10 @@
       </div>
     </div>
     <div class="strat-item__strat-info">
-      <span class="strat-item__strat-title">{{ strat.name }}</span>
+      <span class="strat-item__title">
+        {{ strat.name }}
+        <span v-if="!strat.active" class="strat-item__inactive-label">(inactive)</span>
+      </span>
       <TypeBadge class="strat-item__type" :type="strat.type" />
       <p class="strat-item__note" v-if="strat.note">
         <fa-icon icon="info-circle" />

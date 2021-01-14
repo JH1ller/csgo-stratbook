@@ -31,6 +31,8 @@ import {
   faWifi,
   faChevronLeft,
   faChevronRight,
+  faMinusCircle,
+  faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -81,7 +83,9 @@ library.add(
   faComment,
   faWifi,
   faChevronLeft,
-  faChevronRight
+  faChevronRight,
+  faMinusCircle,
+  faCheckCircle
 );
 Vue.component('fa-icon', FontAwesomeIcon);
 

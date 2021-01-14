@@ -70,7 +70,7 @@ export default class App extends Vue {
     position: absolute;
     font-size: 0.8rem;
     top: 1px;
-    right: 80px;
+    right: 90px;
     color: $color--smoke;
     display: flex;
     align-items: center;
@@ -83,7 +83,6 @@ export default class App extends Vue {
 }
 
 .router-view {
-  
   height: 100%;
   padding: 16px;
   overflow-y: scroll;

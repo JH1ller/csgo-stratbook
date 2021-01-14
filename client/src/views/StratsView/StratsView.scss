@@ -1,23 +1,17 @@
 .strats-view {
-  &__floating-add {
+  &__fab-group {
+    display: flex;
     position: fixed;
-    right: 20px;
+    right: 16px;
     bottom: 16px;
     z-index: 10;
 
-    @include viewport_mq3 {
-      right: 36px;
+    & > :not(:first-of-type) {
+      margin-left: 8px;
     }
-  }
-
-  &__filter-button {
-    position: fixed;
-    right: 72px;
-    bottom: 16px;
-    z-index: 10;
 
     @include viewport_mq3 {
-      right: 96px;
+      right: 34px;
     }
   }
 }

@@ -1,8 +1,7 @@
-import Vue from 'vue';
 import { Module } from 'vuex';
 import { RootState } from '..';
-import APIService from '@/api/APIService';
 import { Strat } from '@/api/models/Strat';
+import api from '@/api/base';
 
 const SET_STRATS = 'SET_STRATS';
 
@@ -26,11 +25,16 @@ export const stratModule: Module<StratState, RootState> = {
   getters: {
     stratsOfCurrentMap(state, _getters, rootState) {
       return state.strats.filter(strat => strat.map === rootState.map.currentMap);
-    }
+    },
+    sortedStratsOfCurrentMap(_state, getters) {
+      return (getters.stratsOfCurrentMap as Strat[])
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .sort((a, b) => +b.active - +a.active);
+    },
   },
   actions: {
     async fetchStrats({ commit, dispatch }) {
-      const res = await APIService.getStrats();
+      const res = await api.strat.getStrats();
       if (res.success) {
         commit(SET_STRATS, res.success);
         dispatch('saveStratsToStorage');
@@ -40,21 +44,21 @@ export const stratModule: Module<StratState, RootState> = {
       }
     },
     async deleteStrat({ dispatch }, stratID: string) {
-      const res = await APIService.deleteStrat(stratID);
+      const res = await api.strat.deleteStrat(stratID);
       if (res.success) dispatch('app/showToast', { id: 'strat/deleteStrat', text: 'Deleted strat.' }, { root: true });
     },
     async createStrat({ dispatch, rootState }, payload: Partial<Strat>) {
       const newStrat = { ...payload, map: rootState.map.currentMap };
-      const res = await APIService.createStrat(newStrat);
+      const res = await api.strat.createStrat(newStrat);
       if (res.success) dispatch('app/showToast', { id: 'strat/createStrat', text: 'Added strat.' }, { root: true });
     },
     async updateStrat({ dispatch }, payload: Partial<Strat>) {
-      const res = await APIService.updateStrat(payload);
+      const res = await api.strat.updateStrat(payload);
       if (res.success)
         dispatch('app/showToast', { id: 'strat/updateStrat', text: 'Successfully updated the strat.' }, { root: true });
     },
     async shareStrat({ dispatch }, stratID: string) {
-      const res = await APIService.updateStrat({ _id: stratID, shared: true });
+      const res = await api.strat.updateStrat({ _id: stratID, shared: true });
       if (res.success) {
         const shareLink = `${window.location.origin}/#/share/${stratID}`;
         navigator.clipboard.writeText(shareLink);
@@ -62,15 +66,19 @@ export const stratModule: Module<StratState, RootState> = {
       }
     },
     async unshareStrat({ dispatch }, stratID: string) {
-      const res = await APIService.updateStrat({ _id: stratID, shared: false });
+      const res = await api.strat.updateStrat({ _id: stratID, shared: false });
       if (res.success) {
         dispatch('app/showToast', { id: 'strat/unshareStrat', text: 'Strat is no longer shared.' }, { root: true });
       }
     },
     async addSharedStrat({ dispatch }, stratID: string) {
-      const res = await APIService.addSharedStrat(stratID);
+      const res = await api.strat.addSharedStrat(stratID);
       if (res.success) {
-        dispatch('app/showToast', { id: 'strat/addedShared', text: 'Strat successfully added to your stratbook.' }, { root: true });
+        dispatch(
+          'app/showToast',
+          { id: 'strat/addedShared', text: 'Strat successfully added to your stratbook.' },
+          { root: true }
+        );
       }
     },
     addStratLocally({ commit, dispatch }, payload: { strat: Strat }) {

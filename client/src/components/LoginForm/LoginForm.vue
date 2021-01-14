@@ -1,5 +1,5 @@
 <template>
-  <form class="login-form" @submit.prevent="handleSubmit" novalidate>
+  <form class="login-form" @submit.prevent="handleSubmit" novalidate data-splitbee-event="Submit: Login">
     <img src="@/assets/icons/new_logo_a.png" class="login-form__logo" />
     <transition name="fade">
       <span class="login-form__error" v-if="formError">{{ formError }}</span>

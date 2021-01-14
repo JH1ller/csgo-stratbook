@@ -1,6 +1,6 @@
 {
   "name": "csgo-stratbook",
-  "version": "0.9.6",
+  "version": "0.9.10",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -25,6 +25,7 @@
     "core-js": "^3.6.4",
     "directory-tree": "^2.2.4",
     "dotenv": "^8.2.0",
+    "is-mobile": "^2.2.2",
     "jwt-decode": "^2.2.0",
     "s-ago": "^2.2.0",
     "sanitize-html": "^2.1.2",

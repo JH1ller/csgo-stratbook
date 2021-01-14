@@ -1,7 +1,7 @@
 <template>
   <div class="utility-view">
     <map-picker @map-clicked="updateCurrentMap" :currentMap="currentMap" />
-    <UtilityList :filters="utilityFilters" :utilities="utilitiesOfCurrentMap" @open-in-lightbox="showLightbox" />
+    <UtilityList :filters="utilityFilters" :utilities="sortedUtilitiesOfCurrentMap" @open-in-lightbox="showLightbox" />
     <FilterMenu :open="filterMenuOpen" @close="toggleFilterMenu" @clear-filters="clearUtilityFilters">
       <UtilityFilterForm
         @type-filter-change="updateUtilityTypeFilter"
@@ -11,19 +11,14 @@
       />
     </FilterMenu>
     <transition name="fade">
-      <FloatingAdd
-        class="utility-view__floating-add"
-        @click="showUtilityForm"
-        v-if="!utilityFormOpen && !filterMenuOpen"
-      />
-    </transition>
-    <transition name="fade">
-      <FilterButton
-        class="utility-view__filter-button"
-        @click="toggleFilterMenu"
-        v-if="!utilityFormOpen && !filterMenuOpen"
-        :activeFilterCount="activeUtilityFilterCount"
-      />
+      <div class="utility-view__fab-group" v-if="!filterMenuOpen && !utilityFormOpen">
+        <FilterButton
+          class="utility-view__filter-button"
+          @click="toggleFilterMenu"
+          :activeFilterCount="activeUtilityFilterCount"
+        />
+        <FloatingAdd class="utility-view__floating-add" label="Add utility" @click="showUtilityForm" />
+      </div>
     </transition>
     <transition name="fade">
       <UtilityLightbox v-if="lightboxOpen" :utility="currentLightboxUtility" @close="hideLightbox" />

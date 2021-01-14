@@ -17,20 +17,18 @@
       @update-content="updateContent"
       @share-strat="requestShareStrat"
       @unshare-strat="unshareStrat"
-      :strats="sortedStrats"
+      :strats="sortedStratsOfCurrentMap"
       :filters="stratFilters"
     />
     <transition name="fade">
-      <FloatingAdd class="strats-view__floating-add" @click="showStratForm" v-if="!filterMenuOpen && !stratFormOpen" />
-    </transition>
-
-    <transition name="fade">
-      <FilterButton
-        class="strats-view__filter-button"
-        @click="toggleFilterMenu"
-        v-if="!filterMenuOpen && !stratFormOpen"
-        :activeFilterCount="activeStratFilterCount"
-      />
+      <div class="strats-view__fab-group" v-if="!filterMenuOpen && !stratFormOpen">
+        <FilterButton
+          class="strats-view__filter-button"
+          @click="toggleFilterMenu"
+          :activeFilterCount="activeStratFilterCount"
+        />
+        <FloatingAdd class="strats-view__floating-add" label="Add strat" @click="showStratForm" />
+      </div>
     </transition>
 
     <transition name="fade">
