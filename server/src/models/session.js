@@ -9,7 +9,7 @@ const sessionSchema = new mongoose.Schema({
 
   player: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'players',
+    ref: 'Player',
     required: true,
   },
 
@@ -19,6 +19,10 @@ const sessionSchema = new mongoose.Schema({
   },
 
   userAgent: {
+    type: String,
+  },
+
+  ip: {
     type: String,
   },
 });

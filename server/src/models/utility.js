@@ -40,7 +40,7 @@ const utilitySchema = new mongoose.Schema({
 
   team: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'teams',
+    ref: 'Team',
     required: true,
   },
 
@@ -66,7 +66,7 @@ const utilitySchema = new mongoose.Schema({
 
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'players',
+    ref: 'Player',
     required: true,
   },
 

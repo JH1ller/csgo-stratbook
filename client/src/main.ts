@@ -45,13 +45,6 @@ Vue.use(VueTippy, {
   duration: [300, 100],
   delay: [300, 0],
   animation: 'scale',
-  popperOptions: {
-    modifiers: {
-      // preventOverflow: {
-      //   enabled: false,
-      // },
-    },
-  },
 });
 Vue.component('tippy', TippyComponent);
 
@@ -91,10 +84,18 @@ Vue.component('fa-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
-store.dispatch('loadDataFromStorage');
+const isFirstVisit = !localStorage.getItem('visited');
 
-new Vue({
-  router,
-  store,
-  render: h => h(App),
-}).$mount('#app');
+(async () => {
+  if (isFirstVisit) {
+    localStorage.setItem('visited', 'true');
+  } else {
+    await store.dispatch('auth/refresh');
+  }
+
+  new Vue({
+    router,
+    store,
+    render: h => h(App),
+  }).$mount('#app');
+})();

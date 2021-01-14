@@ -2,7 +2,8 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const ms = require('ms');
-const nanoid = require('nanoid');
+const { nanoid } = require('nanoid');
+const cookieParser = require('cookie-parser');
 const router = express.Router();
 const Player = require('../../../models/player');
 const Session = require('../../../models/session');
@@ -12,10 +13,6 @@ const { registerValidation } = require('../../utils/validation');
 const { sendMail, Templates } = require('../../utils/mailService');
 const { uploadSingle, processImage } = require('../../utils/fileUpload');
 const { APP_URL } = require('../../../config');
-
-/**
- * * Routes
- */
 
 router.post('/register', uploadSingle('avatar'), async (req, res) => {
   const { error } = registerValidation(req.body);
@@ -78,6 +75,7 @@ router.post('/login', async (req, res) => {
     player: targetUser._id,
     expires: refreshTokenExpiration,
     userAgent: req.get('User-Agent'),
+    ip: req.ip,
   });
 
   await session.save();
@@ -86,14 +84,23 @@ router.post('/login', async (req, res) => {
     expiresIn: process.env.JWT_TOKEN_TTL,
   });
 
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    maxAge: ms(process.env.REFRESH_TOKEN_TTL),
+    sameSite: 'lax',
+  });
+
+  res.set('Access-Control-Expose-Headers', 'Set-Cookie');
+  res.set('Access-Control-Allow-Headers', 'Set-Cookie');
+
   res.send({
     token,
-    refreshToken,
   });
 });
 
-router.post('/refresh', async (req, res) => {
-  const session = await Session.findOne({ refreshToken: req.body.refreshToken });
+router.post('/refresh', cookieParser(), async (req, res) => {
+  const currentRefreshToken = req.cookies.refreshToken;
+  const session = await Session.findOne({ refreshToken: currentRefreshToken });
   if (!session) return res.status(400).json({ error: 'Invalid refresh token' });
 
   if (session.expires < new Date()) {
@@ -106,7 +113,7 @@ router.post('/refresh', async (req, res) => {
 
   session.refreshToken = refreshToken;
   session.expires = refreshTokenExpiration;
-  session.userAgent = req.get('User-Agent');
+  session.userAgent = req.cookies.userAgent;
 
   await session.save();
 
@@ -114,17 +121,22 @@ router.post('/refresh', async (req, res) => {
     expiresIn: process.env.JWT_TOKEN_TTL,
   });
 
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    maxAge: ms(process.env.REFRESH_TOKEN_TTL),
+  });
+
   res.send({
     token,
-    refreshToken,
   });
 });
 
-router.post('/logout', async (req, res) => {
-  const session = await Session.findOne({ refreshToken: req.body.refreshToken });
+router.post('/logout', cookieParser(), async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  const session = await Session.findOne({ refreshToken });
   if (!session) return res.status(400).json({ error: 'Invalid refresh token' });
 
-  await Session.deleteOne(session._id);
+  await Session.findByIdAndRemove(session._id);
 
   res.send('Successfully logged out.');
 });

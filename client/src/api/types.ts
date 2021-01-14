@@ -8,15 +8,11 @@ export enum Endpoints {
 }
 
 export enum Actions {
-  Login = 'login',
-  Register = 'register',
   Join = 'join',
   Leave = 'leave',
   Kick = 'kick',
   Transfer = 'transfer',
   Share = 'share',
-  ForgotPassword = 'forgot-password',
-  Reset = 'reset',
   Players = 'players',
 }
 

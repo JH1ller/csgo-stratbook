@@ -5,7 +5,7 @@ const stratSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    maxlength: 50
+    maxlength: 50,
   },
 
   map: {
@@ -16,7 +16,7 @@ const stratSchema = new mongoose.Schema({
 
   team: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'teams',
+    ref: 'Team',
     required: true,
   },
 
@@ -43,17 +43,17 @@ const stratSchema = new mongoose.Schema({
 
   note: {
     type: String,
-    maxlength: 100
+    maxlength: 100,
   },
 
   content: {
     type: String,
-    default: ''
+    default: '',
   },
 
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'players',
+    ref: 'Player',
     required: true,
   },
 
@@ -65,7 +65,7 @@ const stratSchema = new mongoose.Schema({
 
   modifiedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'players',
+    ref: 'Player',
   },
 
   modifiedAt: {
@@ -75,8 +75,8 @@ const stratSchema = new mongoose.Schema({
 
   shared: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 stratSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
