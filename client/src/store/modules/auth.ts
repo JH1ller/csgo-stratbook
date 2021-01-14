@@ -1,9 +1,11 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
-import APIService from '@/api/base';
 import WebSocketService from '@/api/WebSocketService';
 import { Player } from '@/api/models/Player';
 import api from '@/api/base';
+import router from '@/router';
+import { RouteNames, Routes } from '@/router/router.models';
+import { TOKEN_TTL } from '@/config';
 
 const SET_TOKEN = 'SET_TOKEN';
 const SET_PROFILE = 'SET_PROFILE';
@@ -90,8 +92,7 @@ export const authModule: Module<AuthState, RootState> = {
     async login({ commit, dispatch }, { email, password }) {
       const res = await api.auth.login(email, password);
       if (res.success) {
-        commit(SET_TOKEN, res.success);
-        localStorage.setItem('token', res.success);
+        commit(SET_TOKEN, res.success.token);
         await dispatch('fetchProfile');
         dispatch('app/showToast', { id: 'auth/login', text: 'Logged in successfully.' }, { root: true });
         return { success: 'Logged in successfully.' };
@@ -100,10 +101,22 @@ export const authModule: Module<AuthState, RootState> = {
       }
     },
     async logout({ dispatch }) {
+      await api.auth.logout();
       dispatch('resetState', null, { root: true });
       localStorage.clear();
       WebSocketService.getInstance().disconnect();
       dispatch('app/showToast', { id: 'auth/logout', text: 'Logged out successfully.' }, { root: true });
+    },
+    async refresh({ dispatch, commit }) {
+      const res = await api.auth.refresh();
+      if (res.success) {
+        commit(SET_TOKEN, res.success.token);
+
+        setTimeout(() => dispatch('refresh'), TOKEN_TTL - 10000);
+      }
+      if (res.error) {
+        if (router.currentRoute.name !== RouteNames.Login) router.push(Routes.Login);
+      }
     },
     async forgotPassword({ dispatch }, email: string) {
       const res = await api.auth.forgotPassword(email);
@@ -141,12 +154,6 @@ export const authModule: Module<AuthState, RootState> = {
         return { success: 'Registered successfully. A confirmation email has been sent.' }; // TODO: probably remove all these
       } else {
         return { error: res.error };
-      }
-    },
-    async loadTokenFromStorage({ commit }) {
-      const token = localStorage.getItem('token');
-      if (token) {
-        commit(SET_TOKEN, token);
       }
     },
     async loadProfileFromStorage({ dispatch }) {

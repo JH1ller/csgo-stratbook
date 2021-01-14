@@ -1,8 +1,7 @@
 require('dotenv').config();
-
+const fs = require('fs');
 const express = require('express');
 require('express-async-errors');
-const path = require('path');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const app = express();
@@ -15,8 +14,11 @@ const port = process.env.PORT || 3000;
 const { initWS } = require('./sockets');
 const subdomain = require('express-subdomain');
 const apiRouter = require('./routes/api');
+const secureRedirect = require('./middleware/secureRedirect');
 
-mongoose.connect(process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : process.env.DATABASE_URL_DEV, {
+const isDev = process.env.NODE_ENV === 'development';
+
+mongoose.connect(isDev ? process.env.DATABASE_URL_DEV : process.env.DATABASE_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -32,19 +34,32 @@ const limiter = rateLimit({
   max: 1000, // limit each IP to 100 requests per windowMs
 });
 
-/**
- * Middleware
- */
+if (process.env.NODE_ENV === 'production') {
+  app.use(limiter);
+  app.set('trust proxy', 1);
+  app.use(secureRedirect);
+}
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: true,
+  })
+);
+
 app.use(helmet());
 
-app.use(subdomain('static', express.static('public')));
+if (isDev) {
+  app.use('/static', express.static('public'));
+  app.use('/api', apiRouter);
+} else {
+  app.use(subdomain('static', express.static('public')));
+  app.use(subdomain('app', express.static('dist')));
+  app.use(subdomain('api', apiRouter));
+  app.use('/.well-known/pki-validation/', express.static('cert'));
+}
 
-app.use('/.well-known/pki-validation/', express.static('cert'));
-
-app.use(subdomain('app', express.static('dist')));
 app.use('/', express.static('dist'));
 app.use(
   history({
@@ -52,21 +67,10 @@ app.use(
   })
 );
 
-app.use(subdomain('api', apiRouter));
-
-if (process.env.NODE_ENV === 'production') {
-  app.use(limiter);
-  app.set('trust proxy', 1);
-}
-
 app.use((error, req, res, next) => {
   console.error('Error handler >>> ', error.message);
   res.status(500).json({ error: 'An error occured on the server.' });
 });
-
-/**
- * Routes
- */
 
 initWS(io);
 

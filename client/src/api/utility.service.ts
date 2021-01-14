@@ -1,7 +1,11 @@
 import urljoin from 'url-join';
 import ApiService from './base';
 import { Utility } from './models/Utility';
-import { Actions, APIResponse, Endpoints, Message } from './types';
+import { APIResponse, Endpoints, Message } from './types';
+
+export enum Actions {
+  Share = 'share',
+}
 
 export class UtilityService {
   private static instance: UtilityService;

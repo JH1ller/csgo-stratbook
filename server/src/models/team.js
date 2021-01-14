@@ -11,7 +11,6 @@ const teamSchema = new mongoose.Schema({
 
   website: {
     type: String,
-    minlength: 6,
     maxlength: 300,
   },
 
@@ -33,7 +32,7 @@ const teamSchema = new mongoose.Schema({
 
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'players',
+    ref: 'Player',
     required: true,
   },
 
@@ -45,7 +44,7 @@ const teamSchema = new mongoose.Schema({
 
   modifiedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'players',
+    ref: 'Player',
   },
 
   modifiedAt: {
@@ -55,7 +54,7 @@ const teamSchema = new mongoose.Schema({
 
   manager: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'players',
+    ref: 'Player',
   },
 });
 

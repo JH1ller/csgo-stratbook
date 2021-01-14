@@ -11,7 +11,7 @@ const keySchema = new mongoose.Schema({
   },
 
   note: {
-    type: String
+    type: String,
   },
 
   remainingUses: {
@@ -19,13 +19,13 @@ const keySchema = new mongoose.Schema({
     required: true,
     max: 6,
     min: 0,
-    default: 6
+    default: 6,
   },
 
   usedBy: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'players',
-    default: []
+    ref: 'Player',
+    default: [],
   },
 
   createdAt: {
@@ -35,7 +35,7 @@ const keySchema = new mongoose.Schema({
 
   usedAt: {
     type: [Date],
-    default: []
+    default: [],
   },
 });
 

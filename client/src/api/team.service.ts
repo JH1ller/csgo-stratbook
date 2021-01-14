@@ -2,7 +2,15 @@ import urljoin from 'url-join';
 import ApiService from './base';
 import { Player } from './models/Player';
 import { Team } from './models/Team';
-import { Actions, APIResponse, Endpoints } from './types';
+import { APIResponse, Endpoints } from './types';
+
+export enum Actions {
+  Join = 'join',
+  Leave = 'leave',
+  Kick = 'kick',
+  Transfer = 'transfer',
+  Players = 'players',
+}
 
 export class TeamService {
   private static instance: TeamService;
