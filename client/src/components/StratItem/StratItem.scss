@@ -103,7 +103,7 @@
     display: flex;
     align-items: center;
 
-    :not(:first-child) {
+    & > :not(:first-child) {
       margin-left: 8px;
     }
   }
@@ -114,10 +114,13 @@
     padding-right: 12px;
     margin-right: 4px;
     border-right: 1px solid $color--grey;
+
+    & > :not(:first-child) {
+      margin-left: 8px;
+    }
   }
 
   &__btn {
-    //@include tooltip;
     cursor: pointer;
     width: 28px;
     height: 28px;
@@ -139,10 +142,14 @@
     }
 
     &.--save {
-      width: 70px;
+      @include viewport_mq3 {
+        width: 70px;
+      }
+    }
 
-      & > svg {
-        margin-right: 4px;
+    &.--discard {
+      @include viewport_mq3 {
+        width: 90px;
       }
     }
 
@@ -155,11 +162,20 @@
       }
     }
 
+    &.--save,
     &.--discard {
-      width: 90px;
+      & > span {
+        display: none;
 
-      & > svg {
-        margin-right: 4px;
+        @include viewport_mq3 {
+          display: inline;
+        }
+      }
+
+      @include viewport_mq3 {
+        & > svg {
+          margin-right: 4px;
+        }
       }
     }
   }
