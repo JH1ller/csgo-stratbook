@@ -7,6 +7,11 @@ import MouseButtonDisplay from '@/components/MouseButtonDisplay/MouseButtonDispl
 import UtilityTypeDisplay from '@/components/UtilityTypeDisplay/UtilityTypeDisplay.vue';
 import isMobile from 'is-mobile';
 
+interface LightboxMedia {
+  type: 'image' | 'video';
+  src: string;
+}
+
 @Component({
   components: {
     MouseButtonDisplay,
@@ -16,13 +21,34 @@ import isMobile from 'is-mobile';
 export default class UtilityLightbox extends Vue {
   @Prop() private utility!: Utility;
   private showCrosshair: boolean = false;
-  private currentImageIndex: number = 0;
+  private currentMediaIndex: number = 0;
 
   private UtilityMovement: typeof UtilityMovement = UtilityMovement;
   private Sides: typeof Sides = Sides;
 
-  private get currentImage(): string {
-    return resolveStaticImageUrl(this.utility.images[this.currentImageIndex]);
+  private get currentMedia(): LightboxMedia {
+    return this.mediaList[this.currentMediaIndex];
+  }
+
+  private get mediaList(): LightboxMedia[] {
+    const media: LightboxMedia[] = this.utility.images.map(utility => ({ type: 'image', src: utility }));
+    if (this.utility.videoLink) media.push({ type: 'video', src: this.utility.videoLink });
+
+    return media;
+  }
+
+  private getYoutubeURL(videoURL: string): string {
+    return `http://www.youtube.com/embed/${this.extractVideoId(videoURL)}?&controls=2&origin=${window.location.origin}`;
+  }
+
+  private extractVideoId(videoURL: string): string | undefined {
+    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    const match = videoURL.match(regExp);
+    if (match && match[7].length === 11) return match[7];
+  }
+
+  private getVideoThumbnail(videoId: string): string {
+    return `https://img.youtube.com/vi/${videoId}/0.jpg`;
   }
 
   private resolveImage(fileURL: string) {
@@ -53,14 +79,14 @@ export default class UtilityLightbox extends Vue {
   }
 
   private goToIndex(index: number) {
-    this.currentImageIndex = index;
+    this.currentMediaIndex = index;
   }
 
   private goNext() {
-    this.currentImageIndex === this.utility.images.length - 1 ? (this.currentImageIndex = 0) : this.currentImageIndex++;
+    this.currentMediaIndex === this.mediaList.length - 1 ? (this.currentMediaIndex = 0) : this.currentMediaIndex++;
   }
 
   private goPrev() {
-    this.currentImageIndex === 0 ? (this.currentImageIndex = this.utility.images.length - 1) : this.currentImageIndex--;
+    this.currentMediaIndex === 0 ? (this.currentMediaIndex = this.mediaList.length - 1) : this.currentMediaIndex--;
   }
 }

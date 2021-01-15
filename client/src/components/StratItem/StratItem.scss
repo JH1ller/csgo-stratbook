@@ -99,24 +99,32 @@
   &__btn-wrapper {
     position: absolute;
     bottom: 4px;
-    right: 16px;
+    right: 12px;
     display: flex;
     align-items: center;
 
     & > :not(:first-child) {
       margin-left: 8px;
     }
+
+    @include viewport_mq3 {
+      right: 16px;
+    }
   }
 
   &__action-buttons {
     display: flex;
 
-    padding-right: 12px;
-    margin-right: 4px;
+    padding-right: 8px;
     border-right: 1px solid $color--grey;
 
     & > :not(:first-child) {
       margin-left: 8px;
+    }
+
+    @include viewport_mq3 {
+      padding-right: 12px;
+      margin-right: 4px;
     }
   }
 

@@ -18,7 +18,11 @@ const routes = [
     path: '/',
     name: RouteNames.Home,
     redirect: () => {
-      return Routes.Strats;
+      if (localStorage.getItem('has-session')) {
+        return Routes.Strats;
+      } else {
+        return Routes.Login;
+      }
     },
   },
   {

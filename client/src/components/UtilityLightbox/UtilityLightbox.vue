@@ -1,7 +1,16 @@
 <template>
   <div class="utility-lightbox">
     <div class="utility-lightbox__image-wrapper">
-      <img :src="currentImage" class="utility-lightbox__image" />
+      <img v-if="currentMedia.type === 'image'" :src="resolveImage(currentMedia.src)" class="utility-lightbox__image" />
+
+      <iframe
+        v-else
+        class="utility-lightbox__image"
+        id="ytplayer"
+        type="text/html"
+        :src="getYoutubeURL(currentMedia.src)"
+        frameborder="0"
+      />
       <transition name="fade">
         <div class="utility-lightbox__crosshair-wrapper" v-if="showCrosshair">
           <div class="utility-lightbox__crosshair-horizontal"></div>
@@ -9,18 +18,18 @@
         </div>
       </transition>
     </div>
-    <div class="utility-lightbox__navigation-wrapper" v-if="utility.images.length > 1">
+    <div class="utility-lightbox__navigation-wrapper" v-if="mediaList.length > 1">
       <fa-icon icon="chevron-left" class="utility-lightbox__navigation --left" @click="goPrev" />
       <fa-icon icon="chevron-right" class="utility-lightbox__navigation --right" @click="goNext" />
     </div>
     <div class="utility-lightbox__preview-wrapper">
       <img
-        v-for="(image, index) in utility.images"
-        :key="image"
-        :src="resolveImage(image)"
+        v-for="(item, index) in mediaList"
+        :key="item.src"
+        :src="item.type === 'image' ? resolveImage(item.src) : getVideoThumbnail(extractVideoId(item.src))"
         class="utility-lightbox__preview"
         @click="goToIndex(index)"
-        :class="{ '-active': index === currentImageIndex }"
+        :class="{ '-active': index === currentMediaIndex }"
       />
     </div>
     <fa-icon icon="times" class="utility-lightbox__close" @click="close" />
