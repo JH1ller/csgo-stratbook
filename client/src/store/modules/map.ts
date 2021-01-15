@@ -24,7 +24,7 @@ export const mapModule: Module<MapState, RootState> = {
     },
     loadCurrentMapFromStorage({ commit }) {
       const currentMap = localStorage.getItem('currentMap');
-      if (currentMap) commit(SET_CURRENT_MAP, currentMap);
+      if (currentMap && currentMap in MapID) commit(SET_CURRENT_MAP, currentMap);
     },
     resetState({ commit }) {
       commit(RESET_STATE);

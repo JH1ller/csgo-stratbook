@@ -38,7 +38,6 @@ export const utilityModule: Module<UtilityState, RootState> = {
       const res = await api.utility.getUtilities();
       if (res.success) {
         commit(SET_UTILITIES, res.success);
-        dispatch('saveUtilitiesToStorage');
         return { success: res.success };
       } else {
         return { error: res.error };
@@ -98,22 +97,12 @@ export const utilityModule: Module<UtilityState, RootState> = {
     },
     addUtilityLocally({ commit, dispatch }, payload: { utility: Utility }) {
       commit(ADD_UTILITY, payload.utility);
-      dispatch('saveUtilitiesToStorage');
     },
     updateUtilityLocally({ commit, dispatch }, payload: { utility: Utility }) {
       commit(UPDATE_UTILITY, payload);
-      dispatch('saveUtilitiesToStorage');
     },
     deleteUtilityLocally({ commit, dispatch }, payload: { utilityID: string }) {
       commit(DELETE_UTILITY, payload.utilityID);
-      dispatch('saveUtilitiesToStorage');
-    },
-    loadUtilitiesFromStorage({ commit }) {
-      const utilities = localStorage.getItem('utilities');
-      if (utilities) commit(SET_UTILITIES, JSON.parse(utilities));
-    },
-    saveUtilitiesToStorage({ state }) {
-      localStorage.setItem('utilities', JSON.stringify(state.utilities));
     },
     resetState({ commit }) {
       commit(RESET_STATE);

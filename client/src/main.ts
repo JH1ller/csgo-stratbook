@@ -84,13 +84,12 @@ Vue.component('fa-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
-const isFirstVisit = !localStorage.getItem('visited');
+const hasSession = !!localStorage.getItem('has-session');
 
 (async () => {
-  if (isFirstVisit) {
-    localStorage.setItem('visited', 'true');
-  } else {
+  if (hasSession) {
     await store.dispatch('auth/refresh');
+    await store.dispatch('loadDataFromStorage');
   }
 
   new Vue({
