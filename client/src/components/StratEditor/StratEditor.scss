@@ -104,6 +104,10 @@
     background-color: whitesmoke;
     box-shadow: $shadow-subtle;
     border-radius: 6px;
+
+    & li:not([data-index]) {
+      display: none;
+    }
   }
 
   &__mention-selected {

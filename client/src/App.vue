@@ -46,6 +46,8 @@ export default class App extends Vue {
 </script>
 
 <style lang="scss">
+@import '~vue-context/dist/css/vue-context.css';
+
 .app {
   font-family: $font_ubuntu-regular;
   -webkit-font-smoothing: antialiased;
@@ -92,6 +94,24 @@ export default class App extends Vue {
     margin-left: 70px;
     width: calc(100% - 70px);
     padding: 24px;
+  }
+}
+
+.v-context {
+  & > li {
+    cursor: pointer;
+
+    & > a {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      width: 100%;
+
+      & > svg {
+        height: 70%;
+        margin-right: 16px;
+      }
+    }
   }
 }
 </style>

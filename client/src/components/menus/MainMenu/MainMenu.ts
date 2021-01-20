@@ -5,6 +5,7 @@ import { Player } from '@/api/models/Player';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { FeedbackFish } from '@feedback-fish/vue';
 import { Status } from '@/store/modules/auth';
+import { Routes } from '@/router/router.models';
 
 @Component({
   components: {
@@ -17,6 +18,8 @@ export default class MainMenu extends Vue {
   @appModule.Action private showToast!: (toast: Toast) => void;
   @appModule.State private loading!: boolean;
   @Prop() private menuOpen!: boolean;
+
+  private Routes: typeof Routes = Routes;
 
   private get menuItems() {
     return [

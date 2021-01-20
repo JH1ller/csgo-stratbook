@@ -30,6 +30,7 @@
           class="utility-item__pose"
         />
       </div>
+      <button class="utility-item__context" @click="openMenu"><fa-icon icon="ellipsis-v" /></button>
     </span>
   </div>
 </template>

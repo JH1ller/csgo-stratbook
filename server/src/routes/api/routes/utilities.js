@@ -49,4 +49,50 @@ router.post('/', verifyAuth, uploadMultiple('images'), async (req, res) => {
   res.status(201).json(newUtility);
 });
 
+// * Update One
+router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, res) => {
+  if (!res.player.team.equals(res.utility.team)) {
+    return res.status(400).json({ error: 'Cannot update a utility of another team.' });
+  }
+  const updatableFields = [
+    'name',
+    'map',
+    'side',
+    'type',
+    'mouseButton',
+    'crouch',
+    'movement',
+    'description',
+    'shared',
+    'videoLink',
+  ];
+  Object.entries(req.body).forEach(([key, value]) => {
+    // check for undefined / null, but accept empty string ''
+    if (value != null && updatableFields.includes(key)) {
+      res.utility[key] = value;
+    }
+  });
+
+  if (req.files) {
+    res.utility.images.push(...req.files.map((img) => img.filename));
+    await Promise.all(
+      req.files.map(async (file) => {
+        await uploadFile(file.path, file.filename);
+      })
+    );
+  }
+
+  const updatedUtility = await res.utility.save();
+  res.json(updatedUtility);
+});
+
+// * Delete One
+router.delete('/:utility_id', verifyAuth, getUtility, async (_req, res) => {
+  if (!res.player.team.equals(res.utility.team)) {
+    return res.status(400).json({ error: 'Cannot delete a utility of another team.' });
+  }
+  await res.utility.delete();
+  res.json({ message: 'Deleted utility successfully' });
+});
+
 module.exports = router;

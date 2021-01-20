@@ -6,9 +6,9 @@
         v-for="map in maps"
         :key="map._id"
         @click="mapClicked(map._id)"
-        :class="{'-current': isCurrentMap(map._id)}"
+        :class="{ '-current': isCurrentMap(map._id) }"
       >
-        <img :src="getMapImage(map._id)" alt class="map-picker__image" draggable="false" />
+        <img :src="getMapImage(map._id)" alt="Map" class="map-picker__image" draggable="false" />
         <p class="map-picker__label">{{ map.name }}</p>
       </div>
     </div>

@@ -65,7 +65,7 @@ export default class StratEditor extends Vue {
               (item.original as Player).avatar
             )}"/> ${item.original.name} `,
           //noMatchTemplate: () => (`<span class="strat-editor__mention-item -no-match">No players found</span>`),
-          noMatchTemplate: () => '<span style:"visibility: hidden;"></span>',
+          noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
           spaceSelectsMatch: true,
         },
@@ -88,7 +88,7 @@ export default class StratEditor extends Vue {
               item.original.name
             } `,
           //noMatchTemplate: () => (`<span class="strat-editor__mention-item -no-match">No players found</span>`),
-          noMatchTemplate: () => '<span style:"visibility: hidden;"></span>',
+          noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
           spaceSelectsMatch: true,
         },

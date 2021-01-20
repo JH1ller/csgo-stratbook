@@ -11,15 +11,13 @@ export const stratsResolver: NavigationGuard = async (to, from, next) => {
   const teamGuardResult: boolean = await teamGuard(to, from, next);
   if (!teamGuardResult) return;
 
-  //* if there are strats loaded from localStorage load strats async, otherwise wait for result
-  if (store.state.strat.strats.length) {
-    store.dispatch('strat/fetchStrats');
-  } else {
-    const stratResponse: Response = await store.dispatch('strat/fetchStrats');
-    if (!stratResponse.success) {
-      next(false);
-      return;
-    }
+  const stratResponse: Response = await store.dispatch('strat/fetchStrats');
+  const teamResponse: Response = await store.dispatch('team/fetchTeamInfo');
+  const utilityResponse: Response = await store.dispatch('utility/fetchUtilities');
+
+  if (!stratResponse.success || !teamResponse.success || !utilityResponse.success) {
+    next(false);
+    return;
   }
 
   next();

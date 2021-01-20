@@ -44,8 +44,8 @@ export const teamModule: Module<TeamState, RootState> = {
       const res = await api.team.getTeam();
       if (res.success) {
         commit(SET_TEAM_INFO, res.success);
-        dispatch('auth/updateStatus', Status.LOGGED_IN_WITH_TEAM, { root: true });
-        dispatch('fetchTeamMembers');
+        await dispatch('auth/updateStatus', Status.LOGGED_IN_WITH_TEAM, { root: true });
+        await dispatch('fetchTeamMembers');
         return { success: res.success };
       } else {
         return { error: res.error };

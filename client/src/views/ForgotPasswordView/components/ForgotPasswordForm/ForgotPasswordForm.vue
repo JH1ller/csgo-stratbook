@@ -5,7 +5,7 @@
     novalidate
     data-splitbee-event="Submit: Request Password"
   >
-    <img src="@/assets/icons/new_logo_a.png" class="forgot-password-form__logo" />
+    <img src="@/assets/icons/new_logo_a.png" class="forgot-password-form__logo" alt="Application Logo" />
     <transition name="fade">
       <span class="forgot-password-form__error" v-if="formError">{{ formError }}</span>
     </transition>

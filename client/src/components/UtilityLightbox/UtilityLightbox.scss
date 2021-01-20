@@ -19,13 +19,13 @@
     left: 94px;
   }
 
-  &__image-wrapper {
+  &__media-wrapper {
     width: 100%;
     height: calc(100% - 30px);
     position: relative;
   }
 
-  &__image {
+  &__media {
     object-fit: cover;
     width: 100%;
     height: 100%;

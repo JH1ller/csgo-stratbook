@@ -6,6 +6,7 @@
           src="@/assets/icons/logo_small.png"
           class="main-menu__icon main-menu__logo-icon"
           :class="{ '-loading': loading }"
+          alt="Application Logo"
         />
         <span class="main-menu__label main-menu__logo-label">{{ appName }}</span>
       </router-link>
@@ -20,7 +21,11 @@
         <fa-icon :icon="item.icon" class="main-menu__icon" />
         <span class="main-menu__label" :style="{ transitionDelay: '0.' + index + 's' }">{{ item.label }}</span>
       </router-link>
-      <a class="main-menu__list-item main-menu__link --twitter" href="https://twitter.com/csgostratbook" target="_blank"
+      <a
+        class="main-menu__list-item main-menu__link --twitter"
+        href="https://twitter.com/csgostratbook"
+        rel="noreferrer"
+        target="_blank"
         ><fa-icon :icon="['fab', 'twitter']" />twitter</a
       >
       <a
@@ -29,15 +34,18 @@
         data-splitbee-event="Click: Get Desktop Client"
         ><fa-icon icon="download" />Get desktop client</a
       >
-      <button
+      <a
         class="main-menu__list-item main-menu__link --feedback"
         data-feedback-fish
         :data-feedback-fish-userid="profile.email"
       >
         <fa-icon icon="comment" />Feedback
-      </button>
+      </a>
+      <router-link class="main-menu__list-item main-menu__link --imprint" :to="Routes.Imprint"
+        ><fa-icon icon="balance-scale" />Legal Notice
+      </router-link>
       <router-link to="/profile" class="main-menu__profile" v-if="profile._id">
-        <img :src="avatarUrl" class="main-menu__avatar" />
+        <img :src="avatarUrl" class="main-menu__avatar" alt="User Avatar" />
         <span class="main-menu__label main-menu__profile-label">{{ profile.name }}</span>
       </router-link>
     </ul>

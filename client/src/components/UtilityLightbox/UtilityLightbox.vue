@@ -1,16 +1,16 @@
 <template>
   <div class="utility-lightbox">
-    <div class="utility-lightbox__image-wrapper">
-      <img v-if="currentMedia.type === 'image'" :src="resolveImage(currentMedia.src)" class="utility-lightbox__image" />
-
+    <div class="utility-lightbox__media-wrapper">
       <iframe
-        v-else
-        class="utility-lightbox__image"
+        v-if="currentMedia && currentMedia.type === 'video'"
+        class="utility-lightbox__media"
         id="ytplayer"
         type="text/html"
-        :src="getYoutubeURL(currentMedia.src)"
+        :src="getEmbedURL(extractVideoId(currentMedia.src))"
         frameborder="0"
       />
+      <img v-else :src="resolveImage(currentMedia.src)" class="utility-lightbox__media" />
+
       <transition name="fade">
         <div class="utility-lightbox__crosshair-wrapper" v-if="showCrosshair">
           <div class="utility-lightbox__crosshair-horizontal"></div>
@@ -26,7 +26,7 @@
       <img
         v-for="(item, index) in mediaList"
         :key="item.src"
-        :src="item.type === 'image' ? resolveImage(item.src) : getVideoThumbnail(extractVideoId(item.src))"
+        :src="item.type === 'image' ? resolveImage(item.src) : getThumbnailURL(extractVideoId(item.src))"
         class="utility-lightbox__preview"
         @click="goToIndex(index)"
         :class="{ '-active': index === currentMediaIndex }"

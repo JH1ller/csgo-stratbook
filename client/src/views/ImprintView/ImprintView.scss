@@ -1,0 +1,14 @@
+.imprint-view {
+  &__content {
+    background-color: $color--smoke;
+    padding: 24px;
+    border-radius: 8px;
+    margin: 12px;
+  }
+
+  &__headline {
+    @include typo_hl2;
+
+    margin-bottom: 24px;
+  }
+}

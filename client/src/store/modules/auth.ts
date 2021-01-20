@@ -95,6 +95,7 @@ export const authModule: Module<AuthState, RootState> = {
         await dispatch('fetchProfile');
         localStorage.setItem('has-session', '1');
         dispatch('app/showToast', { id: 'auth/login', text: 'Logged in successfully.' }, { root: true });
+        setTimeout(() => dispatch('refresh'), TOKEN_TTL - 10000);
         return { success: true };
       } else {
         return { error: res.error };
@@ -110,10 +111,11 @@ export const authModule: Module<AuthState, RootState> = {
       const res = await api.auth.refresh();
       if (res.success) {
         commit(SET_TOKEN, res.success.token);
-
+        localStorage.setItem('has-session', '1');
         setTimeout(() => dispatch('refresh'), TOKEN_TTL - 10000);
       }
       if (res.error) {
+        localStorage.removeItem('has-session');
         if (router.currentRoute.name !== RouteNames.Login) router.push(Routes.Login);
       }
     },

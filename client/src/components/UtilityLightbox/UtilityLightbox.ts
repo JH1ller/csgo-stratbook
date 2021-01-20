@@ -6,6 +6,7 @@ import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 import MouseButtonDisplay from '@/components/MouseButtonDisplay/MouseButtonDisplay.vue';
 import UtilityTypeDisplay from '@/components/UtilityTypeDisplay/UtilityTypeDisplay.vue';
 import isMobile from 'is-mobile';
+import { extractVideoId, getEmbedURL, getThumbnailURL } from '@/utils/youtubeUtils';
 
 interface LightboxMedia {
   type: 'image' | 'video';
@@ -26,8 +27,13 @@ export default class UtilityLightbox extends Vue {
   private UtilityMovement: typeof UtilityMovement = UtilityMovement;
   private Sides: typeof Sides = Sides;
 
+  // * declare imported util functions
+  private getEmbedURL: typeof getEmbedURL = getEmbedURL;
+  private getThumbnailURL: typeof getThumbnailURL = getThumbnailURL;
+  private extractVideoId: typeof extractVideoId = extractVideoId;
+
   private get currentMedia(): LightboxMedia {
-    return this.mediaList[this.currentMediaIndex];
+    return this.mediaList[this.currentMediaIndex] ?? { type: 'image', src: '' };
   }
 
   private get mediaList(): LightboxMedia[] {
@@ -35,20 +41,6 @@ export default class UtilityLightbox extends Vue {
     if (this.utility.videoLink) media.push({ type: 'video', src: this.utility.videoLink });
 
     return media;
-  }
-
-  private getYoutubeURL(videoURL: string): string {
-    return `http://www.youtube.com/embed/${this.extractVideoId(videoURL)}?&controls=2&origin=${window.location.origin}`;
-  }
-
-  private extractVideoId(videoURL: string): string | undefined {
-    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-    const match = videoURL.match(regExp);
-    if (match && match[7].length === 11) return match[7];
-  }
-
-  private getVideoThumbnail(videoId: string): string {
-    return `https://img.youtube.com/vi/${videoId}/0.jpg`;
   }
 
   private resolveImage(fileURL: string) {
@@ -62,6 +54,8 @@ export default class UtilityLightbox extends Vue {
         screen.orientation.lock('landscape');
       }
     }
+
+    document.addEventListener('keydown', this.keydownHandler);
   }
 
   private unmounted() {
@@ -70,6 +64,14 @@ export default class UtilityLightbox extends Vue {
       if ('unlock' in screen.orientation) {
         screen.orientation.unlock();
       }
+    }
+
+    document.removeEventListener('keydown', this.keydownHandler);
+  }
+
+  private keydownHandler(e: KeyboardEvent) {
+    if (e.key === 'Escape') {
+      this.close();
     }
   }
 

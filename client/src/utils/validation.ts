@@ -25,6 +25,7 @@ export class Validators {
   private static emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   private static numberRegex = /^\d+$/;
   private static urlRegex = /(https?:\/\/)?([\w-])+\.{1}([a-zA-Z]{2,63})([/\w-]*)*\/?\??([^#\n\r]*)?#?([^\n\r]*)/;
+  private static youtubeRegex = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
 
   static notEmpty(): ValidatorFunction {
     const errorMessage = 'Field cannot be empty.';
@@ -115,6 +116,20 @@ export class Validators {
         : data.value.length
         ? this.urlRegex.test(data.value)
         : true;
+      if (!result) {
+        data.errors.push(errorMessage);
+      } else {
+        data.errors = data.errors.filter(msg => msg !== errorMessage);
+      }
+      return result;
+    };
+  }
+
+  static isYoutubeLink(): ValidatorFunction {
+    const errorMessage = `Currently only youtube is supported.`;
+    return data => {
+      const expressionResult = data.value.match(this.youtubeRegex)?.[7]?.length === 11;
+      const result = data.required ? expressionResult : data.value.length ? expressionResult : true;
       if (!result) {
         data.errors.push(errorMessage);
       } else {
