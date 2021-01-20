@@ -182,11 +182,7 @@
     white-space: nowrap;
     overflow: hidden;
     transition: opacity 0.3s ease, background-color 0.3s ease;
-    // display: none;
-
-    // @include viewport_mq3 {
     display: flex;
-    // }
 
     & > svg {
       margin-right: 6px;
@@ -212,7 +208,22 @@
       }
     }
     &.--feedback {
+      &:hover {
+        & > svg > path {
+          fill: $color--sand;
+          transition: fill 0.3s ease;
+        }
+      }
+    }
+    &.--imprint {
       margin-bottom: 24px;
+
+      &:hover {
+        & > svg > path {
+          fill: $color--orange;
+          transition: fill 0.3s ease;
+        }
+      }
     }
   }
 

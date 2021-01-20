@@ -14,6 +14,7 @@ import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { UtilityTypes } from '@/api/models/UtilityTypes';
 import { Sides } from '@/api/models/Sides';
 import { UtilityFilters } from '@/store/modules/filter';
+import { catchPromise } from '@/utils/catchPromise';
 
 @Component({
   components: {
@@ -66,18 +67,24 @@ export default class UtilityView extends Vue {
     this.hideUtilityForm();
   }
 
-  private requestDeleteUtility(utilityID: string) {
-    this.showDialog({
-      key: 'utility-view/confirm-delete',
-      text: 'Are you sure you want to delete this utility?',
-    }).then(() => this.deleteUtility(utilityID));
+  private requestDeleteUtility(utility: Utility) {
+    catchPromise(
+      this.showDialog({
+        key: 'utility-view/confirm-delete',
+        text: 'Are you sure you want to delete this utility?',
+      }),
+      () => this.deleteUtility(utility._id)
+    );
   }
 
-  private requestShareUtility(utilityID: string) {
-    this.showDialog({
-      key: 'utility-view/confirm-share',
-      text: 'Do you want to create a share-link to let other teams add this utility to their stratbook?',
-    }).then(() => this.shareUtility(utilityID));
+  private requestShareUtility(utility: Utility) {
+    catchPromise(
+      this.showDialog({
+        key: 'utility-view/confirm-share',
+        text: 'Do you want to create a share-link to let other teams add this utility to their stratbook?',
+      }),
+      () => this.shareUtility(utility._id)
+    );
   }
 
   private showUtilityForm(utility: Utility) {

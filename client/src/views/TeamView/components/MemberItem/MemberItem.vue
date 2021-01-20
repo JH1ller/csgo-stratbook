@@ -16,7 +16,7 @@
           {{ member.isOnline ? 'online' : lastOnlineString(member.lastOnline) }}
         </p>
       </div>
-      <img class="member-item__avatar" :src="resolveStaticImageUrl(member.avatar)" />
+      <img class="member-item__avatar" :src="resolveStaticImageUrl(member.avatar)" alt="Member Avatar" />
     </li>
   </div>
 </template>

@@ -38,7 +38,6 @@ export const utilityModule: Module<UtilityState, RootState> = {
       const res = await api.utility.getUtilities();
       if (res.success) {
         commit(SET_UTILITIES, res.success);
-        dispatch('saveUtilitiesToStorage');
         return { success: res.success };
       } else {
         return { error: res.error };
@@ -56,6 +55,7 @@ export const utilityModule: Module<UtilityState, RootState> = {
         dispatch('app/showToast', { id: 'utility/createUtility', text: 'Added utility.' }, { root: true });
     },
     async updateUtility({ dispatch }, data: FormData) {
+      console.log(data.keys);
       const res = await api.utility.updateUtility(data);
       if (res.success)
         dispatch(
@@ -64,28 +64,40 @@ export const utilityModule: Module<UtilityState, RootState> = {
           { root: true }
         );
     },
-    // async shareUtility({ dispatch }, utilityID: string) {
-    //   const res = await APIService.updateUtility({ _id: utilityID, shared: true });
-    //   if (res.success) {
-    //     const shareLink = `${window.location.origin}/#/share/${utilityID}`;
-    //     navigator.clipboard.writeText(shareLink);
-    //     dispatch(
-    //       'app/showToast',
-    //       { id: 'utility/shareUtility', text: 'Copied share link to clipboard.' },
-    //       { root: true }
-    //     );
-    //   }
-    // },
-    // async unshareUtility({ dispatch }, utilityID: string) {
-    //   const res = await APIService.updateUtility({ _id: utilityID, shared: false });
-    //   if (res.success) {
-    //     dispatch(
-    //       'app/showToast',
-    //       { id: 'utility/unshareUtility', text: 'Utility is no longer shared.' },
-    //       { root: true }
-    //     );
-    //   }
-    // },
+    async shareUtility({ dispatch }, utilityID: string) {
+      dispatch(
+        'app/showToast',
+        { id: 'utility/shareUtility', text: 'Sharing utilities not yet implemented.' },
+        { root: true }
+      );
+      return;
+      const formData = new FormData();
+      formData.append('_id', utilityID);
+      formData.append('shared', 'true');
+      const res = await api.utility.updateUtility(formData);
+      if (res.success) {
+        const shareLink = `${window.location.origin}/#/share/${utilityID}`;
+        navigator.clipboard.writeText(shareLink);
+        dispatch(
+          'app/showToast',
+          { id: 'utility/shareUtility', text: 'Copied share link to clipboard.' },
+          { root: true }
+        );
+      }
+    },
+    async unshareUtility({ dispatch }, utilityID: string) {
+      const formData = new FormData();
+      formData.append('_id', utilityID);
+      formData.append('shared', 'false');
+      const res = await api.utility.updateUtility(formData);
+      if (res.success) {
+        dispatch(
+          'app/showToast',
+          { id: 'utility/unshareUtility', text: 'Utility is no longer shared.' },
+          { root: true }
+        );
+      }
+    },
     async addSharedUtility({ dispatch }, utilityID: string) {
       const res = await api.utility.addSharedUtility(utilityID);
       if (res.success) {
@@ -98,22 +110,12 @@ export const utilityModule: Module<UtilityState, RootState> = {
     },
     addUtilityLocally({ commit, dispatch }, payload: { utility: Utility }) {
       commit(ADD_UTILITY, payload.utility);
-      dispatch('saveUtilitiesToStorage');
     },
     updateUtilityLocally({ commit, dispatch }, payload: { utility: Utility }) {
       commit(UPDATE_UTILITY, payload);
-      dispatch('saveUtilitiesToStorage');
     },
     deleteUtilityLocally({ commit, dispatch }, payload: { utilityID: string }) {
       commit(DELETE_UTILITY, payload.utilityID);
-      dispatch('saveUtilitiesToStorage');
-    },
-    loadUtilitiesFromStorage({ commit }) {
-      const utilities = localStorage.getItem('utilities');
-      if (utilities) commit(SET_UTILITIES, JSON.parse(utilities));
-    },
-    saveUtilitiesToStorage({ state }) {
-      localStorage.setItem('utilities', JSON.stringify(state.utilities));
     },
     resetState({ commit }) {
       commit(RESET_STATE);

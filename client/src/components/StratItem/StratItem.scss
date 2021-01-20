@@ -99,25 +99,36 @@
   &__btn-wrapper {
     position: absolute;
     bottom: 4px;
-    right: 16px;
+    right: 12px;
     display: flex;
     align-items: center;
 
-    :not(:first-child) {
+    & > :not(:first-child) {
       margin-left: 8px;
+    }
+
+    @include viewport_mq3 {
+      right: 16px;
     }
   }
 
   &__action-buttons {
     display: flex;
 
-    padding-right: 12px;
-    margin-right: 4px;
+    padding-right: 8px;
     border-right: 1px solid $color--grey;
+
+    & > :not(:first-child) {
+      margin-left: 8px;
+    }
+
+    @include viewport_mq3 {
+      padding-right: 12px;
+      margin-right: 4px;
+    }
   }
 
   &__btn {
-    //@include tooltip;
     cursor: pointer;
     width: 28px;
     height: 28px;
@@ -139,10 +150,14 @@
     }
 
     &.--save {
-      width: 70px;
+      @include viewport_mq3 {
+        width: 70px;
+      }
+    }
 
-      & > svg {
-        margin-right: 4px;
+    &.--discard {
+      @include viewport_mq3 {
+        width: 90px;
       }
     }
 
@@ -155,11 +170,20 @@
       }
     }
 
+    &.--save,
     &.--discard {
-      width: 90px;
+      & > span {
+        display: none;
 
-      & > svg {
-        margin-right: 4px;
+        @include viewport_mq3 {
+          display: inline;
+        }
+      }
+
+      @include viewport_mq3 {
+        & > svg {
+          margin-right: 4px;
+        }
       }
     }
   }

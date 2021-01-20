@@ -1,19 +1,17 @@
-@import '~vue-context/dist/css/vue-context.css';
-
 .member-list {
   padding: 16px;
   border: 2px solid $color--navyblue-80;
   border-radius: 8px;
   overflow-y: scroll;
   overflow-x: hidden;
-  -ms-overflow-style: none;  /* IE and Edge */
+  -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none;
   width: 100%;
-  
+
   @include viewport_mq3 {
     width: 250px;
   }
-  
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -28,11 +26,5 @@
     &:not(:first-of-type) {
       margin-top: 12px;
     }
-  }
-}
-
-.v-context {
-  & > li {
-    cursor: pointer;
   }
 }

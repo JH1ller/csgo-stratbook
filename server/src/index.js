@@ -15,6 +15,8 @@ const { initWS } = require('./sockets');
 const subdomain = require('express-subdomain');
 const apiRouter = require('./routes/api');
 const secureRedirect = require('./middleware/secureRedirect');
+const { APP_URL } = require('./config');
+const urljoin = require('url-join');
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -34,7 +36,7 @@ const limiter = rateLimit({
   max: 1000, // limit each IP to 100 requests per windowMs
 });
 
-if (process.env.NODE_ENV === 'production') {
+if (!isDev) {
   app.use(limiter);
   app.set('trust proxy', 1);
   app.use(secureRedirect);
@@ -53,14 +55,17 @@ app.use(helmet());
 if (isDev) {
   app.use('/static', express.static('public'));
   app.use('/api', apiRouter);
+  app.use('/', express.static('dist'));
 } else {
   app.use(subdomain('static', express.static('public')));
   app.use(subdomain('app', express.static('dist')));
   app.use(subdomain('api', apiRouter));
   app.use('/.well-known/pki-validation/', express.static('cert'));
+  app.use('/', (req, res) => {
+    res.redirect(urljoin(APP_URL + req.url));
+  });
 }
 
-app.use('/', express.static('dist'));
 app.use(
   history({
     index: '/dist/index.html',

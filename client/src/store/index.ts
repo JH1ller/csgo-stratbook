@@ -43,12 +43,7 @@ export default new Vuex.Store({
       localStorage.clear();
     },
     loadDataFromStorage({ dispatch }) {
-      dispatch('auth/loadProfileFromStorage');
       dispatch('map/loadCurrentMapFromStorage');
-      dispatch('team/loadTeamInfoFromStorage');
-      dispatch('team/loadTeamMembersFromStorage');
-      dispatch('strat/loadStratsFromStorage');
-      dispatch('utility/loadUtilitiesFromStorage');
     },
   },
   getters: {},

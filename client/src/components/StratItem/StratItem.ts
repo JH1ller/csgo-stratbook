@@ -6,6 +6,7 @@ import { filterModule } from '@/store/namespaces';
 import { Strat } from '@/api/models/Strat';
 import { Sides } from '@/api/models/Sides';
 import { StratTypes } from '@/api/models/StratTypes';
+import { StratFilters } from '@/store/modules/filter';
 
 @Component({
   components: {
@@ -17,17 +18,9 @@ import { StratTypes } from '@/api/models/StratTypes';
 export default class StratItem extends Vue {
   @Prop() private strat!: Strat;
   @Ref() editor!: any;
-  @filterModule.State filters!: {
-    // TODO: create interface for Filter
-    name: string;
-    player: string;
-    side: Sides | null;
-    type: StratTypes | null;
-  };
+  @filterModule.State filters!: StratFilters;
   private editMode: boolean = false;
-  private editorKey: string = Math.random()
-    .toString(36)
-    .substring(2);
+  private editorKey: number = 0;
 
   private get isCtSide(): boolean {
     return this.strat.side === Sides.CT;
@@ -84,8 +77,6 @@ export default class StratItem extends Vue {
   private discardContent(): void {
     this.editMode = false;
     // * force refresh of editor
-    this.editorKey = Math.random()
-      .toString(36)
-      .substring(2);
+    this.editorKey++;
   }
 }

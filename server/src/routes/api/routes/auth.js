@@ -124,6 +124,7 @@ router.post('/refresh', cookieParser(), async (req, res) => {
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     maxAge: ms(process.env.REFRESH_TOKEN_TTL),
+    sameSite: 'lax',
   });
 
   res.send({

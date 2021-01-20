@@ -1,7 +1,15 @@
 <template>
   <div class="utility-view">
     <map-picker @map-clicked="updateCurrentMap" :currentMap="currentMap" />
-    <UtilityList :filters="utilityFilters" :utilities="sortedUtilitiesOfCurrentMap" @open-in-lightbox="showLightbox" />
+    <UtilityList
+      :filters="utilityFilters"
+      :utilities="sortedUtilitiesOfCurrentMap"
+      @open-in-lightbox="showLightbox"
+      @edit-utility="showUtilityForm"
+      @delete-utility="requestDeleteUtility"
+      @share-utility="requestShareUtility"
+      @unshare="unshareUtility"
+    />
     <FilterMenu :open="filterMenuOpen" @close="toggleFilterMenu" @clear-filters="clearUtilityFilters">
       <UtilityFilterForm
         @type-filter-change="updateUtilityTypeFilter"

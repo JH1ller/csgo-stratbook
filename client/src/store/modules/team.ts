@@ -44,9 +44,8 @@ export const teamModule: Module<TeamState, RootState> = {
       const res = await api.team.getTeam();
       if (res.success) {
         commit(SET_TEAM_INFO, res.success);
-        dispatch('saveTeamInfoToStorage');
-        dispatch('auth/updateStatus', Status.LOGGED_IN_WITH_TEAM, { root: true });
-        dispatch('fetchTeamMembers');
+        await dispatch('auth/updateStatus', Status.LOGGED_IN_WITH_TEAM, { root: true });
+        await dispatch('fetchTeamMembers');
         return { success: res.success };
       } else {
         return { error: res.error };
@@ -56,7 +55,6 @@ export const teamModule: Module<TeamState, RootState> = {
       const res = await api.team.getMembersOfTeam();
       if (res.success) {
         commit(SET_TEAM_MEMBERS, res.success);
-        dispatch('saveTeamMembersToStorage');
       }
     },
     async createTeam({ dispatch }, formData: FormData) {
@@ -114,10 +112,9 @@ export const teamModule: Module<TeamState, RootState> = {
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
         dispatch('strat/resetState', null, { root: true });
+        dispatch('resetState');
         dispatch('app/showToast', { id: 'team/leaveTeam', text: 'You have left the team' }, { root: true });
-        //localStorage.clear(); // TODO: clear everything except auth data
-        // TODO: create team/resetState and call it here
-        return { success: 'Successfully left team.' };
+        return { success: true };
       } else {
         return { error: res.error };
       }
@@ -127,10 +124,9 @@ export const teamModule: Module<TeamState, RootState> = {
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
         dispatch('strat/resetState', null, { root: true });
+        dispatch('resetState');
         dispatch('app/showToast', { id: 'team/deleteTeam', text: 'Team has been deleted' }, { root: true });
-        //localStorage.clear(); // TODO: clear everything except auth data
-        // TODO: create team/resetState and call it here
-        return { success: 'Successfully deleted team.' };
+        return { success: true };
       } else {
         return { error: res.error };
       }
@@ -144,7 +140,7 @@ export const teamModule: Module<TeamState, RootState> = {
           { id: 'team/transferManager', text: 'Leadership successfully transfered' },
           { root: true }
         );
-        return { success: 'Successfully transfered.' };
+        return { success: true };
       } else {
         return { error: res.error };
       }
@@ -171,20 +167,6 @@ export const teamModule: Module<TeamState, RootState> = {
     deleteTeamLocally({ commit, dispatch }) {
       commit(SET_TEAM_INFO, {});
       dispatch('auth/fetchProfile', null, { root: true });
-    },
-    loadTeamInfoFromStorage({ commit }) {
-      const teamInfo = localStorage.getItem('teamInfo');
-      if (teamInfo) commit(SET_TEAM_INFO, JSON.parse(teamInfo));
-    },
-    loadTeamMembersFromStorage({ commit }) {
-      const teamMembers = localStorage.getItem('teamMembers');
-      if (teamMembers) commit(SET_TEAM_MEMBERS, JSON.parse(teamMembers));
-    },
-    saveTeamInfoToStorage({ state }) {
-      localStorage.setItem('teamInfo', JSON.stringify(state.teamInfo));
-    },
-    saveTeamMembersToStorage({ state }) {
-      localStorage.setItem('teamMembers', JSON.stringify(state.teamMembers));
     },
     resetState({ commit }) {
       commit(RESET_STATE);

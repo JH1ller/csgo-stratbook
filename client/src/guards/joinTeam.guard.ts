@@ -5,7 +5,7 @@ import { NavigationGuard } from 'vue-router';
 
 export const joinTeamGuard: NavigationGuard = async (_to, _from, next) => {
   if (store.state.auth.status === Status.LOGGED_IN_WITH_TEAM) {
-    next(Routes.Team);
+    next(Routes.Strats);
     return false;
   } else {
     return true;

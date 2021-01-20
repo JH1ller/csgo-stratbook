@@ -1,15 +1,15 @@
 <template>
   <div class="team-view">
     <div class="team-view__content">
-      <TeamInfo 
-        :teamInfo="teamInfo" 
+      <TeamInfo
+        :teamInfo="teamInfo"
         :serverString="serverString"
         :isManager="isManager"
         @show-edit="toggleEditForm"
         @delete-team="requestTeamDelete"
       />
       <div class="team-view__right-wrapper">
-        <img :src="teamAvatarUrl" alt class="team-view__avatar" />
+        <img :src="teamAvatarUrl" class="team-view__avatar" alt="Team Logo" />
         <MemberList
           class="team-view__member-list"
           @leave-team="requestTeamLeave"
@@ -19,12 +19,7 @@
       </div>
     </div>
     <transition name="fade">
-      <EditTeamForm 
-        v-if="showEditForm" 
-        :teamInfo="teamInfo" 
-        @cancel="toggleEditForm" 
-        @submit="requestTeamUpdate"
-      />
+      <EditTeamForm v-if="showEditForm" :teamInfo="teamInfo" @cancel="toggleEditForm" @submit="requestTeamUpdate" />
     </transition>
   </div>
 </template>

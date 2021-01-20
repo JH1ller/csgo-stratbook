@@ -1,16 +1,18 @@
 import { Utility } from '@/api/models/Utility';
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
+import { Component, Emit, Prop, Ref, Vue } from 'vue-property-decorator';
 import UtilityItem from '@/components/UtilityItem/UtilityItem.vue';
 import { UtilityFilters } from '@/store/modules/filter';
-
+import VueContext from 'vue-context';
 @Component({
   components: {
     UtilityItem,
+    VueContext,
   },
 })
 export default class UtilityList extends Vue {
   @Prop() private utilities!: Utility[];
   @Prop() private filters!: UtilityFilters;
+  @Ref() private menu!: any;
 
   private get filteredUtilities() {
     return this.utilities
@@ -28,5 +30,26 @@ export default class UtilityList extends Vue {
   @Emit()
   private openInLightbox(utility: Utility) {
     return utility;
+  }
+
+  @Emit()
+  private editUtility(utility: Utility) {
+    return utility;
+  }
+
+  @Emit()
+  private shareUtility(utility: Utility) {
+    return utility;
+  }
+
+  @Emit()
+  private deleteUtility(utility: Utility) {
+    return utility;
+  }
+
+  private openMenu(e: Event, utility: Utility) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    this.menu.open(e, { utility });
   }
 }

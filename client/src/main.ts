@@ -33,6 +33,8 @@ import {
   faChevronRight,
   faMinusCircle,
   faCheckCircle,
+  faEllipsisV,
+  faBalanceScale,
 } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -78,19 +80,21 @@ library.add(
   faChevronLeft,
   faChevronRight,
   faMinusCircle,
-  faCheckCircle
+  faCheckCircle,
+  faEllipsisV,
+  faBalanceScale
 );
 Vue.component('fa-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
-const isFirstVisit = !localStorage.getItem('visited');
+const hasSession = !!localStorage.getItem('has-session');
 
 (async () => {
-  if (isFirstVisit) {
-    localStorage.setItem('visited', 'true');
-  } else {
+  if (hasSession) {
     await store.dispatch('auth/refresh');
+    await store.dispatch('auth/fetchProfile');
+    await store.dispatch('loadDataFromStorage');
   }
 
   new Vue({

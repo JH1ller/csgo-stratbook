@@ -14,6 +14,8 @@ import { UtilityTypes } from '@/api/models/UtilityTypes';
 import { MouseButtons } from '@/api/models/MouseButtons';
 import { UtilityMovement } from '@/api/models/UtilityMovement';
 import FormField from '@/utils/FormField';
+import { appModule } from '@/store/namespaces';
+import { Toast } from '../ToastWrapper/ToastWrapper.models';
 
 @Component({
   components: {
@@ -28,13 +30,14 @@ import FormField from '@/utils/FormField';
   },
 })
 export default class UtilityForm extends Vue {
+  @appModule.Action private showToast!: (toast: Toast) => void;
   @Prop() utility!: Utility;
   @Prop() isEdit!: boolean;
 
   private formFields: Record<string, FormField> = {
     name: new FormField('Name', true, [Validators.notEmpty(), Validators.maxLength(50)]),
     description: new FormField('Description', false, [Validators.maxLength(200)]),
-    videoLink: new FormField('Video Link', false, [Validators.isURL()]),
+    videoLink: new FormField('Video Link', false, [Validators.isYoutubeLink()]),
   };
 
   private type: UtilityTypes = UtilityTypes.SMOKE;
@@ -52,7 +55,14 @@ export default class UtilityForm extends Vue {
 
   private handleSubmit() {
     if (validateForm(this.formFields)) {
-      this.submitUtility();
+      if (this.files.length || this.formFields.videoLink.value) {
+        this.submitUtility();
+      } else {
+        this.showToast({
+          id: 'utilityForm/noMedia',
+          text: 'You need to add at least 1 image or a video link.',
+        });
+      }
     }
   }
 
@@ -65,6 +75,8 @@ export default class UtilityForm extends Vue {
     for (const [key, data] of Object.entries(this.formFields)) {
       requestFormData.append(key, data.value);
     }
+
+    if (this.isEdit) requestFormData.append('_id', this.utility._id);
 
     requestFormData.append('type', this.type);
     requestFormData.append('side', this.side);

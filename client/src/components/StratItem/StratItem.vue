@@ -5,10 +5,10 @@
       <transition name="fade">
         <div class="strat-item__action-buttons" v-if="editMode">
           <div class="strat-item__btn --save" @click="updateContent" content="Save strat changes" v-tippy>
-            <fa-icon icon="save" />Save
+            <fa-icon icon="save" /><span class="strat-item__btn-label">Save</span>
           </div>
           <div class="strat-item__btn --discard" @click="discardContent" content="Discard strat changes" v-tippy>
-            <fa-icon icon="ban" />Discard
+            <fa-icon icon="ban" /><span class="strat-item__btn-label">Discard</span>
           </div>
         </div>
       </transition>

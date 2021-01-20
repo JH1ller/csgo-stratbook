@@ -37,7 +37,6 @@ export const stratModule: Module<StratState, RootState> = {
       const res = await api.strat.getStrats();
       if (res.success) {
         commit(SET_STRATS, res.success);
-        dispatch('saveStratsToStorage');
         return { success: res.success };
       } else {
         return { error: res.error };
@@ -83,22 +82,12 @@ export const stratModule: Module<StratState, RootState> = {
     },
     addStratLocally({ commit, dispatch }, payload: { strat: Strat }) {
       commit(ADD_STRAT, payload.strat);
-      dispatch('saveStratsToStorage');
     },
     updateStratLocally({ commit, dispatch }, payload: { strat: Strat }) {
       commit(UPDATE_STRAT, payload);
-      dispatch('saveStratsToStorage');
     },
     deleteStratLocally({ commit, dispatch }, payload: { stratID: string }) {
       commit(DELETE_STRAT, payload.stratID);
-      dispatch('saveStratsToStorage');
-    },
-    loadStratsFromStorage({ commit }) {
-      const strats = localStorage.getItem('strats');
-      if (strats) commit(SET_STRATS, JSON.parse(strats));
-    },
-    saveStratsToStorage({ state }) {
-      localStorage.setItem('strats', JSON.stringify(state.strats));
     },
     resetState({ commit }) {
       commit(RESET_STATE);
