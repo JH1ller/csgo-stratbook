@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon --inspect=0.0.0.0:9229 src/index.js",
-    "genKeys": "node src/genKeys.js --amount 10 --dev"
+    "genKeys": "node scripts/genKeys.js --amount 10"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
     "aws-sdk": "^2.713.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
     "connect-history-api-fallback": "^1.6.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",

@@ -1,5 +1,5 @@
 import { Sides } from '@/api/models/Sides';
-import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
+import { Component, Prop, Emit, Mixins } from 'vue-property-decorator';
 import SidePicker from '@/components/SidePicker/SidePicker.vue';
 import UtilityPicker from '@/components/UtilityPicker/UtilityPicker.vue';
 import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
@@ -16,6 +16,7 @@ import { UtilityMovement } from '@/api/models/UtilityMovement';
 import FormField from '@/utils/FormField';
 import { appModule } from '@/store/namespaces';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
+import CloseOnEscape from '@/mixins/CloseOnEscape';
 
 @Component({
   components: {
@@ -29,7 +30,7 @@ import { Toast } from '../ToastWrapper/ToastWrapper.models';
     PosePicker,
   },
 })
-export default class UtilityForm extends Vue {
+export default class UtilityForm extends Mixins(CloseOnEscape) {
   @appModule.Action private showToast!: (toast: Toast) => void;
   @Prop() utility!: Utility;
   @Prop() isEdit!: boolean;
@@ -85,11 +86,6 @@ export default class UtilityForm extends Vue {
     requestFormData.append('movement', this.movement);
 
     return requestFormData;
-  }
-
-  @Emit()
-  private cancelClicked() {
-    return;
   }
 
   private mapToFields() {

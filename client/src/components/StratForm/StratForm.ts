@@ -1,7 +1,7 @@
 import { Sides } from '@/api/models/Sides';
 import { Strat } from '@/api/models/Strat';
 import { StratTypes } from '@/api/models/StratTypes';
-import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
+import { Component, Prop, Vue, Emit, Mixins } from 'vue-property-decorator';
 import SidePicker from '@/components/SidePicker/SidePicker.vue';
 import TypePicker from '@/components/TypePicker/TypePicker.vue';
 import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
@@ -9,6 +9,7 @@ import FormFieldSet from '@/components/FormFieldSet/FormFieldSet.vue';
 import TextInput from '@/components/TextInput/TextInput.vue';
 import { validateForm, Validators } from '@/utils/validation';
 import FormField from '@/utils/FormField';
+import CloseOnEscape from '@/mixins/CloseOnEscape';
 
 @Component({
   components: {
@@ -19,7 +20,7 @@ import FormField from '@/utils/FormField';
     FormFieldSet,
   },
 })
-export default class StratForm extends Vue {
+export default class StratForm extends Mixins(CloseOnEscape) {
   @Prop() strat!: Strat;
   @Prop() isEdit!: boolean;
 
@@ -54,11 +55,6 @@ export default class StratForm extends Vue {
       note: this.formFields.note.value,
       videoLink: this.formFields.videoLink.value,
     };
-  }
-
-  @Emit()
-  private cancelClicked() {
-    return;
   }
 
   private mapToFields() {

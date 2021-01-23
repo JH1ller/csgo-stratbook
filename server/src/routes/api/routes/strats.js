@@ -76,7 +76,18 @@ router.patch('/', verifyAuth, getStrat, async (req, res) => {
   if (!res.player.team.equals(res.strat.team)) {
     return res.status(400).json({ error: 'Cannot update a strat of another team.' });
   }
-  const updatableFields = ['name', 'map', 'side', 'type', 'active', 'videoLink', 'note', 'content', 'shared'];
+  const updatableFields = [
+    'name',
+    'map',
+    'side',
+    'type',
+    'active',
+    'videoLink',
+    'note',
+    'content',
+    'shared',
+    'drawData',
+  ];
   Object.entries(req.body).forEach(([key, value]) => {
     // check for undefined / null, but accept empty string ''
     if (value != null && updatableFields.includes(key)) {

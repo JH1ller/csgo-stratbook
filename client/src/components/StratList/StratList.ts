@@ -71,4 +71,10 @@ export default class StratList extends Vue {
   private updateContent(payload: Partial<Strat>) {
     return payload;
   }
+
+  // Emitted through from strat-item
+  @Emit()
+  private showMap(strat: Strat) {
+    return strat;
+  }
 }

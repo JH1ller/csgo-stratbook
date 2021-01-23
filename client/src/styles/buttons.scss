@@ -1,4 +1,4 @@
-@mixin button-default($bgcolor: white, $color: $color--navyblue) {
+@mixin button-default($bgcolor: white, $color: $color--navyblue, $has-text: true) {
   display: flex;
   padding: 6px 11px;
   border-radius: 3px;
@@ -21,8 +21,10 @@
     height: 14px;
   }
 
-  & > :first-child {
-    margin-left: 6px;
+  @if ($has-text == true) {
+    & > :first-child {
+      margin-right: 6px;
+    }
   }
 }
 

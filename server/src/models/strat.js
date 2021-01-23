@@ -46,6 +46,10 @@ const stratSchema = new mongoose.Schema({
     maxlength: 100,
   },
 
+  drawData: {
+    type: String,
+  },
+
   content: {
     type: String,
     default: '',

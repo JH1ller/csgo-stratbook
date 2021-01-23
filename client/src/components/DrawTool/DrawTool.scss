@@ -1,0 +1,75 @@
+.draw-tool {
+  &__wrapper {
+    width: 100%;
+    position: relative;
+
+    @include viewport_mq3 {
+      width: 512px;
+      height: 512px;
+    }
+  }
+
+  &__background {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  &__legend {
+    position: absolute;
+    right: 8px;
+    bottom: 5px;
+    color: $color--grey;
+    opacity: 0.5;
+    font-size: 0.9rem;
+
+    & > :first-of-type {
+      margin-right: 12px;
+    }
+  }
+
+  &__btn {
+    @include button-default(white, $color--navyblue, false);
+
+    &:not(:first-of-type) {
+      margin-left: 6px;
+    }
+
+    & > svg {
+      transition: color 0.2s ease;
+    }
+
+    &.-active {
+      & > svg {
+        color: $color--green;
+      }
+    }
+  }
+
+  &__btn-label {
+    display: none;
+    margin-left: 4px;
+
+    @include viewport_mq3 {
+      display: inline;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  &__color-picker {
+    margin-right: auto;
+  }
+}
+
+.canvas-container {
+  z-index: 1;
+}

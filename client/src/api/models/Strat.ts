@@ -11,6 +11,7 @@ export interface Strat extends Model {
   active: boolean;
   videoLink?: string;
   note?: string;
+  drawData?: string;
   createdBy: string;
   createdAt: Date;
   modifiedBy: string;

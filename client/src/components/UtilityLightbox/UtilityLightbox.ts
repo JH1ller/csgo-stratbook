@@ -2,11 +2,12 @@ import { Sides } from '@/api/models/Sides';
 import { Utility } from '@/api/models/Utility';
 import { UtilityMovement } from '@/api/models/UtilityMovement';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
+import { Component, Mixins, Prop } from 'vue-property-decorator';
 import MouseButtonDisplay from '@/components/MouseButtonDisplay/MouseButtonDisplay.vue';
 import UtilityTypeDisplay from '@/components/UtilityTypeDisplay/UtilityTypeDisplay.vue';
 import isMobile from 'is-mobile';
 import { extractVideoId, getEmbedURL, getThumbnailURL } from '@/utils/youtubeUtils';
+import CloseOnEscape from '@/mixins/CloseOnEscape';
 
 interface LightboxMedia {
   type: 'image' | 'video';
@@ -19,7 +20,7 @@ interface LightboxMedia {
     UtilityTypeDisplay,
   },
 })
-export default class UtilityLightbox extends Vue {
+export default class UtilityLightbox extends Mixins(CloseOnEscape) {
   @Prop() private utility!: Utility;
   private showCrosshair: boolean = false;
   private currentMediaIndex: number = 0;
@@ -54,8 +55,6 @@ export default class UtilityLightbox extends Vue {
         screen.orientation.lock('landscape');
       }
     }
-
-    document.addEventListener('keydown', this.keydownHandler);
   }
 
   private unmounted() {
@@ -65,19 +64,6 @@ export default class UtilityLightbox extends Vue {
         screen.orientation.unlock();
       }
     }
-
-    document.removeEventListener('keydown', this.keydownHandler);
-  }
-
-  private keydownHandler(e: KeyboardEvent) {
-    if (e.key === 'Escape') {
-      this.close();
-    }
-  }
-
-  @Emit()
-  private close() {
-    return;
   }
 
   private goToIndex(index: number) {

@@ -1,7 +1,7 @@
 <template>
   <div class="strats-view">
     <MapPicker @map-clicked="updateCurrentMap" :currentMap="currentMap" />
-    <FilterMenu :open="filterMenuOpen" @close="toggleFilterMenu" @clear-filters="clearStratFilters">
+    <FilterMenu :open="filterMenuOpen" @close="filterMenuOpen = false" @clear-filters="clearStratFilters">
       <StratFilterForm
         @content-filter-change="updateStratContentFilter"
         @type-filter-change="updateStratTypeFilter"
@@ -17,6 +17,7 @@
       @update-content="updateContent"
       @share-strat="requestShareStrat"
       @unshare-strat="unshareStrat"
+      @show-map="showDrawTool"
       :strats="sortedStratsOfCurrentMap"
       :filters="stratFilters"
     />
@@ -24,7 +25,7 @@
       <div class="strats-view__fab-group" v-if="!filterMenuOpen && !stratFormOpen">
         <FilterButton
           class="strats-view__filter-button"
-          @click="toggleFilterMenu"
+          @click="filterMenuOpen = true"
           :activeFilterCount="activeStratFilterCount"
         />
         <FloatingAdd class="strats-view__floating-add" label="Add strat" @click="showStratForm" />
@@ -40,8 +41,11 @@
         :isEdit="stratFormEditMode"
         :strat="editStrat"
         @submit-strat="stratFormSubmitted"
-        @cancel-clicked="hideStratForm"
+        @close="hideStratForm"
       />
+    </transition>
+    <transition name="fade">
+      <DrawTool v-if="drawToolOpen" @close="drawToolOpen = false" @save="updateStrat" :strat="currentDrawToolStrat" />
     </transition>
   </div>
 </template>

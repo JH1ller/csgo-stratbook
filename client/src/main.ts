@@ -35,10 +35,17 @@ import {
   faCheckCircle,
   faEllipsisV,
   faBalanceScale,
+  faMap,
+  faEraser,
+  faFont,
+  faPencilAlt,
+  faArrowsAlt,
+  faLongArrowAltRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueTippy, { TippyComponent } from 'vue-tippy';
+import { faCircle } from '@fortawesome/free-regular-svg-icons';
 
 Vue.use(VueTippy, {
   directive: 'tippy',
@@ -82,7 +89,14 @@ library.add(
   faMinusCircle,
   faCheckCircle,
   faEllipsisV,
-  faBalanceScale
+  faBalanceScale,
+  faMap,
+  faEraser,
+  faFont,
+  faPencilAlt,
+  faArrowsAlt,
+  faLongArrowAltRight,
+  faCircle
 );
 Vue.component('fa-icon', FontAwesomeIcon);
 

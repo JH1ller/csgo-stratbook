@@ -54,10 +54,6 @@ export default class UtilityView extends Vue {
   private currentLightboxUtility: Utility | null = null;
   private filterMenuOpen: boolean = false;
 
-  private toggleFilterMenu() {
-    this.filterMenuOpen = !this.filterMenuOpen;
-  }
-
   private utilityFormSubmitted(data: FormData) {
     if (data.has('_id')) {
       this.updateUtility(data);

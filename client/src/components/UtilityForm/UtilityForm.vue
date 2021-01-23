@@ -36,13 +36,13 @@
       </FormFieldSet>
 
       <div class="utility-form__btn-wrapper">
-        <button type="button" @click="cancelClicked" class="utility-form__btn --cancel">
-          Cancel
+        <button type="button" @click="close" class="utility-form__btn --cancel">
           <fa-icon icon="ban" />
+          Cancel
         </button>
         <button type="submit" class="utility-form__btn --submit">
-          Save
           <fa-icon icon="check" />
+          Save
         </button>
       </div>
     </form>

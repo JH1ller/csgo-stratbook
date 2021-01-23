@@ -10,6 +10,7 @@
       @update-content="updateContent"
       @share-strat="shareStrat"
       @unshare-strat="unshareStrat"
+      @show-map="showMap(strat)"
       :style="{ 'animation-delay': 0.05 * index + 's' }"
     />
   </div>

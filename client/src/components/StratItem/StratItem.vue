@@ -30,6 +30,9 @@
         <fa-icon icon="check-circle" v-if="strat.active" />
         <fa-icon icon="minus-circle" v-else />
       </div>
+      <div class="strat-item__btn --map" @click="showMap" content="Open map" v-tippy>
+        <fa-icon icon="map" />
+      </div>
       <div
         class="strat-item__btn --share"
         :class="{ '-shared': strat.shared }"

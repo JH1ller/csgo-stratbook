@@ -6,6 +6,7 @@ import StratForm from '@/components/StratForm/StratForm.vue';
 import StratFilterForm from '@/components/StratFilterForm/StratFilterForm.vue';
 import FilterMenu from '@/components/FilterMenu/FilterMenu.vue';
 import FilterButton from '@/components/FilterButton/FilterButton.vue';
+import DrawTool from '@/components/DrawTool/DrawTool.vue';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { appModule, mapModule, stratModule, filterModule, teamModule } from '@/store/namespaces';
 import { StratFilters } from '@/store/modules/filter';
@@ -28,6 +29,7 @@ import { catchPromise } from '@/utils/catchPromise';
     FilterButton,
     UtilityLightbox,
     FilterMenu,
+    DrawTool,
   },
 })
 export default class StratsView extends Vue {
@@ -59,6 +61,8 @@ export default class StratsView extends Vue {
   private lightboxOpen: boolean = false;
   private currentLightboxUtility: Utility | null = null;
   private filterMenuOpen: boolean = false;
+  private drawToolOpen: boolean = false;
+  private currentDrawToolStrat: Strat | null = null;
 
   private stratFormSubmitted(data: Partial<Strat>) {
     if (data._id) {
@@ -81,10 +85,6 @@ export default class StratsView extends Vue {
 
   private toggleStratActive(data: Partial<Strat>) {
     this.updateStrat(data);
-  }
-
-  private toggleFilterMenu() {
-    this.filterMenuOpen = !this.filterMenuOpen;
   }
 
   private requestDeleteStrat(stratID: string) {
@@ -119,5 +119,17 @@ export default class StratsView extends Vue {
   private hideLightbox() {
     this.currentLightboxUtility = null;
     this.lightboxOpen = false;
+  }
+
+  private showDrawTool(strat: Strat) {
+    this.currentDrawToolStrat = strat;
+    this.drawToolOpen = true;
+  }
+
+  // * unused
+  private submitDrawing(data: Partial<Strat>) {
+    this.updateStrat(data);
+    this.currentDrawToolStrat = null;
+    this.drawToolOpen = false;
   }
 }
