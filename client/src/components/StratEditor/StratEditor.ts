@@ -7,6 +7,7 @@ import sanitizeHtml from 'sanitize-html';
 import { Player } from '@/api/models/Player';
 import { Utility } from '@/api/models/Utility';
 import { Sides } from '@/api/models/Sides';
+import { UtilityTypes } from '@/api/models/UtilityTypes';
 
 @Component({
   components: {
@@ -22,13 +23,35 @@ export default class StratEditor extends Vue {
   @authModule.State profile!: Player;
   @utilityModule.Getter utilitiesOfCurrentMap!: Utility[];
 
-  private get utilityOptionList() {
-    return this.utilitiesOfCurrentMap
-      .filter(utility => utility.side === this.stratSide)
-      .map(utility => ({
-        ...utility,
-        query: `${utility.type} ${utility.name}`,
-      }));
+  private get utilityOptionList(): (Partial<Utility> & { query: string })[] {
+    return [
+      ...this.utilitiesOfCurrentMap
+        .filter(utility => utility.side === this.stratSide)
+        .map(utility => ({
+          ...utility,
+          query: `${utility.type} ${utility.name}`,
+        })),
+      {
+        type: UtilityTypes.FLASH,
+        query: UtilityTypes.FLASH,
+        name: 'Flash',
+      },
+      {
+        type: UtilityTypes.GRENADE,
+        query: UtilityTypes.GRENADE,
+        name: 'Grenade',
+      },
+      {
+        type: UtilityTypes.SMOKE,
+        query: UtilityTypes.SMOKE,
+        name: 'Smoke',
+      },
+      {
+        type: UtilityTypes.MOLOTOV,
+        query: UtilityTypes.MOLOTOV,
+        name: 'Molotov',
+      },
+    ];
   }
 
   private get mentionOptionList() {
@@ -64,7 +87,6 @@ export default class StratEditor extends Vue {
             `<img class="strat-editor__mention-item-image" src="${resolveStaticImageUrl(
               (item.original as Player).avatar
             )}"/> ${item.original.name} `,
-          //noMatchTemplate: () => (`<span class="strat-editor__mention-item -no-match">No players found</span>`),
           noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
           spaceSelectsMatch: true,
@@ -75,9 +97,8 @@ export default class StratEditor extends Vue {
           lookup: 'query',
           fillAttr: 'name',
           selectTemplate: item =>
-            `<span contenteditable="false" data-util-id="${
-              item.original._id
-            }" class="strat-editor__utility"><img class="strat-editor__utility-img" src="utility/${(item.original as Utility).type.toLowerCase()}.png" />${
+            `<span contenteditable="false" ${item.original._id ? `data-util-id="${item.original._id}"` : ''}
+             class="strat-editor__utility"><img class="strat-editor__utility-img" src="utility/${(item.original as Utility).type.toLowerCase()}.png" />${
               item.original.name
             }</span>`,
           itemClass: 'strat-editor__mention-item',
@@ -87,7 +108,6 @@ export default class StratEditor extends Vue {
             `<img class="strat-editor__utility-item-image" src="utility/${(item.original as Utility).type.toLowerCase()}.png"/> ${
               item.original.name
             } `,
-          //noMatchTemplate: () => (`<span class="strat-editor__mention-item -no-match">No players found</span>`),
           noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
           spaceSelectsMatch: true,

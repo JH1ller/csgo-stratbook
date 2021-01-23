@@ -4,12 +4,12 @@
       <p class="confirm-dialog__text">{{ text }}</p>
       <div class="confirm-dialog__buttons">
         <button class="confirm-dialog__btn-confirm" @click="confirmClicked">
-          {{ resolveBtn }}
           <fa-icon icon="check" />
+          {{ resolveBtn }}
         </button>
         <button class="confirm-dialog__btn-cancel" @click="cancelClicked">
-          {{ rejectBtn }}
           <fa-icon icon="ban" />
+          {{ rejectBtn }}
         </button>
       </div>
     </div>

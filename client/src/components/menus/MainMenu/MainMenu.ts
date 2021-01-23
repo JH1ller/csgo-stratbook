@@ -4,7 +4,6 @@ import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import { Player } from '@/api/models/Player';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { FeedbackFish } from '@feedback-fish/vue';
-import { Status } from '@/store/modules/auth';
 import { Routes } from '@/router/router.models';
 
 @Component({

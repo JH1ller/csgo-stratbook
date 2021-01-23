@@ -47,6 +47,7 @@ export default class App extends Vue {
 
 <style lang="scss">
 @import '~vue-context/dist/css/vue-context.css';
+@import '~vue-swatches/dist/vue-swatches.css';
 
 .app {
   font-family: $font_ubuntu-regular;

@@ -5,7 +5,6 @@ import SideBadge from '@/components/SideBadge/SideBadge.vue';
 import { filterModule } from '@/store/namespaces';
 import { Strat } from '@/api/models/Strat';
 import { Sides } from '@/api/models/Sides';
-import { StratTypes } from '@/api/models/StratTypes';
 import { StratFilters } from '@/store/modules/filter';
 
 @Component({
@@ -66,6 +65,11 @@ export default class StratItem extends Vue {
   @Emit()
   private toggleActive(): Partial<Strat> {
     return { _id: this.strat._id, active: !this.strat.active };
+  }
+
+  @Emit()
+  private showMap() {
+    return;
   }
 
   @Emit()

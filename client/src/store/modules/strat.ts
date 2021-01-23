@@ -53,8 +53,8 @@ export const stratModule: Module<StratState, RootState> = {
     },
     async updateStrat({ dispatch }, payload: Partial<Strat>) {
       const res = await api.strat.updateStrat(payload);
-      if (res.success)
-        dispatch('app/showToast', { id: 'strat/updateStrat', text: 'Successfully updated the strat.' }, { root: true });
+      // if (res.success)
+      //   dispatch('app/showToast', { id: 'strat/updateStrat', text: 'Successfully updated the strat.' }, { root: true });
     },
     async shareStrat({ dispatch }, stratID: string) {
       const res = await api.strat.updateStrat({ _id: stratID, shared: true });

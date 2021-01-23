@@ -1,6 +1,6 @@
 {
   "name": "csgo-stratbook",
-  "version": "0.11.0",
+  "version": "0.12.2",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -16,6 +16,7 @@
     "@feedback-fish/vue": "^1.0.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
+    "@fortawesome/free-regular-svg-icons": "^5.15.2",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/vue-fontawesome": "^2.0.0",
     "@types/async": "^3.2.0",
@@ -35,9 +36,11 @@
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.2",
     "vue-context": "^6.0.0",
+    "vue-image-markup": "github:JH1ller/vue-image-markup",
     "vue-multiselect": "^2.1.6",
     "vue-property-decorator": "^8.3.0",
     "vue-router": "^3.1.6",
+    "vue-swatches": "^2.1.0",
     "vue-tippy": "^4.7.2",
     "vue-tribute": "^1.0.6",
     "vuex": "^3.1.3",

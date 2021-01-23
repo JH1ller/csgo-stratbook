@@ -1,6 +1,5 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
-import APIService from '@/api/base';
 import { Utility } from '@/api/models/Utility';
 import api from '@/api/base';
 

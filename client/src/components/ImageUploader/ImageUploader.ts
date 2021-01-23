@@ -1,4 +1,4 @@
-import { Component, Emit, Prop, Ref, Vue, Watch } from 'vue-property-decorator';
+import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator';
 
 interface ImageFile {
   file: File;

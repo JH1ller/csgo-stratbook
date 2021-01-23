@@ -4,6 +4,7 @@ const express = require('express');
 require('express-async-errors');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const compression = require('compression');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, { pingInterval: 10000 });
@@ -42,7 +43,8 @@ if (!isDev) {
   app.use(secureRedirect);
 }
 
-app.use(express.json());
+app.use(express.json({ limit: '500kb' }));
+
 app.use(
   cors({
     credentials: true,
@@ -51,6 +53,8 @@ app.use(
 );
 
 app.use(helmet());
+
+app.use(compression());
 
 if (isDev) {
   app.use('/static', express.static('public'));

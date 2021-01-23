@@ -10,7 +10,7 @@
       @share-utility="requestShareUtility"
       @unshare="unshareUtility"
     />
-    <FilterMenu :open="filterMenuOpen" @close="toggleFilterMenu" @clear-filters="clearUtilityFilters">
+    <FilterMenu :open="filterMenuOpen" @close="filterMenuOpen = false" @clear-filters="clearUtilityFilters">
       <UtilityFilterForm
         @type-filter-change="updateUtilityTypeFilter"
         @side-filter-change="updateUtilitySideFilter"
@@ -22,7 +22,7 @@
       <div class="utility-view__fab-group" v-if="!filterMenuOpen && !utilityFormOpen">
         <FilterButton
           class="utility-view__filter-button"
-          @click="toggleFilterMenu"
+          @click="filterMenuOpen = true"
           :activeFilterCount="activeUtilityFilterCount"
         />
         <FloatingAdd class="utility-view__floating-add" label="Add utility" @click="showUtilityForm" />
@@ -38,7 +38,7 @@
         :isEdit="utilityFormEditMode"
         :utility="editUtility"
         @submit-utility="utilityFormSubmitted"
-        @cancel-clicked="hideUtilityForm"
+        @close="hideUtilityForm"
       />
     </transition>
   </div>

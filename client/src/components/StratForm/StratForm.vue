@@ -17,13 +17,13 @@
         <TextInput v-model="formFields.videoLink.value" :field="formFields.videoLink" fieldName="videoLink" />
       </FormFieldSet>
       <div class="strat-form__btn-wrapper">
-        <button type="button" @click="cancelClicked" class="strat-form__btn --cancel">
-          Cancel
+        <button type="button" @click="close" class="strat-form__btn --cancel">
           <fa-icon icon="ban" />
+          Cancel
         </button>
         <button type="submit" class="strat-form__btn --submit">
-          Save
           <fa-icon icon="check" />
+          Save
         </button>
       </div>
     </form>
