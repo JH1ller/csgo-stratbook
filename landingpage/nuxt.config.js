@@ -125,6 +125,7 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+  buildDir: 'build/',
   generate: {
     dir: path.resolve(__dirname, '../server/dist_landingpage'),
   },
