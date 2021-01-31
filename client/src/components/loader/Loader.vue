@@ -1,8 +1,6 @@
-<template>
-  <div class="component">
-    <div class="loader__wrapper" ref="Loader">
-      <div class="loader__spinner"></div>
-    </div>
+<template functional>
+  <div class="loader" :class="[data.class, data.staticClass]">
+    <div class="loader__spinner"></div>
   </div>
 </template>#
 

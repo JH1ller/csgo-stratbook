@@ -6,12 +6,14 @@ import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
 import { Strat } from '@/api/models/Strat';
 import VSwatches from 'vue-swatches';
+import SmartImage from '@/components/SmartImage/SmartImage.vue';
 
 @Component({
   components: {
     ImageEditor,
     BackdropDialog,
     VSwatches,
+    SmartImage,
   },
 })
 export default class DrawTool extends Mixins(CloseOnEscape) {
@@ -26,13 +28,14 @@ export default class DrawTool extends Mixins(CloseOnEscape) {
   private canvasHeight = 512;
   private currentColor = '#1fbc9c';
 
+  private backgroundLoaded = false;
+
   private get mapURL() {
     return `minimaps/${this.currentMap.toLowerCase()}.jpg`;
   }
 
   private mounted() {
     this.canvas = this.editor.canvas;
-    //(window as any).canvas = this.canvas;
 
     this.canvas.backgroundColor = null;
 
@@ -49,8 +52,22 @@ export default class DrawTool extends Mixins(CloseOnEscape) {
     this.setTool('freeDrawing');
 
     this.setupEventlisteners();
-    this.canvasWidth = this.wrapper.getBoundingClientRect().width;
-    this.canvasHeight = this.canvasWidth;
+    this.setCanvasDynamicWidth();
+  }
+
+  private setCanvasDynamicWidth() {
+    const dynamicWidth = this.wrapper.getBoundingClientRect().width + 'px';
+
+    const canvasContainer = document.querySelector('.canvas-container') as HTMLDivElement;
+    const lowerCanvas = document.querySelector('.lower-canvas') as HTMLCanvasElement;
+    const upperCanvas = document.querySelector('.upper-canvas') as HTMLCanvasElement;
+
+    canvasContainer.style.width = dynamicWidth;
+    canvasContainer.style.height = dynamicWidth;
+    lowerCanvas.style.width = dynamicWidth;
+    lowerCanvas.style.height = dynamicWidth;
+    upperCanvas.style.width = dynamicWidth;
+    upperCanvas.style.height = dynamicWidth;
   }
 
   private beforeUnmount() {
@@ -62,6 +79,10 @@ export default class DrawTool extends Mixins(CloseOnEscape) {
     if (newData !== oldData) {
       this.canvas.loadFromJSON(newData);
     }
+  }
+
+  private imgLoadedHandler() {
+    this.backgroundLoaded = true;
   }
 
   private setupEventlisteners() {

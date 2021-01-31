@@ -9,9 +9,9 @@
     cursor: pointer;
 
     &.-self {
-      background-color: $color--navyblue-20;
+      background-color: rgba($color--navyblue, 0.2);
     }
-  
+
     &.-online {
       border: 1px solid $color--green;
     }
@@ -38,7 +38,7 @@
   &__captain-icon {
     width: 20px;
     height: 20px;
-    color: $color--navyblue-80;
+    color: rgba($color--navyblue, 0.8);
     margin-right: 6px;
   }
 

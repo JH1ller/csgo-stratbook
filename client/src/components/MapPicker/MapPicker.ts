@@ -1,4 +1,5 @@
 import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
+import SmartImage from '@/components/SmartImage/SmartImage.vue';
 
 export enum MapID {
   Dust2 = 'DUST_2',
@@ -15,46 +16,50 @@ export interface Map {
   active: boolean;
 }
 
-@Component({})
+@Component({
+  components: {
+    SmartImage,
+  },
+})
 export default class MapPicker extends Vue {
   @Prop() private currentMap!: string;
   private maps: Map[] = [
     {
       _id: MapID.Dust2,
       name: 'Dust 2',
-      active: true
+      active: true,
     },
     {
       _id: MapID.Mirage,
       name: 'Mirage',
-      active: true
+      active: true,
     },
     {
       _id: MapID.Overpass,
       name: 'Overpass',
-      active: true
+      active: true,
     },
     {
       _id: MapID.Nuke,
       name: 'Nuke',
-      active: true
+      active: true,
     },
     {
       _id: MapID.Vertigo,
       name: 'Vertigo',
-      active: true
+      active: true,
     },
     {
       _id: MapID.Inferno,
       name: 'Inferno',
-      active: true
+      active: true,
     },
     {
       _id: MapID.Train,
       name: 'Train',
-      active: true
-    }
-  ]
+      active: true,
+    },
+  ];
 
   @Emit()
   private mapClicked(mapID: MapID) {
@@ -66,6 +71,6 @@ export default class MapPicker extends Vue {
   }
 
   private getMapImage(mapID: MapID) {
-    return `maps/${mapID.toLowerCase()}.jpg`
+    return `maps/${mapID.toLowerCase()}.jpg`;
   }
 }

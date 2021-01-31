@@ -1,4 +1,5 @@
 .draw-tool {
+  $root: &;
   &__wrapper {
     width: 100%;
     position: relative;
@@ -6,6 +7,17 @@
     @include viewport_mq3 {
       width: 512px;
       height: 512px;
+    }
+  }
+
+  &__editor {
+    & canvas {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+
+      #{$root}.-loaded & {
+        opacity: 1;
+      }
     }
   }
 

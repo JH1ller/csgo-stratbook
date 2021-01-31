@@ -1,0 +1,1 @@
+__NUXT_JSONP__("/de/changelog", {data:[{}],fetch:[],mutations:void 0});

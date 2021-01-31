@@ -6,11 +6,13 @@ import { Component, Emit, Prop, Ref, Vue } from 'vue-property-decorator';
 import MouseButtonDisplay from '@/components/MouseButtonDisplay/MouseButtonDisplay.vue';
 import UtilityTypeDisplay from '@/components/UtilityTypeDisplay/UtilityTypeDisplay.vue';
 import { extractVideoId, getThumbnailURL } from '@/utils/youtubeUtils';
+import SmartImage from '@/components/SmartImage/SmartImage.vue';
 
 @Component({
   components: {
     MouseButtonDisplay,
     UtilityTypeDisplay,
+    SmartImage,
   },
 })
 export default class UtilityItem extends Vue {

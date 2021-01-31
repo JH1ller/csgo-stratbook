@@ -59,20 +59,19 @@ app.use(compression());
 if (isDev) {
   app.use('/static', express.static('public'));
   app.use('/api', apiRouter);
-  app.use('/', express.static('dist'));
+  app.use('/app', express.static('dist_app'));
+  app.use('/', express.static('dist_landingpage'));
 } else {
   app.use(subdomain('static', express.static('public')));
-  app.use(subdomain('app', express.static('dist')));
+  app.use(subdomain('app', express.static('dist_app')));
   app.use(subdomain('api', apiRouter));
   app.use('/.well-known/pki-validation/', express.static('cert'));
-  app.use('/', (req, res) => {
-    res.redirect(urljoin(APP_URL + req.url));
-  });
+  app.use('/', express.static('dist_landingpage'));
 }
 
 app.use(
   history({
-    index: '/dist/index.html',
+    index: '/dist_app/index.html',
   })
 );
 

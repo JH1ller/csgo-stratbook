@@ -24,7 +24,7 @@ body {
   user-select: none;
 
   &::selection {
-    background-color: $color--navyblue-80;
+    background-color: rgba($color--navyblue, 0.8);
     color: white;
   }
 }
