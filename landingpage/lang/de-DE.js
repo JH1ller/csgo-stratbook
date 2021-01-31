@@ -2,7 +2,7 @@ export default {
   navbar: {
     faq: 'FAQ',
     changelog: 'Changelog',
-    register: 'Registrieren',
+    register: 'Register',
   },
   footer: {
     legalNotice: 'Impressum',
@@ -10,11 +10,11 @@ export default {
   index: {
     hero: {
       tagline: 'Free & Open-Source Platform',
-      headline: 'Der beste Ort um eure Strats und Nades zu verwalten.',
+      headline: 'The best place to manage your strats and nades.',
       subline:
-        'Ihr werdet durch Stratbook nicht jedes Game gewinnen. Aber wenigstens habt ihr eure Strats und Nades übersichtlich an einem Ort.',
-      btnOpenApp: 'App öffnen',
-      btnRegister: 'Registrieren',
+        "Stratbook won't make you win every game.\n But at least it will keep your strats and nades organized.",
+      btnOpenApp: 'Open App',
+      btnRegister: 'Register',
     },
   },
   faq: {
@@ -48,7 +48,7 @@ export default {
       {
         questionText: 'Who is behind this project?',
         answerText:
-          "Hi there! I'm Justin, a 24 year old esports & programming enthusiast based in Stuttgart, Germany. I have a bachelors degree in Computer Science & Media and I'm working as a full-time Web Engineer for a Customer Experience Agency in Stuttgart. I started developing Stratbook in my freetime during Covid-19, mostly to improve my programming skills, but also to build an application that can replace the cluttered Google Docs that my team had been using.",
+          "Hi there! I'm Justin, a 24 year old esports & programming enthusiast based in Stuttgart, Germany. I have a bachelors degree in Computer Science & Media and I'm working as a full-time Web Engineer for a Customer Experience Agency in Stuttgart. I started developing Stratbook in my freetime during Covid-19, mostly to improve my programming skills, but also to build an application for my csgo team to replace the cluttered Google Docs that we've been using.",
       },
     ],
   },
@@ -87,6 +87,6 @@ export default {
     ],
   },
   register: {
-    headline: 'Registrieren',
+    headline: 'Register',
   },
 };
