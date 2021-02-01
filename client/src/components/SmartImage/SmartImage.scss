@@ -1,0 +1,51 @@
+.smart-image {
+  $root: &;
+  position: relative;
+  overflow: hidden;
+  background-color: $color--smoke;
+
+  &__img {
+    width: 100%;
+    transition: opacity 0.5s ease;
+    opacity: 0;
+
+    #{$root}.-loading & {
+      opacity: 0;
+    }
+
+    #{$root}.-loaded & {
+      opacity: 1;
+    }
+
+    #{$root}.-error & {
+      display: none;
+    }
+  }
+
+  &__loader,
+  &__error {
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  &__error {
+    width: 32px;
+    height: 32px;
+    color: darken($color--smoke, 15%);
+
+    #{$root}.-error & {
+      opacity: 1;
+    }
+  }
+
+  &__loader {
+    #{$root}.-loading & {
+      opacity: 1;
+    }
+  }
+}

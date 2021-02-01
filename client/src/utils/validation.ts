@@ -23,6 +23,7 @@ export type ValidatorFunction = (data: FormFieldData) => boolean;
 
 export class Validators {
   private static emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  private static pwRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$/;
   private static numberRegex = /^\d+$/;
   private static urlRegex = /(https?:\/\/)?([\w-])+\.{1}([a-zA-Z]{2,63})([/\w-]*)*\/?\??([^#\n\r]*)?#?([^\n\r]*)/;
   private static youtubeRegex = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
@@ -115,6 +116,23 @@ export class Validators {
         ? this.urlRegex.test(data.value)
         : data.value.length
         ? this.urlRegex.test(data.value)
+        : true;
+      if (!result) {
+        data.errors.push(errorMessage);
+      } else {
+        data.errors = data.errors.filter(msg => msg !== errorMessage);
+      }
+      return result;
+    };
+  }
+
+  static isSufficientPw(): ValidatorFunction {
+    const errorMessage = `Must be include lower-case, upper-case and number`;
+    return data => {
+      const result = data.required
+        ? this.pwRegex.test(data.value)
+        : data.value.length
+        ? this.pwRegex.test(data.value)
         : true;
       if (!result) {
         data.errors.push(errorMessage);

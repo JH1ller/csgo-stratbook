@@ -1,5 +1,8 @@
+const path = require('path');
+
 module.exports = {
   publicPath: '/',
+  outputDir: path.resolve(__dirname, '../server/dist_app'),
   css: {
     loaderOptions: {
       sass: {

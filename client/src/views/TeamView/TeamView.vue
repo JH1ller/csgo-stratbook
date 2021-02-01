@@ -9,7 +9,7 @@
         @delete-team="requestTeamDelete"
       />
       <div class="team-view__right-wrapper">
-        <img :src="teamAvatarUrl" class="team-view__avatar" alt="Team Logo" />
+        <SmartImage :src="teamAvatarUrl" class="team-view__avatar" alt="Team Logo" />
         <MemberList
           class="team-view__member-list"
           @leave-team="requestTeamLeave"

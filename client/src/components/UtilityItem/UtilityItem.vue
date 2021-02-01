@@ -1,6 +1,11 @@
 <template>
   <div class="utility-item">
-    <img :src="utilityImage" class="utility-item__image" @click="openInLightbox" />
+    <SmartImage
+      :src="utilityImage"
+      class="utility-item__image"
+      @click.native="openInLightbox"
+      alt="Utility thumbnail"
+    />
     <div class="utility-item__side-wrapper">
       <img v-if="utility.side === Sides.T" src="@/assets/icons/t_badge.png" class="utility-item__side" />
       <img v-else src="@/assets/icons/ct_badge.png" class="utility-item__side" />

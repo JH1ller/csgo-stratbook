@@ -8,7 +8,7 @@
         @click="mapClicked(map._id)"
         :class="{ '-current': isCurrentMap(map._id) }"
       >
-        <img :src="getMapImage(map._id)" alt="Map" class="map-picker__image" draggable="false" />
+        <SmartImage :src="getMapImage(map._id)" alt="Map" class="map-picker__image" />
         <p class="map-picker__label">{{ map.name }}</p>
       </div>
     </div>

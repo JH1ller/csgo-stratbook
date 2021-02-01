@@ -1,6 +1,6 @@
 <template>
   <BackdropDialog>
-    <div class="draw-tool">
+    <div class="draw-tool" :class="{ '-loaded': backgroundLoaded }">
       <div class="draw-tool__wrapper" ref="wrapper">
         <ImageEditor
           class="draw-tool__editor"
@@ -9,7 +9,12 @@
           :canvasHeight="canvasHeight"
           ref="editor"
         />
-        <img class="draw-tool__background" :src="mapURL" />
+        <SmartImage
+          alt="Draw tool minimap background"
+          @load="imgLoadedHandler"
+          class="draw-tool__background"
+          :src="mapURL"
+        />
         <span class="draw-tool__legend"><span>Undo: CTRL + Z</span><span>Redo: CTRL + SHIFT + Z</span></span>
       </div>
       <div class="draw-tool__actions">

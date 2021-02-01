@@ -1,0 +1,154 @@
+// $minWidths
+// Map of minium viewport widths.
+$mq1Min: 0px;
+$mq2Min: 480px;
+$mq3Min: 768px;
+$mq4Min: 1024px;
+$mq5Min: 1280px;
+$mq6Min: 1440px;
+$mq7Min: 1920px;
+
+$minWidths: (
+  mq1: $mq1Min,
+  mq2: $mq2Min,
+  mq3: $mq3Min,
+  mq4: $mq4Min,
+  mq5: $mq5Min,
+  mq6: $mq6Min,
+  mq7: $mq7Min,
+);
+
+// $breakpoints
+// Map of breakpoints.
+// It should be possible to declare breakpoints independently from minWidth.
+$breakpoints: (
+  mq1: map-get($minWidths, mq1),
+  mq2: map-get($minWidths, mq2),
+  mq3: map-get($minWidths, mq3),
+  mq4: map-get($minWidths, mq4),
+  mq5: map-get($minWidths, mq5),
+  mq6: map-get($minWidths, mq6),
+  mq7: map-get($minWidths, mq7),
+);
+
+// $mediaQueries
+$mediaQueries: (
+  mq1: 'only screen and (min-width: #{$mq1Min})',
+  mq2: 'only screen and (min-width: #{$mq2Min})',
+  mq3: 'only screen and (min-width: #{$mq3Min})',
+  mq4: 'only screen and (min-width: #{$mq4Min})',
+  mq5: 'only screen and (min-width: #{$mq5Min})',
+  mq6: 'only screen and (min-width: #{$mq6Min})',
+  mq7: 'only screen and (min-width: #{$mq7Min})',
+);
+
+$ranges: (
+  mq1: (
+    min: 'only screen and (min-width: #{$mq1Min})',
+    max: '(max-width: #{$mq2Min - 1px})',
+  ),
+  mq2: (
+    min: 'only screen and (min-width: #{$mq2Min})',
+    max: '(max-width: #{$mq3Min - 1px})',
+  ),
+  mq3: (
+    min: 'only screen and (min-width: #{$mq3Min})',
+    max: '(max-width: #{$mq4Min - 1px})',
+  ),
+  mq4: (
+    min: 'only screen and (min-width: #{$mq4Min})',
+    max: '(max-width: #{$mq5Min - 1px})',
+  ),
+  mq5: (
+    min: 'only screen and (min-width: #{$mq5Min})',
+    max: '(max-width: #{$mq6Min - 1px})',
+  ),
+  mq6: (
+    min: 'only screen and (min-width: #{$mq6Min})',
+    max: '(max-width: #{$mq7Min - 1px})',
+  ),
+  mq7: (
+    min: 'only screen and (min-width: #{$mq7Min})',
+  ),
+);
+
+@mixin viewport_mq1 {
+  @media #{map-get($mediaQueries, mq1)} {
+    @content;
+  }
+}
+
+@mixin viewport_mq2 {
+  @media #{map-get($mediaQueries, mq2)} {
+    @content;
+  }
+}
+
+@mixin viewport_mq3 {
+  @media #{map-get($mediaQueries, mq3)} {
+    @content;
+  }
+}
+
+@mixin viewport_mq4 {
+  @media #{map-get($mediaQueries, mq4)} {
+    @content;
+  }
+}
+
+@mixin viewport_mq5 {
+  @media #{map-get($mediaQueries, mq5)} {
+    @content;
+  }
+}
+
+@mixin viewport_mq6 {
+  @media #{map-get($mediaQueries, mq6)} {
+    @content;
+  }
+}
+
+@mixin viewport_mq7 {
+  @media #{map-get($mediaQueries, mq7)} {
+    @content;
+  }
+}
+
+// Mixin to generate MediaQuery Ranges
+@mixin viewport_range($from, $to) {
+  @if (map-has-key($breakpoints, $from) and map-has-key($breakpoints, $to)) {
+    $f: map-get($breakpoints, $from);
+    $t: map-get($breakpoints, $to);
+
+    @media screen and (min-width: #{$f}) and (max-width: #{$t - 1px}) {
+      @content;
+    }
+  } @else {
+    @warn "Could not create a MediaQuery for MQ: `#{$from}` and MQ: `#{$to}`!";
+  }
+}
+
+// Mixin to generate MediaQuery for only one breakpoint
+@mixin viewport_only($bp) {
+  $from: $bp;
+  $to: null;
+
+  // get index of breakpoint
+  $index: index($breakpoints, ($bp map-get($breakpoints, $bp)));
+  $keys: map-keys($breakpoints);
+
+  // get key of next breakpoint
+  @if (nth($keys, $index + 1)) {
+    $to: nth($keys, $index + 1);
+  }
+
+  @if ($to != null) {
+    @include viewport_range($from, $to) {
+      @content;
+    }
+  } @else {
+    @media #{map-get($mediaQueries, $from)} {
+      @content;
+    }
+  }
+}

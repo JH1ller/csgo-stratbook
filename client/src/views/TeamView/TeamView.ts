@@ -8,12 +8,14 @@ import { Routes } from '@/router/router.models';
 import EditTeamForm from '@/components/EditTeamForm/EditTeamForm.vue';
 import { Team } from '@/api/models/Team';
 import { catchPromise } from '@/utils/catchPromise';
+import SmartImage from '@/components/SmartImage/SmartImage.vue';
 
 @Component({
   components: {
     MemberList,
     TeamInfo,
     EditTeamForm,
+    SmartImage,
   },
 })
 export default class TeamView extends Vue {
@@ -86,7 +88,7 @@ export default class TeamView extends Vue {
 
   private toggleEditForm() {
     if (!this.isManager) return;
-    
+
     this.showEditForm = !this.showEditForm;
   }
 }

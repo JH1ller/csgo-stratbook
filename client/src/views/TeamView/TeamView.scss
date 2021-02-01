@@ -37,6 +37,7 @@
   &__avatar {
     width: 150px;
     height: 150px;
+    min-height: 150px;
     object-fit: cover;
     border-radius: 50%;
     box-shadow: $shadow-subtle;
@@ -44,6 +45,7 @@
     @include viewport_mq4 {
       width: 200px;
       height: 200px;
+      min-height: 200px;
     }
   }
 

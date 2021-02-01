@@ -16,7 +16,11 @@ export default class RegisterForm extends Vue {
   private formFields: Record<string, FormField> = {
     name: new FormField('Username', true, [Validators.notEmpty(), Validators.minLength(2), Validators.maxLength(20)]),
     email: new FormField('Email', true, [Validators.notEmpty(), Validators.isEmail()]),
-    password: new FormField('Password', true, [Validators.notEmpty(), Validators.minLength(8)]),
+    password: new FormField('Password', true, [
+      Validators.notEmpty(),
+      Validators.minLength(8),
+      Validators.isSufficientPw(),
+    ]),
     key: new FormField('Beta Key', true, [Validators.notEmpty(), Validators.exactLength(20)]),
   };
 
