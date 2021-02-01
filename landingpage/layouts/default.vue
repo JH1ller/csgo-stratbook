@@ -8,19 +8,63 @@
     <Navbar class="app__navbar" />
     <Nuxt class="app__content" />
     <Footer class="app__footer" />
+    <transition name="fade">
+      <CookieBanner v-if="showCookieBanner" @close="handleClose" />
+    </transition>
   </div>
 </template>
 
 <script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
 import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
+import CookieBanner from '@/components/CookieBanner.vue';
+import splitbee from '@splitbee/web';
 
-export default {
+@Component({
   components: {
     Navbar,
     Footer,
-  },
-};
+    CookieBanner
+  }
+})
+export default class Default extends Vue {
+  private showCookieBanner = false;
+
+  private getCookie(name: string) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2)
+      return parts
+        ?.pop()
+        ?.split(';')
+        .shift();
+  }
+
+  private handleClose() {
+    this.showCookieBanner = false;
+    this.checkCookies();
+  }
+
+  private mounted() {
+    this.checkCookies();
+  }
+
+  private checkCookies() {
+    const bannerShown = this.getCookie('bannerShown');
+    const allowAnalytics = this.getCookie('allowAnalytics');
+
+    if (!bannerShown) this.showCookieBanner = true;
+
+    this.initTracking(!allowAnalytics);
+  }
+
+  private initTracking(disableCookie: boolean) {
+    splitbee.init({
+      disableCookie
+    });
+  }
+}
 </script>
 
 <style lang="scss">

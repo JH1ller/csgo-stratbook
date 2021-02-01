@@ -9,6 +9,7 @@
       "DOM"
     ],
     "esModuleInterop": true,
+    "importHelpers": true,
     "allowJs": true,
     "sourceMap": true,
     "strict": true,
@@ -27,7 +28,8 @@
       "@nuxt/types",
       "@nuxtjs/axios",
       "@types/node",
-      "nuxt-i18n"
+      "nuxt-i18n",
+      "vue-i18n"
     ]
   },
   "exclude": [

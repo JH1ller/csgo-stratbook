@@ -44,14 +44,7 @@ export default {
       },
       {
         rel: 'canonical',
-        href: 'https://stratbook.live',
-      },
-    ],
-    script: [
-      {
-        src: 'https://cdn.splitbee.io/sb.js',
-        async: true,
-        defer: true,
+        href: 'https://stratbook.live/',
       },
     ],
   },
@@ -102,6 +95,7 @@ export default {
     seo: true,
     lazy: true,
     langDir: 'lang/',
+    baseUrl: 'https://stratbook.live',
     defaultLocale: 'en',
     locales: [
       {
