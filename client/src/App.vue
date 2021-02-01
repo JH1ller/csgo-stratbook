@@ -8,6 +8,9 @@
     <transition name="fade" mode="out-in">
       <router-view @click.native="closeMenu" class="router-view"></router-view>
     </transition>
+    <transition name="fade">
+      <CookieBanner v-if="showCookieBanner" @close="closeCookieBanner" />
+    </transition>
   </div>
 </template>
 
@@ -18,8 +21,10 @@ import Loader from '@/components/Loader/Loader.vue';
 import ToastWrapper from '@/components/ToastWrapper/ToastWrapper.vue';
 import MainMenu from '@/components/menus/MainMenu/MainMenu.vue';
 import DialogWrapper from './components/DialogWrapper/DialogWrapper.vue';
+import CookieBanner from './components/CookieBanner/CookieBanner.vue';
 import pkg from '../package.json';
 import { appModule } from './store/namespaces';
+import splitbee from '@splitbee/web';
 
 @Component({
   components: {
@@ -28,12 +33,44 @@ import { appModule } from './store/namespaces';
     MainMenu,
     ToastWrapper,
     DialogWrapper,
+    CookieBanner,
   },
 })
 export default class App extends Vue {
   @appModule.State latency!: number;
   private menuOpen: boolean = false;
   private appVersion: string = pkg.version;
+  private showCookieBanner = false;
+
+  private getCookie(name: string) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts?.pop()?.split(';')?.shift();
+  }
+
+  private closeCookieBanner() {
+    this.showCookieBanner = false;
+    this.checkCookies();
+  }
+
+  private mounted() {
+    this.checkCookies();
+  }
+
+  private checkCookies() {
+    const bannerShown = this.getCookie('bannerShown');
+    const allowAnalytics = this.getCookie('allowAnalytics');
+
+    if (!bannerShown) this.showCookieBanner = true;
+
+    this.initTracking(!allowAnalytics);
+  }
+
+  private initTracking(disableCookie: boolean) {
+    splitbee.init({
+      disableCookie,
+    });
+  }
 
   private closeMenu() {
     this.menuOpen = false;

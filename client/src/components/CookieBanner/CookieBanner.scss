@@ -1,0 +1,79 @@
+.cookie-banner {
+  @include blurry-backdrop;
+  @include spacing('padding', xs);
+
+  border-radius: 8px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(white, 0.5);
+  width: 100%;
+  z-index: 10;
+
+  @include viewport_mq3 {
+    @include spacing('padding', sm);
+
+    width: 400px;
+    bottom: 32px;
+    left: 102px;
+  }
+
+  @include viewport_mq6 {
+    @include spacing('padding', md);
+
+    width: 500px;
+    bottom: 64px;
+    left: 134px;
+  }
+
+  &__options {
+    @include spacing('margin-top', 'xs');
+
+    display: flex;
+    align-items: center;
+  }
+
+  &__checkbox-label {
+    @include spacing('margin-left', '3xs');
+  }
+
+  &__checkbox {
+    &:not(:first-of-type) {
+      @include spacing('margin-left', 'xs');
+    }
+
+    &[disabled] + label {
+      color: rgba(black, 0.5);
+    }
+  }
+
+  &__btn-wrapper {
+    @include spacing('margin-top', 'xs');
+
+    display: flex;
+  }
+
+  &__btn {
+    @include spacing('padding', '2xs sm');
+
+    font-family: $font_ubuntu-bold;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 2px solid $color--green;
+
+    &.--accept {
+      background-color: $color--green;
+      color: white;
+    }
+
+    &.--save {
+      color: $color--green;
+      background-color: rgba(white, 0.3);
+    }
+
+    &:first-of-type {
+      @include spacing('margin-right', '2xs');
+    }
+  }
+}

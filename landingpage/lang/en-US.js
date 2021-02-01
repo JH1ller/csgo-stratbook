@@ -28,7 +28,7 @@ export default {
       {
         questionText: 'Who can see my strats?',
         answerText:
-          'Your strats are only visible to your own team. We have good security measures in place to keep your strats safe and sound.',
+          'Your strats are only visible to your own team. Stratbook has good security measures in place to keep your strats safe and sound.',
       },
       {
         questionText: 'Are there any costs or prices?',
@@ -88,5 +88,14 @@ export default {
   },
   register: {
     headline: 'Register',
+  },
+  cookieBanner: {
+    headline: 'We respect your privacy',
+    baseText:
+      'We use necessary cookies to make our site work. With your approval we might also set up optional analytics cookies to help us improve the site.',
+    labelRequired: 'Required cookies',
+    labelAnalytics: 'Analytics cookies',
+    btnSave: 'Save',
+    btnAcceptAll: 'Accept all',
   },
 };
