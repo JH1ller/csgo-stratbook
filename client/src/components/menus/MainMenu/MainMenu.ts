@@ -1,10 +1,11 @@
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop, Vue } from 'vue-property-decorator';
 import { appModule, authModule } from '@/store/namespaces';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import { Player } from '@/api/models/Player';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { FeedbackFish } from '@feedback-fish/vue';
 import { Routes } from '@/router/router.models';
+import TrackingService from '@/services/tracking.service';
 
 @Component({
   components: {
@@ -12,7 +13,8 @@ import { Routes } from '@/router/router.models';
   },
 })
 export default class MainMenu extends Vue {
-  private appName: string = 'stratbook'; // TODO: dynamic
+  private appName = 'stratbook'; // TODO: dynamic
+  @Inject() private trackingService!: TrackingService;
   @authModule.State profile!: Player;
   @appModule.Action private showToast!: (toast: Toast) => void;
   @appModule.State private loading!: boolean;
@@ -62,6 +64,7 @@ export default class MainMenu extends Vue {
 
   private downloadDesktopClient(): void {
     this.showToast({ id: 'mainMenu/downloadDesktopClient', text: 'Coming soon!' });
+    this.trackingService.track('click:get-desktop-client');
   }
 
   @Emit()

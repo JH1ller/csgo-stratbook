@@ -9,6 +9,8 @@ import { extractTextFromHTML } from '@/utils/extractTextFromHTML';
   },
 })
 export default class StratList extends Vue {
+  @Prop() completedTutorial!: boolean;
+  @Prop() tutorialStrat!: Strat | null;
   @Prop() strats!: Strat[];
   @Prop() filters!: StratFilters;
 

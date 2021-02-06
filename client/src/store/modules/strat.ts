@@ -2,6 +2,8 @@ import { Module } from 'vuex';
 import { RootState } from '..';
 import { Strat } from '@/api/models/Strat';
 import api from '@/api/base';
+import { Team } from '@/api/models/Team';
+import TrackingService from '@/services/tracking.service';
 
 const SET_STRATS = 'SET_STRATS';
 
@@ -19,6 +21,8 @@ const stratInitialState = (): StratState => ({
   strats: [],
 });
 
+const trackingService = TrackingService.getInstance();
+
 export const stratModule: Module<StratState, RootState> = {
   namespaced: true,
   state: stratInitialState(),
@@ -33,7 +37,7 @@ export const stratModule: Module<StratState, RootState> = {
     },
   },
   actions: {
-    async fetchStrats({ commit, dispatch }) {
+    async fetchStrats({ commit }) {
       const res = await api.strat.getStrats();
       if (res.success) {
         commit(SET_STRATS, res.success);
@@ -49,19 +53,28 @@ export const stratModule: Module<StratState, RootState> = {
     async createStrat({ dispatch, rootState }, payload: Partial<Strat>) {
       const newStrat = { ...payload, map: rootState.map.currentMap };
       const res = await api.strat.createStrat(newStrat);
-      if (res.success) dispatch('app/showToast', { id: 'strat/createStrat', text: 'Added strat.' }, { root: true });
+      if (res.success) {
+        dispatch('app/showToast', { id: 'strat/createStrat', text: 'Added strat.' }, { root: true });
+        trackingService.track('strat:created', {
+          name: payload.name!,
+          team: (rootState.team.teamInfo as Team).name,
+        });
+        return res.success;
+      }
     },
-    async updateStrat({ dispatch }, payload: Partial<Strat>) {
+    async updateStrat(_, payload: Partial<Strat>) {
       const res = await api.strat.updateStrat(payload);
-      // if (res.success)
-      //   dispatch('app/showToast', { id: 'strat/updateStrat', text: 'Successfully updated the strat.' }, { root: true });
     },
-    async shareStrat({ dispatch }, stratID: string) {
+    async shareStrat({ dispatch, state, rootState }, stratID: string) {
       const res = await api.strat.updateStrat({ _id: stratID, shared: true });
       if (res.success) {
         const shareLink = `${window.location.origin}/#/share/${stratID}`;
         navigator.clipboard.writeText(shareLink);
         dispatch('app/showToast', { id: 'strat/shareStrat', text: 'Copied share link to clipboard.' }, { root: true });
+        trackingService.track('strat:shared', {
+          name: state.strats.find(strat => strat._id === stratID)?.name as string,
+          team: (rootState.team.teamInfo as Team).name,
+        });
       }
     },
     async unshareStrat({ dispatch }, stratID: string) {
@@ -70,7 +83,7 @@ export const stratModule: Module<StratState, RootState> = {
         dispatch('app/showToast', { id: 'strat/unshareStrat', text: 'Strat is no longer shared.' }, { root: true });
       }
     },
-    async addSharedStrat({ dispatch }, stratID: string) {
+    async addSharedStrat({ dispatch, rootState }, stratID: string) {
       const res = await api.strat.addSharedStrat(stratID);
       if (res.success) {
         dispatch(
@@ -78,15 +91,19 @@ export const stratModule: Module<StratState, RootState> = {
           { id: 'strat/addedShared', text: 'Strat successfully added to your stratbook.' },
           { root: true }
         );
+        trackingService.track('strat:shared-added', {
+          stratID,
+          team: (rootState.team.teamInfo as Team).name,
+        });
       }
     },
-    addStratLocally({ commit, dispatch }, payload: { strat: Strat }) {
+    addStratLocally({ commit }, payload: { strat: Strat }) {
       commit(ADD_STRAT, payload.strat);
     },
-    updateStratLocally({ commit, dispatch }, payload: { strat: Strat }) {
+    updateStratLocally({ commit }, payload: { strat: Strat }) {
       commit(UPDATE_STRAT, payload);
     },
-    deleteStratLocally({ commit, dispatch }, payload: { stratID: string }) {
+    deleteStratLocally({ commit }, payload: { stratID: string }) {
       commit(DELETE_STRAT, payload.stratID);
     },
     resetState({ commit }) {

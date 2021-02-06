@@ -1,10 +1,9 @@
 .join-team-form {
-  display: flex;
-  flex-direction: column;
-  padding: 24px;
-  background-color: $color--smoke;
-  border-radius: 8px;
-  box-shadow: $shadow-subtle;
+  @include form-container;
+
+  @include viewport_mq5 {
+    width: 300px;
+  }
 
   &__headline {
     @include form-header;
@@ -24,7 +23,6 @@
   }
 
   &__input {
-    margin-top: 16px;
     & > input {
       text-transform: uppercase;
       font-family: $font_ubuntu-bold;

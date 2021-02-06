@@ -4,6 +4,8 @@
       v-for="(strat, index) in filteredStrats"
       :key="strat._id"
       :strat="strat"
+      :completedTutorial="completedTutorial"
+      :isTutorial="strat._id === (tutorialStrat && tutorialStrat._id)"
       @delete-strat="deleteStrat"
       @toggle-active="toggleActive"
       @edit-strat="editStrat"

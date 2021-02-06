@@ -22,6 +22,7 @@ const profileUpdateValidation = (formData) => {
     password: Joi.string()
       .min(6)
       .pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$/),
+    completedTutorial: Joi.boolean(),
   });
   return schema.validate(formData);
 };

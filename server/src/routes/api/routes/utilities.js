@@ -3,7 +3,7 @@ const router = express.Router();
 const Utility = require('../../../models/utility');
 const { getUtility } = require('../../utils/getters');
 const { verifyAuth } = require('../../utils/verifyToken');
-const { uploadMultiple, uploadFile } = require('../../utils/fileUpload');
+const { uploadMultiple, uploadFile, deleteFile } = require('../../utils/fileUpload');
 
 router.get('/', verifyAuth, async (req, res) => {
   if (!res.player.team) {
@@ -78,6 +78,16 @@ router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, 
     await Promise.all(
       req.files.map(async (file) => {
         await uploadFile(file.path, file.filename);
+      })
+    );
+  }
+
+  if (req.body.delete) {
+    const imagesToDelete = JSON.parse(req.body.delete);
+    res.utility.images = res.utility.images.filter((image) => !imagesToDelete.includes(image));
+    await Promise.all(
+      imagesToDelete.map(async (image) => {
+        await deleteFile(image);
       })
     );
   }

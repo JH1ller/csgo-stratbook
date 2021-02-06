@@ -1,13 +1,13 @@
 import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator';
-
+import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 interface ImageFile {
-  file: File;
+  file?: File;
   uri: string;
 }
 
 @Component({})
 export default class UploadPreview extends Vue {
-  @Prop() value!: File[];
+  @Prop() value!: (File | string)[];
   @Prop({ default: 1 }) limit!: number;
 
   private images: ImageFile[] = [];
@@ -20,7 +20,15 @@ export default class UploadPreview extends Vue {
   }
 
   private removeImage(image: ImageFile) {
-    this.input(this.value.filter(file => file !== image.file));
+    this.input(
+      this.value.filter(file => {
+        if (image.file) {
+          return file !== image.file;
+        } else {
+          return !image.uri.includes(file as string);
+        }
+      })
+    );
   }
 
   private get fileString() {
@@ -34,24 +42,31 @@ export default class UploadPreview extends Vue {
   }
 
   @Emit()
-  private input(files: File[]): File[] {
+  private input(files: (File | string)[]): (File | string)[] {
     return files;
   }
 
   @Watch('value')
-  private filesChanged(currentFiles: File[]) {
+  private filesChanged(currentFiles: (File | string)[]) {
     this.images = [];
 
     currentFiles.forEach(file => {
-      const fileReader = new FileReader();
-
-      fileReader.onload = () =>
+      if (typeof file === 'string') {
         this.images.push({
-          file: file,
-          uri: fileReader.result as string,
+          uri: resolveStaticImageUrl(file),
         });
+      } else {
+        const fileReader = new FileReader();
 
-      fileReader.readAsDataURL(file);
+        fileReader.onload = () => {
+          this.images.push({
+            file: file,
+            uri: fileReader.result as string,
+          });
+        };
+
+        fileReader.readAsDataURL(file);
+      }
     });
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <BackdropDialog>
-    <form class="utility-form" @submit.prevent="handleSubmit" novalidate data-splitbee-event="Submit: Utility">
+    <form class="utility-form" @submit.prevent="handleSubmit" novalidate>
       <FormFieldSet>
         <TextInput v-model="formFields.name.value" :field="formFields.name" fieldName="name" />
         <TextInput v-model="formFields.description.value" :field="formFields.description" fieldName="description" />

@@ -6,7 +6,9 @@ export class PlayerService {
   private static instance: PlayerService;
   private endpoint = Endpoints.Players;
 
-  private constructor() {}
+  private constructor() {
+    // private to prevent instantiation
+  }
 
   static getInstance(): PlayerService {
     if (!PlayerService.instance) {
@@ -19,7 +21,7 @@ export class PlayerService {
     return ApiService.makeRequest<Player>(ApiService.http.get(this.endpoint));
   }
 
-  async updatePlayer(formData: FormData, updateStrats: boolean = false): Promise<APIResponse<Player>> {
+  async updatePlayer(formData: FormData, updateStrats = false): Promise<APIResponse<Player>> {
     return ApiService.makeRequest<Player>(
       ApiService.http.patch(this.endpoint, formData, {
         params: {

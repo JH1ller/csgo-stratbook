@@ -7,7 +7,7 @@
     margin-top: auto;
     display: flex;
     justify-content: flex-end;
-    
+
     @include viewport_mq3 {
       transform: translateY(10px);
       margin-top: 6px;

@@ -1,17 +1,7 @@
 .team-create-form {
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  background-color: $color--smoke;
-  box-shadow: $shadow-subtle;
-  transition: height 0.3s ease;
-  border-radius: 8px;
-  width: 100%;
+  @include form-container;
 
-  @include viewport_mq2 {
-    width: 450px;
-    padding: 24px;
-  }
+  transition: height 0.3s ease;
 
   &__headline {
     @include form-header;

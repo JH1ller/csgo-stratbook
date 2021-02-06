@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <span class="app__version">Beta {{ appVersion }}</span>
-    <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi" /></span>
+    <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi"/></span>
     <DialogWrapper />
     <ToastWrapper />
     <MainMenu :menuOpen="menuOpen" @toggle-menu="toggleMenu" @close-menu="closeMenu" />
@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Provide, Vue } from 'vue-property-decorator';
 import ViewTitle from '@/components/ViewTitle/ViewTitle.vue';
 import Loader from '@/components/Loader/Loader.vue';
 import ToastWrapper from '@/components/ToastWrapper/ToastWrapper.vue';
@@ -24,7 +24,7 @@ import DialogWrapper from './components/DialogWrapper/DialogWrapper.vue';
 import CookieBanner from './components/CookieBanner/CookieBanner.vue';
 import pkg from '../package.json';
 import { appModule } from './store/namespaces';
-import splitbee from '@splitbee/web';
+import TrackingService from '@/services/tracking.service';
 
 @Component({
   components: {
@@ -37,6 +37,7 @@ import splitbee from '@splitbee/web';
   },
 })
 export default class App extends Vue {
+  @Provide() trackingService: TrackingService = TrackingService.getInstance();
   @appModule.State latency!: number;
   private menuOpen: boolean = false;
   private appVersion: string = pkg.version;
@@ -45,7 +46,11 @@ export default class App extends Vue {
   private getCookie(name: string) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts?.pop()?.split(';')?.shift();
+    if (parts.length === 2)
+      return parts
+        ?.pop()
+        ?.split(';')
+        ?.shift();
   }
 
   private closeCookieBanner() {
@@ -67,9 +72,7 @@ export default class App extends Vue {
   }
 
   private initTracking(disableCookie: boolean) {
-    splitbee.init({
-      disableCookie,
-    });
+    this.trackingService.init(disableCookie);
   }
 
   private closeMenu() {
@@ -124,7 +127,7 @@ export default class App extends Vue {
 
 .router-view {
   height: 100%;
-  padding: 16px;
+  //padding: 12px;
   overflow-y: scroll;
   overflow-x: hidden;
 

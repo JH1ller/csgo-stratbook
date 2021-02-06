@@ -6,10 +6,10 @@
         class="utility-lightbox__media"
         id="ytplayer"
         type="text/html"
-        :src="getEmbedURL(extractVideoId(currentMedia.src))"
+        :src="getEmbedURL(extractVideoId(currentMedia.src) || '', extractTimestamp(currentMedia.src))"
         frameborder="0"
       />
-      <img v-else :src="resolveImage(currentMedia.src)" class="utility-lightbox__media" />
+      <SmartImage v-else :src="resolveImage(currentMedia.src)" class="utility-lightbox__media" alt="Utility image" />
 
       <transition name="fade">
         <div class="utility-lightbox__crosshair-wrapper" v-if="showCrosshair">
@@ -23,13 +23,14 @@
       <fa-icon icon="chevron-right" class="utility-lightbox__navigation --right" @click="goNext" />
     </div>
     <div class="utility-lightbox__preview-wrapper">
-      <img
+      <SmartImage
         v-for="(item, index) in mediaList"
         :key="item.src"
-        :src="item.type === 'image' ? resolveImage(item.src) : getThumbnailURL(extractVideoId(item.src))"
+        :src="item.type === 'image' ? resolveImage(item.src) : getThumbnailURL(extractVideoId(item.src) || '')"
         class="utility-lightbox__preview"
-        @click="goToIndex(index)"
+        @click.native="goToIndex(index)"
         :class="{ '-active': index === currentMediaIndex }"
+        alt="Lightbox image preview"
       />
     </div>
     <fa-icon icon="times" class="utility-lightbox__close" @click="close" />

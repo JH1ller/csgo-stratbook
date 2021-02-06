@@ -22,7 +22,7 @@ export default class DrawTool extends Mixins(CloseOnEscape) {
   @Ref() private wrapper!: any;
   @Prop() private strat!: Strat;
   private canvas!: any;
-  private activeTool: string = 'freeDrawing';
+  private activeTool = 'freeDrawing';
 
   private canvasWidth = 512;
   private canvasHeight = 512;

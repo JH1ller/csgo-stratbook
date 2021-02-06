@@ -3,7 +3,7 @@ import store from '@/store';
 import router from '@/router';
 import { Routes, RouteNames } from '@/router/router.models';
 import { API_URL } from '@/config';
-import { log } from '@/utils/logger';
+import { Log } from '@/utils/logger';
 import { Status } from '@/store/modules/auth';
 import AuthService from './auth.service';
 import { APIResponse } from './types';
@@ -15,7 +15,9 @@ import { UtilityService } from './utility.service';
 export default class ApiService {
   private static axiosInstance: AxiosInstance = ApiService.setupAxios();
 
-  private constructor() {}
+  private constructor() {
+    // private to prevent instantiation
+  }
 
   static async makeRequest<T = any>(request: Promise<AxiosResponse<T>>): Promise<APIResponse<T>> {
     try {
@@ -66,12 +68,12 @@ export default class ApiService {
           store.dispatch('app/updateLoading', true);
           return config;
         } else {
-          log.error('axios::interceptor', 'User not authenticated. Request cancelled.');
+          Log.error('axios::interceptor', 'User not authenticated. Request cancelled.');
           throw new axios.Cancel('User not authenticated. Request cancelled.');
         }
       },
       error => {
-        log.error('axios::interceptor', 'User not authenticated. Request cancelled.');
+        Log.error('axios::interceptor', 'User not authenticated. Request cancelled.');
         return Promise.reject(error);
       }
     );
@@ -82,7 +84,7 @@ export default class ApiService {
       },
       error => {
         store.dispatch('app/updateLoading', false);
-        log.error('axios::interceptor', error.response.data.error);
+        Log.error('axios::interceptor', error.response.data.error);
         if (error.response.status === 401) {
           if (router.currentRoute.name !== RouteNames.Login) router.push(Routes.Login);
           store.dispatch('resetState');

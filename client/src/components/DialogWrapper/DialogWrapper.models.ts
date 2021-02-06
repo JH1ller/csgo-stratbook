@@ -5,4 +5,5 @@ export interface Dialog {
   reject: () => void;
   resolveBtn?: string;
   rejectBtn?: string;
+  confirmOnly?: boolean;
 }

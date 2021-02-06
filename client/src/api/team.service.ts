@@ -16,7 +16,9 @@ export class TeamService {
   private static instance: TeamService;
   private endpoint = Endpoints.Teams;
 
-  private constructor() {}
+  private constructor() {
+    // private to prevent instantiation
+  }
 
   static getInstance(): TeamService {
     if (!TeamService.instance) {

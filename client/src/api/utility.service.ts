@@ -11,7 +11,9 @@ export class UtilityService {
   private static instance: UtilityService;
   private endpoint = Endpoints.Utilities;
 
-  private constructor() {}
+  private constructor() {
+    // private to prevent instantiation
+  }
 
   static getInstance(): UtilityService {
     if (!UtilityService.instance) {

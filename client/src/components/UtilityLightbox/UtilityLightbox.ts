@@ -5,8 +5,9 @@ import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import { Component, Mixins, Prop } from 'vue-property-decorator';
 import MouseButtonDisplay from '@/components/MouseButtonDisplay/MouseButtonDisplay.vue';
 import UtilityTypeDisplay from '@/components/UtilityTypeDisplay/UtilityTypeDisplay.vue';
+import SmartImage from '@/components/SmartImage/SmartImage.vue';
 import isMobile from 'is-mobile';
-import { extractVideoId, getEmbedURL, getThumbnailURL } from '@/utils/youtubeUtils';
+import { extractTimestamp, extractVideoId, getEmbedURL, getThumbnailURL } from '@/utils/youtubeUtils';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
 
 interface LightboxMedia {
@@ -18,12 +19,13 @@ interface LightboxMedia {
   components: {
     MouseButtonDisplay,
     UtilityTypeDisplay,
+    SmartImage,
   },
 })
 export default class UtilityLightbox extends Mixins(CloseOnEscape) {
   @Prop() private utility!: Utility;
-  private showCrosshair: boolean = false;
-  private currentMediaIndex: number = 0;
+  private showCrosshair = false;
+  private currentMediaIndex = 0;
 
   private UtilityMovement: typeof UtilityMovement = UtilityMovement;
   private Sides: typeof Sides = Sides;
@@ -32,6 +34,7 @@ export default class UtilityLightbox extends Mixins(CloseOnEscape) {
   private getEmbedURL: typeof getEmbedURL = getEmbedURL;
   private getThumbnailURL: typeof getThumbnailURL = getThumbnailURL;
   private extractVideoId: typeof extractVideoId = extractVideoId;
+  private extractTimestamp: typeof extractTimestamp = extractTimestamp;
 
   private get currentMedia(): LightboxMedia {
     return this.mediaList[this.currentMediaIndex] ?? { type: 'image', src: '' };

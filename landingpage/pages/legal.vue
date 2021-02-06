@@ -4,14 +4,9 @@
       <h1 class="legal__headline">{{ $t('legal.headline') }}</h1>
       <div class="legal__content">
         <p>Angaben gemäß § 5 TMG</p>
-        <p>
-          Justin Hiller <br />
-          Däumlingweg 12<br />
-          70567 Stuttgart <br />
-        </p>
+        <p>Justin Hiller <br /></p>
         <p>
           <strong>Kontakt:</strong> <br />
-          Telefon: +49 1573 040 3495<br />
           E-Mail:
           <a href="mailto:justin@hiller-family.com">justin@hiller-family.com</a
           ><br />

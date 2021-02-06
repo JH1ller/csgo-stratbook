@@ -11,7 +11,7 @@ import { Routes } from '@/router/router.models';
 })
 export default class ResetPasswordView extends Vue {
   @authModule.Action resetPassword!: (payload: { token: string; password: string }) => Promise<Response>;
-  private formError: string = '';
+  private formError = '';
 
   private async resetPasswordRequest(payload: { token: string; password: string }) {
     const res = await this.resetPassword(payload);

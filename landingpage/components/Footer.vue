@@ -49,6 +49,11 @@ export default {};
 
   background-color: $color--abbey;
 
+  @include viewport_mq2 {
+    @include spacing('padding-top', 'md');
+    @include spacing('padding-bottom', 'md');
+  }
+
   @include viewport_mq3 {
     @include spacing('padding-top', 'md');
     @include spacing('padding-bottom', 'md');

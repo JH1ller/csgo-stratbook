@@ -1,11 +1,12 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
-import WebSocketService from '@/api/WebSocketService';
+import WebSocketService from '@/services/websocket.service';
 import { Player } from '@/api/models/Player';
 import api from '@/api/base';
 import router from '@/router';
 import { RouteNames, Routes } from '@/router/router.models';
 import { TOKEN_TTL } from '@/config';
+import TrackingService from '@/services/tracking.service';
 
 const SET_TOKEN = 'SET_TOKEN';
 const SET_PROFILE = 'SET_PROFILE';
@@ -29,6 +30,8 @@ const authInitialState = (): AuthState => ({
   token: '',
   profile: {},
 });
+
+const trackingService = TrackingService.getInstance();
 
 export const authModule: Module<AuthState, RootState> = {
   namespaced: true,
@@ -69,11 +72,11 @@ export const authModule: Module<AuthState, RootState> = {
       const res = await api.player.updatePlayer(data, updateStrats);
       if (res.success) {
         commit(SET_PROFILE, res.success);
-        const message = data.has('email')
-          ? 'Successfully updated your profile. A confirmation mail has been sent to confirm the new email address.'
-          : 'Successfully updated your profile.';
-
-        dispatch('app/showToast', { id: 'auth/updateProfile', text: message }, { root: true });
+        if (data.has('email')) {
+          const message =
+            'Successfully updated your profile. A confirmation mail has been sent to confirm the new email address.';
+          dispatch('app/showToast', { id: 'auth/updateProfile', text: message }, { root: true });
+        }
       }
     },
     updateStatus({ commit }, status: Status) {
@@ -82,8 +85,10 @@ export const authModule: Module<AuthState, RootState> = {
     setProfile({ commit }, profile: Player) {
       commit(SET_PROFILE, profile);
       commit(SET_STATUS, profile.team ? Status.LOGGED_IN_WITH_TEAM : Status.LOGGED_IN_NO_TEAM);
+      trackingService.setUser({ userId: profile._id, name: profile.name });
       if (profile.team) {
         WebSocketService.getInstance().connect();
+        trackingService.setUser({ team: profile.team });
       } else {
         WebSocketService.getInstance().disconnect(); // TODO: maybe find a way to call this earlier, because socket update will cause console error
       }
@@ -95,6 +100,7 @@ export const authModule: Module<AuthState, RootState> = {
         await dispatch('fetchProfile');
         localStorage.setItem('has-session', '1');
         dispatch('app/showToast', { id: 'auth/login', text: 'Logged in successfully.' }, { root: true });
+        trackingService.track('auth:login', { email });
         setTimeout(() => dispatch('refresh'), TOKEN_TTL - 10000);
         return { success: true };
       } else {
@@ -144,7 +150,7 @@ export const authModule: Module<AuthState, RootState> = {
         return { error: res.error };
       }
     },
-    async register({ dispatch }, formData: Partial<Player>) {
+    async register({ dispatch }, formData: FormData) {
       const res = await api.auth.register(formData);
       if (res.success) {
         dispatch(
@@ -152,6 +158,10 @@ export const authModule: Module<AuthState, RootState> = {
           { id: 'auth/register', text: 'Registered successfully. A confirmation email has been sent.' },
           { root: true }
         );
+        trackingService.track('auth:register', {
+          email: formData.get('email') as string,
+          name: formData.get('name') as string,
+        });
         return { success: 'Registered successfully. A confirmation email has been sent.' }; // TODO: probably remove all these
       } else {
         return { error: res.error };

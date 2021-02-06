@@ -103,6 +103,7 @@ function deleteFile(filename) {
 
       const data = await s3.deleteObject(params).promise();
 
+      // TODO: check if data.Location is correct, seems to return undefined
       console.log(`File deleted successfully. ${data.Location}`);
       resolve(data.Location);
     } catch (error) {

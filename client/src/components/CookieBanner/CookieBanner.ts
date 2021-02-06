@@ -23,5 +23,7 @@ export default class CookieBanner extends Vue {
   }
 
   @Emit()
-  private close() {}
+  private close() {
+    return;
+  }
 }

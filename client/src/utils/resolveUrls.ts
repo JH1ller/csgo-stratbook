@@ -1,4 +1,4 @@
-import { S3_URL, STATIC_URL } from '@/config';
+import { S3_URL } from '@/config';
 
 export const resolveStaticImageUrl = (url?: string): string => {
   if (url) {

@@ -1,17 +1,12 @@
 <template>
   <div class="imprint-view">
     <div class="imprint-view__content">
-      <h1 class="imprint-view__headline">Imprint / Impressum</h1>
+      <h1 class="imprint-view__headline">Legal Notice / Impressum</h1>
       <div class="impressum">
         <p>Angaben gemäß § 5 TMG</p>
-        <p>
-          Justin Hiller <br />
-          Däumlingweg 12<br />
-          70567 Stuttgart <br />
-        </p>
+        <p>Justin Hiller <br /></p>
         <p>
           <strong>Kontakt:</strong> <br />
-          Telefon: +49 1573 040 3495<br />
           E-Mail: <a href="mailto:justin@hiller-family.com">justin@hiller-family.com</a><br />
         </p>
         <br />

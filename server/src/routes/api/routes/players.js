@@ -11,7 +11,21 @@ const { profileUpdateValidation } = require('../../utils/validation');
 
 // * Get User Profile
 router.get('/', verifyAuth, (req, res) => {
-  const { _id, name, role, avatar, team, email, confirmed, isAdmin, createdAt, isOnline, lastOnline } = res.player;
+  const {
+    _id,
+    name,
+    role,
+    avatar,
+    team,
+    email,
+    confirmed,
+    isAdmin,
+    createdAt,
+    isOnline,
+    lastOnline,
+    completedTutorial,
+  } = res.player;
+
   res.json({
     _id,
     name,
@@ -24,6 +38,7 @@ router.get('/', verifyAuth, (req, res) => {
     createdAt,
     isOnline,
     lastOnline,
+    completedTutorial,
   });
 });
 
@@ -70,9 +85,26 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
     await sendMail(req.body.email, token, res.player.name, true);
   }
 
+  if (req.body.completedTutorial) {
+    res.player.completedTutorial = JSON.parse(req.body.completedTutorial);
+  }
+
   const updatedPlayer = await res.player.save();
 
-  const { _id, name, role, avatar, team, email, confirmed, isAdmin, createdAt, isOnline, lastOnline } = updatedPlayer;
+  const {
+    _id,
+    name,
+    role,
+    avatar,
+    team,
+    email,
+    confirmed,
+    isAdmin,
+    createdAt,
+    isOnline,
+    lastOnline,
+    completedTutorial,
+  } = updatedPlayer;
 
   res.json({
     _id,
@@ -86,6 +118,7 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
     createdAt,
     isOnline,
     lastOnline,
+    completedTutorial,
   });
 });
 

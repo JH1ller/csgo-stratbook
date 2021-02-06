@@ -55,6 +55,11 @@
     @include viewport_mq3 {
       width: calc(100% - 48px);
     }
+
+    &.-blinking {
+      outline: 2px solid $color--red;
+      animation: pulse-outline 2s infinite;
+    }
   }
 
   &__type {

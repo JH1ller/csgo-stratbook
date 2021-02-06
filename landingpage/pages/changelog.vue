@@ -135,8 +135,12 @@ export default class Changelog extends Vue {}
     background-color: $color--green;
     border-radius: 6px;
     align-self: flex-start;
+    width: 80px;
+    text-align: center;
 
     @include viewport_mq3 {
+      width: 100px;
+      min-width: 100px;
       font-size: 1.6rem;
       margin-bottom: 0;
     }

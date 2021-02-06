@@ -7,7 +7,7 @@ const crypto = require('crypto');
 const { getTeam } = require('../../utils/getters');
 const { verifyAuth } = require('../../utils/verifyToken');
 const { teamValidation } = require('../../utils/validation');
-const { uploadSingle, processImage } = require('../../utils/fileUpload');
+const { uploadSingle, processImage, deleteFile } = require('../../utils/fileUpload');
 
 router.get('/', verifyAuth, async (req, res) => {
   if (!res.player.team) {
@@ -108,9 +108,9 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
 
   if (req.body.website) team.website = req.body.website;
 
-  if (req.body.serverIp) await Team.updateOne(team, { $set: { 'server.ip': req.body.serverIp }});
+  if (req.body.serverIp) await Team.updateOne(team, { $set: { 'server.ip': req.body.serverIp } });
 
-  if (req.body.serverPw) await Team.updateOne(team, { $set: { 'server.password': req.body.serverPw }});
+  if (req.body.serverPw) await Team.updateOne(team, { $set: { 'server.password': req.body.serverPw } });
 
   const updatedTeam = await team.save();
 
@@ -120,7 +120,7 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
 // * Delete One
 router.delete('/', verifyAuth, async (req, res) => {
   const team = await Team.findById(res.player.team);
-  if (!team.manager.equals(res.player._id)) 
+  if (!team.manager.equals(res.player._id))
     return res.status(403).json({ error: 'This action requires higher privileges.' });
 
   await team.delete();

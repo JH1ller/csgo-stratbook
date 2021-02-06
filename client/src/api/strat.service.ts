@@ -11,7 +11,9 @@ export class StratService {
   private static instance: StratService;
   private endpoint = Endpoints.Strats;
 
-  private constructor() {}
+  private constructor() {
+    // private to prevent instantiation
+  }
 
   static getInstance(): StratService {
     if (!StratService.instance) {

@@ -15,7 +15,7 @@
             {{ item.questionText }}
           </template>
           <template #content>
-            {{ item.answerText }}
+            <div v-html="item.answerText"></div>
           </template>
         </Accordion>
       </div>
@@ -29,8 +29,8 @@ import Accordion from '@/components/Accordion.vue';
 
 @Component({
   components: {
-    Accordion,
-  },
+    Accordion
+  }
 })
 export default class Faq extends Vue {
   private openAccordion: number | null = null;
@@ -75,7 +75,11 @@ export default class Faq extends Vue {
     width: 100%;
 
     & > :not(:last-of-type) {
-      @include spacing('margin-bottom', md);
+      @include spacing('margin-bottom', xs);
+
+      @include viewport_mq3 {
+        @include spacing('margin-bottom', md);
+      }
     }
   }
 }

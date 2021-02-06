@@ -10,6 +10,10 @@ export default class TeamInfo extends Vue {
   @Prop() private isManager!: boolean;
   @Prop() private teamInfo!: Team;
 
+  private get serverIp() {
+    return this.teamInfo.server?.ip;
+  }
+
   private openWebsite() {
     if (process?.versions?.electron) {
       const { remote } = require('electron');
@@ -26,7 +30,7 @@ export default class TeamInfo extends Vue {
 
   private copyServer() {
     if (!this.teamInfo.server?.ip) return;
-    
+
     navigator.clipboard.writeText(this.serverString);
     this.showToast({ id: 'teamInfo/copyServer', text: 'Connection string copied' });
   }
