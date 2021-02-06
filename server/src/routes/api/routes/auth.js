@@ -11,8 +11,9 @@ const Key = require('../../../models/key');
 const urljoin = require('url-join');
 const { registerValidation } = require('../../utils/validation');
 const { sendMail, Templates } = require('../../utils/mailService');
-const { uploadSingle, processImage } = require('../../utils/fileUpload');
+const { uploadSingle, processImage, deleteFile } = require('../../utils/fileUpload');
 const { APP_URL } = require('../../../config');
+const { verifyAuth } = require('../../utils/verifyToken');
 
 router.post('/register', uploadSingle('avatar'), async (req, res) => {
   const { error } = registerValidation(req.body);
@@ -140,6 +141,16 @@ router.post('/logout', cookieParser(), async (req, res) => {
   await Session.findByIdAndRemove(session._id);
 
   res.send('Successfully logged out.');
+});
+
+router.delete('/', verifyAuth, async (_req, res) => {
+  if (res.player.avatar) {
+    await deleteFile(res.player.avatar);
+  }
+
+  await Player.findByIdAndRemove(res.player._id);
+
+  res.send('Successfully deleted account.');
 });
 
 router.get('/confirmation/:token', async (req, res) => {

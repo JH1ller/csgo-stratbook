@@ -3,7 +3,12 @@
     <div class="profile-view__content">
       <ProfileForm :profile="profile" @submit="updateProfile" class="profile-view__detail" />
       <img :src="avatar" class="profile-view__avatar" alt="Current User Avatar" />
-      <button @click="logoutRequest" class="profile-view__logout">Logout</button>
+      <div class="profile-view__btn-wrapper">
+        <button @click="logoutRequest" class="profile-view__btn --logout"><fa-icon icon="sign-out-alt" />Logout</button>
+        <button @click="deleteRequest" class="profile-view__btn --delete">
+          <fa-icon icon="exclamation-triangle" />Delete Account
+        </button>
+      </div>
     </div>
   </div>
 </template>

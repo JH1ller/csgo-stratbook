@@ -113,6 +113,12 @@ export const authModule: Module<AuthState, RootState> = {
       WebSocketService.getInstance().disconnect();
       dispatch('app/showToast', { id: 'auth/logout', text: 'Logged out successfully.' }, { root: true });
     },
+    async deleteAccount({ dispatch }) {
+      await api.auth.deleteAccount();
+      dispatch('resetState', null, { root: true });
+      WebSocketService.getInstance().disconnect();
+      dispatch('app/showToast', { id: 'auth/delete', text: 'Successfully deleted account.' }, { root: true });
+    },
     async refresh({ dispatch, commit }) {
       const res = await api.auth.refresh();
       if (res.success) {
