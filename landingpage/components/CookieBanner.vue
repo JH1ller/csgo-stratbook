@@ -39,8 +39,8 @@ import Button from '@/components/Button.vue';
 
 @Component({
   components: {
-    Button,
-  },
+    Button
+  }
 })
 export default class CookieBanner extends Vue {
   private analyticsChecked = false;
@@ -53,7 +53,7 @@ export default class CookieBanner extends Vue {
 
   private saveClicked() {
     this.setCookie('bannerShown', 'true');
-    this.setCookie('allowAnalytics', this.analyticsChecked);
+    this.setCookie('allowAnalytics', this.analyticsChecked.toString());
     this.close();
   }
 
@@ -77,7 +77,6 @@ export default class CookieBanner extends Vue {
   position: fixed;
   bottom: 0;
   left: 0;
-  background-color: rgba($color--white, 0.5);
   width: 100%;
 
   @include viewport_mq3 {

@@ -134,3 +134,29 @@
     @include spacing('padding', md);
   }
 }
+
+@mixin form-container {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  background-color: $color--smoke;
+  border-radius: 8px;
+  box-shadow: $shadow-subtle;
+  width: 100%;
+
+  @include viewport_mq3 {
+    padding: 24px;
+    width: 450px;
+  }
+}
+
+@mixin view-content {
+  background-color: white;
+  box-shadow: $shadow-subtle;
+  padding: 12px;
+
+  @include viewport_mq3 {
+    border-radius: 8px;
+    padding: 24px;
+  }
+}

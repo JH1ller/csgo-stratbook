@@ -1,0 +1,7 @@
+{
+  "eslint.workingDirectories": [
+    "./client",
+    "./landingpage",
+    "./server"
+  ]
+}

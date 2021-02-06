@@ -18,6 +18,8 @@
       @share-strat="requestShareStrat"
       @unshare-strat="unshareStrat"
       @show-map="showDrawTool"
+      :completedTutorial="profile.completedTutorial"
+      :tutorialStrat="tutorialStrat"
       :strats="sortedStratsOfCurrentMap"
       :filters="stratFilters"
     />

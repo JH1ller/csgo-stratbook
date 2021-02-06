@@ -1,5 +1,7 @@
 export const extractTextFromHTML = (html: string) => {
-  var span = document.createElement('span');
+  const span = document.createElement('span');
   span.innerHTML = html;
-  return span.textContent || span.innerText;
+  const text = span.textContent ?? span.innerText;
+  document.removeChild(span);
+  return text;
 };

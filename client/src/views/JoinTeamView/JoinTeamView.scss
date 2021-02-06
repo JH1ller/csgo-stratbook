@@ -1,24 +1,33 @@
 .join-team-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   &__content {
-    background-color: white;
-    box-shadow: $shadow-subtle;
-    padding: 24px 24px 64px 24px;
-    border-radius: 8px;
-    position: relative;
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: center;
-    flex-wrap: wrap;
+    @include view-content;
+
     min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     @include viewport_mq3 {
+      min-height: unset;
+    }
+
+    @include viewport_mq5 {
       flex-direction: row;
-      justify-content: space-between;
+      justify-content: center;
       align-items: flex-start;
     }
-  }
 
-  > *:not(:first-child) {
-    margin-left: 24px;
+    > *:not(:first-child) {
+      margin-top: 16px;
+
+      @include viewport_mq5 {
+        margin-top: 0;
+        margin-left: 24px;
+      }
+    }
   }
 }

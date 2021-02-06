@@ -47,12 +47,12 @@ export default class UtilityView extends Vue {
   @utilityModule.Action shareUtility!: (utilityID: string) => Promise<void>;
   @utilityModule.Action unshareUtility!: (utilityID: string) => Promise<void>;
 
-  private utilityFormOpen: boolean = false;
-  private utilityFormEditMode: boolean = false;
+  private utilityFormOpen = false;
+  private utilityFormEditMode = false;
   private editUtility: Utility | null = null;
-  private lightboxOpen: boolean = false;
+  private lightboxOpen = false;
   private currentLightboxUtility: Utility | null = null;
-  private filterMenuOpen: boolean = false;
+  private filterMenuOpen = false;
 
   private utilityFormSubmitted(data: FormData) {
     if (data.has('_id')) {

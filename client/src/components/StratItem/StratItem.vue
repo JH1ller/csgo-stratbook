@@ -62,6 +62,7 @@
       <StratEditor
         :key="editorKey"
         class="strat-item__editor"
+        :class="{ '-blinking': !completedTutorial && isTutorial }"
         ref="editor"
         :htmlContent="strat.content"
         :stratSide="strat.side"

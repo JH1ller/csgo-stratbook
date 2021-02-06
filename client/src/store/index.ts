@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import createLogger from 'vuex/dist/logger';
 import { appModule, AppState } from './modules/app';
 import { FilterState, filterModule } from './modules/filter';
 import { MapState, mapModule } from './modules/map';
@@ -25,6 +26,8 @@ export interface RootState {
 
 Vue.use(Vuex);
 
+const plugins = localStorage.getItem('debug') ? [createLogger({})] : [];
+
 export default new Vuex.Store({
   modules: {
     app: appModule,
@@ -47,4 +50,5 @@ export default new Vuex.Store({
     },
   },
   getters: {},
+  plugins,
 });

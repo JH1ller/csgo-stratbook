@@ -83,11 +83,6 @@ const routes = [
     },
   },
   {
-    path: '/faq',
-    name: RouteNames.Faq,
-    component: () => import('@/views/FaqView/FaqView.vue'),
-  },
-  {
     path: '/imprint',
     name: RouteNames.Imprint,
     component: () => import('@/views/ImprintView/ImprintView.vue'),

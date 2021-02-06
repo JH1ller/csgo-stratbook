@@ -10,11 +10,11 @@ export interface FormFieldData {
 }
 
 export default class FormField implements FormFieldData {
-  private _value: string = '';
+  private _value = '';
   public label!: string;
-  public required: boolean = false;
+  public required = false;
   public errors: string[] = [];
-  public autocompleteTag: string = 'off';
+  public autocompleteTag = 'off';
   public validators: ValidatorFunction[] = [];
 
   constructor(label: string, required: boolean, validators: ValidatorFunction[], autocompleteTag?: string) {

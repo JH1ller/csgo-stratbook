@@ -7,7 +7,7 @@
           <fa-icon icon="check" />
           {{ resolveBtn }}
         </button>
-        <button class="confirm-dialog__btn-cancel" @click="cancelClicked">
+        <button v-if="!confirmOnly" class="confirm-dialog__btn-cancel" @click="cancelClicked">
           <fa-icon icon="ban" />
           {{ rejectBtn }}
         </button>

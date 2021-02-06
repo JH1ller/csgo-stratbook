@@ -18,8 +18,7 @@ __Live Version [here!](https://stratbook.live)__
 - [Technologies](#technologies)
   - [Client/Frontend](#clientfrontend)
   - [Server/Backend](#serverbackend)
-- [Features](#features)
-- [Minimum OS Version requirements](#minimum-os-version-requirements)
+  - [Get started (local setup)](#get-started-local-setup)
 
 ### Technologies
 
@@ -42,3 +41,6 @@ __Live Version [here!](https://stratbook.live)__
 - Socket.io
 - Bcrypt
 - JWT
+
+#### Get started (local setup)
+// TODO

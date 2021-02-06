@@ -2,13 +2,7 @@
   <div class="team-info">
     <div class="team-info__head">
       <h2 class="team-info__title">{{ teamInfo.name }}</h2>
-      <p 
-        v-if="teamInfo.website" 
-        class="team-info__website" 
-        @click="openWebsite"
-        v-tippy
-        content="Visit website"
-      >
+      <p v-if="teamInfo.website" class="team-info__website" @click="openWebsite" v-tippy content="Visit website">
         {{ teamInfo.website }}
       </p>
     </div>
@@ -18,20 +12,18 @@
         <div class="team-info__fieldset-content">
           <div
             class="team-info__button --server-copy"
-            :inactive="!teamInfo.server.ip"
+            :inactive="!serverIp"
             @click="copyServer"
-            :content="
-              teamInfo.server.ip ? 'Copy server connection string' : 'Add gameserver data to use these features'
-            "
+            :content="serverIp ? 'Copy server connection string' : 'Add gameserver data to use these features'"
             v-tippy
           >
             <fa-icon icon="copy" />
           </div>
           <div
             class="team-info__button --server-run"
-            :inactive="!teamInfo.server.ip"
+            :inactive="!serverIp"
             @click="runServer"
-            :content="teamInfo.server.ip ? 'Run game and join server' : 'Add gameserver data to use these features'"
+            :content="serverIp ? 'Run game and join server' : 'Add gameserver data to use these features'"
             v-tippy
           >
             <fa-icon icon="gamepad" />

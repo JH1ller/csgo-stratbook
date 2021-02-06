@@ -28,10 +28,7 @@
         target="_blank"
         ><fa-icon :icon="['fab', 'twitter']" />twitter</a
       >
-      <a
-        class="main-menu__list-item main-menu__link --download"
-        @click="downloadDesktopClient"
-        data-splitbee-event="Click: Get Desktop Client"
+      <a class="main-menu__list-item main-menu__link --download" @click="downloadDesktopClient"
         ><fa-icon icon="download" />Get desktop client</a
       >
       <a

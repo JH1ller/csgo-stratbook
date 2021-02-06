@@ -8,7 +8,7 @@ import FilterMenu from '@/components/FilterMenu/FilterMenu.vue';
 import FilterButton from '@/components/FilterButton/FilterButton.vue';
 import DrawTool from '@/components/DrawTool/DrawTool.vue';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
-import { appModule, mapModule, stratModule, filterModule, teamModule } from '@/store/namespaces';
+import { appModule, mapModule, stratModule, filterModule, teamModule, authModule } from '@/store/namespaces';
 import { StratFilters } from '@/store/modules/filter';
 import { Strat } from '@/api/models/Strat';
 import { Player } from '@/api/models/Player';
@@ -40,6 +40,7 @@ export default class StratsView extends Vue {
   @filterModule.State stratFilters!: StratFilters;
   @filterModule.Getter activeStratFilterCount!: number;
   @teamModule.State teamMembers!: Player[];
+  @authModule.State profile!: Player;
 
   @filterModule.Action updateStratContentFilter!: (value: string) => Promise<void>;
   @filterModule.Action updateStratTypeFilter!: (type: StratTypes | null) => Promise<void>;
@@ -47,28 +48,49 @@ export default class StratsView extends Vue {
   @filterModule.Action updateStratSideFilter!: (side: Sides | null) => Promise<void>;
   @filterModule.Action clearStratFilters!: () => Promise<void>;
 
+  @authModule.Action updateProfile!: (formData: FormData) => Promise<void>;
   @mapModule.Action updateCurrentMap!: (mapID: MapID) => Promise<void>;
   @stratModule.Action updateStrat!: (payload: Partial<Strat>) => Promise<void>;
-  @stratModule.Action createStrat!: (payload: Partial<Strat>) => Promise<void>;
+  @stratModule.Action createStrat!: (payload: Partial<Strat>) => Promise<Strat>;
   @stratModule.Action deleteStrat!: (stratID: string) => Promise<void>;
   @stratModule.Action shareStrat!: (stratID: string) => Promise<void>;
   @stratModule.Action unshareStrat!: (stratID: string) => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
 
-  private stratFormOpen: boolean = false;
-  private stratFormEditMode: boolean = false;
+  private stratFormOpen = false;
+  private stratFormEditMode = false;
   private editStrat: Strat | null = null;
-  private lightboxOpen: boolean = false;
+  private lightboxOpen = false;
   private currentLightboxUtility: Utility | null = null;
-  private filterMenuOpen: boolean = false;
-  private drawToolOpen: boolean = false;
+  private filterMenuOpen = false;
+  private drawToolOpen = false;
   private currentDrawToolStrat: Strat | null = null;
 
-  private stratFormSubmitted(data: Partial<Strat>) {
+  private tutorialStrat: Strat | null = null;
+
+  private async stratFormSubmitted(data: Partial<Strat>) {
     if (data._id) {
       this.updateStrat(data);
     } else {
-      this.createStrat(data);
+      const newStrat = await this.createStrat(data);
+      if (!this.profile.completedTutorial) {
+        this.tutorialStrat = newStrat;
+
+        catchPromise(
+          this.showDialog({
+            key: 'strats-view/confirm-tutorial',
+            text:
+              'Hey there! Looks like you just created your first strat. You can now edit the content of the strat by clicking the blinking box. You can mention teammates with "@" and you can link utility from the nadebook with "#".',
+            resolveBtn: 'OK',
+            confirmOnly: true,
+          }),
+          () => {
+            const formData = new FormData();
+            formData.append('completedTutorial', 'true');
+            this.updateProfile(formData);
+          }
+        );
+      }
     }
     this.hideStratForm();
   }

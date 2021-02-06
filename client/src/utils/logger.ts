@@ -1,6 +1,6 @@
-export class log {
+export class Log {
   private static log(color: string, ns: string, ...data: any[]): void {
-    if (process.env.NODE_ENV === 'development')
+    if ((window as any).debugMode)
       console.log(
         `%c${new Date().toLocaleTimeString()}%c${ns.padEnd(15, ' ')} >>`,
         `color: #c3c3c3; background: #141418; border: 1px solid ${color}; border-right: none; padding: 2px 8px;`,

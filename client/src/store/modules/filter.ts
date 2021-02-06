@@ -1,6 +1,7 @@
 import { Sides } from '@/api/models/Sides';
 import { StratTypes } from '@/api/models/StratTypes';
 import { UtilityTypes } from '@/api/models/UtilityTypes';
+import TrackingService from '@/services/tracking.service';
 import { Module } from 'vuex';
 import { RootState } from '..';
 
@@ -44,6 +45,8 @@ const filterInitialState = (): FilterState => ({
   },
 });
 
+const trackingService = TrackingService.getInstance();
+
 export const filterModule: Module<FilterState, RootState> = {
   namespaced: true,
   state: filterInitialState(),
@@ -61,9 +64,11 @@ export const filterModule: Module<FilterState, RootState> = {
     },
     updateStratTypeFilter({ commit }, value: StratTypes | null) {
       commit(SET_STRAT_TYPE_FILTER, value);
+      trackingService.track('filter:strat-type');
     },
     updateStratSideFilter({ commit }, value: Sides | null) {
       commit(SET_STRAT_SIDE_FILTER, value);
+      trackingService.track('filter:strat-side');
     },
     updateStratNameFilter({ commit }, value: string) {
       commit(SET_STRAT_NAME_FILTER, value);
@@ -73,12 +78,15 @@ export const filterModule: Module<FilterState, RootState> = {
       commit(SET_STRAT_TYPE_FILTER, null);
       commit(SET_STRAT_SIDE_FILTER, null);
       commit(SET_STRAT_NAME_FILTER, '');
+      trackingService.track('filter:strat-clear');
     },
     updateUtilityTypeFilter({ commit }, value: UtilityTypes | null) {
       commit(SET_UTILITY_TYPE_FILTER, value);
+      trackingService.track('filter:utility-type');
     },
     updateUtilitySideFilter({ commit }, value: Sides | null) {
       commit(SET_UTILITY_SIDE_FILTER, value);
+      trackingService.track('filter:utility-side');
     },
     updateUtilityNameFilter({ commit }, value: string) {
       commit(SET_UTILITY_NAME_FILTER, value);
@@ -87,6 +95,7 @@ export const filterModule: Module<FilterState, RootState> = {
       commit(SET_UTILITY_TYPE_FILTER, null);
       commit(SET_UTILITY_SIDE_FILTER, null);
       commit(SET_UTILITY_NAME_FILTER, '');
+      trackingService.track('filter:utility-clear');
     },
     resetState({ commit }) {
       commit(RESET_STATE);

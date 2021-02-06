@@ -54,7 +54,6 @@ export const utilityModule: Module<UtilityState, RootState> = {
         dispatch('app/showToast', { id: 'utility/createUtility', text: 'Added utility.' }, { root: true });
     },
     async updateUtility({ dispatch }, data: FormData) {
-      console.log(data.keys);
       const res = await api.utility.updateUtility(data);
       if (res.success)
         dispatch(

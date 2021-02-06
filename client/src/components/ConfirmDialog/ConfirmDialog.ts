@@ -7,6 +7,7 @@ export default class ConfirmDialog extends Vue {
   @Prop() reject!: () => void;
   @Prop({ default: 'Confirm' }) resolveBtn!: string;
   @Prop({ default: 'Cancel' }) rejectBtn!: string;
+  @Prop({ default: false }) confirmOnly!: boolean;
 
   private confirmClicked() {
     this.resolve();
@@ -19,5 +20,7 @@ export default class ConfirmDialog extends Vue {
   }
 
   @Emit()
-  private close() {}
+  private close() {
+    return;
+  }
 }

@@ -18,7 +18,9 @@ export default class AuthService {
   private static instance: AuthService;
   private endpoint = Endpoints.Auth;
 
-  private constructor() {}
+  private constructor() {
+    // private to prevent instantiation
+  }
 
   static getInstance(): AuthService {
     if (!AuthService.instance) {
@@ -44,7 +46,7 @@ export default class AuthService {
     return ApiService.makeRequest<{ token: string }>(axios.post(target, {}, { withCredentials: true }));
   }
 
-  async register(formData: Partial<Player>): Promise<APIResponse<{ _id: string; email: string }>> {
+  async register(formData: FormData): Promise<APIResponse<{ _id: string; email: string }>> {
     const target = urljoin(API_URL, this.endpoint, Actions.Register);
     return ApiService.makeRequest<{ _id: string; email: string }>(axios.post(target, formData));
   }

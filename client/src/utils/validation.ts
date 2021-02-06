@@ -3,9 +3,10 @@ import FormField, { FormFieldData } from './FormField';
 export const validateForm = (formData: Record<string, FormField>): boolean => {
   let valid = true;
 
+  // TODO: can be changed to Object.values
   const fields = Object.entries(formData);
 
-  fields.forEach(([fieldName, field]) => {
+  fields.forEach(([, field]) => {
     if (!field.validate()) {
       valid = false;
     }

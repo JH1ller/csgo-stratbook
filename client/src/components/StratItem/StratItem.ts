@@ -16,10 +16,13 @@ import { StratFilters } from '@/store/modules/filter';
 })
 export default class StratItem extends Vue {
   @Prop() private strat!: Strat;
+  @Prop() private completedTutorial!: boolean;
+  @Prop() private isTutorial!: boolean;
   @Ref() editor!: any;
   @filterModule.State filters!: StratFilters;
-  private editMode: boolean = false;
-  private editorKey: number = 0;
+
+  private editMode = false;
+  private editorKey = 0;
 
   private get isCtSide(): boolean {
     return this.strat.side === Sides.CT;

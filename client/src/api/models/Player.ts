@@ -7,4 +7,5 @@ export interface Player extends Model {
   team?: string;
   isOnline?: boolean;
   lastOnline?: Date;
+  completedTutorial?: boolean;
 }

@@ -23,7 +23,7 @@ export default {
       {
         questionText: 'Where can I report bugs or request new features?',
         answerText:
-          'First of all, I\'m very thankful for everyone who is taking their time to report bugs and provides valuable feedback. The best way is to use the "Feedback" button in the navigation drawer of the app. If you have a Github account, you can open an issue on the projects repository. You can also always send me a DM on twitter.',
+          'First of all, I\'m very thankful for everyone who is taking their time to report bugs and provides valuable feedback.<br>The best way is to use the "Feedback" button in the navigation drawer of the app. If you have a Github account, you can open an issue on the projects repository. You can also always send me a DM on twitter.',
       },
       {
         questionText: 'Who can see my strats?',
@@ -33,7 +33,7 @@ export default {
       {
         questionText: 'Are there any costs or prices?',
         answerText:
-          'Stratbook is so called "Free and Open Source Software". Using the code and hosting the service yourself will always be free. The prehosted service at "app.stratbook.live" is also currently free. I\'m not planning to make a profit from this, so there only might be a light monetization at a later stage to cover hosting and domain costs.',
+          'Stratbook is so called "Free and Open Source Software". Using the code and hosting the service yourself will always be free.<br>The prehosted service at "app.stratbook.live" is also currently free. I\'m not planning to make a profit from this, so there only might be a light monetization at a later stage to cover hosting and domain costs.',
       },
       {
         questionText: 'What if Stratbook servers are down?',
@@ -48,7 +48,7 @@ export default {
       {
         questionText: 'Who is behind this project?',
         answerText:
-          "Hi there! I'm Justin, a 24 year old esports & programming enthusiast based in Stuttgart, Germany. I have a bachelors degree in Computer Science & Media and I'm working as a full-time Web Engineer for a Customer Experience Agency in Stuttgart. I started developing Stratbook in my freetime during Covid-19, mostly to improve my programming skills, but also to build an application for my csgo team to replace the cluttered Google Docs that we've been using.",
+          "Hi there! I'm Justin, a 24 year old web engineer & esports enthusiast based in Stuttgart, Germany. I played CSGO in the german amateur scene for a few years and started developing Stratbook in my freetime during Covid-19.<br>But you, too, could be behind this project! Drop me a message if you're interested in collaborating or helping out.",
       },
     ],
   },
@@ -58,6 +58,31 @@ export default {
   changelog: {
     headline: 'Changelog',
     changes: [
+      {
+        version: '1.3.0',
+        date: '2021-02-02',
+        changes: [
+          'Added timestamp support to utility lightbox youtube player',
+          'Fixed not being able to interact with video when extended crosshair active',
+        ],
+      },
+      {
+        version: '1.2.2',
+        date: '2021-02-03',
+        changes: [
+          'Fixed new bug that prevented utilities from being added.',
+          'Fixed error when changing team avatar',
+        ],
+      },
+      {
+        version: '1.2.0',
+        date: '2021-02-02',
+        changes: [
+          'Utility images can now be removed.',
+          'Added tutorial dialog after adding first strat.',
+          "Fixed console error when teams don't have server specified.",
+        ],
+      },
       {
         version: '0.12.0',
         date: '2021-01-23',

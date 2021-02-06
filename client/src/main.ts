@@ -104,6 +104,8 @@ Vue.component('fa-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
+(window as any).debugMode = process.env.NODE_ENV === 'development' || !!localStorage.getItem('debug');
+
 const hasSession = !!localStorage.getItem('has-session');
 
 (async () => {

@@ -46,7 +46,7 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
   private mouseButton: MouseButtons = MouseButtons.LEFT;
   private crouch = false;
   private movement = UtilityMovement.STILL;
-  private files: File[] = [];
+  private files: (File | string)[] = [];
 
   private mounted() {
     if (this.utility && this.isEdit) {
@@ -71,7 +71,23 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
   private submitUtility(): FormData {
     const requestFormData = new FormData();
 
-    this.files.forEach(file => requestFormData.append('images', file, file.name));
+    const filesToDelete: string[] = [];
+
+    this.utility?.images.forEach(image => {
+      if (!this.files.find(file => file === image)) {
+        filesToDelete.push(image);
+      }
+    });
+
+    if (filesToDelete.length) {
+      requestFormData.append('delete', JSON.stringify(filesToDelete));
+    }
+
+    this.files.forEach(file => {
+      if (typeof file !== 'string') {
+        requestFormData.append('images', file, file.name);
+      }
+    });
 
     for (const [key, data] of Object.entries(this.formFields)) {
       requestFormData.append(key, data.value);
@@ -97,6 +113,7 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
     this.mouseButton = this.utility.mouseButton;
     this.crouch = this.utility.crouch;
     this.movement = this.utility.movement;
+    this.files.push(...this.utility.images);
   }
 
   private toggleCrouch() {

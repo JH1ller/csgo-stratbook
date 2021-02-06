@@ -1,9 +1,8 @@
 .profile-view {
   &__content {
-    background-color: white;
-    box-shadow: $shadow-subtle;
-    padding: 16px 16px 48px 16px;
-    border-radius: 8px;
+    @include view-content;
+
+    padding-bottom: 48px;
     position: relative;
     display: flex;
     flex-direction: column-reverse;
@@ -15,7 +14,7 @@
       flex-direction: row;
       justify-content: space-between;
       align-items: flex-start;
-      padding: 24px 24px 64px 24px;
+      padding-bottom: 64px;
     }
   }
 

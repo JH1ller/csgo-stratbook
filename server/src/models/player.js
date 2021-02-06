@@ -59,6 +59,11 @@ const playerSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+
+  completedTutorial: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 playerSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });

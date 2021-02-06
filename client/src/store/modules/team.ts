@@ -5,6 +5,7 @@ import { Team } from '@/api/models/Team';
 import { Player } from '@/api/models/Player';
 import { Status } from './auth';
 import api from '@/api/base';
+import TrackingService from '@/services/tracking.service';
 
 const SET_TEAM_INFO = 'SET_TEAM_INFO';
 const SET_TEAM_MEMBERS = 'SET_TEAM_MEMBERS';
@@ -22,6 +23,8 @@ const teamInitialState = (): TeamState => ({
   teamInfo: {},
   teamMembers: [],
 });
+
+const trackingService = TrackingService.getInstance();
 
 export const teamModule: Module<TeamState, RootState> = {
   namespaced: true,
@@ -69,6 +72,7 @@ export const teamModule: Module<TeamState, RootState> = {
           },
           { root: true }
         );
+        trackingService.track('team:created', { name: formData.get('name') as string });
         return { success: true }; // TODO: probably obsolete. remove
       } else {
         return { error: res.error };
@@ -90,7 +94,7 @@ export const teamModule: Module<TeamState, RootState> = {
         return { error: res.error };
       }
     },
-    async joinTeam({ dispatch }, code: string) {
+    async joinTeam({ dispatch, rootState }, code: string) {
       const res = await api.team.joinTeam(code);
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
@@ -102,6 +106,7 @@ export const teamModule: Module<TeamState, RootState> = {
           },
           { root: true }
         );
+        trackingService.track('team:joined', { name: (rootState.team?.teamInfo as Team)?.name ?? '' });
         return { success: 'Successfully joined team.' };
       } else {
         return { error: res.error };
