@@ -42,6 +42,7 @@ import {
   faArrowsAlt,
   faLongArrowAltRight,
   faExclamationTriangle,
+  faSignOutAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -98,7 +99,8 @@ library.add(
   faArrowsAlt,
   faLongArrowAltRight,
   faCircle,
-  faExclamationTriangle
+  faExclamationTriangle,
+  faSignOutAlt
 );
 Vue.component('fa-icon', FontAwesomeIcon);
 

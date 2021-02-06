@@ -2,7 +2,6 @@ import { API_URL } from '@/config';
 import axios from 'axios';
 import urljoin from 'url-join';
 import ApiService from './base';
-import { Player } from './models/Player';
 import { APIResponse, Endpoints } from './types';
 
 export enum Actions {
@@ -59,5 +58,10 @@ export default class AuthService {
   async resetPassword(payload: { token: string; password: string }): Promise<APIResponse<boolean>> {
     const target = urljoin(API_URL, this.endpoint, Actions.Reset);
     return ApiService.makeRequest<boolean>(axios.patch(target, payload));
+  }
+
+  async deleteAccount(): Promise<APIResponse<string>> {
+    const target = urljoin(API_URL, this.endpoint);
+    return ApiService.makeRequest<string>(ApiService.http.delete(target));
   }
 }

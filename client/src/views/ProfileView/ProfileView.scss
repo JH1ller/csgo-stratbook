@@ -42,17 +42,26 @@
     }
   }
 
-  &__logout {
-    @include button-default($color--red);
-
+  &__btn-wrapper {
     position: absolute;
     right: 16px;
     bottom: 16px;
     color: white;
+    display: flex;
+
+    & > :not(:first-of-type) {
+      margin-left: 16px;
+    }
 
     @include viewport_mq3 {
       right: 24px;
       bottom: 24px;
     }
+  }
+
+  &__btn {
+    @include button-default($color--red);
+
+    color: white;
   }
 }
