@@ -8,6 +8,10 @@
         <p>
           <strong>Kontakt:</strong> <br />
           E-Mail: <a href="mailto:justin@hiller-family.com">justin@hiller-family.com</a><br />
+          Anschrift:
+          <br />
+          Däumlingweg 12<br />
+          70567 Stuttgart
         </p>
         <br />
         <p>

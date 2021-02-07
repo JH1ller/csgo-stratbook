@@ -51,6 +51,11 @@ export default class StratEditor extends Vue {
         query: UtilityTypes.MOLOTOV,
         name: 'Molotov',
       },
+      {
+        type: this.stratSide === Sides.CT ? UtilityTypes.DEFUSEKIT : UtilityTypes.BOMB,
+        query: this.stratSide === Sides.CT ? UtilityTypes.DEFUSEKIT : UtilityTypes.BOMB,
+        name: this.stratSide === Sides.CT ? 'Defuse Kit' : 'Bomb',
+      },
     ];
   }
 

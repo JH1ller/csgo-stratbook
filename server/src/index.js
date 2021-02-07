@@ -16,6 +16,7 @@ const { initWS } = require('./sockets');
 const subdomain = require('express-subdomain');
 const apiRouter = require('./routes/api');
 const secureRedirect = require('./middleware/secureRedirect');
+const logger = require('./middleware/logger');
 const { APP_URL } = require('./config');
 const urljoin = require('url-join');
 
@@ -55,6 +56,8 @@ app.use(
 app.use(helmet());
 
 app.use(compression());
+
+app.use(logger);
 
 if (isDev) {
   app.use('/static', express.static('public'));

@@ -59,6 +59,16 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '1.4.0',
+        date: '2021-02-06',
+        changes: [
+          'Add bomb & defuse kit as linkable options in strat editor (Thanks @enzy2k12 for the suggestion)',
+          'Improved layout of team join/create page',
+          'Added server logging to fix production bugs easier',
+          'Added "delete Account" functionality',
+        ],
+      },
+      {
         version: '1.3.0',
         date: '2021-02-02',
         changes: [

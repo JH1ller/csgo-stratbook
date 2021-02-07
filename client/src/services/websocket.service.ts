@@ -103,6 +103,12 @@ class WebSocketService {
       store.dispatch('team/updateTeamLocally', data);
     });
   }
+
+  emit(event: string, ...args: any[]) {
+    if (this.socket?.connected) {
+      this.socket.emit(event, ...args);
+    }
+  }
 }
 
 export default WebSocketService;
