@@ -1,13 +1,12 @@
 .strat-item {
   background-color: $color--smoke;
   box-shadow: $shadow-subtle;
-  padding: 12px;
+  padding: 12px 12px 6px 12px;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   position: relative;
   border: 2px solid rgba($color--navyblue, 0.5);
-  min-height: 132px;
 
   &.-inactive {
     border: 2px dashed rgba($color--navyblue, 0.5);
@@ -15,7 +14,7 @@
   }
 
   @include viewport_mq3 {
-    padding: 12px 20px;
+    padding: 12px 20px 6px 20px;
   }
 
   &__title {
@@ -49,8 +48,7 @@
   }
 
   &__editor {
-    margin-bottom: 30px;
-    margin-top: 8px;
+    margin: 8px 0;
     width: 100%;
     @include viewport_mq3 {
       width: calc(100% - 48px);
@@ -102,10 +100,8 @@
   }
 
   &__btn-wrapper {
-    position: absolute;
-    bottom: 4px;
-    right: 12px;
     display: flex;
+    justify-content: flex-end;
     align-items: center;
 
     & > :not(:first-child) {

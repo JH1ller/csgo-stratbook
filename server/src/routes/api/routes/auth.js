@@ -47,11 +47,11 @@ router.post('/register', uploadSingle('avatar'), async (req, res) => {
 
   const token = jwt.sign({ _id: user._id }, process.env.EMAIL_SECRET);
 
+  await user.save();
   targetKey.remainingUses--;
   targetKey.usedBy.push(user._id);
   targetKey.usedAt.push(Date.now());
   await targetKey.save();
-  await user.save();
   await sendMail(user.email, token, user.name, Templates.verifyNew);
 
   res.json({ _id: user._id, email: user.email });

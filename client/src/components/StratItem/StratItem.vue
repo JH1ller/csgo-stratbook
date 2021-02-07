@@ -1,6 +1,26 @@
 <template>
   <div class="strat-item" :class="{ '-inactive': !strat.active }">
     <SideBadge class="strat-item__side" :side="strat.side" />
+    <div class="strat-item__strat-info">
+      <span class="strat-item__title">
+        {{ strat.name }}
+        <span v-if="!strat.active" class="strat-item__inactive-label">(inactive)</span>
+      </span>
+      <TypeBadge class="strat-item__type" :type="strat.type" />
+      <p class="strat-item__note" v-if="strat.note">
+        <fa-icon icon="info-circle" />
+        {{ strat.note }}
+      </p>
+      <StratEditor
+        :key="editorKey"
+        class="strat-item__editor"
+        :class="{ '-blinking': !completedTutorial && isTutorial }"
+        ref="editor"
+        :htmlContent="strat.content"
+        :stratSide="strat.side"
+        @update="editorUpdated"
+      />
+    </div>
     <div class="strat-item__btn-wrapper">
       <transition name="fade">
         <div class="strat-item__action-buttons" v-if="editMode">
@@ -48,26 +68,6 @@
       <div class="strat-item__btn --delete" @click="deleteStrat" content="Delete strat" v-tippy>
         <fa-icon icon="trash-alt" />
       </div>
-    </div>
-    <div class="strat-item__strat-info">
-      <span class="strat-item__title">
-        {{ strat.name }}
-        <span v-if="!strat.active" class="strat-item__inactive-label">(inactive)</span>
-      </span>
-      <TypeBadge class="strat-item__type" :type="strat.type" />
-      <p class="strat-item__note" v-if="strat.note">
-        <fa-icon icon="info-circle" />
-        {{ strat.note }}
-      </p>
-      <StratEditor
-        :key="editorKey"
-        class="strat-item__editor"
-        :class="{ '-blinking': !completedTutorial && isTutorial }"
-        ref="editor"
-        :htmlContent="strat.content"
-        :stratSide="strat.side"
-        @update="editorUpdated"
-      />
     </div>
   </div>
 </template>
