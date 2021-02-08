@@ -1,7 +1,8 @@
 <template>
   <div class="confirm-dialog">
     <div class="confirm-dialog__window">
-      <p class="confirm-dialog__text">{{ text }}</p>
+      <p v-if="htmlMode" class="confirm-dialog__text" v-html="text"></p>
+      <p v-else class="confirm-dialog__text">{{ text }}</p>
       <div class="confirm-dialog__buttons">
         <button class="confirm-dialog__btn-confirm" @click="confirmClicked">
           <fa-icon icon="check" />

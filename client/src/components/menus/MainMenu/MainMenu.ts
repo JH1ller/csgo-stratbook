@@ -6,6 +6,9 @@ import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { FeedbackFish } from '@feedback-fish/vue';
 import { Routes } from '@/router/router.models';
 import TrackingService from '@/services/tracking.service';
+import { isDesktop } from '@/utils/isDesktop';
+import { catchPromise } from '@/utils/catchPromise';
+import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 
 @Component({
   components: {
@@ -17,10 +20,12 @@ export default class MainMenu extends Vue {
   @Inject() private trackingService!: TrackingService;
   @authModule.State profile!: Player;
   @appModule.Action private showToast!: (toast: Toast) => void;
+  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
   @appModule.State private loading!: boolean;
   @Prop() private menuOpen!: boolean;
 
   private Routes: typeof Routes = Routes;
+  private isDesktop = isDesktop();
 
   private get menuItems() {
     return [
@@ -46,7 +51,7 @@ export default class MainMenu extends Vue {
   }
 
   private async mounted() {
-    if (process?.versions?.electron) {
+    if (this.isDesktop) {
       const remote = require('electron').remote;
       const win = remote.getCurrentWindow();
       // win?.setMinimumSize(660, this.calculateMinHeight());
@@ -63,8 +68,33 @@ export default class MainMenu extends Vue {
   }
 
   private downloadDesktopClient(): void {
-    this.showToast({ id: 'mainMenu/downloadDesktopClient', text: 'Coming soon!' });
+    catchPromise(
+      this.showDialog({
+        key: 'main-menu/download-desktop',
+        text:
+          'Click "Download now" to get the current version of the Stratbook native application. \
+          It offers higher performance, but currently doesn\'t yet have an auto-update functionality, \
+          therefore you will need to download updates manually.<br>The app will check for updates on startup and will notify you about changes.<br>\
+          Windows will probably warn you about running the application, but you can safely run it anyway.',
+        resolveBtn: 'Download now',
+        htmlMode: true,
+      }),
+      () => {
+        window.open(
+          'https://csgo-stratbook.s3.eu-central-1.amazonaws.com/05914da67a7ebaee36b03ffd80875766e503441a.png'
+        );
+      }
+    );
     this.trackingService.track('click:get-desktop-client');
+  }
+
+  private openTwitter() {
+    if (this.isDesktop) {
+      const { shell } = require('electron').remote;
+      shell.openExternal('https://twitter.com/csgostratbook');
+    } else {
+      window.open('https://twitter.com/csgostratbook', '_blank');
+    }
   }
 
   @Emit()

@@ -9,7 +9,7 @@
       <router-view @click.native="closeMenu" class="router-view"></router-view>
     </transition>
     <transition name="fade">
-      <CookieBanner v-if="showCookieBanner" @close="closeCookieBanner" />
+      <CookieBanner v-if="showCookieBanner && !isDesktop" @close="closeCookieBanner" />
     </transition>
   </div>
 </template>
@@ -25,6 +25,7 @@ import CookieBanner from './components/CookieBanner/CookieBanner.vue';
 import pkg from '../package.json';
 import { appModule } from './store/namespaces';
 import TrackingService from '@/services/tracking.service';
+import { isDesktop } from './utils/isDesktop';
 
 @Component({
   components: {
@@ -42,6 +43,7 @@ export default class App extends Vue {
   private menuOpen: boolean = false;
   private appVersion: string = pkg.version;
   private showCookieBanner = false;
+  private isDesktop = isDesktop();
 
   private getCookie(name: string) {
     const value = `; ${document.cookie}`;
@@ -59,7 +61,11 @@ export default class App extends Vue {
   }
 
   private mounted() {
-    this.checkCookies();
+    if (this.isDesktop) {
+      this.initTracking(false);
+    } else {
+      this.checkCookies();
+    }
   }
 
   private checkCookies() {
