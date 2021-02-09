@@ -190,10 +190,6 @@
       height: 14px;
     }
 
-    &:nth-last-of-type(2) {
-      margin-bottom: 24px;
-    }
-
     &.--twitter {
       margin-top: auto;
       &:hover {
@@ -212,6 +208,8 @@
       }
     }
     &.--feedback {
+      margin-bottom: 24px;
+
       &:hover {
         & > svg > path {
           fill: $color--sand;

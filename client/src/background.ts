@@ -1,11 +1,14 @@
 'use strict';
-import { app, protocol, BrowserWindow } from 'electron';
+import { app, protocol, BrowserWindow, ipcMain } from 'electron';
 import os from 'os';
 import path from 'path';
 import {
   createProtocol,
   /* installVueDevtools */
 } from 'vue-cli-plugin-electron-builder/lib';
+import { autoUpdater } from 'electron-updater';
+import { ElectronLog } from 'electron-log';
+
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -22,7 +25,7 @@ function createWindow() {
       BrowserWindow.addDevToolsExtension(
         path.join(
           os.homedir(),
-          '/AppData/Local/Google/Chrome/User Data/Default/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/5.3.3_0'
+          '/AppData/Local/Google/Chrome/User Data/Default/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/5.3.4_0'
         )
       );
     } catch (error) {
@@ -35,7 +38,7 @@ function createWindow() {
     height: 720,
     minHeight: 670,
     minWidth: 941,
-    title: 'CSGO Stratbook',
+    title: 'Stratbook',
     useContentSize: true,
     webPreferences: {
       nodeIntegration: true,
@@ -60,7 +63,17 @@ function createWindow() {
   win.on('closed', () => {
     win = null;
   });
+
+  autoUpdater.autoDownload = true;
+
+  autoUpdater.on('update-downloaded', () => {
+    win!.webContents.send('update-downloaded');
+  });
 }
+
+ipcMain.on('app-ready', () => {
+  autoUpdater.checkForUpdatesAndNotify();
+});
 
 app.allowRendererProcessReuse = true;
 // Quit when all windows are closed.
@@ -87,6 +100,9 @@ app.on('ready', async () => {
   createWindow();
 });
 
+ipcMain.on('restart-app', () => {
+  autoUpdater.quitAndInstall();
+});
 // app.on('open-url', function(event, data) {
 //   event.preventDefault();
 //   logEverywhere(data);
@@ -106,12 +122,5 @@ if (isDevelopment) {
     process.on('SIGTERM', () => {
       app.quit();
     });
-  }
-}
-
-function logEverywhere(s: string) {
-  console.log(s);
-  if (win && win.webContents) {
-    win.webContents.executeJavaScript(`console.log("${s}")`);
   }
 }

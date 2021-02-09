@@ -72,17 +72,14 @@ export default class MainMenu extends Vue {
       this.showDialog({
         key: 'main-menu/download-desktop',
         text:
-          'Click "Download now" to get the current version of the Stratbook native application. \
-          It offers higher performance, but currently doesn\'t yet have an auto-update functionality, \
-          therefore you will need to download updates manually.<br>The app will check for updates on startup and will notify you about changes.<br>\
-          Windows will probably warn you about running the application, but you can safely run it anyway.',
+          'Click "Download now" to get the Stratbook desktop application. \
+          It offers higher performance and might soon get features that wouldn\'nt be possible in the web version.\
+          If Windows prevents running the app, you should be able to click "More Info" and "Run anyway".',
         resolveBtn: 'Download now',
         htmlMode: true,
       }),
       () => {
-        window.open(
-          'https://csgo-stratbook.s3.eu-central-1.amazonaws.com/05914da67a7ebaee36b03ffd80875766e503441a.png'
-        );
+        window.open('https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+1.5.0.exe');
       }
     );
     this.trackingService.track('click:get-desktop-client');

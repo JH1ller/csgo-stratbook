@@ -26,6 +26,9 @@ import pkg from '../package.json';
 import { appModule } from './store/namespaces';
 import TrackingService from '@/services/tracking.service';
 import { isDesktop } from './utils/isDesktop';
+import { Toast } from './components/ToastWrapper/ToastWrapper.models';
+import { Dialog } from './components/DialogWrapper/DialogWrapper.models';
+import { catchPromise } from './utils/catchPromise';
 
 @Component({
   components: {
@@ -40,6 +43,9 @@ import { isDesktop } from './utils/isDesktop';
 export default class App extends Vue {
   @Provide() trackingService: TrackingService = TrackingService.getInstance();
   @appModule.State latency!: number;
+  @appModule.Action private showToast!: (toast: Toast) => void;
+  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
+
   private menuOpen: boolean = false;
   private appVersion: string = pkg.version;
   private showCookieBanner = false;
@@ -62,10 +68,29 @@ export default class App extends Vue {
 
   private mounted() {
     if (this.isDesktop) {
-      this.initTracking(false);
+      this.initAutoUpdate();
     } else {
       this.checkCookies();
     }
+  }
+
+  private initAutoUpdate() {
+    const { ipcRenderer } = require('electron');
+
+    ipcRenderer.on('update-downloaded', () => {
+      ipcRenderer.removeAllListeners('update-downloaded');
+      catchPromise(
+        this.showDialog({
+          key: 'app/update-downloaded',
+          text:
+            'A new update has been downloaded. An app restart is required for the update to take effect. Restart now?',
+          resolveBtn: 'Restart',
+        }),
+        () => ipcRenderer.send('restart-app')
+      );
+    });
+
+    ipcRenderer.send('app-ready');
   }
 
   private checkCookies() {

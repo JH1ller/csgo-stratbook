@@ -3,3 +3,4 @@ dist_electron
 #Electron-builder output
 dist_electron
 dist
+.env

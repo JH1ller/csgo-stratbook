@@ -13,15 +13,23 @@ module.exports = {
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
-        productName: 'CSGO-Stratbook',
-        appId: 'CSGO.Stratbook',
+        productName: 'Stratbook',
+        appId: 'live.stratbook',
         win: {
-          target: 'portable',
+          target: 'nsis',
           publisherName: 'Hiller',
           icon: './icon.png',
+          // publish: {
+          //   provider: 'github',
+          //   token: process.env.GH_TOKEN,
+          // },
+          publish: {
+            provider: 's3',
+            bucket: process.env.S3_BUCKET_NAME,
+          },
         },
         portable: {
-          artifactName: 'CSGO-Stratbook.exe',
+          artifactName: 'Stratbook.exe',
         },
         directories: {
           output: 'dist_electron/release',
