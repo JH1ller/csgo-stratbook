@@ -5,10 +5,10 @@
       <div class="faq__accordions">
         <Accordion
           v-for="(item, index) in $t('faq.questions')"
-          :id="index"
+          :id="item.id"
           :key="index"
           class="faq__accordion"
-          :open="openAccordion === index"
+          :open="openAccordion === item.id"
           @toggle="toggleAccordion"
         >
           <template #header>
@@ -33,10 +33,17 @@ import Accordion from '@/components/Accordion.vue';
   }
 })
 export default class Faq extends Vue {
-  private openAccordion: number | null = null;
+  private openAccordion: string | null = null;
 
-  private toggleAccordion(id: number) {
+  private toggleAccordion(id: string) {
     this.openAccordion = this.openAccordion === id ? null : id;
+  }
+
+  private mounted() {
+    const hash = window.location.hash?.slice(1);
+    if (hash) {
+      this.openAccordion = hash;
+    }
   }
 }
 </script>

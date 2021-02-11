@@ -1,8 +1,7 @@
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
-import { appModule, teamModule } from '@/store/namespaces';
+import { appModule } from '@/store/namespaces';
 import { Team } from '@/api/models/Team';
-import { isDesktop } from '@/utils/isDesktop';
 
 @Component({})
 export default class TeamInfo extends Vue {
@@ -16,7 +15,7 @@ export default class TeamInfo extends Vue {
   }
 
   private openWebsite() {
-    if (isDesktop()) {
+    if (window.desktopMode) {
       const { remote } = require('electron');
       remote.shell.openExternal(this.teamInfo.website as string);
     } else {
@@ -39,7 +38,7 @@ export default class TeamInfo extends Vue {
   private runServer() {
     if (!this.teamInfo.server?.ip) return;
 
-    if (isDesktop()) {
+    if (window.desktopMode) {
       const { remote } = require('electron');
       const currentWindow = remote.getCurrentWindow();
       currentWindow.loadURL(`steam://connect/${this.teamInfo.server?.ip}/${this.teamInfo.server?.password}`);

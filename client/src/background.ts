@@ -1,19 +1,68 @@
 'use strict';
-import { app, protocol, BrowserWindow, ipcMain } from 'electron';
+import electron, { app, protocol, BrowserWindow, ipcMain, net } from 'electron';
 import os from 'os';
 import path from 'path';
 import {
   createProtocol,
   /* installVueDevtools */
 } from 'vue-cli-plugin-electron-builder/lib';
-import { autoUpdater } from 'electron-updater';
-import { ElectronLog } from 'electron-log';
+import { autoUpdater, UpdateInfo } from 'electron-updater';
+import Store from 'electron-store';
+import ElectronLog from 'electron-log';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null;
+
+const store = new Store();
+
+ElectronLog.catchErrors({
+  showDialog: false,
+  onError(error, versions) {
+    electron.dialog
+      .showMessageBox({
+        title: 'An error occurred',
+        message: error.message,
+        detail: error.stack,
+        type: 'error',
+        buttons: ['Ignore', 'Report', 'Exit'],
+      })
+      .then(result => {
+        if (result.response === 1) {
+          const postData = JSON.stringify({
+            projectId: '092eb5ee119a8c',
+            userId: store.get('userId') ?? 'unknown',
+            category: 'issue',
+            text: `Error report for ${versions?.app}\nError:\n${error.stack}\n\nOS: ${versions?.os}`,
+            metadata: {
+              appVersion: versions?.app,
+              osVersion: versions?.os,
+              userName: store.get('username') ?? 'Unknown user',
+            },
+          });
+
+          const request = net.request({
+            method: 'POST',
+            url: 'https://api.feedback.fish/feedback',
+          });
+
+          request.on('response', response => {
+            ElectronLog.info('Error submitted', response);
+          });
+
+          request.write(postData);
+          request.end();
+          return;
+        }
+
+        if (result.response === 2) {
+          electron.app.quit();
+        }
+      });
+  },
+});
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
@@ -64,10 +113,12 @@ function createWindow() {
     win = null;
   });
 
+  autoUpdater.logger = ElectronLog;
+
   autoUpdater.autoDownload = true;
 
-  autoUpdater.on('update-downloaded', () => {
-    win!.webContents.send('update-downloaded');
+  autoUpdater.on('update-downloaded', (info: UpdateInfo) => {
+    win!.webContents.send('update-downloaded', info.version);
   });
 }
 

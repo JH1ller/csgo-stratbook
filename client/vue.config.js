@@ -17,7 +17,7 @@ module.exports = {
         appId: 'live.stratbook',
         win: {
           target: 'nsis',
-          publisherName: 'Hiller',
+          //publisherName: 'Hiller',
           icon: './icon.png',
           // publish: {
           //   provider: 'github',

@@ -48,6 +48,8 @@ import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueTippy, { TippyComponent } from 'vue-tippy';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
+import { isDesktop } from './utils/isDesktop';
+import StorageService from './services/storage.service';
 
 Vue.use(VueTippy, {
   directive: 'tippy',
@@ -106,9 +108,12 @@ Vue.component('fa-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
-(window as any).debugMode = process.env.NODE_ENV === 'development' || !!localStorage.getItem('debug');
+window.debugMode = process.env.NODE_ENV === 'development' || !!localStorage.getItem('debug');
+window.desktopMode = isDesktop();
 
-const hasSession = !!localStorage.getItem('has-session');
+const storageService = StorageService.getInstance();
+
+const hasSession = !!storageService.get('has-session');
 
 (async () => {
   if (hasSession) {

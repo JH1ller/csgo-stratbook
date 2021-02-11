@@ -71,6 +71,8 @@ router.post('/login', async (req, res) => {
   const refreshToken = nanoid(64);
   const refreshTokenExpiration = new Date(Date.now() + ms(process.env.REFRESH_TOKEN_TTL));
 
+  const jsonMode = !!req.body.jsonMode;
+
   const session = new Session({
     refreshToken,
     player: targetUser._id,
@@ -91,16 +93,18 @@ router.post('/login', async (req, res) => {
     sameSite: 'lax',
   });
 
+  // TODO: evaluate if these headers are still needed
   res.set('Access-Control-Expose-Headers', 'Set-Cookie');
   res.set('Access-Control-Allow-Headers', 'Set-Cookie');
 
   res.send({
     token,
+    refreshToken: jsonMode ? refreshToken : undefined,
   });
 });
 
 router.post('/refresh', cookieParser(), async (req, res) => {
-  const currentRefreshToken = req.cookies.refreshToken;
+  const currentRefreshToken = req.cookies.refreshToken ?? req.body.refreshToken;
   const session = await Session.findOne({ refreshToken: currentRefreshToken });
   if (!session) return res.status(400).json({ error: 'Invalid refresh token' });
 
@@ -108,6 +112,8 @@ router.post('/refresh', cookieParser(), async (req, res) => {
     session.remove();
     return res.status(400).json({ error: 'Refresh token expired' });
   }
+
+  const jsonMode = !!req.body.jsonMode;
 
   const refreshToken = nanoid(64);
   const refreshTokenExpiration = new Date(Date.now() + ms(process.env.REFRESH_TOKEN_TTL));
@@ -130,6 +136,7 @@ router.post('/refresh', cookieParser(), async (req, res) => {
 
   res.send({
     token,
+    refreshToken: jsonMode ? refreshToken : undefined,
   });
 });
 

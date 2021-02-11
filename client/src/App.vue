@@ -25,7 +25,6 @@ import CookieBanner from './components/CookieBanner/CookieBanner.vue';
 import pkg from '../package.json';
 import { appModule } from './store/namespaces';
 import TrackingService from '@/services/tracking.service';
-import { isDesktop } from './utils/isDesktop';
 import { Toast } from './components/ToastWrapper/ToastWrapper.models';
 import { Dialog } from './components/DialogWrapper/DialogWrapper.models';
 import { catchPromise } from './utils/catchPromise';
@@ -49,7 +48,7 @@ export default class App extends Vue {
   private menuOpen: boolean = false;
   private appVersion: string = pkg.version;
   private showCookieBanner = false;
-  private isDesktop = isDesktop();
+  private isDesktop = window.desktopMode;
 
   private getCookie(name: string) {
     const value = `; ${document.cookie}`;
@@ -77,14 +76,14 @@ export default class App extends Vue {
   private initAutoUpdate() {
     const { ipcRenderer } = require('electron');
 
-    ipcRenderer.on('update-downloaded', () => {
+    ipcRenderer.on('update-downloaded', (event, version: string) => {
       ipcRenderer.removeAllListeners('update-downloaded');
       catchPromise(
         this.showDialog({
           key: 'app/update-downloaded',
-          text:
-            'A new update has been downloaded. An app restart is required for the update to take effect. Restart now?',
+          text: `A new update has been downloaded. (${this.appVersion} -> ${version})<br>An app restart is required for the update to take effect. Restart now?`,
           resolveBtn: 'Restart',
+          htmlMode: true,
         }),
         () => ipcRenderer.send('restart-app')
       );

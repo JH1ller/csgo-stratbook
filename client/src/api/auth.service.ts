@@ -13,6 +13,11 @@ export enum Actions {
   Reset = 'reset',
 }
 
+interface Authorization {
+  token: string;
+  refreshToken?: string;
+}
+
 export default class AuthService {
   private static instance: AuthService;
   private endpoint = Endpoints.Auth;
@@ -28,10 +33,10 @@ export default class AuthService {
     return AuthService.instance;
   }
 
-  async login(email: string, password: string): Promise<APIResponse<{ token: string }>> {
+  async login(email: string, password: string): Promise<APIResponse<Authorization>> {
     const target = urljoin(API_URL, this.endpoint, Actions.Login);
     return ApiService.makeRequest<{ token: string }>(
-      axios.post(target, { email, password }, { withCredentials: true })
+      axios.post(target, { email, password, jsonMode: window.desktopMode }, { withCredentials: true })
     );
   }
 
@@ -40,9 +45,11 @@ export default class AuthService {
     return ApiService.makeRequest<string>(axios.post(target, {}, { withCredentials: true }));
   }
 
-  async refresh(): Promise<APIResponse<{ token: string }>> {
+  async refresh(refreshToken?: string): Promise<APIResponse<Authorization>> {
     const target = urljoin(API_URL, this.endpoint, Actions.Refresh);
-    return ApiService.makeRequest<{ token: string }>(axios.post(target, {}, { withCredentials: true }));
+    return ApiService.makeRequest<Authorization>(
+      axios.post(target, { jsonMode: window.desktopMode, refreshToken }, { withCredentials: true })
+    );
   }
 
   async register(formData: FormData): Promise<APIResponse<{ _id: string; email: string }>> {

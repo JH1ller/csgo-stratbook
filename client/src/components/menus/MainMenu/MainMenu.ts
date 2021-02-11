@@ -6,7 +6,6 @@ import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { FeedbackFish } from '@feedback-fish/vue';
 import { Routes } from '@/router/router.models';
 import TrackingService from '@/services/tracking.service';
-import { isDesktop } from '@/utils/isDesktop';
 import { catchPromise } from '@/utils/catchPromise';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 
@@ -25,7 +24,7 @@ export default class MainMenu extends Vue {
   @Prop() private menuOpen!: boolean;
 
   private Routes: typeof Routes = Routes;
-  private isDesktop = isDesktop();
+  private isDesktop = window.desktopMode;
 
   private get menuItems() {
     return [
@@ -68,6 +67,12 @@ export default class MainMenu extends Vue {
   }
 
   private downloadDesktopClient(): void {
+    this.showToast({
+      id: 'main-menu/get-desktop',
+      text: 'Coming soon!',
+    });
+    return;
+
     catchPromise(
       this.showDialog({
         key: 'main-menu/download-desktop',

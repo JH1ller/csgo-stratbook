@@ -30,7 +30,7 @@ export default class StratItem extends Vue {
   }
 
   private openVideo() {
-    if (isDesktop()) {
+    if (window.desktopMode) {
       const { shell } = require('electron').remote;
       shell.openExternal(this.strat.videoLink as string);
     } else {

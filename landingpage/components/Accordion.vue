@@ -1,5 +1,5 @@
 <template>
-  <div class="accordion" :class="{ '-open': open }" @click="toggle">
+  <div :id="id" class="accordion" :class="{ '-open': open }" @click="toggle">
     <div class="accordion__header">
       <slot name="header" />
       <fa-icon icon="angle-down" class="accordion__icon"></fa-icon>
@@ -16,7 +16,7 @@ import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 @Component({})
 export default class Accordion extends Vue {
   @Prop({ default: false }) open!: boolean;
-  @Prop({ default: Date.now() }) id!: number;
+  @Prop({ default: Date.now().toString() }) id!: string;
 
   @Emit()
   private toggle() {

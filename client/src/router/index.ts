@@ -10,15 +10,18 @@ import { utilityResolver } from '@/views/UtilityView/UtilityView.resolver';
 // * not using lazy loading for these two views, as they are both entrypoints to the app
 import LoginView from '@/views/LoginView/LoginView.vue';
 import StratsView from '@/views/StratsView/StratsView.vue';
+import StorageService from '@/services/storage.service';
 
 Vue.use(VueRouter);
+
+const storageService = StorageService.getInstance();
 
 const routes = [
   {
     path: '/',
     name: RouteNames.Home,
     redirect: () => {
-      if (localStorage.getItem('has-session')) {
+      if (storageService.get('has-session')) {
         return Routes.Strats;
       } else {
         return Routes.Login;
