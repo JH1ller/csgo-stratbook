@@ -9,7 +9,7 @@
       <router-view @click.native="closeMenu" class="router-view"></router-view>
     </transition>
     <transition name="fade">
-      <CookieBanner v-if="showCookieBanner" @close="closeCookieBanner" />
+      <CookieBanner v-if="showCookieBanner && !isDesktop" @close="closeCookieBanner" />
     </transition>
   </div>
 </template>
@@ -25,6 +25,9 @@ import CookieBanner from './components/CookieBanner/CookieBanner.vue';
 import pkg from '../package.json';
 import { appModule } from './store/namespaces';
 import TrackingService from '@/services/tracking.service';
+import { Toast } from './components/ToastWrapper/ToastWrapper.models';
+import { Dialog } from './components/DialogWrapper/DialogWrapper.models';
+import { catchPromise } from './utils/catchPromise';
 
 @Component({
   components: {
@@ -39,9 +42,13 @@ import TrackingService from '@/services/tracking.service';
 export default class App extends Vue {
   @Provide() trackingService: TrackingService = TrackingService.getInstance();
   @appModule.State latency!: number;
+  @appModule.Action private showToast!: (toast: Toast) => void;
+  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
+
   private menuOpen: boolean = false;
   private appVersion: string = pkg.version;
   private showCookieBanner = false;
+  private isDesktop = window.desktopMode;
 
   private getCookie(name: string) {
     const value = `; ${document.cookie}`;
@@ -59,7 +66,30 @@ export default class App extends Vue {
   }
 
   private mounted() {
-    this.checkCookies();
+    if (this.isDesktop) {
+      this.initAutoUpdate();
+    } else {
+      this.checkCookies();
+    }
+  }
+
+  private initAutoUpdate() {
+    const { ipcRenderer } = require('electron');
+
+    ipcRenderer.on('update-downloaded', (event, version: string) => {
+      ipcRenderer.removeAllListeners('update-downloaded');
+      catchPromise(
+        this.showDialog({
+          key: 'app/update-downloaded',
+          text: `A new update has been downloaded. (${this.appVersion} -> ${version})<br>An app restart is required for the update to take effect. Restart now?`,
+          resolveBtn: 'Restart',
+          htmlMode: true,
+        }),
+        () => ipcRenderer.send('restart-app')
+      );
+    });
+
+    ipcRenderer.send('app-ready');
   }
 
   private checkCookies() {

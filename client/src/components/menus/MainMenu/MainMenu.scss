@@ -208,6 +208,8 @@
       }
     }
     &.--feedback {
+      margin-bottom: 24px;
+
       &:hover {
         & > svg > path {
           fill: $color--sand;
@@ -216,8 +218,6 @@
       }
     }
     &.--imprint {
-      margin-bottom: 24px;
-
       &:hover {
         & > svg > path {
           fill: $color--orange;

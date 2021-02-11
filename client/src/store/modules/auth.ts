@@ -7,6 +7,8 @@ import router from '@/router';
 import { RouteNames, Routes } from '@/router/router.models';
 import { TOKEN_TTL } from '@/config';
 import TrackingService from '@/services/tracking.service';
+import { Team } from '@/api/models/Team';
+import StorageService from '@/services/storage.service';
 
 const SET_TOKEN = 'SET_TOKEN';
 const SET_PROFILE = 'SET_PROFILE';
@@ -32,6 +34,7 @@ const authInitialState = (): AuthState => ({
 });
 
 const trackingService = TrackingService.getInstance();
+const storageService = StorageService.getInstance();
 
 export const authModule: Module<AuthState, RootState> = {
   namespaced: true,
@@ -82,13 +85,15 @@ export const authModule: Module<AuthState, RootState> = {
     updateStatus({ commit }, status: Status) {
       commit(SET_STATUS, status);
     },
-    setProfile({ commit }, profile: Player) {
+    setProfile({ commit, rootState }, profile: Player) {
       commit(SET_PROFILE, profile);
       commit(SET_STATUS, profile.team ? Status.LOGGED_IN_WITH_TEAM : Status.LOGGED_IN_NO_TEAM);
       trackingService.setUser({ userId: profile._id, name: profile.name });
+      storageService.set('username', profile.name);
+      storageService.set('userId', profile._id);
       if (profile.team) {
         WebSocketService.getInstance().connect();
-        trackingService.setUser({ team: profile.team });
+        trackingService.setUser({ team: (rootState.team.teamInfo as Team).name });
       } else {
         WebSocketService.getInstance().disconnect(); // TODO: maybe find a way to call this earlier, because socket update will cause console error
       }
@@ -97,8 +102,13 @@ export const authModule: Module<AuthState, RootState> = {
       const res = await api.auth.login(email, password);
       if (res.success) {
         commit(SET_TOKEN, res.success.token);
+
+        if (window.desktopMode) {
+          storageService.set('refreshToken', res.success.refreshToken);
+        }
+
         await dispatch('fetchProfile');
-        localStorage.setItem('has-session', '1');
+        storageService.set('has-session', '1');
         dispatch('app/showToast', { id: 'auth/login', text: 'Logged in successfully.' }, { root: true });
         trackingService.track('auth:login', { email });
         setTimeout(() => dispatch('refresh'), TOKEN_TTL - 10000);
@@ -120,14 +130,27 @@ export const authModule: Module<AuthState, RootState> = {
       dispatch('app/showToast', { id: 'auth/delete', text: 'Successfully deleted account.' }, { root: true });
     },
     async refresh({ dispatch, commit }) {
-      const res = await api.auth.refresh();
+      let res;
+
+      if (window.desktopMode) {
+        const refreshToken = storageService.get('refreshToken');
+        res = await api.auth.refresh(refreshToken);
+      } else {
+        res = await api.auth.refresh();
+      }
+
       if (res.success) {
         commit(SET_TOKEN, res.success.token);
-        localStorage.setItem('has-session', '1');
+
+        if (window.desktopMode) {
+          storageService.set('refreshToken', res.success.refreshToken);
+        }
+
+        storageService.set('has-session', '1');
         setTimeout(() => dispatch('refresh'), TOKEN_TTL - 10000);
       }
       if (res.error) {
-        localStorage.removeItem('has-session');
+        storageService.remove('has-session');
         if (router.currentRoute.name !== RouteNames.Login) router.push(Routes.Login);
       }
     },

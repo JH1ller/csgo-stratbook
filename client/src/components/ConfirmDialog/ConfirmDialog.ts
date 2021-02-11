@@ -8,6 +8,7 @@ export default class ConfirmDialog extends Vue {
   @Prop({ default: 'Confirm' }) resolveBtn!: string;
   @Prop({ default: 'Cancel' }) rejectBtn!: string;
   @Prop({ default: false }) confirmOnly!: boolean;
+  @Prop({ default: false }) htmlMode!: boolean;
 
   private confirmClicked() {
     this.resolve();

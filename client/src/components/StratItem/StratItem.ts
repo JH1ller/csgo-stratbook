@@ -6,6 +6,7 @@ import { filterModule } from '@/store/namespaces';
 import { Strat } from '@/api/models/Strat';
 import { Sides } from '@/api/models/Sides';
 import { StratFilters } from '@/store/modules/filter';
+import { isDesktop } from '@/utils/isDesktop';
 
 @Component({
   components: {
@@ -29,7 +30,7 @@ export default class StratItem extends Vue {
   }
 
   private openVideo() {
-    if (process?.versions?.electron) {
+    if (window.desktopMode) {
       const { shell } = require('electron').remote;
       shell.openExternal(this.strat.videoLink as string);
     } else {

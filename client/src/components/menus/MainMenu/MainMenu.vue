@@ -21,16 +21,15 @@
         <fa-icon :icon="item.icon" class="main-menu__icon" />
         <span class="main-menu__label" :style="{ transitionDelay: '0.' + index + 's' }">{{ item.label }}</span>
       </router-link>
-      <a
-        class="main-menu__list-item main-menu__link --twitter"
-        href="https://twitter.com/csgostratbook"
-        rel="noreferrer"
-        target="_blank"
+      <a class="main-menu__list-item main-menu__link --twitter" @click="openTwitter"
         ><fa-icon :icon="['fab', 'twitter']" />twitter</a
       >
-      <a class="main-menu__list-item main-menu__link --download" @click="downloadDesktopClient"
-        ><fa-icon icon="download" />Get desktop client</a
+      <a v-if="!isDesktop" class="main-menu__list-item main-menu__link --download" @click="downloadDesktopClient"
+        ><fa-icon icon="download" />Get desktop app</a
       >
+      <router-link v-if="!isDesktop" class="main-menu__list-item main-menu__link --imprint" :to="Routes.Imprint"
+        ><fa-icon icon="balance-scale" />Legal Notice
+      </router-link>
       <a
         class="main-menu__list-item main-menu__link --feedback"
         data-feedback-fish
@@ -38,9 +37,6 @@
       >
         <fa-icon icon="comment" />Feedback
       </a>
-      <router-link class="main-menu__list-item main-menu__link --imprint" :to="Routes.Imprint"
-        ><fa-icon icon="balance-scale" />Legal Notice
-      </router-link>
       <router-link to="/profile" class="main-menu__profile" v-if="profile._id">
         <img :src="avatarUrl" class="main-menu__avatar" alt="User Avatar" />
         <span class="main-menu__label main-menu__profile-label">{{ profile.name }}</span>

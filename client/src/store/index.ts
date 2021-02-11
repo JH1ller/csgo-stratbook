@@ -8,6 +8,7 @@ import { StratState, stratModule } from './modules/strat';
 import { authModule, AuthState } from './modules/auth';
 import { TeamState, teamModule } from './modules/team';
 import { utilityModule, UtilityState } from './modules/utility';
+import StorageService from '@/services/storage.service';
 
 export interface Response {
   success?: string | boolean;
@@ -28,6 +29,8 @@ Vue.use(Vuex);
 
 const plugins = localStorage.getItem('debug') ? [createLogger({})] : [];
 
+const storageService = StorageService.getInstance();
+
 export default new Vuex.Store({
   modules: {
     app: appModule,
@@ -43,7 +46,7 @@ export default new Vuex.Store({
   actions: {
     resetState({ dispatch, state }) {
       Object.keys(state).forEach(module => dispatch(`${module}/resetState`));
-      localStorage.clear();
+      storageService.clear();
     },
     loadDataFromStorage({ dispatch }) {
       dispatch('map/loadCurrentMapFromStorage');

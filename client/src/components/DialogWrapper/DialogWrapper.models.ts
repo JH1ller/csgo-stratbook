@@ -6,4 +6,5 @@ export interface Dialog {
   resolveBtn?: string;
   rejectBtn?: string;
   confirmOnly?: boolean;
+  htmlMode?: boolean;
 }

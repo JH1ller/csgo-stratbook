@@ -1,12 +1,22 @@
 {
   "name": "csgo-stratbook",
-  "version": "1.4.0",
+  "version": "1.5.1",
   "private": true,
+  "author": {
+    "name": "Justin Hiller",
+    "email": "justin@hiller-family.com",
+    "url": "https://jhiller.me"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JH1ller/csgo-stratbook.git"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "electron:build": "vue-cli-service electron:build",
+    "electron:publish": "vue-cli-service electron:build --publish always",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
@@ -27,6 +37,9 @@
     "core-js": "^3.6.4",
     "directory-tree": "^2.2.4",
     "dotenv": "^8.2.0",
+    "electron-log": "^4.3.1",
+    "electron-store": "^7.0.1",
+    "electron-updater": "^4.3.5",
     "is-mobile": "^2.2.2",
     "jwt-decode": "^2.2.0",
     "s-ago": "^2.2.0",

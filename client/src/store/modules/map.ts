@@ -1,4 +1,5 @@
 import { MapID } from '@/components/MapPicker/MapPicker';
+import StorageService from '@/services/storage.service';
 import { Module } from 'vuex';
 import { RootState } from '..';
 
@@ -13,6 +14,8 @@ const mapInitialState = (): MapState => ({
   currentMap: MapID.Dust2,
 });
 
+const storageService = StorageService.getInstance();
+
 export const mapModule: Module<MapState, RootState> = {
   namespaced: true,
   state: mapInitialState(),
@@ -20,11 +23,11 @@ export const mapModule: Module<MapState, RootState> = {
   actions: {
     updateCurrentMap({ commit }, mapID: MapID) {
       commit(SET_CURRENT_MAP, mapID);
-      localStorage.setItem('currentMap', mapID);
+      storageService.set('currentMap', mapID);
     },
     loadCurrentMapFromStorage({ commit }) {
-      const currentMap = localStorage.getItem('currentMap');
-      if (currentMap && currentMap in MapID) commit(SET_CURRENT_MAP, currentMap);
+      const currentMap = storageService.get('currentMap');
+      if (currentMap) commit(SET_CURRENT_MAP, currentMap);
     },
     resetState({ commit }) {
       commit(RESET_STATE);

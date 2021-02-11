@@ -6,6 +6,8 @@ import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { FeedbackFish } from '@feedback-fish/vue';
 import { Routes } from '@/router/router.models';
 import TrackingService from '@/services/tracking.service';
+import { catchPromise } from '@/utils/catchPromise';
+import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 
 @Component({
   components: {
@@ -17,10 +19,12 @@ export default class MainMenu extends Vue {
   @Inject() private trackingService!: TrackingService;
   @authModule.State profile!: Player;
   @appModule.Action private showToast!: (toast: Toast) => void;
+  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
   @appModule.State private loading!: boolean;
   @Prop() private menuOpen!: boolean;
 
   private Routes: typeof Routes = Routes;
+  private isDesktop = window.desktopMode;
 
   private get menuItems() {
     return [
@@ -46,7 +50,7 @@ export default class MainMenu extends Vue {
   }
 
   private async mounted() {
-    if (process?.versions?.electron) {
+    if (this.isDesktop) {
       const remote = require('electron').remote;
       const win = remote.getCurrentWindow();
       // win?.setMinimumSize(660, this.calculateMinHeight());
@@ -63,8 +67,36 @@ export default class MainMenu extends Vue {
   }
 
   private downloadDesktopClient(): void {
-    this.showToast({ id: 'mainMenu/downloadDesktopClient', text: 'Coming soon!' });
+    this.showToast({
+      id: 'main-menu/get-desktop',
+      text: 'Coming soon!',
+    });
+    return;
+
+    catchPromise(
+      this.showDialog({
+        key: 'main-menu/download-desktop',
+        text:
+          'Click "Download now" to get the Stratbook desktop application. \
+          It offers higher performance and might soon get features that wouldn\'nt be possible in the web version.\
+          If Windows prevents running the app, you should be able to click "More Info" and "Run anyway".',
+        resolveBtn: 'Download now',
+        htmlMode: true,
+      }),
+      () => {
+        window.open('https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+1.5.0.exe');
+      }
+    );
     this.trackingService.track('click:get-desktop-client');
+  }
+
+  private openTwitter() {
+    if (this.isDesktop) {
+      const { shell } = require('electron').remote;
+      shell.openExternal('https://twitter.com/csgostratbook');
+    } else {
+      window.open('https://twitter.com/csgostratbook', '_blank');
+    }
   }
 
   @Emit()
