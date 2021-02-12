@@ -15,6 +15,40 @@
     />
     <title>Stratbook App</title>
     <link rel="icon" href="<%= BASE_URL %>favicon.png" />
+    <style>
+      html,
+      body {
+        background-color: #4c4c53;
+      }
+      .spinner {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: inline-block;
+        width: 80px;
+        height: 80px;
+      }
+      .spinner:after {
+        content: ' ';
+        display: block;
+        width: 64px;
+        height: 64px;
+        margin: 8px;
+        border-radius: 50%;
+        border: 6px solid #fff;
+        border-color: #fff transparent #fff transparent;
+        animation: spinner 1.2s linear infinite;
+      }
+      @keyframes spinner {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </head>
   <body>
     <noscript>
@@ -23,7 +57,9 @@
         enable it to continue.</strong
       >
     </noscript>
-    <div id="app"></div>
+    <div id="app">
+      <div class="spinner"></div>
+    </div>
     <!-- built files will be auto injected -->
   </body>
 </html>

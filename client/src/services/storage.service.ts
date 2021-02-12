@@ -5,16 +5,14 @@ import ElectronStore from 'electron-store';
 export default class StorageService {
   private static instance: StorageService;
 
-  private _isDesktop: boolean;
-  // * untyped because we can't import type from electron-store when in browser context.
-  // * accessed through getter to get typing back
-  private _store: any;
+  private useNativeStore: boolean;
+  private store: ElectronStore | undefined;
 
   private constructor() {
-    this._isDesktop = window.desktopMode ?? isDesktop();
-    if (this._isDesktop) {
+    this.useNativeStore = (window.desktopMode ?? isDesktop()) && process.env.NODE_ENV === 'production';
+    if (this.useNativeStore) {
       const ElectronStore = require('electron-store');
-      this._store = new ElectronStore();
+      this.store = new ElectronStore();
     }
   }
 
@@ -25,15 +23,11 @@ export default class StorageService {
     return StorageService.instance;
   }
 
-  private get store(): ElectronStore {
-    return this._store as ElectronStore;
-  }
-
   get<T = any>(key: string): T | undefined | null {
-    let value = this._isDesktop ? this.store.get(key) : localStorage.getItem(key);
+    let value = this.useNativeStore ? this.store?.get(key) : localStorage.getItem(key);
     if (value == null) {
-      Log.warn('StorageService', `No value found for '${key}'.`);
-    } else if (!this._isDesktop) {
+      Log.warn(`StorageService (${this.useNativeStore ? 'native' : 'browser'})`, `No value found for '${key}'.`);
+    } else if (!this.useNativeStore) {
       try {
         const parsed = JSON.parse(value as string);
         value = parsed;
@@ -47,30 +41,32 @@ export default class StorageService {
 
   set(key: string, value: unknown): void {
     try {
-      if (this._isDesktop) {
-        this.store.set(key, value);
+      if (this.useNativeStore) {
+        this.store?.set(key, value);
       } else {
         localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
       }
-      Log.info('StorageService', `Saved value to key '${key}'`, value);
+      Log.info(`StorageService (${this.useNativeStore ? 'native' : 'browser'})`, `Saved value to key '${key}':`, value);
     } catch (error) {
-      Log.error('StorageService', error);
+      Log.error(`StorageService (${this.useNativeStore ? 'native' : 'browser'})`, error);
     }
   }
 
   remove(key: string): void {
-    if (this._isDesktop) {
-      this.store.delete(key);
+    if (this.useNativeStore) {
+      this.store?.delete(key);
     } else {
       localStorage.removeItem(key);
     }
+    Log.info(`StorageService (${this.useNativeStore ? 'native' : 'browser'})`, `Removed value for '${key}'.`);
   }
 
   clear(): void {
-    if (this._isDesktop) {
-      this.store.clear();
+    if (this.useNativeStore) {
+      this.store?.clear();
     } else {
       localStorage.clear();
     }
+    Log.info(`StorageService (${this.useNativeStore ? 'native' : 'browser'})`, 'Store cleared.');
   }
 }

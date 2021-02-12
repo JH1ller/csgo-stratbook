@@ -1,8 +1,8 @@
-export const catchPromise = async (promise: Promise<any>, callback: Function) => {
+export const catchPromise = async (promise: Promise<any>, callback?: Function) => {
   try {
     await promise;
-    callback();
+    callback?.();
   } catch (error) {
     return;
   }
-}
+};

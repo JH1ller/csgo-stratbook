@@ -21,7 +21,6 @@ export default class RegisterForm extends Vue {
       Validators.minLength(8),
       Validators.isSufficientPw(),
     ]),
-    key: new FormField('Beta Key', true, [Validators.notEmpty(), Validators.exactLength(20)]),
   };
 
   private passwordRepeat = new FormField('Repeat password', true, [
