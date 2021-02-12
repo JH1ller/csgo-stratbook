@@ -7,7 +7,6 @@ const cookieParser = require('cookie-parser');
 const router = express.Router();
 const Player = require('../../../models/player');
 const Session = require('../../../models/session');
-const Key = require('../../../models/key');
 const urljoin = require('url-join');
 const { registerValidation } = require('../../utils/validation');
 const { sendMail, Templates } = require('../../utils/mailService');
@@ -24,12 +23,6 @@ router.post('/register', uploadSingle('avatar'), async (req, res) => {
   const emailExists = await Player.findOne({ email: req.body.email });
 
   if (emailExists) return res.status(400).json({ error: 'Email already exists.' });
-
-  const targetKey = await Key.findOne({ key: req.body.key });
-
-  if (!targetKey) return res.status(400).json({ error: 'The provided key is invalid.' });
-
-  if (targetKey.remainingUses <= 0) return res.status(400).json({ error: 'The provided key has no uses left.' });
 
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -48,10 +41,6 @@ router.post('/register', uploadSingle('avatar'), async (req, res) => {
   const token = jwt.sign({ _id: user._id }, process.env.EMAIL_SECRET);
 
   await user.save();
-  targetKey.remainingUses--;
-  targetKey.usedBy.push(user._id);
-  targetKey.usedAt.push(Date.now());
-  await targetKey.save();
   await sendMail(user.email, token, user.name, Templates.verifyNew);
 
   res.json({ _id: user._id, email: user.email });

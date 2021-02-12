@@ -18,7 +18,6 @@ export default class MainMenu extends Vue {
   private appName = 'stratbook'; // TODO: dynamic
   @Inject() private trackingService!: TrackingService;
   @authModule.State profile!: Player;
-  @appModule.Action private showToast!: (toast: Toast) => void;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
   @appModule.State private loading!: boolean;
   @Prop() private menuOpen!: boolean;
@@ -49,30 +48,11 @@ export default class MainMenu extends Vue {
     ].filter(item => item.show);
   }
 
-  private async mounted() {
-    if (this.isDesktop) {
-      const remote = require('electron').remote;
-      const win = remote.getCurrentWindow();
-      // win?.setMinimumSize(660, this.calculateMinHeight());
-      document.addEventListener('keydown', e => {
-        if (e.key === 'd' && e.ctrlKey) {
-          win.webContents.openDevTools();
-        }
-      });
-    }
-  }
-
   get avatarUrl() {
     return resolveStaticImageUrl(this.profile?.avatar);
   }
 
   private downloadDesktopClient(): void {
-    this.showToast({
-      id: 'main-menu/get-desktop',
-      text: 'Coming soon!',
-    });
-    return;
-
     catchPromise(
       this.showDialog({
         key: 'main-menu/download-desktop',
@@ -84,7 +64,7 @@ export default class MainMenu extends Vue {
         htmlMode: true,
       }),
       () => {
-        window.open('https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+1.5.0.exe');
+        window.open('https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+1.5.2.exe');
       }
     );
     this.trackingService.track('click:get-desktop-client');

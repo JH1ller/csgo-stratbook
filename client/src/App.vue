@@ -42,7 +42,6 @@ import { catchPromise } from './utils/catchPromise';
 export default class App extends Vue {
   @Provide() trackingService: TrackingService = TrackingService.getInstance();
   @appModule.State latency!: number;
-  @appModule.Action private showToast!: (toast: Toast) => void;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
 
   private menuOpen: boolean = false;

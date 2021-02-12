@@ -1,5 +1,5 @@
 'use strict';
-import electron, { app, protocol, BrowserWindow, ipcMain, net } from 'electron';
+import { app, protocol, BrowserWindow, ipcMain } from 'electron';
 import os from 'os';
 import path from 'path';
 import {
@@ -7,8 +7,8 @@ import {
   /* installVueDevtools */
 } from 'vue-cli-plugin-electron-builder/lib';
 import { autoUpdater, UpdateInfo } from 'electron-updater';
-import Store from 'electron-store';
 import ElectronLog from 'electron-log';
+import debug from 'electron-debug';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -16,53 +16,11 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null;
 
-const store = new Store();
-
 ElectronLog.catchErrors({
   showDialog: false,
-  onError(error, versions) {
-    electron.dialog
-      .showMessageBox({
-        title: 'An error occurred',
-        message: error.message,
-        detail: error.stack,
-        type: 'error',
-        buttons: ['Ignore', 'Report', 'Exit'],
-      })
-      .then(result => {
-        if (result.response === 1) {
-          const postData = JSON.stringify({
-            projectId: '092eb5ee119a8c',
-            userId: store.get('userId') ?? 'unknown',
-            category: 'issue',
-            text: `Error report for ${versions?.app}\nError:\n${error.stack}\n\nOS: ${versions?.os}`,
-            metadata: {
-              appVersion: versions?.app,
-              osVersion: versions?.os,
-              userName: store.get('username') ?? 'Unknown user',
-            },
-          });
-
-          const request = net.request({
-            method: 'POST',
-            url: 'https://api.feedback.fish/feedback',
-          });
-
-          request.on('response', response => {
-            ElectronLog.info('Error submitted', response);
-          });
-
-          request.write(postData);
-          request.end();
-          return;
-        }
-
-        if (result.response === 2) {
-          electron.app.quit();
-        }
-      });
-  },
 });
+
+debug();
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);

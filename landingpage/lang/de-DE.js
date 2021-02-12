@@ -77,11 +77,16 @@ export default {
   changelog: {
     headline: 'Changelog',
     changes: [
-      // {
-      //   version: '1.5.0',
-      //   date: '2021-02-09',
-      //   changes: ['Release desktop app', 'Add auto update to desktop app'],
-      // },
+      {
+        version: '1.5.0',
+        date: '2021-02-12',
+        changes: [
+          'Release desktop app',
+          'Add auto update to desktop app',
+          'Remove beta key requirement during registration',
+          'Selected map now saved between sessions',
+        ],
+      },
       {
         version: '1.4.0',
         date: '2021-02-06',

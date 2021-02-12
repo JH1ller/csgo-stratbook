@@ -2,7 +2,11 @@
   <section class="changelog">
     <div class="changelog__wrapper">
       <h1 class="changelog__headline">{{ $t('changelog.headline') }}</h1>
-      <div v-for="item in $t('changelog.changes')" class="changelog__change">
+      <div
+        v-for="item in $t('changelog.changes')"
+        :key="item.version"
+        class="changelog__change"
+      >
         <h3 class="changelog__change-version">{{ item.version }}</h3>
         <ul class="changelog__change-list">
           <li class="changelog__change-date">
