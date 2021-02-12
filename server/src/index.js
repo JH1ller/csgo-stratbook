@@ -17,8 +17,6 @@ const subdomain = require('express-subdomain');
 const apiRouter = require('./routes/api');
 const secureRedirect = require('./middleware/secureRedirect');
 const logger = require('./middleware/logger');
-const { APP_URL } = require('./config');
-const urljoin = require('url-join');
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -81,6 +79,11 @@ app.use(
 app.use((error, req, res, next) => {
   console.error('Error handler >>> ', error.message);
   res.status(500).json({ error: 'An error occured on the server.' });
+});
+
+// * allow all origins again
+io.origins((_, callback) => {
+  callback(null, true);
 });
 
 initWS(io);

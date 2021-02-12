@@ -9,18 +9,18 @@ import {
 import { autoUpdater, UpdateInfo } from 'electron-updater';
 import ElectronLog from 'electron-log';
 import debug from 'electron-debug';
+import ElectronStore from 'electron-store';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
+
+const store = new ElectronStore();
+const isDebug = !!store.get('debug') || false;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null;
 
-ElectronLog.catchErrors({
-  showDialog: false,
-});
-
-debug();
+debug({ isEnabled: isDebug || isDevelopment });
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);

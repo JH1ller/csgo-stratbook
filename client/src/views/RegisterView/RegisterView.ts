@@ -39,7 +39,7 @@ export default class RegisterView extends Vue {
         catchPromise(
           this.showDialog({
             key: 'register-view/hotmail-warning',
-            text: `Hey there, glad to have you on board!<br>It seems like you registered with a Microsoft email.<br>Sadly, Microsoft seems to filter out confirmation emails before they can arrive in your inbox.<br>Please contact me at support@stratbook.live and I will confirm your account manually.`,
+            text: `Hey there, glad to have you on board!<br>It seems like you registered with a Microsoft email.<br>The confirmation mail might land in your spam folder or not arrive at all.<br>If that's the case, please contact me at support@stratbook.live`,
             resolveBtn: 'OK',
             htmlMode: true,
             confirmOnly: true,
