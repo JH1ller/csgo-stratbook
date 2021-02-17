@@ -21,6 +21,10 @@
 
   &__text {
     line-height: 1.4;
+
+    & bold {
+      font-family: $font_ubuntu-bold;
+    }
   }
 
   &__btn-confirm {

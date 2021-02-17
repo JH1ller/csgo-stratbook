@@ -208,8 +208,6 @@
       }
     }
     &.--feedback {
-      margin-bottom: 24px;
-
       &:hover {
         & > svg > path {
           fill: $color--sand;
@@ -221,6 +219,16 @@
       &:hover {
         & > svg > path {
           fill: $color--orange;
+          transition: fill 0.3s ease;
+        }
+      }
+    }
+    &.--kofi {
+      margin-bottom: 24px;
+
+      &:hover {
+        & > svg > path {
+          fill: $color--red;
           transition: fill 0.3s ease;
         }
       }

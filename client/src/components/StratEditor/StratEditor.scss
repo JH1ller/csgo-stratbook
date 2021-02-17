@@ -22,9 +22,8 @@
 
   &__mention,
   &__utility {
-    box-shadow: $shadow-subtle;
-    border-radius: 2px;
-    padding: 3px 4px;
+    border-radius: 3px;
+    padding: 3px 6px;
     font-family: $font_ubuntu-bold;
     font-size: 1rem;
     color: $color--emperor;
@@ -33,6 +32,26 @@
 
     &[data-util-id] {
       cursor: pointer;
+      padding-right: 16px;
+      position: relative;
+
+      &.-linked {
+        &::after {
+          background-color: $color--green;
+        }
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: $color--orange;
+      }
     }
   }
 
@@ -61,10 +80,10 @@
   }
 
   &__utility {
-    background-color: white;
+    background-color: $color--smoke;
 
     &:hover {
-      background-color: darken(white, 7%);
+      background-color: darken($color--smoke, 5%);
     }
   }
 

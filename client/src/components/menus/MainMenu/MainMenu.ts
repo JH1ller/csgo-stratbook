@@ -8,6 +8,7 @@ import { Routes } from '@/router/router.models';
 import TrackingService from '@/services/tracking.service';
 import { catchPromise } from '@/utils/catchPromise';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
+import { openLink } from '@/utils/openLink';
 
 @Component({
   components: {
@@ -64,19 +65,19 @@ export default class MainMenu extends Vue {
         htmlMode: true,
       }),
       () => {
-        window.open('https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+1.5.2.exe');
+        // TODO: consider if we should just insert current version here
+        window.open('https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+1.6.0.exe');
       }
     );
     this.trackingService.track('click:get-desktop-client');
   }
 
   private openTwitter() {
-    if (this.isDesktop) {
-      const { shell } = require('electron').remote;
-      shell.openExternal('https://twitter.com/csgostratbook');
-    } else {
-      window.open('https://twitter.com/csgostratbook', '_blank');
-    }
+    openLink('https://twitter.com/csgostratbook');
+  }
+
+  private openDonationLink() {
+    openLink('https://ko-fi.com/Q5Q02X2XQ');
   }
 
   @Emit()
