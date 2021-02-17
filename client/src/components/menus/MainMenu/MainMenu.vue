@@ -27,15 +27,15 @@
       <a v-if="!isDesktop" class="main-menu__list-item main-menu__link --download" @click="downloadDesktopClient"
         ><fa-icon icon="download" />Get desktop app</a
       >
-      <router-link v-if="!isDesktop" class="main-menu__list-item main-menu__link --imprint" :to="Routes.Imprint"
-        ><fa-icon icon="balance-scale" />Legal Notice
-      </router-link>
       <a
         class="main-menu__list-item main-menu__link --feedback"
         data-feedback-fish
         :data-feedback-fish-userid="profile.email"
       >
         <fa-icon icon="comment" />Feedback
+      </a>
+      <a class="main-menu__list-item main-menu__link --kofi" @click="openDonationLink()">
+        <fa-icon icon="coffee" />Buy me a coffee
       </a>
       <router-link to="/profile" class="main-menu__profile" v-if="profile._id">
         <img :src="avatarUrl" class="main-menu__avatar" alt="User Avatar" />

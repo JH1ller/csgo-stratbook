@@ -78,6 +78,15 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '1.6.0',
+        date: '2021-02-16',
+        changes: [
+          'Add weapon and equipment linking with new / operator (Thanks @ImbaaA_CSGO for the suggestion)',
+          'Add indicator to linked utilities showing if linked utility still exists.',
+          'Minor fixes',
+        ],
+      },
+      {
         version: '1.5.0',
         date: '2021-02-12',
         changes: [
