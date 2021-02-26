@@ -10,8 +10,8 @@ export default class CloseOnEscape extends Vue {
     document.removeEventListener('keydown', this.__keydownHandler);
   }
 
-  private __keydownHandler(e: KeyboardEvent) {
-    if (e.key === 'Escape') {
+  private __keydownHandler({ key }: KeyboardEvent) {
+    if (key === 'Escape') {
       this.close();
     }
   }

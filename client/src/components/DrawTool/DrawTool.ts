@@ -107,8 +107,8 @@ export default class DrawTool extends Mixins(CloseOnEscape) {
     }
   }
 
-  private keydownHandler(e: KeyboardEvent) {
-    if (e.key === 'Delete') {
+  private keydownHandler({ key }: KeyboardEvent) {
+    if (key === 'Delete') {
       this.canvas.remove(this.canvas.getActiveObject());
     }
   }

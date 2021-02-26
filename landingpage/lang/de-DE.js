@@ -78,6 +78,15 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '1.7.0',
+        date: '2021-02-26',
+        changes: [
+          'Recognize & highlight timestamps',
+          'Auto-transform -> to proper arrows',
+          'Fix minor API vulnerability',
+        ],
+      },
+      {
         version: '1.6.0',
         date: '2021-02-16',
         changes: [

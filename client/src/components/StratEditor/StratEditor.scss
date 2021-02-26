@@ -1,3 +1,5 @@
+@import 'StratEditor.legacy';
+
 .strat-editor {
   &__editor {
     user-select: text;
@@ -18,17 +20,71 @@
     @include viewport_mq3 {
       padding: 10px 18px;
     }
+
+    // * fixes most of the firefox bug that prevents cursor being placed at arbitrary position.
+    & * {
+      user-select: text;
+    }
   }
 
-  &__mention,
-  &__utility {
+  &__tag {
     border-radius: 3px;
-    padding: 3px 6px;
+    padding: 3px 5px;
     font-family: $font_ubuntu-bold;
     font-size: 1rem;
     color: $color--emperor;
     transition: background-color 0.3s ease-out;
     white-space: nowrap;
+    background-color: $color--smoke;
+
+    &.--mention {
+      background-color: $color--light-purple;
+
+      &:hover {
+        background-color: darken($color--light-purple, 7%);
+      }
+
+      &.-is-user {
+        background-color: $color--aero;
+
+        &:hover {
+          background-color: darken($color--aero, 7%);
+        }
+      }
+
+      &.-is-spawn {
+        background-color: $color--sand;
+
+        &:hover {
+          background-color: darken($color--sand, 7%);
+        }
+      }
+    }
+
+    &.--utility {
+      background-color: $color--smoke;
+
+      &:hover {
+        background-color: darken($color--smoke, 5%);
+      }
+    }
+
+    &.--timestamp {
+      background-color: $color--puerto;
+      color: white;
+
+      & > img {
+        width: 16px;
+        height: 16px;
+        transform: translateY(2px);
+        margin-right: 4px;
+        margin-left: -2px;
+      }
+
+      &:hover {
+        background-color: darken($color--puerto, 5%);
+      }
+    }
 
     &[data-util-id] {
       cursor: pointer;
@@ -55,43 +111,12 @@
     }
   }
 
-  &__mention {
-    background-color: $color--light-purple;
-
-    &:hover {
-      background-color: darken($color--light-purple, 7%);
-    }
-
-    &.-is-user {
-      background-color: $color--aero;
-
-      &:hover {
-        background-color: darken($color--aero, 7%);
-      }
-    }
-
-    &.-is-spawn {
-      background-color: $color--sand;
-
-      &:hover {
-        background-color: darken($color--sand, 7%);
-      }
-    }
-  }
-
-  &__utility {
-    background-color: $color--smoke;
-
-    &:hover {
-      background-color: darken($color--smoke, 5%);
-    }
-  }
-
-  &__utility-img {
+  &__tag-img {
     width: 20px;
     height: 20px;
     opacity: 0.5;
     margin-right: 2px;
+    margin-left: -1px;
     transform: translateY(4px);
   }
 
@@ -142,11 +167,8 @@
     margin-right: 8px;
   }
 
-  &__utility-item-image {
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
+  &__arrow {
+    color: $color--emperor;
   }
 }
 

@@ -6,7 +6,6 @@ import { filterModule } from '@/store/namespaces';
 import { Strat } from '@/api/models/Strat';
 import { Sides } from '@/api/models/Sides';
 import { StratFilters } from '@/store/modules/filter';
-import { isDesktop } from '@/utils/isDesktop';
 import { openLink } from '@/utils/openLink';
 
 @Component({

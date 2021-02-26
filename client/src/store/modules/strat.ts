@@ -4,6 +4,7 @@ import { Strat } from '@/api/models/Strat';
 import api from '@/api/base';
 import { Team } from '@/api/models/Team';
 import TrackingService from '@/services/tracking.service';
+import { extractTextFromHTML } from '@/utils/extractTextFromHTML';
 
 const SET_STRATS = 'SET_STRATS';
 
@@ -27,11 +28,26 @@ export const stratModule: Module<StratState, RootState> = {
   namespaced: true,
   state: stratInitialState(),
   getters: {
-    stratsOfCurrentMap(state, _getters, rootState) {
+    stratsOfCurrentMap(state, _getters, rootState): Strat[] {
       return state.strats.filter(strat => strat.map === rootState.map.currentMap);
     },
-    sortedStratsOfCurrentMap(_state, getters) {
-      return (getters.stratsOfCurrentMap as Strat[])
+    filteredStratsOfCurrentMap(_state, getters, rootState): Strat[] {
+      return (getters.stratsOfCurrentMap as Strat[]).filter(
+        strat =>
+          (rootState.filter.stratFilters.side ? rootState.filter.stratFilters.side === strat.side : true) &&
+          (rootState.filter.stratFilters.type ? rootState.filter.stratFilters.type === strat.type : true) &&
+          (rootState.filter.stratFilters.name
+            ? strat.name.toLowerCase().includes(rootState.filter.stratFilters.name.toLowerCase())
+            : true) &&
+          (rootState.filter.stratFilters.content
+            ? extractTextFromHTML(strat.content)
+                .toLowerCase()
+                .includes(rootState.filter.stratFilters.content.toLowerCase())
+            : true)
+      );
+    },
+    sortedFilteredStratsOfCurrentMap(_state, getters): Strat[] {
+      return (getters.filteredStratsOfCurrentMap as Strat[])
         .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
         .sort((a, b) => +b.active - +a.active);
     },
@@ -57,13 +73,13 @@ export const stratModule: Module<StratState, RootState> = {
         dispatch('app/showToast', { id: 'strat/createStrat', text: 'Added strat.' }, { root: true });
         trackingService.track('strat:created', {
           name: payload.name!,
-          team: (rootState.team.teamInfo as Team).name,
+          team: (rootState.team.teamInfo as Team)?.name,
         });
         return res.success;
       }
     },
-    async updateStrat(_, payload: Partial<Strat>) {
-      const res = await api.strat.updateStrat(payload);
+    updateStrat(_, payload: Partial<Strat>) {
+      api.strat.updateStrat(payload);
     },
     async shareStrat({ dispatch, state, rootState }, stratID: string) {
       const res = await api.strat.updateStrat({ _id: stratID, shared: true });
@@ -73,7 +89,7 @@ export const stratModule: Module<StratState, RootState> = {
         dispatch('app/showToast', { id: 'strat/shareStrat', text: 'Copied share link to clipboard.' }, { root: true });
         trackingService.track('strat:shared', {
           name: state.strats.find(strat => strat._id === stratID)?.name as string,
-          team: (rootState.team.teamInfo as Team).name,
+          team: (rootState.team.teamInfo as Team)?.name,
         });
       }
     },
@@ -93,7 +109,7 @@ export const stratModule: Module<StratState, RootState> = {
         );
         trackingService.track('strat:shared-added', {
           stratID,
-          team: (rootState.team.teamInfo as Team).name,
+          team: (rootState.team.teamInfo as Team)?.name,
         });
       }
     },

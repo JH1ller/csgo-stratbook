@@ -26,14 +26,24 @@ export const utilityModule: Module<UtilityState, RootState> = {
     utilitiesOfCurrentMap(state, _getters, rootState) {
       return state.utilities.filter(utility => utility.map === rootState.map.currentMap);
     },
-    sortedUtilitiesOfCurrentMap(_state, getters) {
-      return (getters.utilitiesOfCurrentMap as Utility[]).sort(
+    filteredUtilitiesOfCurrentMap(_state, getters, rootState) {
+      return (getters.utilitiesOfCurrentMap as Utility[]).filter(
+        utility =>
+          (rootState.filter.utilityFilters.side ? rootState.filter.utilityFilters.side === utility.side : true) &&
+          (rootState.filter.utilityFilters.type ? rootState.filter.utilityFilters.type === utility.type : true) &&
+          (rootState.filter.utilityFilters.name
+            ? utility.name.toLowerCase().includes(rootState.filter.utilityFilters.name.toLowerCase())
+            : true)
+      );
+    },
+    sortedFilteredUtilitiesOfCurrentMap(_state, getters) {
+      return (getters.filteredUtilitiesOfCurrentMap as Utility[]).sort(
         (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
     },
   },
   actions: {
-    async fetchUtilities({ commit, dispatch }) {
+    async fetchUtilities({ commit }) {
       const res = await api.utility.getUtilities();
       if (res.success) {
         commit(SET_UTILITIES, res.success);
