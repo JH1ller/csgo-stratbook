@@ -74,7 +74,8 @@ export default class App extends Vue {
     } else {
       this.checkCookies();
     }
-    //this.checkVersion();
+    this.checkVersion();
+    window.twttr.widgets.load();
   }
 
   private checkVersion() {
@@ -84,7 +85,7 @@ export default class App extends Vue {
         this.showDialog({
           key: 'app/update-notice',
           text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><br>
-          <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Another <a href="https://twitter.com/hashtag/quicktip?src=hash&amp;ref_src=twsrc%5Etfw">#quicktip</a>:<br>You can link utilities from your &quot;nadebook&quot; in strats of the same map and side! <a href="https://t.co/8mJptu6gkh">pic.twitter.com/8mJptu6gkh</a></p>&mdash; Stratbook (@csgostratbook) <a href="https://twitter.com/csgostratbook/status/1360982996279508997?ref_src=twsrc%5Etfw">February 14, 2021</a></blockquote>`,
+          <blockquote class="twitter-tweet"><p lang="en" dir="ltr">1.7.0 📈<br>I heard you guys like to use -&gt; arrows in your strats?<br>Arrows and timestamps are now magically visually highlighted! <a href="https://t.co/Z8NOEy0Rgb">pic.twitter.com/Z8NOEy0Rgb</a></p>&mdash; Stratbook (@csgostratbook) <a href="https://twitter.com/csgostratbook/status/1365608034936979457?ref_src=twsrc%5Etfw">February 27, 2021</a></blockquote>`,
           resolveBtn: 'OK',
           confirmOnly: true,
           htmlMode: true,
@@ -94,8 +95,8 @@ export default class App extends Vue {
     }
   }
 
-  private initAutoUpdate() {
-    const { ipcRenderer } = require('electron');
+  private async initAutoUpdate() {
+    const { ipcRenderer } = await import('electron');
 
     ipcRenderer.on('update-downloaded', (_event, version: string) => {
       ipcRenderer.removeAllListeners('update-downloaded');
@@ -208,11 +209,10 @@ export default class App extends Vue {
 }
 
 .twitter-tweet {
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  display: none;
 
   &.twitter-tweet-rendered {
-    opacity: 1;
+    display: flex;
   }
 }
 </style>

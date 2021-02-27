@@ -7,7 +7,7 @@ export const transformMap: Transformation[] = [
   },
   {
     query: /(?<!\/>[\s]*)\b((?:0|1):[0-4]\d)\b/g,
-    value: word => `<span contenteditable="false" class="strat-editor__tag --timestamp">
-      <img class="strat-editor__tag-img" src="icons/clock.svg" />${word}</span>`,
+    value: word => `<span contenteditable="false" class="strat-editor__tag --timestamp"><img 
+    class="strat-editor__tag-img" src="icons/clock.svg" />${word}</span>`,
   },
 ];
