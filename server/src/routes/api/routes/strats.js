@@ -4,6 +4,7 @@ const Strat = require('../../../models/strat');
 const { getStrat } = require('../../utils/getters');
 const { verifyAuth } = require('../../utils/verifyToken');
 const { sanitize } = require('../../utils/sanitizeHtml');
+const { minify } = require('../../utils/minifyHtml');
 
 router.get('/', verifyAuth, async (req, res) => {
   if (!res.player.team) {
@@ -92,9 +93,9 @@ router.patch('/', verifyAuth, getStrat, async (req, res) => {
     // check for undefined / null, but accept empty string ''
     if (value != null && updatableFields.includes(key)) {
       if (key === 'content') {
-        res.strat[key] = sanitize(value);
+        res.strat[key.toString()] = minify(sanitize(value));
       } else {
-        res.strat[key] = value;
+        res.strat[key.toString()] = value;
       }
     }
   });

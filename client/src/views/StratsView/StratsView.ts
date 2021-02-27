@@ -36,7 +36,7 @@ export default class StratsView extends Vue {
   @Provide('lightbox') showLightboxFunc = this.showLightbox;
 
   @mapModule.State currentMap!: MapID;
-  @stratModule.Getter sortedStratsOfCurrentMap!: Strat[];
+  @stratModule.Getter sortedFilteredStratsOfCurrentMap!: Strat[];
   @filterModule.State stratFilters!: StratFilters;
   @filterModule.Getter activeStratFilterCount!: number;
   @teamModule.State teamMembers!: Player[];

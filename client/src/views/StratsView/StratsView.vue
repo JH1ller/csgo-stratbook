@@ -20,8 +20,7 @@
       @show-map="showDrawTool"
       :completedTutorial="profile.completedTutorial"
       :tutorialStrat="tutorialStrat"
-      :strats="sortedStratsOfCurrentMap"
-      :filters="stratFilters"
+      :strats="sortedFilteredStratsOfCurrentMap"
     />
     <transition name="fade">
       <div class="strats-view__fab-group" v-if="!filterMenuOpen && !stratFormOpen">

@@ -9,7 +9,7 @@
       <router-view @click.native="closeMenu" class="router-view"></router-view>
     </transition>
     <transition name="fade">
-      <CookieBanner v-if="showCookieBanner && !isDesktop" @close="closeCookieBanner" />
+      <CookieBanner v-if="showCookieBanner && isDesktop === false" @close="closeCookieBanner" />
     </transition>
   </div>
 </template>
@@ -25,9 +25,10 @@ import CookieBanner from './components/CookieBanner/CookieBanner.vue';
 import pkg from '../package.json';
 import { appModule } from './store/namespaces';
 import TrackingService from '@/services/tracking.service';
-import { Toast } from './components/ToastWrapper/ToastWrapper.models';
 import { Dialog } from './components/DialogWrapper/DialogWrapper.models';
 import { catchPromise } from './utils/catchPromise';
+import StorageService from './services/storage.service';
+import semver from 'semver';
 
 @Component({
   components: {
@@ -41,6 +42,8 @@ import { catchPromise } from './utils/catchPromise';
 })
 export default class App extends Vue {
   @Provide() trackingService: TrackingService = TrackingService.getInstance();
+  @Provide() storageService: StorageService = StorageService.getInstance();
+
   @appModule.State latency!: number;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
 
@@ -67,15 +70,35 @@ export default class App extends Vue {
   private mounted() {
     if (this.isDesktop) {
       this.initAutoUpdate();
+      this.initTracking();
     } else {
       this.checkCookies();
     }
+    this.checkVersion();
+    window.twttr.widgets.load();
   }
 
-  private initAutoUpdate() {
-    const { ipcRenderer } = require('electron');
+  private checkVersion() {
+    const currentVersion = this.storageService.get<string>('version');
+    if (!currentVersion || semver.gt(this.appVersion, currentVersion)) {
+      catchPromise(
+        this.showDialog({
+          key: 'app/update-notice',
+          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><br>
+          <blockquote class="twitter-tweet"><p lang="en" dir="ltr">1.7.0 📈<br>I heard you guys like to use -&gt; arrows in your strats?<br>Arrows and timestamps are now magically visually highlighted! <a href="https://t.co/Z8NOEy0Rgb">pic.twitter.com/Z8NOEy0Rgb</a></p>&mdash; Stratbook (@csgostratbook) <a href="https://twitter.com/csgostratbook/status/1365608034936979457?ref_src=twsrc%5Etfw">February 27, 2021</a></blockquote>`,
+          resolveBtn: 'OK',
+          confirmOnly: true,
+          htmlMode: true,
+        }),
+        () => this.storageService.set('version', this.appVersion)
+      );
+    }
+  }
 
-    ipcRenderer.on('update-downloaded', (event, version: string) => {
+  private async initAutoUpdate() {
+    const { ipcRenderer } = await import('electron');
+
+    ipcRenderer.on('update-downloaded', (_event, version: string) => {
       ipcRenderer.removeAllListeners('update-downloaded');
       catchPromise(
         this.showDialog({
@@ -100,7 +123,7 @@ export default class App extends Vue {
     this.initTracking(!allowAnalytics);
   }
 
-  private initTracking(disableCookie: boolean) {
+  private initTracking(disableCookie = false) {
     this.trackingService.init(disableCookie);
   }
 
@@ -182,6 +205,14 @@ export default class App extends Vue {
         margin-right: 16px;
       }
     }
+  }
+}
+
+.twitter-tweet {
+  display: none;
+
+  &.twitter-tweet-rendered {
+    display: flex;
   }
 }
 </style>

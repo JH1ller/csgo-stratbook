@@ -66,7 +66,7 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
   if (req.body.name && req.query.updateStrats === 'true') {
     const strats = await Strat.find({ team: res.player.team });
     const promises = strats.map(async (strat) => {
-      strat.content = strat.content.replace(new RegExp(res.player.name, 'g'), req.body.name);
+      strat.content = strat.content.replace(res.player.name, req.body.name);
       await strat.save();
     });
     await Promise.all(promises);

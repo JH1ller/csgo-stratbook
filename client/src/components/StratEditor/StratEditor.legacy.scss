@@ -1,0 +1,83 @@
+.strat-editor {
+  &__mention,
+  &__utility {
+    border-radius: 3px;
+    padding: 3px 6px;
+    font-family: $font_ubuntu-bold;
+    font-size: 1rem;
+    color: $color--emperor;
+    transition: background-color 0.3s ease-out;
+    white-space: nowrap;
+
+    &[data-util-id] {
+      cursor: pointer;
+      padding-right: 16px;
+      position: relative;
+
+      &.-linked {
+        &::after {
+          background-color: $color--green;
+        }
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: $color--orange;
+      }
+    }
+  }
+
+  &__mention {
+    background-color: $color--light-purple;
+
+    &:hover {
+      background-color: darken($color--light-purple, 7%);
+    }
+
+    &.-is-user {
+      background-color: $color--aero;
+
+      &:hover {
+        background-color: darken($color--aero, 7%);
+      }
+    }
+
+    &.-is-spawn {
+      background-color: $color--sand;
+
+      &:hover {
+        background-color: darken($color--sand, 7%);
+      }
+    }
+  }
+
+  &__utility {
+    background-color: $color--smoke;
+
+    &:hover {
+      background-color: darken($color--smoke, 5%);
+    }
+  }
+
+  &__utility-img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+    margin-right: 2px;
+    transform: translateY(4px);
+  }
+
+  &__utility-item-image {
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+  }
+}

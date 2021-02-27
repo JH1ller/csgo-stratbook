@@ -30,7 +30,7 @@ import { catchPromise } from '@/utils/catchPromise';
 })
 export default class UtilityView extends Vue {
   @mapModule.State currentMap!: MapID;
-  @utilityModule.Getter sortedUtilitiesOfCurrentMap!: Utility[];
+  @utilityModule.Getter sortedFilteredUtilitiesOfCurrentMap!: Utility[];
   @mapModule.Action updateCurrentMap!: (mapID: MapID) => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
 

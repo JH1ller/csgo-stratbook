@@ -1,5 +1,9 @@
 const path = require('path');
 
+const electronConfig = {
+  target: 'electron-renderer',
+};
+
 module.exports = {
   publicPath: '/',
   outputDir: path.resolve(__dirname, '../server/dist_app'),
@@ -10,8 +14,10 @@ module.exports = {
       },
     },
   },
+  configureWebpack: process.env.BUILD_TARGET === 'ELECTRON' ? electronConfig : {},
   pluginOptions: {
     electronBuilder: {
+      nodeIntegration: true,
       builderOptions: {
         productName: 'Stratbook',
         appId: 'live.stratbook',

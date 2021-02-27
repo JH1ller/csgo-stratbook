@@ -2,8 +2,7 @@
   <div class="utility-view">
     <map-picker @map-clicked="updateCurrentMap" :currentMap="currentMap" />
     <UtilityList
-      :filters="utilityFilters"
-      :utilities="sortedUtilitiesOfCurrentMap"
+      :utilities="sortedFilteredUtilitiesOfCurrentMap"
       @open-in-lightbox="showLightbox"
       @edit-utility="showUtilityForm"
       @delete-utility="requestDeleteUtility"

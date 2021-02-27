@@ -9,13 +9,12 @@ import TrackingService from '@/services/tracking.service';
 
 const SET_TEAM_INFO = 'SET_TEAM_INFO';
 const SET_TEAM_MEMBERS = 'SET_TEAM_MEMBERS';
-const ADD_TEAM_MEMBER = 'ADD_TEAM_MEMBER';
 const UPDATE_TEAM_MEMBER = 'UPDATE_TEAM_MEMBER';
 const DELETE_TEAM_MEMBER = 'DELETE_TEAM_MEMBER';
 const RESET_STATE = 'RESET_STATE';
 
 export interface TeamState {
-  teamInfo: Team | {};
+  teamInfo: Team | Record<string, unknown>;
   teamMembers: Player[];
 }
 
@@ -54,7 +53,7 @@ export const teamModule: Module<TeamState, RootState> = {
         return { error: res.error };
       }
     },
-    async fetchTeamMembers({ commit, dispatch }) {
+    async fetchTeamMembers({ commit }) {
       const res = await api.team.getMembersOfTeam();
       if (res.success) {
         commit(SET_TEAM_MEMBERS, res.success);
@@ -116,7 +115,6 @@ export const teamModule: Module<TeamState, RootState> = {
       const res = await api.team.leaveTeam();
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
-        dispatch('strat/resetState', null, { root: true });
         dispatch('resetState');
         dispatch('app/showToast', { id: 'team/leaveTeam', text: 'You have left the team' }, { root: true });
         return { success: true };
@@ -128,7 +126,6 @@ export const teamModule: Module<TeamState, RootState> = {
       const res = await api.team.deleteTeam();
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
-        dispatch('strat/resetState', null, { root: true });
         dispatch('resetState');
         dispatch('app/showToast', { id: 'team/deleteTeam', text: 'Team has been deleted' }, { root: true });
         return { success: true };

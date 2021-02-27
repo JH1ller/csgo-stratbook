@@ -69,7 +69,7 @@ router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, 
   Object.entries(req.body).forEach(([key, value]) => {
     // check for undefined / null, but accept empty string ''
     if (value != null && updatableFields.includes(key)) {
-      res.utility[key] = value;
+      res.utility[key.toString()] = value;
     }
   });
 

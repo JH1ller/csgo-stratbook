@@ -16,7 +16,7 @@ export default class TrackingService {
   }
 
   init(disableCookie = false) {
-    splitbee.init({ disableCookie });
+    splitbee.init({ disableCookie, token: 'J3KX6SRRBPBD' });
   }
 
   track(event: string, data?: Record<string, string | number | boolean>) {
@@ -28,7 +28,7 @@ export default class TrackingService {
 
   setUser(data: Record<string, string | number | boolean>) {
     if (window.splitbee) {
-      window.splitbee.user.set(data);
+      window.splitbee.user.set({ ...data, appContext: window.desktopMode ? 'Desktop App' : 'Web App' });
       Log.info('tracking:setuser', data);
     }
   }

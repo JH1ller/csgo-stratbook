@@ -2,9 +2,9 @@
   <div class="utility-list">
     <UtilityItem
       class="utility-list__item"
-      v-for="(utility, index) in filteredUtilities"
+      v-for="(utility, index) in utilities"
       :utility="utility"
-      :key="utility.id"
+      :key="utility._id"
       :style="{ 'animation-delay': 0.025 * index + 's' }"
       @open-in-lightbox="openInLightbox"
       @open-menu="openMenu($event, utility)"
