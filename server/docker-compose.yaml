@@ -1,0 +1,7 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo:3.6.22-xenial
+    ports:
+      - 27017:27017
+      - 27018:27018

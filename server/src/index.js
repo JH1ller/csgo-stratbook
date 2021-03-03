@@ -17,10 +17,11 @@ const subdomain = require('express-subdomain');
 const apiRouter = require('./routes/api');
 const secureRedirect = require('./middleware/secureRedirect');
 const logger = require('./middleware/logger');
+require('dotenv').config()
 
 const isDev = process.env.NODE_ENV === 'development';
 
-mongoose.connect(isDev ? process.env.DATABASE_URL_DEV : process.env.DATABASE_URL, {
+mongoose.connect(process.env.DATABASE_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
