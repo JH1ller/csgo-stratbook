@@ -46,7 +46,7 @@
     "multer": "^1.4.2",
     "nanoid": "^3.1.20",
     "nodemailer": "^6.4.10",
-    "pug": "^2.0.4",
+    "pug": "^3.0.1",
     "sanitize-html": "^2.3.0",
     "sharp": "^0.25.4",
     "socket.io": "^2.4.0",
