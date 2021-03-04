@@ -45,7 +45,7 @@ import {
   faSignOutAlt,
   faCoffee,
 } from '@fortawesome/free-solid-svg-icons';
-import { faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueTippy, { TippyComponent } from 'vue-tippy';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
@@ -104,7 +104,8 @@ library.add(
   faCircle,
   faExclamationTriangle,
   faSignOutAlt,
-  faCoffee
+  faCoffee,
+  faDiscord
 );
 Vue.component('fa-icon', FontAwesomeIcon);
 

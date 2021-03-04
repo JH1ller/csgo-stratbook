@@ -199,6 +199,14 @@
         }
       }
     }
+    &.--discord {
+      &:hover {
+        & > svg > path {
+          fill: #7289da;
+          transition: fill 0.3s ease;
+        }
+      }
+    }
     &.--download {
       &:hover {
         & > svg > path {

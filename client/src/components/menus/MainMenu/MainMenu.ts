@@ -76,6 +76,10 @@ export default class MainMenu extends Vue {
     openLink('https://twitter.com/csgostratbook');
   }
 
+  private openDiscord() {
+    openLink('https://discord.com/invite/mkxzQJGRgq');
+  }
+
   private openDonationLink() {
     openLink('https://ko-fi.com/Q5Q02X2XQ');
   }

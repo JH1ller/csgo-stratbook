@@ -230,6 +230,7 @@ export default class StratEditor extends Vue {
           node.onclick = () => this.utilClicked(id as string);
           node.classList.add('-linked');
         } else {
+          node.classList.remove('-linked');
           node.onclick = () =>
             this.showToast({
               id: 'strat-editor/invalid-link',

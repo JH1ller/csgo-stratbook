@@ -58,7 +58,7 @@ router.post('/login', async (req, res) => {
   if (!targetUser.confirmed) return res.status(401).send({ error: 'Please confirm your email to log in.' });
 
   const refreshToken = nanoid(64);
-  const refreshTokenExpiration = new Date(Date.now() + ms(process.env.REFRESH_TOKEN_TTL));
+  const refreshTokenExpiration = new Date(Date.now() + ms(process.env.REFRESH_TOKEN_TTL ?? '180d'));
 
   const jsonMode = !!req.body.jsonMode;
 
@@ -73,12 +73,12 @@ router.post('/login', async (req, res) => {
   await session.save();
 
   const token = jwt.sign({ _id: targetUser._id }, process.env.TOKEN_SECRET, {
-    expiresIn: process.env.JWT_TOKEN_TTL,
+    expiresIn: process.env.JWT_TOKEN_TTL ?? '1h',
   });
 
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
-    maxAge: ms(process.env.REFRESH_TOKEN_TTL),
+    maxAge: ms(process.env.REFRESH_TOKEN_TTL ?? '180d'),
     sameSite: 'lax',
   });
 
@@ -105,7 +105,7 @@ router.post('/refresh', cookieParser(), async (req, res) => {
   const jsonMode = !!req.body.jsonMode;
 
   const refreshToken = nanoid(64);
-  const refreshTokenExpiration = new Date(Date.now() + ms(process.env.REFRESH_TOKEN_TTL));
+  const refreshTokenExpiration = new Date(Date.now() + ms(process.env.REFRESH_TOKEN_TTL ?? '180d'));
 
   session.refreshToken = refreshToken;
   session.expires = refreshTokenExpiration;
@@ -114,12 +114,12 @@ router.post('/refresh', cookieParser(), async (req, res) => {
   await session.save();
 
   const token = jwt.sign({ _id: session.player }, process.env.TOKEN_SECRET, {
-    expiresIn: process.env.JWT_TOKEN_TTL,
+    expiresIn: process.env.JWT_TOKEN_TTL ?? '1h',
   });
 
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
-    maxAge: ms(process.env.REFRESH_TOKEN_TTL),
+    maxAge: ms(process.env.REFRESH_TOKEN_TTL ?? '180d'),
     sameSite: 'lax',
   });
 

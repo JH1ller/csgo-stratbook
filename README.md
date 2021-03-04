@@ -12,17 +12,20 @@ __Live Version [here!](https://stratbook.live)__
 ![typescript](https://img.shields.io/badge/typescript-3.7.5-blue.svg)
 ![socket.io](https://img.shields.io/badge/socket.io-2.3.0-blue.svg)
 
-### Table of Content
+## Table of Content
 
 - [Table of Content](#table-of-content)
 - [Technologies](#technologies)
   - [Client/Frontend](#clientfrontend)
   - [Server/Backend](#serverbackend)
-  - [Get started (local setup)](#get-started-local-setup)
+  - [Landingpage](#landingpage)
+- [Get started (local setup)](#get-started-local-setup)
+  - [Server](#server)
+  - [Client](#client)
 
-### Technologies
+## Technologies
 
-#### Client/Frontend
+### Client/Frontend
 
 - Vue 2
 - Vue CLI
@@ -33,7 +36,7 @@ __Live Version [here!](https://stratbook.live)__
 - Socket.io-Client
 - SCSS
 
-#### Server/Backend
+### Server/Backend
 
 - Node.js
 - Express
@@ -42,5 +45,21 @@ __Live Version [here!](https://stratbook.live)__
 - Bcrypt
 - JWT
 
-#### Get started (local setup)
-// TODO
+### Landingpage
+
+- Nuxt (SSG)
+- Nuxt Class Components
+
+## Get started (local setup)
+
+### Server
+
+- Navigate to the /server directory
+- Run `npm i` to install all dependencies
+- Create an `.env` file and add the required environment variables documented [here](https://github.com/JH1ller/csgo-stratbook/blob/master/server/README.md)
+- Run `npm run dev` to start the server in development mode
+### Client
+
+- Navigate to the /client directory.
+- Run `npm i` to install all dependencies
+- Run `npm run serve` to serve the web client in development mode, or `npm run electron:serve` for the desktop app

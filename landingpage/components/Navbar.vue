@@ -37,6 +37,14 @@
         <fa-icon :icon="['fab', 'twitter']" />
       </a>
       <a
+        href="https://discord.com/invite/mkxzQJGRgq"
+        class="navbar__link --social"
+        rel="noreferrer"
+        target="_blank"
+      >
+        <fa-icon :icon="['fab', 'discord']" />
+      </a>
+      <a
         href="https://github.com/JH1ller/csgo-stratbook"
         rel="noreferrer"
         class="navbar__link --social"
@@ -73,6 +81,15 @@
           @click="menuOpen = false"
         >
           <fa-icon :icon="['fab', 'twitter']" />
+        </a>
+        <a
+          href="https://discord.com/invite/mkxzQJGRgq"
+          class="navbar__mobile-link --social"
+          rel="noreferrer"
+          target="_blank"
+          @click="menuOpen = false"
+        >
+          <fa-icon :icon="['fab', 'discord']" />
         </a>
         <a
           href="https://github.com/JH1ller/csgo-stratbook"

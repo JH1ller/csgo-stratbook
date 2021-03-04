@@ -80,7 +80,7 @@ export default class App extends Vue {
 
   private checkVersion() {
     const currentVersion = this.storageService.get<string>('version');
-    if (!currentVersion || semver.gt(this.appVersion, currentVersion)) {
+    if (currentVersion && semver.gt(this.appVersion, currentVersion)) {
       catchPromise(
         this.showDialog({
           key: 'app/update-notice',

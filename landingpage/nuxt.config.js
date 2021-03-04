@@ -3,6 +3,9 @@ const path = require('path');
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
+  server: {
+    port: 4000,
+  },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -69,7 +72,7 @@ export default {
         addCss: false,
         suffix: false,
         icons: {
-          brands: ['faTwitter', 'faGithub'],
+          brands: ['faTwitter', 'faGithub', 'faDiscord'],
           solid: ['faAngleDown', 'faTimes'],
         },
       },

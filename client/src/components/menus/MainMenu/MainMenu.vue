@@ -24,6 +24,9 @@
       <a class="main-menu__list-item main-menu__link --twitter" @click="openTwitter"
         ><fa-icon :icon="['fab', 'twitter']" />twitter</a
       >
+      <a class="main-menu__list-item main-menu__link --discord" @click="openDiscord"
+        ><fa-icon :icon="['fab', 'discord']" />Discord</a
+      >
       <a v-if="!isDesktop" class="main-menu__list-item main-menu__link --download" @click="downloadDesktopClient"
         ><fa-icon icon="download" />Get desktop app</a
       >
