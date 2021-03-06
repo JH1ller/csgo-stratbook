@@ -1,5 +1,5 @@
 'use strict';
-import { app, protocol, BrowserWindow, ipcMain } from 'electron';
+import { app, protocol, BrowserWindow, ipcMain, session } from 'electron';
 import os from 'os';
 import path from 'path';
 import {
@@ -29,7 +29,8 @@ function createWindow() {
   if (isDevelopment && !process.env.IS_TEST) {
     console.log('installing Vue dev tools extension');
     try {
-      BrowserWindow.addDevToolsExtension(
+      // * Attempt to load locally installed Vue Dev Tools extension
+      session.defaultSession.loadExtension(
         path.join(
           os.homedir(),
           '/AppData/Local/Google/Chrome/User Data/Default/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/5.3.4_0'
