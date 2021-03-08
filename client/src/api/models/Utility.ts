@@ -12,6 +12,7 @@ export interface Utility extends Model {
   side: Sides;
   mouseButton: MouseButtons;
   crouch: boolean;
+  jump: boolean;
   movement: UtilityMovement;
   videoLink?: string;
   description?: string;
