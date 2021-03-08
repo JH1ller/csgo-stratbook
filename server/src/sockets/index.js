@@ -18,13 +18,13 @@ const initWS = (io) => {
         player.isOnline = true;
         player.save();
       } catch (error) {
-        console.log(error);
+        console.error(`Could not find player with ID: ${data.playerID}`);
       }
 
       io.to(data.teamID).emit('room-joined', { roomID: data.teamID });
     });
 
-    socket.on('disconnecting', async (data) => {
+    socket.on('disconnecting', async () => {
       try {
         const playerID = clients.get(socket.id).playerID;
         clients.delete(socket.id);

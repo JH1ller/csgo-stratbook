@@ -11,6 +11,10 @@
     transition: opacity 0.3s ease, filter 0.3s ease;
     filter: grayscale(60%);
 
+    &:first-of-type {
+      margin-right: 12px;
+    }
+
     &.-selected {
       opacity: 1;
       filter: grayscale(0%);

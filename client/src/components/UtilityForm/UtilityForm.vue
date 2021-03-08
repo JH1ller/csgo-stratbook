@@ -15,11 +15,14 @@
           <div class="utility-form__vertical-wrapper">
             <label class="utility-form__label">Throw settings</label>
             <div class="utility-form__config-wrapper">
-              <MouseButtonPicker v-model="mouseButton" />
+              <MouseButtonPicker class="utility-form__mouse-button-picker" v-model="mouseButton" />
               <PosePicker
+                class="utility-form__pose-picker"
                 :crouch="crouch"
+                :jump="jump"
                 :movement="movement"
                 @toggle-crouch="toggleCrouch"
+                @toggle-jump="toggleJump"
                 @toggle-movement="toggleMovement"
               />
             </div>

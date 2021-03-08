@@ -28,7 +28,7 @@ import TrackingService from '@/services/tracking.service';
 import { Dialog } from './components/DialogWrapper/DialogWrapper.models';
 import { catchPromise } from './utils/catchPromise';
 import StorageService from './services/storage.service';
-import semver from 'semver';
+import { satisfies, gt, major, minor } from 'semver';
 
 @Component({
   components: {
@@ -80,7 +80,10 @@ export default class App extends Vue {
 
   private checkVersion() {
     const currentVersion = this.storageService.get<string>('version');
-    if (currentVersion && semver.gt(this.appVersion, currentVersion)) {
+    if (
+      currentVersion &&
+      gt(`${major(this.appVersion)}.${minor(this.appVersion)}.0`, `${major(currentVersion)}.${minor(currentVersion)}.0`)
+    ) {
       catchPromise(
         this.showDialog({
           key: 'app/update-notice',
@@ -89,10 +92,10 @@ export default class App extends Vue {
           resolveBtn: 'OK',
           confirmOnly: true,
           htmlMode: true,
-        }),
-        () => this.storageService.set('version', this.appVersion)
+        })
       );
     }
+    this.storageService.set('version', this.appVersion);
   }
 
   private async initAutoUpdate() {

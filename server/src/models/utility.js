@@ -28,7 +28,13 @@ const utilitySchema = new mongoose.Schema({
   crouch: {
     type: Boolean,
     required: true,
-    default: true,
+    default: false,
+  },
+
+  jump: {
+    type: Boolean,
+    required: true,
+    default: false,
   },
 
   movement: {

@@ -45,6 +45,7 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
   private side: Sides = Sides.T;
   private mouseButton: MouseButtons = MouseButtons.LEFT;
   private crouch = false;
+  private jump = false;
   private movement = UtilityMovement.STILL;
   private files: (File | string)[] = [];
 
@@ -99,6 +100,7 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
     requestFormData.append('side', this.side);
     requestFormData.append('mouseButton', this.mouseButton);
     requestFormData.append('crouch', JSON.stringify(this.crouch));
+    requestFormData.append('jump', JSON.stringify(this.jump));
     requestFormData.append('movement', this.movement);
 
     return requestFormData;
@@ -112,12 +114,17 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
     this.side = this.utility.side;
     this.mouseButton = this.utility.mouseButton;
     this.crouch = this.utility.crouch;
+    this.jump = this.utility.jump;
     this.movement = this.utility.movement;
     this.files.push(...this.utility.images);
   }
 
   private toggleCrouch() {
     this.crouch = !this.crouch;
+  }
+
+  private toggleJump() {
+    this.jump = !this.jump;
   }
 
   private toggleMovement() {

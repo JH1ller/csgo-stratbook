@@ -81,15 +81,19 @@
   }
 
   &__pose-wrapper {
+    height: 100%;
     display: flex;
     align-items: center;
     margin-left: 6px;
   }
 
   &__pose {
-    height: 20px;
-    width: 20px;
+    height: 100%;
     opacity: 0.7;
+
+    &.--default {
+      opacity: 0.3;
+    }
   }
 
   &__badge-wrapper {
@@ -97,11 +101,32 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    bottom: 96px;
+    top: 50%;
     right: 12px;
+    transform: translateY(-50%);
 
     & > :not(:first-of-type) {
       margin-top: 16px;
+    }
+  }
+
+  &__description {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(white, 0.8);
+    padding: 12px 18px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    max-width: 80%;
+    word-break: break-word;
+    box-shadow: 0 0 8px rgba(black, 0.2);
+
+    &:hover {
+      background-color: white;
+      box-shadow: 0 0 8px rgba(black, 0.4);
     }
   }
 
@@ -137,8 +162,6 @@
   }
 
   &__mouse-button {
-    height: 22px;
-    width: 30px;
     opacity: 0.9;
   }
 
@@ -247,5 +270,19 @@
       height: 96px;
       width: 156px;
     }
+  }
+
+  &__icon-wrapper {
+    background-color: white;
+    height: 60px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-top-left-radius: 6px;
+    padding: 12px;
+    width: 200px;
   }
 }

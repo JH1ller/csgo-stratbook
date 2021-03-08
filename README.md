@@ -22,6 +22,7 @@ __Live Version [here!](https://stratbook.live)__
 - [Get started (local setup)](#get-started-local-setup)
   - [Server](#server)
   - [Client](#client)
+    - [Troubleshooting](#troubleshooting)
 
 ## Technologies
 
@@ -63,3 +64,12 @@ __Live Version [here!](https://stratbook.live)__
 - Navigate to the /client directory.
 - Run `npm i` to install all dependencies
 - Run `npm run serve` to serve the web client in development mode, or `npm run electron:serve` for the desktop app
+
+#### Troubleshooting
+
+If installing dependencies fails at the post-install script, try the following:
+- remove `vue-cli-plugin-electron-builder` from client/package.json
+- run `npm i`
+- run `vue add electron-builder`
+
+
