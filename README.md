@@ -7,9 +7,9 @@ __Vue-Typescript application to manage strategies in Valve's popular competitive
 
 __Live Version [here!](https://stratbook.live)__
 
-![electron](https://img.shields.io/badge/electron-8.3.2-blue.svg)
+![electron](https://img.shields.io/badge/electron-9.4.0-blue.svg)
 ![vue](https://img.shields.io/badge/vue-2.6.11-blue.svg)
-![typescript](https://img.shields.io/badge/typescript-3.7.5-blue.svg)
+![typescript](https://img.shields.io/badge/typescript-4.1.3-blue.svg)
 ![socket.io](https://img.shields.io/badge/socket.io-2.3.0-blue.svg)
 
 ## Table of Content
