@@ -69,8 +69,8 @@ module.exports = {
     'import/no-extraneous-dependencies': 'off',
 
     'prefer-promise-reject-errors': 'off',
-    'semi': 'off',
-    '@typescript-eslint/semi': ['error', 'never'],
+    'semi': ["error", "always"],
+    '@typescript-eslint/semi': ['error', 'always'],
     'space-before-function-paren': 'off',
     'no-void': 'off',
     '@typescript-eslint/no-inferrable-types': 0,
@@ -100,7 +100,6 @@ module.exports = {
     'comma-dangle': ['warn', {
       'arrays': 'always-multiline',
       'objects': 'always-multiline',
-      // don't require dangling commas on imports as this breaks loader.transform-quasar-imports.js
       'imports': 'never',
       'exports': 'always-multiline',
       'functions': 'always-multiline'
