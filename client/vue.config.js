@@ -44,6 +44,7 @@ module.exports = {
           name: 'csgostratbook-protocol',
           schemes: ['csgostratbook'],
         },
+        extraResources: ['build/*'],
       },
     },
   },

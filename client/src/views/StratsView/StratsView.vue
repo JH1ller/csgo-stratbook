@@ -1,6 +1,8 @@
 <template>
   <div class="strats-view">
-    <MapPicker @map-clicked="updateCurrentMap" :currentMap="currentMap" />
+    <transition name="fade">
+      <MapPicker v-show="!gameMode" @map-clicked="updateCurrentMap" :currentMap="currentMap" />
+    </transition>
     <FilterMenu :open="filterMenuOpen" @close="filterMenuOpen = false" @clear-filters="clearStratFilters">
       <StratFilterForm
         @content-filter-change="updateStratContentFilter"
@@ -11,6 +13,8 @@
       />
     </FilterMenu>
     <StratList
+      class="strats-view__strat-list"
+      :class="{ '-game-mode': gameMode }"
       @delete-strat="requestDeleteStrat"
       @edit-strat="showStratForm"
       @toggle-active="toggleStratActive"
@@ -24,12 +28,26 @@
     />
     <transition name="fade">
       <div class="strats-view__fab-group" v-if="!filterMenuOpen && !stratFormOpen">
+        <FloatingButton
+          class="strats-view__floating-game-mode"
+          label="Game Mode"
+          icon="headset"
+          @click="toggleGameMode"
+        />
         <FilterButton
           class="strats-view__filter-button"
           @click="filterMenuOpen = true"
           :activeFilterCount="activeStratFilterCount"
         />
-        <FloatingAdd class="strats-view__floating-add" label="Add strat" @click="showStratForm" />
+        <transition name="fade">
+          <FloatingButton
+            v-if="!gameMode"
+            class="strats-view__floating-add"
+            label="Add strat"
+            icon="plus"
+            @click="showStratForm"
+          />
+        </transition>
       </div>
     </transition>
 

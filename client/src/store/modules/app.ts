@@ -9,6 +9,7 @@ const HIDE_TOAST = 'HIDE_TOAST';
 const OPEN_DIALOG = 'OPEN_DIALOG';
 const CLOSE_DIALOG = 'CLOSE_DIALOG';
 const SET_LATENCY = 'SET_LATENCY';
+const SET_GAME_MODE = 'SET_GAME_MODE';
 const RESET_STATE = 'RESET_STATE';
 
 export interface AppState {
@@ -16,6 +17,7 @@ export interface AppState {
   toasts: Toast[];
   openDialogs: Dialog[];
   latency: number;
+  gameMode: boolean;
 }
 
 const appInitialState = (): AppState => ({
@@ -23,6 +25,7 @@ const appInitialState = (): AppState => ({
   toasts: [],
   openDialogs: [],
   latency: 0,
+  gameMode: false,
 });
 
 export const appModule: Module<AppState, RootState> = {
@@ -63,6 +66,14 @@ export const appModule: Module<AppState, RootState> = {
     updateLatency({ commit }, latency: number) {
       commit(SET_LATENCY, latency);
     },
+    startGameMode({ commit }) {
+      commit(SET_GAME_MODE, true);
+      document.title = document.title += ' | Game Mode';
+    },
+    exitGameMode({ commit }) {
+      commit(SET_GAME_MODE, false);
+      document.title = document.title.replace(' | Game Mode', '');
+    },
     resetState({ commit }) {
       commit(RESET_STATE);
     },
@@ -85,6 +96,9 @@ export const appModule: Module<AppState, RootState> = {
     },
     [SET_LATENCY](state, latency: number) {
       state.latency = latency;
+    },
+    [SET_GAME_MODE](state, gameMode: boolean) {
+      state.gameMode = gameMode;
     },
     [RESET_STATE](state) {
       Object.assign(state, appInitialState());

@@ -1,7 +1,7 @@
 import { Component, Provide, Vue } from 'vue-property-decorator';
 import MapPicker from '@/components/MapPicker/MapPicker.vue';
 import StratList from '@/components/StratList/StratList.vue';
-import FloatingAdd from '@/components/FloatingAdd/FloatingAdd.vue';
+import FloatingButton from '@/components/FloatingButton/FloatingButton.vue';
 import StratForm from '@/components/StratForm/StratForm.vue';
 import StratFilterForm from '@/components/StratFilterForm/StratFilterForm.vue';
 import FilterMenu from '@/components/FilterMenu/FilterMenu.vue';
@@ -23,7 +23,7 @@ import { catchPromise } from '@/utils/catchPromise';
   components: {
     MapPicker,
     StratList,
-    FloatingAdd,
+    FloatingButton,
     StratForm,
     StratFilterForm,
     FilterButton,
@@ -41,6 +41,7 @@ export default class StratsView extends Vue {
   @filterModule.Getter activeStratFilterCount!: number;
   @teamModule.State teamMembers!: Player[];
   @authModule.State profile!: Player;
+  @appModule.State gameMode!: boolean;
 
   @filterModule.Action updateStratContentFilter!: (value: string) => Promise<void>;
   @filterModule.Action updateStratTypeFilter!: (type: StratTypes | null) => Promise<void>;
@@ -56,6 +57,8 @@ export default class StratsView extends Vue {
   @stratModule.Action shareStrat!: (stratID: string) => Promise<void>;
   @stratModule.Action unshareStrat!: (stratID: string) => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
+  @appModule.Action startGameMode!: () => Promise<void>;
+  @appModule.Action exitGameMode!: () => Promise<void>;
 
   private stratFormOpen = false;
   private stratFormEditMode = false;
@@ -155,5 +158,9 @@ export default class StratsView extends Vue {
     this.updateStrat(data);
     this.currentDrawToolStrat = null;
     this.drawToolOpen = false;
+  }
+
+  private toggleGameMode() {
+    this.gameMode ? this.exitGameMode() : this.startGameMode();
   }
 }

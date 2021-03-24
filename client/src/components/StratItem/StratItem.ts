@@ -2,7 +2,7 @@ import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
 import StratEditor from '@/components/StratEditor/StratEditor.vue';
 import TypeBadge from '@/components/TypeBadge/TypeBadge.vue';
 import SideBadge from '@/components/SideBadge/SideBadge.vue';
-import { filterModule } from '@/store/namespaces';
+import { appModule, filterModule } from '@/store/namespaces';
 import { Strat } from '@/api/models/Strat';
 import { Sides } from '@/api/models/Sides';
 import { StratFilters } from '@/store/modules/filter';
@@ -16,6 +16,8 @@ import { openLink } from '@/utils/openLink';
   },
 })
 export default class StratItem extends Vue {
+  @appModule.State gameMode!: boolean;
+
   @Prop() private strat!: Strat;
   @Prop() private completedTutorial!: boolean;
   @Prop() private isTutorial!: boolean;

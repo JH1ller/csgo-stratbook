@@ -44,6 +44,7 @@ import {
   faExclamationTriangle,
   faSignOutAlt,
   faCoffee,
+  faHeadset,
 } from '@fortawesome/free-solid-svg-icons';
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -105,8 +106,10 @@ library.add(
   faExclamationTriangle,
   faSignOutAlt,
   faCoffee,
-  faDiscord
+  faDiscord,
+  faHeadset
 );
+
 Vue.component('fa-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;

@@ -10,6 +10,7 @@ import { autoUpdater, UpdateInfo } from 'electron-updater';
 import ElectronLog from 'electron-log';
 import debug from 'electron-debug';
 import ElectronStore from 'electron-store';
+import GSIServer from './main_process/gsi-server';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -19,6 +20,8 @@ const isDebug = !!store.get('debug') || false;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null;
+
+let gsiServer: GSIServer;
 
 debug({ isEnabled: isDebug || isDevelopment });
 
@@ -108,6 +111,15 @@ app.on('activate', () => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   createWindow();
+});
+
+ipcMain.on('start-game-mode', () => {
+  gsiServer = new GSIServer();
+  gsiServer.init();
+});
+
+ipcMain.on('exit-game-mode', () => {
+  gsiServer?.stopServer();
 });
 
 ipcMain.on('restart-app', () => {

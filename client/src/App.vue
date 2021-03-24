@@ -4,9 +4,11 @@
     <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi"/></span>
     <DialogWrapper />
     <ToastWrapper />
-    <MainMenu :menuOpen="menuOpen" @toggle-menu="toggleMenu" @close-menu="closeMenu" />
+    <transition name="fade">
+      <MainMenu v-show="!gameMode" :menuOpen="menuOpen" @toggle-menu="toggleMenu" @close-menu="closeMenu" />
+    </transition>
     <transition name="fade" mode="out-in">
-      <router-view @click.native="closeMenu" class="router-view"></router-view>
+      <router-view @click.native="closeMenu" class="router-view" :class="{ '-game-mode': gameMode }"></router-view>
     </transition>
     <transition name="fade">
       <CookieBanner v-if="showCookieBanner && isDesktop === false" @close="closeCookieBanner" />
@@ -28,7 +30,7 @@ import TrackingService from '@/services/tracking.service';
 import { Dialog } from './components/DialogWrapper/DialogWrapper.models';
 import { catchPromise } from './utils/catchPromise';
 import StorageService from './services/storage.service';
-import { satisfies, gt, major, minor } from 'semver';
+import { gt, major, minor } from 'semver';
 
 @Component({
   components: {
@@ -45,6 +47,7 @@ export default class App extends Vue {
   @Provide() storageService: StorageService = StorageService.getInstance();
 
   @appModule.State latency!: number;
+  @appModule.State gameMode!: boolean;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
 
   private menuOpen: boolean = false;
@@ -115,6 +118,7 @@ export default class App extends Vue {
     });
 
     ipcRenderer.send('app-ready');
+    ipcRenderer.send('start-game-mode');
   }
 
   private checkCookies() {
@@ -182,7 +186,6 @@ export default class App extends Vue {
 
 .router-view {
   height: 100%;
-  //padding: 12px;
   overflow-y: scroll;
   overflow-x: hidden;
 
@@ -190,6 +193,12 @@ export default class App extends Vue {
     margin-left: 70px;
     width: calc(100% - 70px);
     padding: 24px;
+    transition: margin-left 0.3s ease, width 0.3s ease;
+
+    &.-game-mode {
+      margin-left: 0;
+      width: 100%;
+    }
   }
 }
 

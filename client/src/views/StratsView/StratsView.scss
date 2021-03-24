@@ -14,4 +14,28 @@
       right: 34px;
     }
   }
+
+  &__floating-add {
+    background-color: $color--green;
+
+    &:hover {
+      background-color: darken($color--green, 15%);
+    }
+  }
+
+  &__floating-game-mode {
+    background-color: $color--orange;
+
+    &:hover {
+      background-color: darken($color--orange, 15%);
+    }
+  }
+
+  &__strat-list {
+    margin-top: 24px;
+
+    &.-game-mode {
+      margin-top: 0;
+    }
+  }
 }

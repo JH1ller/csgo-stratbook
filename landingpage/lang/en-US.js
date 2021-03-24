@@ -78,6 +78,17 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '1.7.6',
+        date: '2021-02-26',
+        changes: [
+          'Add "Jumpthrow" pose option to utilities',
+          'Improve utility lightbox and display utility description',
+          'Add discord link to menu',
+          'Improve version check on app start: Only display notice for new feature version, not patches',
+          'Desktop App: Update electron to v9.4',
+        ],
+      },
+      {
         version: '1.7.0',
         date: '2021-02-26',
         changes: [

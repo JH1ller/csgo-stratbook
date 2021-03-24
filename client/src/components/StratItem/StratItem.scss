@@ -113,6 +113,14 @@
     }
   }
 
+  &__edit-buttons {
+    display: flex;
+
+    & > :not(:first-child) {
+      margin-left: 8px;
+    }
+  }
+
   &__action-buttons {
     display: flex;
 

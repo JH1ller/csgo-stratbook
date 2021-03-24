@@ -41,33 +41,37 @@
       >
         <fa-icon icon="film" />
       </div>
-      <div
-        class="strat-item__btn --toggle-active"
-        @click="toggleActive"
-        :content="strat.active ? 'Set inactive' : 'Set active'"
-        v-tippy
-      >
-        <fa-icon icon="check-circle" v-if="strat.active" />
-        <fa-icon icon="minus-circle" v-else />
-      </div>
       <div class="strat-item__btn --map" @click="showMap" content="Open map" v-tippy>
         <fa-icon icon="map" />
       </div>
-      <div
-        class="strat-item__btn --share"
-        :class="{ '-shared': strat.shared }"
-        @click="strat.shared ? unshareStrat() : shareStrat()"
-        :content="strat.shared ? 'Stop sharing' : 'Create share link'"
-        v-tippy
-      >
-        <fa-icon icon="share-alt" />
-      </div>
-      <div class="strat-item__btn --edit" @click="editStrat" content="Edit strat" v-tippy>
-        <fa-icon icon="edit" />
-      </div>
-      <div class="strat-item__btn --delete" @click="deleteStrat" content="Delete strat" v-tippy>
-        <fa-icon icon="trash-alt" />
-      </div>
+      <transition name="fade">
+        <span v-show="!gameMode" class="strat-item__edit-buttons">
+          <div
+            class="strat-item__btn --toggle-active"
+            @click="toggleActive"
+            :content="strat.active ? 'Set inactive' : 'Set active'"
+            v-tippy
+          >
+            <fa-icon icon="check-circle" v-if="strat.active" />
+            <fa-icon icon="minus-circle" v-else />
+          </div>
+          <div
+            class="strat-item__btn --share"
+            :class="{ '-shared': strat.shared }"
+            @click="strat.shared ? unshareStrat() : shareStrat()"
+            :content="strat.shared ? 'Stop sharing' : 'Create share link'"
+            v-tippy
+          >
+            <fa-icon icon="share-alt" />
+          </div>
+          <div class="strat-item__btn --edit" @click="editStrat" content="Edit strat" v-tippy>
+            <fa-icon icon="edit" />
+          </div>
+          <div class="strat-item__btn --delete" @click="deleteStrat" content="Delete strat" v-tippy>
+            <fa-icon icon="trash-alt" />
+          </div>
+        </span>
+      </transition>
     </div>
   </div>
 </template>

@@ -44,7 +44,7 @@
         <img src="@/assets/icons/crosshair.svg" class="utility-lightbox__crosshair-img" />
       </div>
     </div>
-    <span class="utility-lightbox__description">{{ utility.description }}</span>
+    <span class="utility-lightbox__description" v-if="utility.description">{{ utility.description }}</span>
     <span class="utility-lightbox__info">
       <span class="utility-lightbox__name">{{ utility.name }}</span>
       <div class="utility-lightbox__icon-wrapper">
