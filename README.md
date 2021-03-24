@@ -20,6 +20,7 @@ __Live Version [here!](https://stratbook.live)__
   - [Server/Backend](#serverbackend)
   - [Landingpage](#landingpage)
 - [Get started (local setup)](#get-started-local-setup)
+  - [Docker (Server + Client)](#docker-server--client)
   - [Server](#server)
   - [Client](#client)
     - [Troubleshooting](#troubleshooting)
@@ -52,6 +53,12 @@ __Live Version [here!](https://stratbook.live)__
 - Nuxt Class Components
 
 ## Get started (local setup)
+
+### Docker (Server + Client)
+
+- install [docker-compose](https://docs.docker.com/compose/install/)
+- Run `docker-compose up`
+- Navigate to http://localhost:8080 and voilá
 
 ### Server
 
