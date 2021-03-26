@@ -2,6 +2,8 @@
   "compileOnSave": false,
   "compilerOptions": {
     "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -13,10 +15,17 @@
     "baseUrl": "./",
     "incremental": true,
 
+    "paths": {
+      "src/*": ["src/*"],
+    },
+
     "types": [
       "node",
       "webpack-env",
       "jest"
     ]
-  }
+  },
+  "exclude": [
+    "/dist"
+  ]
 }
