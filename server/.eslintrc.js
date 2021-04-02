@@ -80,6 +80,9 @@ module.exports = {
     // empty constructors are often used by nestjs
     'no-useless-constructor': 'off',
 
+    // required for mongoose document creation
+    'new-cap': 'off',
+
     'space-before-function-paren': ['error', {
       'anonymous': 'never',
       'named': 'never',

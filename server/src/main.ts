@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -26,16 +26,25 @@ async function bootstrap() {
   });
 
   // setup handlers
-  app.use(helmet());
+  if (isDevEnv()) {
+    app.use(
+      helmet({
+        contentSecurityPolicy: false,
+      })
+    );
+  } else {
+    app.use(helmet());
+  }
 
   if (isDevEnv()) {
+    console.log(chalk.green('installing swagger'));
     useSwagger(app);
   }
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
 
-  console.log(`listening on port ${port}`);
+  console.log(chalk.cyan(`Application is running on: ${chalk.magenta(await app.getUrl())}`));
 
   if (module.hot) {
     module.hot.accept();

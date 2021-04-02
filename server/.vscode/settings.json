@@ -15,4 +15,8 @@
       "source.fixAll.eslint": true
     },
   },
+  "cSpell.words": [
+    "Fastify",
+    "nestjs"
+  ],
 }

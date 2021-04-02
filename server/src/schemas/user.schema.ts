@@ -17,7 +17,7 @@ export class User {
     maxlength: 20,
     minlength: 3,
   })
-  name: string;
+  userName: string;
 
   @Prop({
     required: true,

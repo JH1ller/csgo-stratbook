@@ -1,6 +1,7 @@
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { genSalt, hash } from 'bcrypt';
 
 import { User, UserDocument } from 'src/schemas/user.schema';
 
@@ -20,8 +21,25 @@ export class UsersService {
       .exec();
   }
 
-  public userExists(email: string) {
-    return this.userModel.exists({
+  public async createUser(userName: string, email: string, password: string) {
+    if (await this.isEmailInUse(email)) {
+      throw new Error('email in use');
+    }
+
+    const salt = await genSalt(10);
+    const hashedPassword = await hash(password, salt);
+
+    const createdUser = new this.userModel({
+      userName,
+      email,
+      password: hashedPassword,
+    });
+
+    return await createdUser.save();
+  }
+
+  public async isEmailInUse(email: string) {
+    return await this.userModel.exists({
       email,
     });
   }
