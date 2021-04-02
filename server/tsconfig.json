@@ -15,6 +15,9 @@
     "baseUrl": "./",
     "incremental": true,
 
+    "noEmitHelpers": true,
+    "importHelpers": false,
+
     "paths": {
       "src/*": ["src/*"],
     },

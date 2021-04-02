@@ -1,0 +1,22 @@
+.DS_Store
+.thumbs.db
+/node_modules
+
+/public/upload
+/dist
+
+# hide .env files
+*.env
+
+
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
