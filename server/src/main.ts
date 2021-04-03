@@ -7,9 +7,18 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { fastifyHelmet } from 'fastify-helmet';
+import FastifySecureSession from 'fastify-secure-session';
+import FastifyCsrf from 'fastify-csrf';
+import FastifyPassport from 'fastify-passport';
+
+import * as PassportLocal from 'passport-local';
 
 import { AppModule } from './app.module';
 import { isDevEnv } from './utils/env';
+
+interface User {
+  id: string;
+}
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -18,6 +27,9 @@ async function bootstrap() {
       logger: isDevEnv(),
     })
   );
+
+  // set all routes to /api/<controller_name>
+  app.setGlobalPrefix('api');
 
   const configService = app.get(ConfigService);
 
@@ -30,12 +42,54 @@ async function bootstrap() {
     await app.register(fastifyHelmet);
   }
 
-  // set all routes to /api/<controller_name>
-  app.setGlobalPrefix('api');
+  // console.log(configService.get<Buffer>('session.key'));
 
-  app.enableCors({
-    credentials: true,
-    origin: true,
+  await app.register(FastifySecureSession, {
+    secret: 'averylogphrasebiggerthanthirtytwochars',
+    salt: 'mq9hDxBVDbspDR6n',
+
+    cookie: {
+      maxAge: configService.get<number>('session.cookie.ttl'),
+      path: '/',
+
+      // Use httpOnly for all production purposes
+      // options for setCookie, see https://github.com/fastify/fastify-cookie
+      httpOnly: !isDevEnv(),
+
+      // allow non https cookies in dev mode
+      secure: !isDevEnv(),
+    },
+  });
+
+  await app.register(FastifyCsrf, {
+    sessionPlugin: 'fastify-secure-session',
+  });
+
+  await app.register(FastifyPassport.initialize());
+  await app.register(
+    FastifyPassport.secureSession({
+      session: true,
+    })
+  );
+
+  FastifyPassport.use(
+    'local',
+    new PassportLocal.Strategy(
+      {
+        usernameField: 'email',
+        passwordField: 'password',
+        passReqToCallback: true,
+      },
+      (req, username, password, done) => {
+        console.log('cb');
+        done(null, {});
+      }
+    )
+  );
+
+  FastifyPassport.registerUserSerializer<User, string>((user) => Promise.resolve(user.id));
+  FastifyPassport.registerUserDeserializer(async () => {
+    return Promise.resolve({});
   });
 
   app.useGlobalPipes(
@@ -45,6 +99,11 @@ async function bootstrap() {
       validationError: { target: false, value: false },
     })
   );
+
+  app.enableCors({
+    credentials: true,
+    origin: true,
+  });
 
   if (isDevEnv()) {
     useSwagger(app);
