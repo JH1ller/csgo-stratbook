@@ -1,5 +1,5 @@
 import { plainToClass } from 'class-transformer';
-import { IsString, IsBoolean, IsOptional, IsNumber, validateSync } from 'class-validator';
+import { IsString, IsBoolean, IsOptional, IsNumber, validateSync, MinLength } from 'class-validator';
 
 /**
  * @summary helper class for validating .env-file properties
@@ -10,6 +10,16 @@ class EnvironmentVariables {
 
   @IsString()
   DATABASE_URL: string;
+
+  @IsString()
+  @MinLength(32)
+  COOKIE_SECRET: string;
+
+  @IsString()
+  SESSION_KEY: string;
+
+  @IsString()
+  SESSION_COOKIE_TTL: string;
 
   @IsBoolean()
   @IsOptional()
