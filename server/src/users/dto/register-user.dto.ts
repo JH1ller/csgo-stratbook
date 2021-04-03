@@ -3,20 +3,22 @@ import { passwordPattern } from 'src/common/validation-helpers';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class RegisterUserDto {
-  @ApiProperty()
   @IsString()
   @MinLength(2)
   @MaxLength(20)
+  @ApiProperty({ example: 'HelloWorld' })
   public readonly userName: string;
 
-  @ApiProperty()
   @IsEmail()
   @MaxLength(128)
+  @ApiProperty({ example: 'hello-world@stratbook.live' })
   public readonly email: string;
 
-  @ApiProperty()
   @IsString()
   @MinLength(6)
-  @Matches(passwordPattern)
+  @Matches(passwordPattern, {
+    message: 'password too weak',
+  })
+  @ApiProperty({ example: 'HelloWorld1' })
   public readonly password: string;
 }

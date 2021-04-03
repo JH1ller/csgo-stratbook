@@ -13,10 +13,7 @@ class EnvironmentVariables {
 
   @IsString()
   @MinLength(32)
-  COOKIE_SECRET: string;
-
-  @IsString()
-  SESSION_KEY: string;
+  SESSION_SECRET: string;
 
   @IsString()
   SESSION_COOKIE_TTL: string;

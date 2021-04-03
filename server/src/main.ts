@@ -1,32 +1,25 @@
 import * as chalk from 'chalk';
 
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
-import { fastifyHelmet } from 'fastify-helmet';
-import FastifySecureSession from 'fastify-secure-session';
-import FastifyCsrf from 'fastify-csrf';
-import FastifyPassport from 'fastify-passport';
+import * as cookieParser from 'cookie-parser';
+import { json } from 'body-parser';
+import * as session from 'express-session';
 
-import * as PassportLocal from 'passport-local';
+import * as morgan from 'morgan';
+
+import * as helmet from 'helmet';
+import * as passport from 'passport';
 
 import { AppModule } from './app.module';
-import { isDevEnv } from './utils/env';
-
-interface User {
-  id: string;
-}
+import { isDevEnv } from './common/env';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter({
-      logger: isDevEnv(),
-    })
-  );
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {});
 
   // set all routes to /api/<controller_name>
   app.setGlobalPrefix('api');
@@ -34,63 +27,42 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   if (isDevEnv()) {
+    app.use(morgan('common'));
+
     // we need to disable CSP for swagger in development mode
-    await app.register(fastifyHelmet, {
-      contentSecurityPolicy: false,
-    });
+    app.use(
+      helmet({
+        contentSecurityPolicy: false,
+      })
+    );
   } else {
-    await app.register(fastifyHelmet);
+    app.use(helmet());
   }
 
-  // console.log(configService.get<Buffer>('session.key'));
+  app.use(cookieParser());
 
-  await app.register(FastifySecureSession, {
-    secret: 'averylogphrasebiggerthanthirtytwochars',
-    salt: 'mq9hDxBVDbspDR6n',
+  // parse application/json
+  app.use(json());
 
-    cookie: {
-      maxAge: configService.get<number>('session.cookie.ttl'),
-      path: '/',
+  // setup session-storage
+  app.use(
+    session({
+      name: 'sid',
+      secret: configService.get<string>('session.secret'),
+      resave: false,
+      saveUninitialized: false,
 
-      // Use httpOnly for all production purposes
-      // options for setCookie, see https://github.com/fastify/fastify-cookie
-      httpOnly: !isDevEnv(),
-
-      // allow non https cookies in dev mode
-      secure: !isDevEnv(),
-    },
-  });
-
-  await app.register(FastifyCsrf, {
-    sessionPlugin: 'fastify-secure-session',
-  });
-
-  await app.register(FastifyPassport.initialize());
-  await app.register(
-    FastifyPassport.secureSession({
-      session: true,
+      cookie: {
+        maxAge: configService.get<number>('session.cookie.ttl'),
+        httpOnly: true,
+        // disable https only cookie in dev mode
+        secure: !isDevEnv(),
+      },
     })
   );
 
-  FastifyPassport.use(
-    'local',
-    new PassportLocal.Strategy(
-      {
-        usernameField: 'email',
-        passwordField: 'password',
-        passReqToCallback: true,
-      },
-      (req, username, password, done) => {
-        console.log('cb');
-        done(null, {});
-      }
-    )
-  );
-
-  FastifyPassport.registerUserSerializer<User, string>((user) => Promise.resolve(user.id));
-  FastifyPassport.registerUserDeserializer(async () => {
-    return Promise.resolve({});
-  });
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -124,7 +96,7 @@ async function bootstrap() {
   }
 }
 
-function useSwagger(app: NestFastifyApplication) {
+function useSwagger(app: NestExpressApplication) {
   // create swagger on route /swagger
   const route = 'swagger';
 

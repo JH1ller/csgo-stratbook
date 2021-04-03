@@ -11,12 +11,8 @@ export default () => ({
     url: process.env.DATABASE_URL,
   },
 
-  cookie: {
-    secret: process.env.COOKIE_SECRET,
-  },
-
   session: {
-    key: Buffer.from(process.env.SESSION_KEY, 'hex'),
+    secret: process.env.SESSION_SECRET,
 
     cookie: {
       ttl: ms(process.env.SESSION_COOKIE_TTL),

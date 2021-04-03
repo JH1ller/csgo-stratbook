@@ -1,4 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
+
+import * as bcrypt from 'bcrypt';
 
 import { UsersService } from 'src/users/users.service';
 
@@ -6,16 +8,29 @@ import { UsersService } from 'src/users/users.service';
 export class AuthService {
   constructor(private readonly usersService: UsersService) {}
 
-  // public async validateUser(username: string, pass: string): Promise<any> {
-  //   const user = await this.usersService.findOne(username);
+  public async validateUser(username: string, password: string) {
+    const user = await this.usersService.findOne(username);
+    if (user == null) {
+      throw new BadRequestException({
+        error: 'Email or password is invalid.',
+      });
+    }
 
-  //   // if (user && user.password === pass) {
-  //   //   const { password, ...result } = user;
-  //   //   return result;
-  //   // }
+    const passwordValid = await bcrypt.compare(user.password, password);
+    if (!passwordValid) {
+      throw new BadRequestException({
+        error: 'Email or password is invalid.',
+      });
+    }
 
-  //   return null;
-  // }
+    if (!user.mailConfirmed) {
+      throw new BadRequestException({
+        error: 'Please confirm your email to log in.',
+      });
+    }
+
+    return user;
+  }
 
   public login() {
     return {

@@ -1,27 +1,25 @@
-import { Controller, Post, Req, Request, UseGuards } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
-import { FastifyRequest } from 'fastify';
+import { Controller, Post, Request, UseGuards } from '@nestjs/common';
+import * as express from 'express';
 
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
-  @Post('auth/login')
-  public login(@Request() req) {
+  @Post('local/signin')
+  public login(@Request() req: express.Request) {
     // req.user
-    console.log(req);
+    // console.log(req);
     return this.authService.login();
   }
 
-  @Post('local/signin')
-  @ApiResponse({ status: 200 })
-  public localSignIn(@Req() request: FastifyRequest) {
-    request.session.set('data', request.body);
-
-    console.log(request);
+  @UseGuards(AuthenticatedGuard)
+  @Post('logout')
+  public logout(@Request() req: express.Request) {
+    req.logout();
   }
 }

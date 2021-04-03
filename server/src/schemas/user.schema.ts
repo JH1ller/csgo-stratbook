@@ -36,7 +36,7 @@ export class User {
   @Prop({
     default: false,
   })
-  confirmed: boolean;
+  mailConfirmed: boolean;
 
   @Prop()
   avatar: string;
@@ -72,7 +72,7 @@ export class User {
   completedTutorial: boolean;
 }
 
-export type UserDocument = User & Document;
+export type UserDocument = User & Document<mongoose.ObjectId>;
 
 export const UserSchema = SchemaFactory.createForClass(User);
 // UserSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
