@@ -25,8 +25,11 @@ import { StrategiesModule } from './strategies/strategies.module';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         uri: configService.get<string>('database.url'),
+        useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true,
+
+        // loggerLevel: 'debug',
       }),
       inject: [ConfigService],
     }),

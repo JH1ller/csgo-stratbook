@@ -77,4 +77,6 @@ export class UsersService {
   public updateCompletedTutorial(id: ObjectId, completedTutorial: boolean) {
     return this.userModel.updateOne({ _id: id }, { completedTutorial });
   }
+
+  public testConnect() {}
 }
