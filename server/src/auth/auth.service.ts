@@ -8,8 +8,14 @@ import { UsersService } from 'src/users/users.service';
 export class AuthService {
   constructor(private readonly usersService: UsersService) {}
 
-  public async validateUser(username: string, password: string) {
-    const user = await this.usersService.findOne(username);
+  /**
+   * local user validation
+   * @param email user account email
+   * @param password password
+   * @returns user document
+   */
+  public async localValidateUser(email: string, password: string) {
+    const user = await this.usersService.findByEmail(email);
     if (user == null) {
       throw new BadRequestException({
         error: 'Email or password is invalid.',

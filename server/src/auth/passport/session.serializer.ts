@@ -1,6 +1,8 @@
 import { PassportSerializer } from '@nestjs/passport';
 import { Injectable, Logger } from '@nestjs/common';
 
+import { NativeError } from 'mongoose';
+
 import { UsersService } from 'src/users/users.service';
 import { UserDocument } from 'src/schemas/user.schema';
 
@@ -40,8 +42,8 @@ export class SessionSerializer extends PassportSerializer {
       .then((user) => {
         done(null, user);
       })
-      .catch((error: string) => {
-        Logger.error(`failed to translate session id to user document: ${error}`);
+      .catch((error: NativeError) => {
+        Logger.error(`failed to translate session id to user document: ${error.message}`);
         done(error, null);
       });
   }
