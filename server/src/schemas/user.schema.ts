@@ -1,6 +1,5 @@
-import * as mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
 
 import { Team } from './team.schema';
 
@@ -59,7 +58,7 @@ export class User {
   @Prop({
     default: () => Date.now(),
   })
-  lastOnline: boolean;
+  lastOnline: Date;
 
   @Prop({
     default: false,

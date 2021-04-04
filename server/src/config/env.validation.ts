@@ -1,5 +1,7 @@
 import { plainToClass } from 'class-transformer';
-import { IsString, IsBoolean, IsOptional, IsNumber, validateSync, MinLength } from 'class-validator';
+import { IsString, IsBoolean, IsOptional, IsNumber, validateSync, MinLength, Validate } from 'class-validator';
+
+import { DirectoryExistsConstraint } from './constraints/directory-exists-constraint';
 
 /**
  * @summary helper class for validating .env-file properties
@@ -8,15 +10,28 @@ class EnvironmentVariables {
   @IsNumber()
   PORT: number;
 
+  /**
+   * Mongodb connection string
+   */
   @IsString()
   DATABASE_URL: string;
 
+  /**
+   * express-session cookie secret
+   */
   @IsString()
   @MinLength(32)
   SESSION_SECRET: string;
 
+  /**
+   * express-session cookie maxAge. Specified as ms-module string.
+   */
   @IsString()
   SESSION_COOKIE_TTL: string;
+
+  @IsString()
+  // @Validate(DirectoryExistsConstraint, { message: 'temp directory does not exist.' })
+  PERSISTENCE_TMP_DIR: string;
 
   @IsBoolean()
   @IsOptional()
@@ -25,6 +40,10 @@ class EnvironmentVariables {
   @IsString()
   @IsOptional()
   RECAPTCHA_SECRET: string;
+
+  @IsBoolean()
+  @IsOptional()
+  DEBUG_CREATE_USER_WITH_CONFIRMED_MAIL: boolean;
 }
 
 export function validate(config: Record<string, unknown>) {

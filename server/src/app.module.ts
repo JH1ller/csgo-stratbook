@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { BullModule } from '@nestjs/bull';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
@@ -29,6 +30,13 @@ import { StrategiesModule } from './strategies/strategies.module';
       }),
       inject: [ConfigService],
     }),
+
+    // BullModule.forRoot({
+    //   redis: {
+    //     host: 'localhost',
+    //     port: 6379,
+    //   },
+    // }),
 
     AuthModule,
     UsersModule,

@@ -1,19 +1,32 @@
-import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
-import { genSalt, hash } from 'bcrypt';
+
+import { Model } from 'mongoose';
+import bcrypt from 'bcrypt';
 
 import { User, UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    private readonly configService: ConfigService,
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>
+  ) {}
+
+  /**
+   * Find user by document id
+   * @param id user document id
+   */
+  public async findById(id: string) {
+    return this.userModel.findById(id).exec();
+  }
 
   /**
    * Find a user by email
    * @param email email of the corresponding account
    */
-  public async findOne(email: string) {
+  public findOne(email: string) {
     return this.userModel
       .findOne({
         email,
@@ -26,14 +39,18 @@ export class UsersService {
       throw new Error('email in use');
     }
 
-    const salt = await genSalt(10);
-    const hashedPassword = await hash(password, salt);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     const createdUser = new this.userModel({
       userName,
       email,
       password: hashedPassword,
     });
+
+    if (this.configService.get<boolean>('debug.createUserWithConfirmedMail')) {
+      createdUser.mailConfirmed = true;
+    }
 
     return await createdUser.save();
   }

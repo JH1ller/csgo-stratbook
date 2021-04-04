@@ -1,4 +1,4 @@
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -6,14 +6,13 @@ import { ConfigService } from '@nestjs/config';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
-import * as cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+import CookieParser from 'cookie-parser';
 import { json } from 'body-parser';
-import * as session from 'express-session';
-
-import * as morgan from 'morgan';
-
-import * as helmet from 'helmet';
-import * as passport from 'passport';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
+import helmet from 'helmet';
+import passport from 'passport';
 
 import { AppModule } from './app.module';
 import { isDevEnv } from './common/env';
@@ -39,7 +38,7 @@ async function bootstrap() {
     app.use(helmet());
   }
 
-  app.use(cookieParser());
+  app.use(CookieParser());
 
   // parse application/json
   app.use(json());
@@ -51,6 +50,12 @@ async function bootstrap() {
       secret: configService.get<string>('session.secret'),
       resave: false,
       saveUninitialized: false,
+
+      store: MongoStore.create({
+        mongoUrl: configService.get<string>('database.url'),
+        collectionName: 'sessions',
+        ttl: 14 * 24 * 60 * 60, // = 14 days. Default
+      }),
 
       cookie: {
         maxAge: configService.get<number>('session.cookie.ttl'),

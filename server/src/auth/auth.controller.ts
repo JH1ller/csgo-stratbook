@@ -1,5 +1,6 @@
-import { Controller, Post, Request, UseGuards } from '@nestjs/common';
-import * as express from 'express';
+import { Controller, Post, Request, UseGuards, Logger, HttpCode, HttpStatus } from '@nestjs/common';
+import { ApiOkResponse } from '@nestjs/swagger';
+import { Express } from 'express';
 
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -11,15 +12,24 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('local/signin')
-  public login(@Request() req: express.Request) {
-    // req.user
-    // console.log(req);
-    return this.authService.login();
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  public login() {
+    // login is performed by LocalAuthGuard.
   }
 
   @UseGuards(AuthenticatedGuard)
   @Post('logout')
-  public logout(@Request() req: express.Request) {
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  public logout(@Request() req: Express.Request) {
     req.logout();
+
+    // destroy session data
+    req.session.destroy((error: string) => {
+      if (error) {
+        Logger.error(`failed to destroy user session: ${error}`);
+      }
+    });
   }
 }

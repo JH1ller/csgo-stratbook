@@ -18,4 +18,12 @@ export default () => ({
       ttl: ms(process.env.SESSION_COOKIE_TTL),
     },
   },
+
+  persistence: {
+    tmp: process.env.PERSISTENCE_TMP_DIR,
+  },
+
+  debug: {
+    createUserWithConfirmedMail: process.env.DEBUG_CREATE_USER_WITH_CONFIRMED_MAIL,
+  },
 });

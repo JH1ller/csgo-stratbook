@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 
 import { UsersService } from 'src/users/users.service';
 
@@ -16,10 +16,10 @@ export class AuthService {
       });
     }
 
-    const passwordValid = await bcrypt.compare(user.password, password);
+    const passwordValid = await bcrypt.compare(password, user.password);
     if (!passwordValid) {
       throw new BadRequestException({
-        error: 'Email or password is invalid.',
+        error: 'Password is invalid.',
       });
     }
 
@@ -30,11 +30,5 @@ export class AuthService {
     }
 
     return user;
-  }
-
-  public login() {
-    return {
-      access_token: '',
-    };
   }
 }
