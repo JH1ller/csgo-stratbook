@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { Model, ObjectId } from 'mongoose';
+import Mongoose, { Model, ObjectId } from 'mongoose';
 import bcrypt from 'bcrypt';
 
 import { User, UserDocument } from 'src/schemas/user.schema';
@@ -78,5 +78,7 @@ export class UsersService {
     return this.userModel.updateOne({ _id: id }, { completedTutorial });
   }
 
-  public testConnect() {}
+  // public getUsersByTeamId(teamId: Mongoose.Types.ObjectId) {
+  //   return this.userModel.find({ team: teamId });
+  // }
 }

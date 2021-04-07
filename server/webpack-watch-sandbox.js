@@ -180,12 +180,11 @@ class WebpackWatchSandboxPlugin {
           // if (i !== `bcrypt` && i !== `chalk` && i !== `morgan` && i !== `helmet` && i !== `ms`
           //   //&& i !== `passport` && i !== `passport-local` && i !== `@nestjs/passport`
           //   )
-          if(
+          if (
             // i === `passport` //||
             // i === `passport-local` ||
             i === `@nestjs/passport`
-            )
-            {
+          ) {
             const mod = require.resolve(i, [__dirname]);
 
             if (require.cache[mod]) {
@@ -202,37 +201,42 @@ class WebpackWatchSandboxPlugin {
         resolvedModules: {},
       }
 
-      // compile script
-      const script = compileScript(
-        file,
-        name,
-        requireProxy.bind(this.context),
-      );
+      try {
+        // compile script
+        const script = compileScript(
+          file,
+          name,
+          requireProxy.bind(this.context),
+        );
 
-      // get <default> export from entry module
-      const hasDefaultExport = Object.hasOwnProperty.call(script.exports, "default");
-      if (!hasDefaultExport) {
-        console.log(`[warning] module ${name} has no default export!`);
+        // get <default> export from entry module
+        const hasDefaultExport = Object.hasOwnProperty.call(script.exports, "default");
+        if (!hasDefaultExport) {
+          console.log(`[warning] module ${name} has no default export!`);
+        }
+
+        if (this.instance != null) {
+          this.instance.dispose()
+            .then(() => {
+              this.instance = script.exports["default"]();
+
+              this.instance.bootstrap()
+                .then(() => {
+                  cb();
+                })
+            })
+        } else {
+          // construct instance
+          this.instance = script.exports["default"]();
+
+          this.instance.bootstrap()
+            .then(() => {
+              cb();
+            })
+        }
       }
-
-      if (this.instance != null) {
-        this.instance.dispose()
-          .then(() => {
-            this.instance = script.exports["default"]();
-
-            this.instance.bootstrap()
-              .then(() => {
-                cb();
-              })
-          })
-      } else {
-        // construct instance
-        this.instance = script.exports["default"]();
-
-        this.instance.bootstrap()
-          .then(() => {
-            cb();
-          })
+      catch (err) {
+        console.log(err)
       }
     });
   }

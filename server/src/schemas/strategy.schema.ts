@@ -1,9 +1,10 @@
-import * as mongoose from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
 import { Team } from './team.schema';
 import { User } from './user.schema';
+
+import { StrategyType, StrategySide, StrategyMap } from './enums/strategy';
 
 @Schema({
   timestamps: {
@@ -20,7 +21,7 @@ export class Strategy {
 
   @Prop({
     required: true,
-    enum: ['DUST_2', 'MIRAGE', 'OVERPASS', 'NUKE', 'VERTIGO', 'INFERNO', 'TRAIN'],
+    enum: Object.values(StrategyMap),
   })
   map: string;
 
@@ -32,14 +33,14 @@ export class Strategy {
   team: Team;
 
   @Prop({
-    enum: ['CT', 'T'],
+    enum: Object.values(StrategySide),
     required: true,
   })
   side: string;
 
   @Prop({
-    enum: ['PISTOL', 'FORCE', 'BUYROUND'],
-    default: 'BUYROUND',
+    enum: Object.values(StrategyType),
+    default: StrategyType.BuyRound,
   })
   type: string;
 

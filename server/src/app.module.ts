@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TeamsModule } from './teams/teams.module';
 import { StrategiesModule } from './strategies/strategies.module';
+import { UtilitiesModule } from './utilities/utilities.module';
 
 @Module({
   imports: [
@@ -29,9 +30,8 @@ import { StrategiesModule } from './strategies/strategies.module';
         useUnifiedTopology: true,
         useCreateIndex: true,
 
-        bufferCommands: false,
-        validateOptions: true,
-        loggerLevel: 'debug',
+        // bufferCommands: false,
+        // validateOptions: true,
       }),
       inject: [ConfigService],
     }),
@@ -47,6 +47,7 @@ import { StrategiesModule } from './strategies/strategies.module';
     UsersModule,
     StrategiesModule,
     TeamsModule,
+    UtilitiesModule,
   ],
 
   providers: [AppService],

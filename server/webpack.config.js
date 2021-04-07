@@ -116,6 +116,7 @@ module.exports = (env) => {
       }),
 
       new CaseSensitivePathsPlugin(),
+
       // new ESLintPlugin({
       //   extensions: ['js', 'ts', 'tsx']
       // }),

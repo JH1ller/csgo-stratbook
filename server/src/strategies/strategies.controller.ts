@@ -1,10 +1,14 @@
-import { Controller, Delete, Get, UseGuards, Param, BadRequestException } from '@nestjs/common';
+import { Controller, Delete, Get, UseGuards, Param, BadRequestException, Req, Post, Body } from '@nestjs/common';
 import { ApiOkResponse } from '@nestjs/swagger';
+import { Request } from 'express';
 import Mongoose from 'mongoose';
+
+import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
+import { HasTeamGuard } from 'src/common/guards/has-team.guard';
 
 import { StrategiesService } from './strategies.service';
 
-import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
+import { CreateStrategyDto } from './dto/create-strategy.dto';
 
 @Controller('strategies')
 @UseGuards(AuthenticatedGuard)
@@ -12,8 +16,30 @@ export class StrategiesController {
   constructor(private readonly strategiesService: StrategiesService) {}
 
   @Get()
-  public getStrategy() {
+  @UseGuards(HasTeamGuard)
+  public getStrategy(@Req() req: Request) {
     console.log('hello world');
+  }
+
+  @Post('add')
+  @UseGuards(HasTeamGuard)
+  public async addStrategy(@Req() req: Request, @Body() model: CreateStrategyDto) {
+    const { name, type, map, side, active, videoLink, note } = model;
+
+    const team = req.user.team;
+    const strategy = await this.strategiesService.addStrategy(
+      name,
+      type,
+      map,
+      side,
+      active,
+      videoLink,
+      note,
+      team,
+      req.user
+    );
+
+    return strategy;
   }
 
   @Delete('delete/:id')

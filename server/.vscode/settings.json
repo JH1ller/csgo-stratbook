@@ -16,7 +16,9 @@
     },
   },
   "cSpell.words": [
+    "BUYROUND",
     "csrf",
-    "nestjs"
+    "nestjs",
+    "originalname"
   ],
 }

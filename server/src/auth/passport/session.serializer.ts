@@ -36,7 +36,6 @@ export class SessionSerializer extends PassportSerializer {
   public deserializeUser(payload: string, done: (err: any, id?: any) => void) {
     // note: we only pass the id in serializeUser to passport so we only have the raw-id string
     // as the payload parameter.
-    console.log('deserialize');
     this.usersService
       .findById(payload)
       .then((user) => {
