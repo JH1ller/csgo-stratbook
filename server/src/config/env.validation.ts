@@ -30,6 +30,18 @@ class EnvironmentVariables {
   SESSION_COOKIE_TTL: string;
 
   @IsString()
+  MAIL_HOST: string;
+
+  @IsNumber()
+  MAIL_PORT: number;
+
+  @IsString()
+  MAIL_USER: string;
+
+  @IsString()
+  MAIL_PASSWORD: string;
+
+  @IsString()
   // @Validate(DirectoryExistsConstraint, { message: 'temp directory does not exist.' })
   PERSISTENCE_TMP_DIR: string;
 
@@ -40,6 +52,13 @@ class EnvironmentVariables {
   @IsString()
   @IsOptional()
   RECAPTCHA_SECRET: string;
+
+  /**
+   * Disables mail transport
+   */
+  @IsBoolean()
+  @IsOptional()
+  DEBUG_MAIL_TRANSPORT_DISABLED: boolean;
 
   @IsBoolean()
   @IsOptional()
