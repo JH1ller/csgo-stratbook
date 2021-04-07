@@ -29,7 +29,9 @@ import { StrategiesModule } from './strategies/strategies.module';
         useUnifiedTopology: true,
         useCreateIndex: true,
 
-        // loggerLevel: 'debug',
+        bufferCommands: false,
+        validateOptions: true,
+        loggerLevel: 'debug',
       }),
       inject: [ConfigService],
     }),

@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const webpack = require('webpack');
 const path = require('path');
 const child_process = require('child_process');
@@ -6,19 +7,28 @@ const nodeExternals = require('webpack-node-externals');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 
 const { RunScriptWebpackPlugin } = require('run-script-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
+
+const WebpackWatchSandboxPlugin = require('./webpack-watch-sandbox');
+
+
 
 function git(command) {
   return child_process.execSync(`git ${command}`, { encoding: 'utf8' }).trim();
 }
 
 module.exports = (env) => {
-  const isDevBuild = !(env && env.prod);
-
   // default object
   env = env || {};
 
-  console.log('mode:', isDevBuild ? 'development' : 'production');
+  const isDevBuild = !env.prod;
+  const isStandalone = !!env.standalone;
+
+  console.log(chalk.green('mode:', isDevBuild ? 'development' : 'production'));
+
+  if (isStandalone) {
+    console.log(chalk.yellow('standalone build'));
+  }
 
   return {
     mode: isDevBuild ? 'development' : 'production',
@@ -26,12 +36,14 @@ module.exports = (env) => {
     // is this even required for server apps?
     devtool: 'source-map',
 
-    entry: ['webpack/hot/poll?100', './src/main.ts'],
-    target: 'node',
+    entry: isStandalone ? ['./src/main.ts'] : ['webpack/hot/poll?100', './src/main.ts'],
+    target: 'node15.12',
 
     output: {
       path: path.join(__dirname, 'dist'),
       filename: 'server.js',
+      libraryTarget: 'commonjs2',
+      clean: true,
     },
 
     resolve: {
@@ -39,7 +51,7 @@ module.exports = (env) => {
 
       alias: {
         src: path.resolve(__dirname, './src'),
-        'tslib$': 'tslib/tslib.es6.js',
+        tslib$: 'tslib/tslib.es6.js',
       },
 
       modules: ['node_modules'],
@@ -69,31 +81,31 @@ module.exports = (env) => {
     plugins: [
       // manually provide ts-imports to webpack
       new webpack.ProvidePlugin({
-        '__assign': ['tslib', '__assign'],
-        '__extends': ['tslib', '__extends'],
-        '__rest': ['tslib', '__rest'],
-        '__decorate': ['tslib', '__decorate'],
-        '__param': ['tslib', '__param'],
-        '__metadata': ['tslib', '__metadata'],
-        '__awaiter': ['tslib', '__awaiter'],
-        '__generator': ['tslib', '__generator'],
-        '__createBinding': ['tslib', '__createBinding'],
-        '__exportStar': ['tslib', '__exportStar'],
-        '__values': ['tslib', '__values'],
-        '__read': ['tslib', '__read'],
-        '__spread': ['tslib', '__spread'],
-        '__spreadArrays': ['tslib', '__spreadArrays'],
-        '__spreadArray': ['tslib', '__spreadArray'],
-        '__await': ['tslib', '__await'],
-        '__asyncGenerator': ['tslib', '__asyncGenerator'],
-        '__asyncDelegator': ['tslib', '__asyncDelegator'],
-        '__asyncValues': ['tslib', '__asyncValues'],
-        '__makeTemplateObject': ['tslib', '__makeTemplateObject'],
-        '__importStar': ['tslib', '__importStar'],
-        '__importDefault': ['tslib', '__importDefault'],
-        '__setModuleDefault': ['tslib', '__setModuleDefault'],
-        '__classPrivateFieldGet': ['tslib', '__classPrivateFieldGet'],
-        '__classPrivateFieldSet': ['tslib', '__classPrivateFieldSet'],
+        __assign: ['tslib', '__assign'],
+        __extends: ['tslib', '__extends'],
+        __rest: ['tslib', '__rest'],
+        __decorate: ['tslib', '__decorate'],
+        __param: ['tslib', '__param'],
+        __metadata: ['tslib', '__metadata'],
+        __awaiter: ['tslib', '__awaiter'],
+        __generator: ['tslib', '__generator'],
+        __createBinding: ['tslib', '__createBinding'],
+        __exportStar: ['tslib', '__exportStar'],
+        __values: ['tslib', '__values'],
+        __read: ['tslib', '__read'],
+        __spread: ['tslib', '__spread'],
+        __spreadArrays: ['tslib', '__spreadArrays'],
+        __spreadArray: ['tslib', '__spreadArray'],
+        __await: ['tslib', '__await'],
+        __asyncGenerator: ['tslib', '__asyncGenerator'],
+        __asyncDelegator: ['tslib', '__asyncDelegator'],
+        __asyncValues: ['tslib', '__asyncValues'],
+        __makeTemplateObject: ['tslib', '__makeTemplateObject'],
+        __importStar: ['tslib', '__importStar'],
+        __importDefault: ['tslib', '__importDefault'],
+        __setModuleDefault: ['tslib', '__setModuleDefault'],
+        __classPrivateFieldGet: ['tslib', '__classPrivateFieldGet'],
+        __classPrivateFieldSet: ['tslib', '__classPrivateFieldSet'],
       }),
 
       new webpack.EnvironmentPlugin({
@@ -104,15 +116,26 @@ module.exports = (env) => {
       }),
 
       new CaseSensitivePathsPlugin(),
+      // new ESLintPlugin({
+      //   extensions: ['js', 'ts', 'tsx']
+      // }),
+    ].concat(
+      isStandalone
+        ? [
+            new webpack.EnvironmentPlugin({
+              STANDALONE_BUILD: JSON.stringify(true),
+            }),
+          ]
+        : [
+            // hot reload specific plugins
+            new webpack.HotModuleReplacementPlugin(),
 
-      new webpack.HotModuleReplacementPlugin(),
-      new RunScriptWebpackPlugin({ name: 'server.js' }),
+            new WebpackWatchSandboxPlugin({
+              name: 'server.js',
+            }),
 
-      new CleanWebpackPlugin({
-        verbose: true,
-        cleanStaleWebpackAssets: false,
-        cleanOnceBeforeBuildPatterns: [path.join(__dirname, './dist')],
-      }),
-    ],
+            // new RunScriptWebpackPlugin({ name: 'server.js' }),
+          ]
+    ),
   };
 };

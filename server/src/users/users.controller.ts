@@ -114,10 +114,4 @@ export class UsersController {
 
     await req.user.save();
   }
-
-  @Get('test')
-  public test() {
-    this.usersService.testConnect();
-    return 'aaaaa';
-  }
 }

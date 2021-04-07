@@ -13,7 +13,7 @@ export class StrategiesController {
 
   @Get()
   public getStrategy() {
-    console.log('test');
+    console.log('hello world');
   }
 
   @Delete('delete/:id')
@@ -24,6 +24,6 @@ export class StrategiesController {
       throw new BadRequestException('strategy was not found');
     }
 
-    return 'hello test :)';
+    return 'hello world :)';
   }
 }
