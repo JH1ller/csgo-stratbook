@@ -14,6 +14,8 @@ import { TeamsModule } from './teams/teams.module';
 import { StrategiesModule } from './strategies/strategies.module';
 import { UtilitiesModule } from './utilities/utilities.module';
 
+import { BullConfigService } from 'src/services/bull-config.service';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -38,10 +40,7 @@ import { UtilitiesModule } from './utilities/utilities.module';
 
     BullModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        redis: configService.get<string>('bull.redis.url'),
-      }),
-      inject: [ConfigService],
+      useClass: BullConfigService,
     }),
 
     AuthModule,

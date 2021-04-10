@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
+
 import { Express } from 'express';
 
 import { UsersService } from './users.service';
@@ -21,10 +22,14 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import { ProfileUpdateDto } from './dto/profile-update.dto';
 
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
+import { ImageUploaderService } from 'src/services/image-uploader/image-uploader.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly imageUploaderService: ImageUploaderService
+  ) {}
 
   @Post('register')
   @UseInterceptors(FileInterceptor('avatar'))

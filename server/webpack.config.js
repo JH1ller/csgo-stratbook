@@ -3,9 +3,7 @@ const webpack = require('webpack');
 const path = require('path');
 const child_process = require('child_process');
 
-const Handlebars = require('handlebars');
-
-const nodeExternals = require('webpack-node-externals');
+const NodeExternals = require('webpack-node-externals');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 
 const { RunScriptWebpackPlugin } = require('run-script-webpack-plugin');
@@ -36,12 +34,16 @@ module.exports = (env) => {
     // is this even required for server apps?
     devtool: 'source-map',
 
-    entry: isStandalone ? ['./src/main.ts'] : ['webpack/hot/poll?100', './src/main.ts'],
+    entry: {
+      server: isStandalone ? './src/main.ts' : ['webpack/hot/poll?100', './src/main.ts'],
+      'image-processor': './src-processors/image-processor.ts',
+    },
+
     target: 'node15.12',
 
     output: {
       path: path.join(__dirname, 'dist'),
-      filename: 'server.js',
+      filename: '[name].js',
       libraryTarget: 'commonjs2',
       clean: true,
     },
@@ -58,7 +60,7 @@ module.exports = (env) => {
     },
 
     externals: [
-      nodeExternals({
+      NodeExternals({
         allowlist: ['webpack/hot/poll?100', 'tslib'],
       }),
     ],

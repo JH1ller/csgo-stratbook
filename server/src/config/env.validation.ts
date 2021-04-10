@@ -51,6 +51,12 @@ class EnvironmentVariables {
   // @Validate(DirectoryExistsConstraint, { message: 'temp directory does not exist.' })
   PERSISTENCE_TMP_DIR: string;
 
+  @IsString()
+  S3_ACCESS_KEY_ID: string;
+
+  @IsString()
+  S3_SECRET_ACCESS_KEY: string;
+
   @IsBoolean()
   @IsOptional()
   USE_CAPTCHA: boolean;

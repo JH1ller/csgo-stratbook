@@ -176,14 +176,15 @@ class WebpackWatchSandboxPlugin {
       const file = fs.readFileSync(path.resolve(entryPoint), "utf-8");
 
       if (this.instance !== null) {
+        console.log()
+        console.log("reloading...")
+        console.log()
+
+
         for (const i in this.context.resolvedModules) {
-          // if (i !== `bcrypt` && i !== `chalk` && i !== `morgan` && i !== `helmet` && i !== `ms`
-          //   //&& i !== `passport` && i !== `passport-local` && i !== `@nestjs/passport`
-          //   )
           if (
-            // i === `passport` //||
-            // i === `passport-local` ||
-            i === `@nestjs/passport`
+            i === `@nestjs/passport` ||
+            i === `@nestjs/bull`
           ) {
             const mod = require.resolve(i, [__dirname]);
 

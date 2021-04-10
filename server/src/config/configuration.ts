@@ -1,4 +1,11 @@
-import ms = require('ms');
+import ms from 'ms';
+
+function getBooleanValue(value: string) {
+  if (value.toLocaleLowerCase() === 'true') {
+    return true;
+  }
+  return false;
+}
 
 /**
  * @summary Prepares a new configuration object which is injected into nestjs's configuration service.
@@ -27,7 +34,7 @@ export default () => ({
 
   mail: {
     host: process.env.MAIL_HOST,
-    port: process.env.MAIL_PORT,
+    port: parseInt(process.env.MAIL_PORT, 10),
 
     user: process.env.MAIL_USER,
     password: process.env.MAIL_PASSWORD,
@@ -39,8 +46,15 @@ export default () => ({
     tmp: process.env.PERSISTENCE_TMP_DIR,
   },
 
+  s3: {
+    accessKeyId: process.env.S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    endpoint: process.env.S3_ENDPOINT,
+    bucket: process.env.S3_BUCKET,
+  },
+
   debug: {
-    mailTransportDisabled: process.env.DEBUG_MAIL_TRANSPORT_DISABLED,
-    createUserWithConfirmedMail: process.env.DEBUG_CREATE_USER_WITH_CONFIRMED_MAIL,
+    mailTransportDisabled: getBooleanValue(process.env.DEBUG_MAIL_TRANSPORT_DISABLED),
+    createUserWithConfirmedMail: getBooleanValue(process.env.DEBUG_CREATE_USER_WITH_CONFIRMED_MAIL),
   },
 });
