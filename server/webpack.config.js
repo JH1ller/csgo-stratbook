@@ -3,6 +3,8 @@ const webpack = require('webpack');
 const path = require('path');
 const child_process = require('child_process');
 
+const Handlebars = require('handlebars');
+
 const nodeExternals = require('webpack-node-externals');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 
@@ -10,8 +12,6 @@ const { RunScriptWebpackPlugin } = require('run-script-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
 const WebpackWatchSandboxPlugin = require('./webpack-watch-sandbox');
-
-
 
 function git(command) {
   return child_process.execSync(`git ${command}`, { encoding: 'utf8' }).trim();
@@ -69,6 +69,26 @@ module.exports = (env) => {
           test: /.tsx?$/,
           use: 'ts-loader',
           exclude: /node_modules/,
+        },
+        {
+          test: /\.hbs$/i,
+          loader: 'html-loader',
+        },
+        {
+          test: /\.s[ac]ss$/i,
+          use: [
+            'style-loader',
+            'css-loader',
+            {
+              loader: 'sass-loader',
+              options: {
+                implementation: require('sass'),
+                sassOptions: {
+                  fiber: false,
+                },
+              },
+            },
+          ],
         },
       ],
     },

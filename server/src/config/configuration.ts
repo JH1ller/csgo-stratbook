@@ -19,12 +19,20 @@ export default () => ({
     },
   },
 
+  bull: {
+    redis: {
+      url: process.env.BULL_REDIS_URL,
+    },
+  },
+
   mail: {
     host: process.env.MAIL_HOST,
     port: process.env.MAIL_PORT,
 
     user: process.env.MAIL_USER,
     password: process.env.MAIL_PASSWORD,
+
+    privateKey: process.env.MAIL_DKIM_PRIVATE_KEY,
   },
 
   persistence: {

@@ -9,6 +9,8 @@ import { User, UserSchema } from 'src/schemas/user.schema';
 import { MulterConfigModule } from 'src/services/multer/multer-config.module';
 import { MulterConfigService } from 'src/services/multer/multer-config.service';
 
+import { MailerModule } from 'src/services/mail/mailer.module';
+
 @Module({
   controllers: [UsersController],
   imports: [
@@ -17,6 +19,7 @@ import { MulterConfigService } from 'src/services/multer/multer-config.service';
       useExisting: MulterConfigService,
     }),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MailerModule,
   ],
   providers: [UsersService],
   exports: [UsersService],

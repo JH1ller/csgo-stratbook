@@ -31,17 +31,18 @@ import { UtilitiesModule } from './utilities/utilities.module';
         useCreateIndex: true,
 
         // bufferCommands: false,
-        // validateOptions: true,
+        validateOptions: true,
       }),
       inject: [ConfigService],
     }),
 
-    // BullModule.forRoot({
-    //   redis: {
-    //     host: 'localhost',
-    //     port: 6379,
-    //   },
-    // }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        redis: configService.get<string>('bull.redis.url'),
+      }),
+      inject: [ConfigService],
+    }),
 
     AuthModule,
     UsersModule,

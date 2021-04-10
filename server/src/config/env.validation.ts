@@ -30,6 +30,9 @@ class EnvironmentVariables {
   SESSION_COOKIE_TTL: string;
 
   @IsString()
+  BULL_REDIS_URL: string;
+
+  @IsString()
   MAIL_HOST: string;
 
   @IsNumber()
@@ -40,6 +43,9 @@ class EnvironmentVariables {
 
   @IsString()
   MAIL_PASSWORD: string;
+
+  @IsString()
+  MAIL_DKIM_PRIVATE_KEY: string;
 
   @IsString()
   // @Validate(DirectoryExistsConstraint, { message: 'temp directory does not exist.' })
