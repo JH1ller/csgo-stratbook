@@ -3,7 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import Mongoose, { Model } from 'mongoose';
 
-import { StrategyType, StrategyMap, StrategySide } from 'src/schemas/enums/strategy';
+import { GameMap, PlayerSide } from 'src/schemas/enums';
+import { StrategyType } from 'src/schemas/enums/strategy';
+
 import { Strategy, StrategyDocument } from 'src/schemas/strategy.schema';
 import { Team } from 'src/schemas/team.schema';
 import { User } from 'src/schemas/user.schema';
@@ -19,8 +21,8 @@ export class StrategiesService {
   public addStrategy(
     name: string,
     type: StrategyType,
-    map: StrategyMap,
-    side: StrategySide,
+    map: GameMap,
+    side: PlayerSide,
     active: boolean,
     videoLink: string,
     note: string,

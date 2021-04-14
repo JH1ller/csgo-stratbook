@@ -1,10 +1,30 @@
+import { Logger } from '@nestjs/common';
 import ms from 'ms';
+import path from 'path';
+import process from 'process';
+import fs from 'fs';
+
+import { testTempDir } from './helpers/temp-directory';
 
 function getBooleanValue(value: string) {
   if (value.toLocaleLowerCase() === 'true') {
     return true;
   }
   return false;
+}
+
+function resolveTempDir(arg: string) {
+  const tempDir = path.resolve(arg);
+
+  if (testTempDir(process.cwd(), tempDir)) {
+    Logger.warn(`Removing temp directory: ${tempDir}`, 'Configuration');
+    fs.rmdirSync(tempDir, { recursive: true });
+  }
+
+  // re-create temp directory
+  fs.mkdirSync(tempDir, { recursive: true });
+
+  return tempDir;
 }
 
 /**
@@ -42,15 +62,15 @@ export default () => ({
     privateKey: process.env.MAIL_DKIM_PRIVATE_KEY,
   },
 
-  persistence: {
-    tmp: process.env.PERSISTENCE_TMP_DIR,
+  upload: {
+    tempDir: resolveTempDir(process.env.UPLOAD_TEMP_DIR),
   },
 
   s3: {
     accessKeyId: process.env.S3_ACCESS_KEY_ID,
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
     endpoint: process.env.S3_ENDPOINT,
-    bucket: process.env.S3_BUCKET,
+    imageBucket: process.env.S3_IMAGE_BUCKET,
   },
 
   debug: {

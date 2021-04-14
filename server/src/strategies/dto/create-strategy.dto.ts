@@ -1,37 +1,39 @@
 import { IsBoolean, IsEnum, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { StrategyType, StrategyMap, StrategySide } from 'src/schemas/enums/strategy';
+import { GameMap, PlayerSide } from 'src/schemas/enums';
+import { StrategyType } from 'src/schemas/enums/strategy';
 
 export class CreateStrategyDto {
+  @IsEnum(GameMap)
+  @ApiProperty({ example: GameMap.Dust2, enum: GameMap })
+  public readonly map: GameMap;
+
   @IsString()
-  @ApiProperty({ example: 'Test Strategy' })
+  @ApiProperty({ example: 'Test Strategy', type: String })
   public readonly name: string;
 
   @IsEnum(StrategyType)
-  @ApiProperty({ example: StrategyType.Pistol })
+  @ApiProperty({ example: StrategyType.Pistol, enum: StrategyType, required: false })
   public readonly type: StrategyType;
 
-  @IsEnum(StrategyMap)
-  @ApiProperty({ example: StrategyMap.Dust2 })
-  public readonly map: StrategyMap;
-
-  @IsEnum(StrategySide)
-  @ApiProperty({ example: StrategySide.CounterTerrorists })
-  public readonly side: StrategySide;
+  @IsEnum(PlayerSide)
+  @ApiProperty({ example: PlayerSide.CounterTerrorists, enum: PlayerSide })
+  public readonly side: PlayerSide;
 
   @IsBoolean()
-  @ApiProperty({ example: true })
+  @ApiProperty({ example: true, type: Boolean })
   public readonly active: boolean;
-
-  @IsUrl()
-  @IsOptional()
-  @ApiProperty({ example: 'https://www.youtube.com/' })
-  public readonly videoLink: string;
 
   @IsString()
   @IsOptional()
-  @MaxLength(512)
-  @ApiProperty({ example: 'Hello World :)' })
+  @MaxLength(250)
+  @ApiProperty({ example: 'Hello World :)', type: String, required: false })
   public readonly note: string;
+
+  @IsUrl()
+  @IsOptional()
+  @MaxLength(250)
+  @ApiProperty({ example: 'https://www.youtube.com/', type: String, required: false })
+  public readonly videoLink: string;
 }

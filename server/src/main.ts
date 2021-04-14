@@ -21,10 +21,12 @@ import { isDevEnv } from './common/env';
  * @summary Helper for HMR - Api reloading
  */
 class Main {
+  private readonly logger = new Logger(Main.name);
+
   private app: NestExpressApplication;
 
   public async bootstrap() {
-    Logger.debug(
+    this.logger.debug(
       `Build: ${chalk.green(process.env.BUILD_TIME)} ` +
         `git-commit: ${chalk.magenta(process.env.GIT_VERSION)} (${chalk.magenta(process.env.GIT_AUTHOR_DATE)})`
     );
@@ -100,7 +102,7 @@ class Main {
     const port = configService.get<number>('port');
     await this.app.listen(port);
 
-    Logger.debug(chalk.cyan(`Application is running on: ${chalk.magenta(await this.app.getUrl())}`));
+    this.logger.debug(chalk.cyan(`Application is running on: ${chalk.magenta(await this.app.getUrl())}`));
   }
 
   public dispose() {
@@ -115,13 +117,12 @@ class Main {
       .setTitle('csgo-stratbook api')
       .setDescription('Stratbook REST API')
       .setVersion('0.1')
-      .addTag('stratbook')
       .build();
 
     const document = SwaggerModule.createDocument(this.app, config);
     SwaggerModule.setup(route, this.app, document);
 
-    Logger.debug(`Swagger running on route: ${chalk.magenta(`/${route}`)}`);
+    this.logger.debug(`Swagger running on route: ${chalk.magenta(`/${route}`)}`);
   }
 }
 

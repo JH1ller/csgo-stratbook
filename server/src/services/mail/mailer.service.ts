@@ -32,11 +32,13 @@ function toLoggerString(...params: any[]) {
 
 @Injectable()
 export class MailerService {
+  private readonly logger = new Logger(MailerService.name);
+
   private readonly transporter: Transporter;
 
   constructor(private readonly configService: ConfigService, @InjectQueue('mailer') private mailQueue: Queue) {
     if (this.configService.get<boolean>('debug.mailTransportDisabled')) {
-      Logger.warn('Email transport is disabled');
+      this.logger.warn('Email transport is disabled');
       return;
     }
 

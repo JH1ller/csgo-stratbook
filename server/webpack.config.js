@@ -7,6 +7,7 @@ const NodeExternals = require('webpack-node-externals');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 
 const { RunScriptWebpackPlugin } = require('run-script-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
 const WebpackWatchSandboxPlugin = require('./webpack-watch-sandbox');
@@ -69,8 +70,12 @@ module.exports = (env) => {
       rules: [
         {
           test: /.tsx?$/,
-          use: 'ts-loader',
+          loader: 'ts-loader',
           exclude: /node_modules/,
+          options: {
+            // disable type checker - we will use it in fork plugin
+            transpileOnly: true
+          },
         },
         {
           test: /\.hbs$/i,
@@ -138,9 +143,15 @@ module.exports = (env) => {
       }),
 
       new CaseSensitivePathsPlugin(),
+      new ForkTsCheckerWebpackPlugin({
+        eslint: {
+           // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
+          files: './src/**/*.{ts,tsx,js,jsx}'
+        }
+      }),
 
       // new ESLintPlugin({
-      //   extensions: ['js', 'ts', 'tsx']
+      //   extensions: ['ts', 'tsx']
       // }),
     ].concat(
       isStandalone
