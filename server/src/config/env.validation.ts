@@ -1,12 +1,13 @@
 import { plainToClass } from 'class-transformer';
-import { IsString, IsBoolean, IsOptional, IsNumber, validateSync, MinLength, Validate } from 'class-validator';
-
-import { DirectoryExistsConstraint } from './constraints/directory-exists-constraint';
+import { IsString, IsBoolean, IsOptional, IsNumber, validateSync, MinLength, IsUrl } from 'class-validator';
 
 /**
  * @summary helper class for validating .env-file properties
  */
 class EnvironmentVariables {
+  /**
+   * Port on which the server listens to
+   */
   @IsNumber()
   PORT: number;
 
@@ -29,12 +30,21 @@ class EnvironmentVariables {
   @IsString()
   SESSION_COOKIE_TTL: string;
 
+  /**
+   * Redis connection url for bull-based queues
+   */
   @IsString()
   BULL_REDIS_URL: string;
 
+  /**
+   * Mail host
+   */
   @IsString()
   MAIL_HOST: string;
 
+  /**
+   * Mail port
+   */
   @IsNumber()
   MAIL_PORT: number;
 
@@ -44,18 +54,29 @@ class EnvironmentVariables {
   @IsString()
   MAIL_PASSWORD: string;
 
+  /**
+   * OpenSSL generated private key. Can be generated with ``node ./gen-dkim-private-key.js``
+   */
   @IsString()
   MAIL_DKIM_PRIVATE_KEY: string;
 
+  /**
+   * Temporary directory for storing uploads. Directory is deleted on each startup.
+   */
   @IsString()
-  // @Validate(DirectoryExistsConstraint, { message: 'temp directory does not exist.' })
-  PERSISTENCE_TMP_DIR: string;
+  UPLOAD_TEMP_DIR: string;
 
   @IsString()
   S3_ACCESS_KEY_ID: string;
 
   @IsString()
   S3_SECRET_ACCESS_KEY: string;
+
+  @IsUrl()
+  S3_ENDPOINT: string;
+
+  @IsString()
+  S3_IMAGE_BUCKET: string;
 
   @IsBoolean()
   @IsOptional()

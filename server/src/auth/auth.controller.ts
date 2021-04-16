@@ -1,9 +1,12 @@
 import { Controller, Post, Request, UseGuards, Logger, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse } from '@nestjs/swagger';
 import { Express } from 'express';
 
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+
+import { LocalSignInDto } from './dto/local-sign-in.dto';
+
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 
 @Controller('auth')
@@ -13,6 +16,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('local/signin')
   @HttpCode(HttpStatus.OK)
+  @ApiBody({ type: LocalSignInDto })
   @ApiOkResponse()
   public login() {
     // login is performed by LocalAuthGuard.

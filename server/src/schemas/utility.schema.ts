@@ -5,6 +5,9 @@ import { Document } from 'mongoose';
 import { Team } from './team.schema';
 import { User } from './user.schema';
 
+import { PlayerSide, GameMap } from './enums';
+import { UtilityType, UtilityMouseButton, UtilityMovement } from './enums/utility';
+
 @Schema({
   timestamps: {
     createdAt: 'createdAt',
@@ -19,19 +22,19 @@ export class Utility {
 
   @Prop({
     required: true,
-    enum: ['FLASH', 'GRENADE', 'SMOKE', 'MOLOTOV'],
+    enum: Object.values(UtilityType),
   })
   type: string;
 
   @Prop({
-    enum: ['DUST_2', 'MIRAGE', 'OVERPASS', 'NUKE', 'VERTIGO', 'INFERNO', 'TRAIN'],
+    enum: Object.values(GameMap),
     required: true,
   })
   map: string;
 
   @Prop({
     required: true,
-    enum: ['LEFT', 'RIGHT', 'LEFTRIGHT'],
+    enum: Object.values(UtilityMouseButton),
   })
   mouseButton: string;
 
@@ -48,9 +51,9 @@ export class Utility {
   jump: boolean;
 
   @Prop({
-    enum: ['STILL', 'WALK', 'RUN'],
+    enum: Object.values(UtilityMovement),
     required: true,
-    default: 'STILL',
+    default: UtilityMovement.Still,
   })
   movement: string;
 
@@ -70,12 +73,14 @@ export class Utility {
   description: string;
 
   @Prop({
-    enum: ['CT', 'T'],
+    enum: Object.values(PlayerSide),
     required: true,
   })
   side: string;
 
-  @Prop()
+  @Prop({
+    maxlength: 300,
+  })
   videoLink: string;
 
   @Prop({

@@ -4,7 +4,8 @@ import mongoose, { Document } from 'mongoose';
 import { Team } from './team.schema';
 import { User } from './user.schema';
 
-import { StrategyType, StrategySide, StrategyMap } from './enums/strategy';
+import { PlayerSide, GameMap } from './enums';
+import { StrategyType } from './enums/strategy';
 
 @Schema({
   timestamps: {
@@ -21,7 +22,7 @@ export class Strategy {
 
   @Prop({
     required: true,
-    enum: Object.values(StrategyMap),
+    enum: Object.values(GameMap),
   })
   map: string;
 
@@ -33,7 +34,7 @@ export class Strategy {
   team: Team;
 
   @Prop({
-    enum: Object.values(StrategySide),
+    enum: Object.values(PlayerSide),
     required: true,
   })
   side: string;
