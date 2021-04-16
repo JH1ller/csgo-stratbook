@@ -11,6 +11,9 @@ class EnvironmentVariables {
   @IsNumber()
   PORT: number;
 
+  @IsString()
+  BASE_URL: string;
+
   /**
    * Mongodb connection string
    */
@@ -59,6 +62,10 @@ class EnvironmentVariables {
    */
   @IsString()
   MAIL_DKIM_PRIVATE_KEY: string;
+
+  @IsString()
+  @MinLength(32)
+  MAIL_TOKEN_SECRET: string;
 
   /**
    * Temporary directory for storing uploads. Directory is deleted on each startup.

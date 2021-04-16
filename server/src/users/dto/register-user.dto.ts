@@ -1,4 +1,4 @@
-import { IsString, MinLength, MaxLength, IsEmail, Matches } from 'class-validator';
+import { IsString, MinLength, MaxLength, IsEmail, Matches, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { passwordPattern } from 'src/common/validation-helpers';
@@ -22,4 +22,8 @@ export class RegisterUserDto {
   })
   @ApiProperty({ example: 'HelloWorld1' })
   public readonly password: string;
+
+  @IsOptional()
+  @ApiProperty({ type: 'string', format: 'binary' })
+  public readonly avatar: any;
 }
