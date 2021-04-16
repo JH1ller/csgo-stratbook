@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import Mongoose, { Model, ObjectId } from 'mongoose';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 import { User, UserDocument } from 'src/schemas/user.schema';
 
@@ -30,11 +31,7 @@ export class UsersService {
     return this.userModel.findOne({ email }).exec();
   }
 
-  public async createUser(userName: string, email: string, password: string) {
-    if (await this.isEmailInUse(email)) {
-      throw new Error('email in use');
-    }
-
+  public async createUser(userName: string, email: string, password: string, avatar: string) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -42,6 +39,7 @@ export class UsersService {
       userName,
       email,
       password: hashedPassword,
+      avatar,
     });
 
     if (this.configService.get<boolean>('debug.createUserWithConfirmedMail')) {
@@ -49,6 +47,12 @@ export class UsersService {
     }
 
     return await createdUser.save();
+  }
+
+  public async deleteUser(id: Mongoose.Types.ObjectId) {
+    const user = await this.userModel.findByIdAndDelete(id);
+
+    // delete avatar from S3
   }
 
   public async isEmailInUse(email: string) {
@@ -81,4 +85,14 @@ export class UsersService {
   // public getUsersByTeamId(teamId: Mongoose.Types.ObjectId) {
   //   return this.userModel.find({ team: teamId });
   // }
+
+  public sendForgotPasswordRequest(user: UserDocument) {
+    const tokenSecret = this.configService.get<string>('mail.tokenSecret');
+
+    const data = {
+      _id: user._id,
+    };
+
+    const token = jwt.sign(data, tokenSecret, { expiresIn: '30m' });
+  }
 }

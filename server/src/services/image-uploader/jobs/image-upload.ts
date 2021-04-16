@@ -9,5 +9,9 @@ export interface ImageUploadJob {
    */
   source: string;
 
+  /**
+   * resize arguments. Image is note resized if this property
+   * is null.
+   */
   resize?: ResizeParameters;
 }

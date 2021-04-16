@@ -66,6 +66,11 @@ module.exports = (env) => {
       }),
     ],
 
+    watchOptions: {
+      aggregateTimeout: 200,
+      // poll: 1000,
+    },
+
     module: {
       rules: [
         {
@@ -74,7 +79,7 @@ module.exports = (env) => {
           exclude: /node_modules/,
           options: {
             // disable type checker - we will use it in fork plugin
-            transpileOnly: true
+            transpileOnly: true,
           },
         },
         {
@@ -145,9 +150,13 @@ module.exports = (env) => {
       new CaseSensitivePathsPlugin(),
       new ForkTsCheckerWebpackPlugin({
         eslint: {
-           // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
-          files: './src/**/*.{ts,tsx,js,jsx}'
-        }
+          // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
+          files: './src/**/*.{ts,tsx,js,jsx}',
+        },
+      }),
+
+      new webpack.WatchIgnorePlugin({
+        paths: [path.resolve(__dirname, './public'), path.resolve(__dirname, './dist')],
       }),
 
       // new ESLintPlugin({

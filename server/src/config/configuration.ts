@@ -33,6 +33,7 @@ function resolveTempDir(arg: string) {
  */
 export default () => ({
   port: parseInt(process.env.PORT, 10),
+  baseUrl: process.env.BASE_URL,
 
   database: {
     url: process.env.DATABASE_URL,
@@ -60,6 +61,7 @@ export default () => ({
     password: process.env.MAIL_PASSWORD,
 
     privateKey: process.env.MAIL_DKIM_PRIVATE_KEY,
+    tokenSecret: process.env.MAIL_TOKEN_SECRET,
   },
 
   upload: {
