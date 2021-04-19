@@ -17,7 +17,9 @@
   },
   "cSpell.words": [
     "BUYROUND",
+    "Stratbook",
     "csrf",
+    "hcaptcha",
     "mjml",
     "nestjs",
     "originalname"

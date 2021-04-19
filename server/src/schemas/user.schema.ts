@@ -16,7 +16,7 @@ export class User {
     maxlength: 20,
     minlength: 3,
   })
-  userName: string;
+  public userName: string;
 
   @Prop({
     required: true,
@@ -24,54 +24,53 @@ export class User {
     maxlength: 255,
     minlength: 6,
   })
-  email: string;
+  public email: string;
 
   @Prop({
     required: true,
     minlength: 8,
   })
-  password: string;
+  public password: string;
 
   @Prop({
     default: false,
   })
-  mailConfirmed: boolean;
+  public mailConfirmed: boolean;
 
+  /**
+   * s3 image bucket key
+   */
   @Prop()
-  avatar: string;
+  public avatar?: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Team',
   })
-  team: Team;
+  public team?: Team;
 
   @Prop()
-  createdAt: Date;
+  public createdAt: Date;
 
   @Prop()
-  modifiedAt: Date;
-
-  @Prop()
-  isOnline: boolean;
+  public modifiedAt: Date;
 
   @Prop({
     default: () => Date.now(),
   })
-  lastOnline: Date;
+  public lastOnline: Date;
 
   @Prop({
     default: false,
   })
-  isAdmin: boolean;
+  public isAdmin: boolean;
 
   @Prop({
     default: false,
   })
-  completedTutorial: boolean;
+  public completedTutorial: boolean;
 }
 
 export type UserDocument = User & Document<mongoose.ObjectId>;
 
 export const UserSchema = SchemaFactory.createForClass(User);
-// UserSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });

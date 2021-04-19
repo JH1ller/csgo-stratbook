@@ -11,6 +11,8 @@ import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 
 @Controller('auth')
 export class AuthController {
+  private readonly logger = new Logger(AuthController.name);
+
   constructor(private readonly authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
@@ -32,7 +34,7 @@ export class AuthController {
     // destroy session data
     req.session.destroy((error: string) => {
       if (error) {
-        Logger.error(`failed to destroy user session: ${error}`);
+        this.logger.error(`failed to destroy user session: ${error}`);
       }
     });
   }

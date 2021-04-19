@@ -2,17 +2,22 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 
-import Mongoose, { Model, ObjectId } from 'mongoose';
+import { Model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import { User, UserDocument } from 'src/schemas/user.schema';
 
+import { MailerService } from 'src/services/mail/mailer.service';
+import { ResourceManagerService } from 'src/services/resource-manager/resource-manager.service';
+
 @Injectable()
 export class UsersService {
   constructor(
     private readonly configService: ConfigService,
-    @InjectModel(User.name) private readonly userModel: Model<UserDocument>
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    private readonly mailerService: MailerService,
+    private readonly resourceManagerService: ResourceManagerService
   ) {}
 
   /**
@@ -23,6 +28,10 @@ export class UsersService {
     return this.userModel.findById(id).exec();
   }
 
+  public existsById(id: Schema.Types.ObjectId) {
+    return this.userModel.exists({ _id: id });
+  }
+
   /**
    * Find a user by email
    * @param email email of the corresponding account
@@ -31,7 +40,7 @@ export class UsersService {
     return this.userModel.findOne({ email }).exec();
   }
 
-  public async createUser(userName: string, email: string, password: string, avatar: string) {
+  public async createUser(userName: string, email: string, password: string, avatar?: string) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -49,10 +58,13 @@ export class UsersService {
     return await createdUser.save();
   }
 
-  public async deleteUser(id: Mongoose.Types.ObjectId) {
+  public async deleteUser(id: Schema.Types.ObjectId) {
     const user = await this.userModel.findByIdAndDelete(id);
 
     // delete avatar from S3
+    if (user.avatar) {
+      await this.resourceManagerService.deleteImage(user.avatar);
+    }
   }
 
   public async isEmailInUse(email: string) {
@@ -67,18 +79,18 @@ export class UsersService {
    * @param newPassword new password
    * @returns query promise
    */
-  public async updatePassword(id: ObjectId, newPassword: string) {
+  public async updatePassword(id: Schema.Types.ObjectId, newPassword: string) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
     return await this.userModel.updateOne({ _id: id }, { password: hashedPassword });
   }
 
-  public updateUserName(id: ObjectId, userName: string) {
+  public updateUserName(id: Schema.Types.ObjectId, userName: string) {
     return this.userModel.updateOne({ _id: id }, { userName });
   }
 
-  public updateCompletedTutorial(id: ObjectId, completedTutorial: boolean) {
+  public updateCompletedTutorial(id: Schema.Types.ObjectId, completedTutorial: boolean) {
     return this.userModel.updateOne({ _id: id }, { completedTutorial });
   }
 
@@ -86,7 +98,7 @@ export class UsersService {
   //   return this.userModel.find({ team: teamId });
   // }
 
-  public sendForgotPasswordRequest(user: UserDocument) {
+  public async sendForgotPasswordRequest(user: UserDocument) {
     const tokenSecret = this.configService.get<string>('mail.tokenSecret');
 
     const data = {
@@ -94,5 +106,8 @@ export class UsersService {
     };
 
     const token = jwt.sign(data, tokenSecret, { expiresIn: '30m' });
+
+    const { email, userName } = user;
+    await this.mailerService.sendPasswordResetMail(email, userName, token);
   }
 }

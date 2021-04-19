@@ -12,7 +12,7 @@ import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 import { ImageUploaderService } from 'src/services/image-uploader/image-uploader.service';
 
 @Controller('utilities')
-// @UseGuards(AuthenticatedGuard)
+@UseGuards(AuthenticatedGuard)
 export class UtilitiesController {
   constructor(
     private readonly utilitiesService: UtilitiesService,
@@ -27,7 +27,7 @@ export class UtilitiesController {
   public async addUtility(
     @UploadedFiles() files: { images: Express.Multer.File[] },
     @Body() model: AddUtilityDto,
-    @Request req: Express.Request
+    @Request() req: Express.Request
   ) {
     if (files) {
       const result = await Promise.all(

@@ -1,135 +1,78 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 
-import nodemailer, { Transporter } from 'nodemailer';
-import Handlebars from 'handlebars';
-import mjml = require('mjml');
-import { htmlToText } from 'html-to-text';
+import urljoin from 'url-join';
+import ms from 'ms';
 
-import ResetPasswordTemplate from 'src/services/mail/templates/reset-password.hbs';
+import { MailSendJob } from './job/mail-send-job';
 
-/**
- * Converts params to string and appends all to one string output
- * @param params bunyan log param array
- * @returns output string
- */
-function toLoggerString(...params: any[]) {
-  let output = '';
-
-  for (let i = 0; i < params.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    output += `${params[i]}`;
-
-    if (i <= params.length - 1) {
-      output += ' ';
-    }
-  }
-
-  return output;
-}
+import ResetPasswordTemplate from './templates/reset-password.hbs';
+import VerifyEmail from './templates/verify-email.hbs';
+import VerifyNewEmailTemplate from './templates/verify-new-email.hbs';
 
 @Injectable()
 export class MailerService {
-  private readonly logger = new Logger(MailerService.name);
+  private readonly baseUrl: string;
 
-  private readonly transporter: Transporter;
-
-  constructor(private readonly configService: ConfigService, @InjectQueue('mailer') private mailQueue: Queue) {
-    if (this.configService.get<boolean>('debug.mailTransportDisabled')) {
-      this.logger.warn('Email transport is disabled');
-      return;
-    }
-
-    this.transporter = nodemailer.createTransport({
-      host: this.configService.get<string>('mail.host'),
-      port: this.configService.get<number>('mail.port'),
-      secure: false,
-
-      tls: {
-        ciphers: 'SSLv3',
-      },
-
-      auth: {
-        user: this.configService.get<string>('mail.user'),
-        pass: this.configService.get<string>('mail.password'),
-      },
-
-      logger: {
-        level: () => {
-          // empty
-        },
-
-        trace: (...params: any[]) => Logger.verbose(toLoggerString(params)),
-        debug: (...params: any[]) => Logger.debug(toLoggerString(params)),
-        info: (...params: any[]) => Logger.debug(toLoggerString(params)),
-        warn: (...params: any[]) => Logger.warn(toLoggerString(params)),
-        error: (...params: any[]) => Logger.error(toLoggerString(params)),
-        fatal: (...params: any[]) => Logger.error(toLoggerString(params)),
-      },
-
-      dkim: {
-        domainName: 'stratbook.live',
-        keySelector: 's1',
-        privateKey: configService.get<string>('mail.privateKey'),
-      },
-    });
-
-    // this.transporter.verify();
+  constructor(
+    private readonly configService: ConfigService,
+    @InjectQueue('mailer') private mailQueue: Queue<MailSendJob>
+  ) {
+    this.baseUrl = this.configService.get<string>('baseUrl');
   }
 
-  private async sendMail(to: string, subject: string, html: string) {
-    if (this.configService.get<boolean>('debug.mailTransportDisabled')) {
-      Logger.debug(`Skip mail: ${to} ${subject}`);
-      return;
-    }
-
-    // nodemailer-base64-to-s3
-    const text = htmlToText(html);
-
-    // see https://nodemailer.com/usage/
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const info = await this.transporter.sendMail({
-      from: 'Stratbook <support@stratbook.live>',
-      to,
-      subject,
-      html,
-      text,
-    });
-
-    console.log(info);
-  }
-
-  public sendPasswordResetMail(email: string, userName: string, resetCode: string) {
+  public async sendPasswordResetMail(email: string, userName: string, token: string) {
     const context = {
       userName,
-      link: 'API_URL' + resetCode,
+      link: urljoin(this.baseUrl, `/#/reset?token=${token}`),
     };
 
-    const html = this.compileTemplate(ResetPasswordTemplate, context);
-    return this.sendMail(email, 'Stratbook - Reset password', html);
+    await this.addJob({
+      email,
+      subject: 'Stratbook - Reset password',
+      context,
+      template: ResetPasswordTemplate,
+    });
   }
 
-  /**
-   * Compiles email template to html code.
-   * @param mailTemplate imported template
-   * @param context context object, which feeds into handlebars
-   * @returns generated html code
-   */
-  private compileTemplate(mailTemplate: string, context: Record<string, unknown>) {
-    const template = Handlebars.compile(mailTemplate);
-    const mjmlTemplate = template(context);
+  public async sendVerifyEmail(email: string, userName: string, token: string) {
+    const context = {
+      userName,
+      link: urljoin(this.baseUrl, `/auth/confirmation/${token}`),
+    };
 
-    const { html } = mjml(mjmlTemplate, {
-      // default
-      fonts: {
-        'Open Sans': 'https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700',
-      },
-      validationLevel: 'strict',
-      keepComments: false,
+    await this.addJob({
+      email,
+      subject: `Hi ${userName} - verify your Stratbook email`,
+      context,
+      template: VerifyEmail,
     });
+  }
 
-    return html;
+  public async sendVerifyNewEmailRequest(email: string, userName: string, token: string) {
+    const context = {
+      userName,
+      // update link
+      link: urljoin(this.baseUrl, `/#/reset?token=${token}`),
+    };
+
+    await this.addJob({
+      email,
+      subject: 'Stratbook - Verify new email',
+      context,
+      template: VerifyNewEmailTemplate,
+    });
+  }
+
+  private addJob(data: MailSendJob) {
+    return this.mailQueue.add('send', data, {
+      attempts: 3,
+      backoff: {
+        type: 'exponential',
+        delay: ms('30s'),
+      },
+    });
   }
 }

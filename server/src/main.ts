@@ -1,10 +1,12 @@
 import chalk from 'chalk';
+import { useContainer } from 'class-validator';
 
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 
 import morgan from 'morgan';
 import CookieParser from 'cookie-parser';
@@ -24,6 +26,8 @@ class Main {
   private readonly logger = new Logger(Main.name);
 
   private app: NestExpressApplication;
+
+  private ioAdapter: IoAdapter;
 
   public async bootstrap() {
     this.logger.debug(
@@ -81,6 +85,9 @@ class Main {
 
     this.app.use(passport.initialize());
     this.app.use(passport.session());
+
+    // setup DI in class-validator
+    useContainer(this.app.select(AppModule), { fallbackOnErrors: true });
 
     this.app.useGlobalPipes(
       new ValidationPipe({

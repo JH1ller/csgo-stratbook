@@ -1,30 +1,13 @@
-import { Logger } from '@nestjs/common';
 import ms from 'ms';
-import path from 'path';
 import process from 'process';
-import fs from 'fs';
 
-import { testTempDir } from './helpers/temp-directory';
+import { resolvePrepareDirectory } from './helpers/temp-directory';
 
-function getBooleanValue(value: string) {
-  if (value.toLocaleLowerCase() === 'true') {
+function getBooleanValue(value: string | undefined) {
+  if (value && value.toLocaleLowerCase() === 'true') {
     return true;
   }
   return false;
-}
-
-function resolveTempDir(arg: string) {
-  const tempDir = path.resolve(arg);
-
-  if (testTempDir(process.cwd(), tempDir)) {
-    Logger.warn(`Removing temp directory: ${tempDir}`, 'Configuration');
-    fs.rmdirSync(tempDir, { recursive: true });
-  }
-
-  // re-create temp directory
-  fs.mkdirSync(tempDir, { recursive: true });
-
-  return tempDir;
 }
 
 /**
@@ -65,18 +48,25 @@ export default () => ({
   },
 
   upload: {
-    tempDir: resolveTempDir(process.env.UPLOAD_TEMP_DIR),
+    tempDir: resolvePrepareDirectory(process.env.UPLOAD_TEMP_DIR),
   },
 
   s3: {
     accessKeyId: process.env.S3_ACCESS_KEY_ID,
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
     endpoint: process.env.S3_ENDPOINT,
+
     imageBucket: process.env.S3_IMAGE_BUCKET,
+  },
+
+  hcaptcha: {
+    secret: process.env.HCAPTCHA_SECRET,
   },
 
   debug: {
     mailTransportDisabled: getBooleanValue(process.env.DEBUG_MAIL_TRANSPORT_DISABLED),
+    hcaptchaVerifyDisabled: getBooleanValue(process.env.DEBUG_HCAPTCHA_VERIFY_DISABLED),
+
     createUserWithConfirmedMail: getBooleanValue(process.env.DEBUG_CREATE_USER_WITH_CONFIRMED_MAIL),
   },
 });

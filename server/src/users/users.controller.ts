@@ -9,16 +9,18 @@ import {
   UploadedFile,
   UseInterceptors,
   UseGuards,
-  Request,
+  Req,
   InternalServerErrorException,
   Param,
-  Response,
+  Res,
+  Logger,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOkResponse, ApiCreatedResponse, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
-import { Express } from 'express';
+import { Express, Response, Request } from 'express';
+
 import urljoin from 'url-join';
 
 import { UsersService } from './users.service';
@@ -33,6 +35,8 @@ import { ImageUploaderService } from 'src/services/image-uploader/image-uploader
 
 @Controller('users')
 export class UsersController {
+  private readonly logger = new Logger(UsersController.name);
+
   constructor(
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
@@ -45,50 +49,57 @@ export class UsersController {
   @ApiBody({ description: 'Register new user', type: RegisterUserDto })
   @UseInterceptors(FileInterceptor('avatar'))
   public async registerUser(@Body() model: RegisterUserDto, @UploadedFile() file: Express.Multer.File) {
-    console.log(file);
-
-    if (await this.usersService.isEmailInUse(model.email)) {
-      throw new BadRequestException('email is already in use.');
+    let avatar: string;
+    if (file) {
+      avatar = await this.imageUploaderService.addJob({
+        source: file.path,
+        resize: {
+          width: 256,
+          height: 256,
+        },
+      });
     }
-
-    const avatar = await this.imageUploaderService.addJob({
-      source: file.path,
-      resize: {
-        width: 256,
-        height: 256,
-      },
-    });
 
     const user = await this.usersService.createUser(model.userName, model.email, model.password, avatar);
     console.log(user);
   }
 
   @Delete()
-  public async deleteUser(@Body() model: DeleteUserDto, @Request() req: Express.Request) {
+  @UseGuards(AuthenticatedGuard)
+  public async deleteUser(@Body() model: DeleteUserDto, @Req() req: Request) {
     if (req.user.userName !== model.userName) {
       throw new BadRequestException('User name does not match');
     }
 
-    await this.usersService.deleteUser(req.user.id);
+    // user object will be destroy on logout
+    const userId = req.user._id;
+
+    // logout user
+    req.logout();
+
+    // destroy session data
+    req.session.destroy((error: string) => {
+      if (error) {
+        this.logger.error(`failed to destroy user session: ${error}`);
+      }
+    });
+
+    await this.usersService.deleteUser(userId);
   }
 
   @Get('/confirmation/:token')
-  public userConfirmation(
-    @Param('token') token: string,
-    @Request() req: Express.Request,
-    @Response() res: Express.Response
-  ) {
+  public userConfirmation(@Param('token') token: string, @Req() req: Request, @Res() res: Response) {
     const baseUrl = this.configService.get<string>('baseUrl');
 
-    // if (req.user.mailConfirmed) {
-    //   res.redirect(urljoin(baseUrl, `/#/login?already_confirmed=${req.user.email}`));
-    // }
+    if (req.user.mailConfirmed) {
+      res.redirect(urljoin(baseUrl, `/#/login?already_confirmed=${req.user.email}`));
+    }
   }
 
   @Get()
   @UseGuards(AuthenticatedGuard)
   @ApiOkResponse()
-  public getUser(@Request() req: Express.Request) {
+  public getUser(@Req() req: Request) {
     const {
       _id,
       userName,
@@ -98,7 +109,6 @@ export class UsersController {
       mailConfirmed,
       isAdmin,
       createdAt,
-      isOnline,
       lastOnline,
       completedTutorial,
     } = req.user;
@@ -112,7 +122,6 @@ export class UsersController {
       mailConfirmed,
       isAdmin,
       createdAt,
-      isOnline,
       lastOnline,
       completedTutorial,
     };
@@ -125,7 +134,7 @@ export class UsersController {
   public async updateUser(
     @Body() model: ProfileUpdateDto,
     @UploadedFile() file: Express.Multer.File,
-    @Request() req: Express.Request
+    @Req() req: Request
   ) {
     // #todo: reduce update queries
 
@@ -164,6 +173,6 @@ export class UsersController {
       throw new BadRequestException('user was not found by this email');
     }
 
-    this.usersService.sendForgotPasswordRequest(user);
+    await this.usersService.sendForgotPasswordRequest(user);
   }
 }

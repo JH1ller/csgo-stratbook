@@ -1,4 +1,5 @@
 import { IsBoolean, IsEnum, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { GameMap, PlayerSide } from 'src/schemas/enums';
@@ -22,6 +23,7 @@ export class CreateStrategyDto {
   public readonly side: PlayerSide;
 
   @IsBoolean()
+  @Type(() => Boolean)
   @ApiProperty({ example: true, type: Boolean })
   public readonly active: boolean;
 

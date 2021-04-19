@@ -1,3 +1,5 @@
+import { Logger } from '@nestjs/common';
+
 import path from 'path';
 import fs from 'fs';
 
@@ -9,15 +11,11 @@ function isPathRelative(parent: string, dir: string) {
   return relative && !relative.startsWith('..') && !path.isAbsolute(relative);
 }
 
-export function testTempDir(cwd: string, tempDir: string) {
-  if (!isPathRelative(cwd, tempDir)) {
-    throw new Error('tempDir path is outside of our cwd!');
-  }
-
+function isDirectory(dir: string) {
   let stats: fs.Stats;
 
   try {
-    stats = fs.lstatSync(tempDir);
+    stats = fs.lstatSync(dir);
   } catch (error) {
     // directory does not exist
     return false;
@@ -27,5 +25,34 @@ export function testTempDir(cwd: string, tempDir: string) {
     return true;
   }
 
-  throw new Error(`The specified path points to a file: ${tempDir}`);
+  throw new Error(`The specified path points to a file: ${dir}`);
+}
+
+/**
+ * Resolves, verifies the location and prepares to directory pointed at by @param dir
+ * @param dir relative path to temp directory
+ * @returns resolved, absolute path to prepare directory
+ */
+export function resolvePrepareDirectory(dir: string) {
+  const resolved = path.resolve(dir);
+
+  if (!isPathRelative(process.cwd(), resolved)) {
+    throw new Error('path is outside of our cwd!');
+  }
+
+  if (!isDirectory(resolved)) {
+    // directory doesn't exist, create one
+    fs.mkdirSync(resolved, { recursive: true });
+  } else {
+    Logger.debug(`Deleting files from temp directory: ${resolved}`, 'temp-directory');
+
+    // delete single files instead of deleting the whole directory,
+    // to prevent double reloading of webpack in watch mode.
+    fs.readdirSync(resolved).forEach((file) => {
+      const filePath = path.join(resolved, file);
+      fs.unlinkSync(filePath);
+    });
+  }
+
+  return resolved;
 }

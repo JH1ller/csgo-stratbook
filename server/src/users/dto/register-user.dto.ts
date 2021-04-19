@@ -1,7 +1,8 @@
-import { IsString, MinLength, MaxLength, IsEmail, Matches, IsOptional } from 'class-validator';
+import { IsString, MinLength, MaxLength, IsEmail, Matches, IsOptional, Validate } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { passwordPattern } from 'src/common/validation-helpers';
+import { UserMailNotInUseRule } from 'src/common/validators/user-mail-not-in-use.validator';
 
 export class RegisterUserDto {
   @IsString()
@@ -12,7 +13,8 @@ export class RegisterUserDto {
 
   @IsEmail()
   @MaxLength(128)
-  @ApiProperty({ example: 'hello-world@stratbook.live' })
+  @Validate(UserMailNotInUseRule)
+  @ApiProperty({ example: 'test@stratbook.live' })
   public readonly email: string;
 
   @IsString()
@@ -20,10 +22,10 @@ export class RegisterUserDto {
   @Matches(passwordPattern, {
     message: 'password too weak',
   })
-  @ApiProperty({ example: 'HelloWorld1' })
+  @ApiProperty({ example: 'HelloWorld12345!' })
   public readonly password: string;
 
   @IsOptional()
-  @ApiProperty({ type: 'string', format: 'binary' })
+  @ApiProperty({ type: 'string', format: 'binary', required: false })
   public readonly avatar: any;
 }

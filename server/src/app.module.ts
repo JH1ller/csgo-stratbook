@@ -3,18 +3,24 @@ import { BullModule } from '@nestjs/bull';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
+import { AppService } from './app.service';
+
 import configuration from './config/configuration';
 import { validate } from './config/env.validation';
-
-import { AppService } from './app.service';
 
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TeamsModule } from './teams/teams.module';
 import { StrategiesModule } from './strategies/strategies.module';
 import { UtilitiesModule } from './utilities/utilities.module';
+import { LandingModule } from './landing/landing.module';
+import { DrawToolModule } from './draw-tool/draw-tool.module';
 
-import { BullConfigService } from 'src/services/bull-config.service';
+import { ValidatorsModule } from './common/validators/validators.module';
+
+import { BullConfigService } from './services/bull-config.service';
+import { CaptchaModule } from './services/captcha/captcha.module';
+import { ResourceManagerModule } from './services/resource-manager/resource-manager.module';
 
 @Module({
   imports: [
@@ -32,7 +38,6 @@ import { BullConfigService } from 'src/services/bull-config.service';
         useUnifiedTopology: true,
         useCreateIndex: true,
 
-        // bufferCommands: false,
         validateOptions: true,
       }),
       inject: [ConfigService],
@@ -43,13 +48,19 @@ import { BullConfigService } from 'src/services/bull-config.service';
       useClass: BullConfigService,
     }),
 
+    ValidatorsModule,
+
+    CaptchaModule,
+    ResourceManagerModule,
+
     AuthModule,
     UsersModule,
     StrategiesModule,
     TeamsModule,
     UtilitiesModule,
+    LandingModule,
+    DrawToolModule,
   ],
-
   providers: [AppService],
 })
 export class AppModule {}

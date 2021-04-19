@@ -10,6 +10,7 @@ import { User, UserSchema } from 'src/schemas/user.schema';
 import { MulterConfigService } from 'src/services/multer-config.service';
 import { MailerModule } from 'src/services/mail/mailer.module';
 import { ImageUploaderModule } from 'src/services/image-uploader/image-uploader.module';
+import { ResourceManagerModule } from 'src/services/resource-manager/resource-manager.module';
 
 @Module({
   controllers: [UsersController],
@@ -22,6 +23,7 @@ import { ImageUploaderModule } from 'src/services/image-uploader/image-uploader.
 
     MailerModule,
     ImageUploaderModule,
+    ResourceManagerModule,
   ],
   providers: [UsersService],
   exports: [UsersService],

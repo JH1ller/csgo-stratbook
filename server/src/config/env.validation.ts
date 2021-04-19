@@ -85,13 +85,8 @@ class EnvironmentVariables {
   @IsString()
   S3_IMAGE_BUCKET: string;
 
-  @IsBoolean()
-  @IsOptional()
-  USE_CAPTCHA: boolean;
-
   @IsString()
-  @IsOptional()
-  RECAPTCHA_SECRET: string;
+  HCAPTCHA_SECRET: string;
 
   /**
    * Disables mail transport
@@ -99,6 +94,13 @@ class EnvironmentVariables {
   @IsBoolean()
   @IsOptional()
   DEBUG_MAIL_TRANSPORT_DISABLED: boolean;
+
+  /**
+   * disables hcaptcha verify check (check always returns true)
+   */
+  @IsBoolean()
+  @IsOptional()
+  DEBUG_HCAPTCHA_VERIFY_DISABLED: boolean;
 
   @IsBoolean()
   @IsOptional()

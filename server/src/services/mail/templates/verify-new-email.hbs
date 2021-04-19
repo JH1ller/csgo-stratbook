@@ -1,7 +1,6 @@
 <mjml>
   <mj-head>
-    <!-- invisible text, but is parsed for preview (second line on gmail)-->
-    <mj-preview>Hi, {{userName}}! your password reset request.</mj-preview>
+    <mj-preview>Hi, {{userName}} verify your new email.</mj-preview>
   </mj-head>
   <mj-body background-color="#202020">
     <mj-section>
@@ -9,17 +8,14 @@
         <mj-text color="white">
           <h2>Hi {{userName}},</h2>
         </mj-text>
-        <mj-text color="white">To change your password click the button below:</mj-text>
+        <mj-text color="white">Click the link below to verify your new email address:</mj-text>
       </mj-column>
     </mj-section>
-
     <mj-section>
       <mj-column>
-        <mj-button font-family="Helvetica" background-color="#41b883" color="white" href="{{link}}">Change password</mj-button>
-
+        <mj-button font-family="Helvetica" background-color="#41b883" color="white" href="{{link}}">Verify email</mj-button>
       </mj-column>
     </mj-section>
-
     <mj-section>
       <mj-column>
         <mj-text color="white">If the above button doesn't work, click on the link below instead:</mj-text>
