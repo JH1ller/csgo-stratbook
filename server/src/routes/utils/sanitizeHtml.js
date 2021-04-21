@@ -1,7 +1,7 @@
 const sanitizeHtml = require('sanitize-html');
 
 const config = {
-  allowedTags: ['span', 'img', 'div'],
+  allowedTags: ['span', 'img', 'div', 'br'],
   allowedAttributes: {
     span: ['contenteditable', 'class', 'data-*', 'style'],
     img: ['class', 'src'],

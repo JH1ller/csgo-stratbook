@@ -22,6 +22,9 @@
       />
     </div>
     <div class="strat-item__btn-wrapper">
+      <div class="strat-item__btn --insert" @click="insertPlayerRows" content="Insert line for each player" v-tippy>
+        <fa-icon icon="th-list" />
+      </div>
       <transition name="fade">
         <div class="strat-item__action-buttons" v-if="editMode">
           <div class="strat-item__btn --save" @click="updateContent" content="Save strat changes" v-tippy>
