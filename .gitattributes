@@ -1,0 +1,5 @@
+*.ts    text eol=lf
+*.tsx   text eol=lf
+*.vue   text eol=lf
+*.json  text eol=lf
+*.md    text eol=lf
