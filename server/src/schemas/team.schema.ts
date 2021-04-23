@@ -4,6 +4,11 @@ import { Document } from 'mongoose';
 
 import { User } from './user.schema';
 
+export interface TeamServerConnection {
+  ip?: string;
+  password?: string;
+}
+
 @Schema({
   timestamps: {
     // https://mongoosejs.com/docs/guide.html#timestamps
@@ -17,12 +22,12 @@ export class Team {
     maxlength: 24,
     minlength: 3,
   })
-  name: string;
+  public name: string;
 
   @Prop({
     maxlength: 300,
   })
-  website: string;
+  public website: string;
 
   @Prop(
     raw({
@@ -30,15 +35,16 @@ export class Team {
       password: { type: String },
     })
   )
-  server: Record<string, any>;
+  public server: TeamServerConnection;
 
   @Prop({
     required: true,
+    unique: true,
   })
-  code: string;
+  public code: string;
 
   @Prop()
-  avatar: string;
+  public avatar: string;
 
   /**
    * renamed from createdBy to owner
@@ -47,29 +53,27 @@ export class Team {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   })
-  owner: User;
+  public owner: User;
 
   @Prop()
-  createdAt: Date;
+  public createdAt: Date;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   })
-  modifiedBy: User;
+  public modifiedBy: User;
 
   @Prop()
-  modifiedAt: Date;
+  public modifiedAt: Date;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   })
-  manager: User;
+  public manager: User;
 }
 
 export type TeamDocument = Team & Document;
 
 export const TeamSchema = SchemaFactory.createForClass(Team);
-
-// teamSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });

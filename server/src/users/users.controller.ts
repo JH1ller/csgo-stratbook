@@ -16,7 +16,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiOkResponse, ApiCreatedResponse, ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { ApiOkResponse, ApiCreatedResponse, ApiConsumes, ApiBody, ApiTags } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
 import { Express, Response, Request } from 'express';
@@ -32,15 +32,18 @@ import { ForgotPasswordDto } from './dto/forgot-password.dto';
 
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 import { ImageUploaderService } from 'src/services/image-uploader/image-uploader.service';
+import { CaptchaService } from 'src/services/captcha/captcha.service';
 
 @Controller('users')
+@ApiTags('Users')
 export class UsersController {
   private readonly logger = new Logger(UsersController.name);
 
   constructor(
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
-    private readonly imageUploaderService: ImageUploaderService
+    private readonly imageUploaderService: ImageUploaderService,
+    private readonly captchaService: CaptchaService
   ) {}
 
   @Post('register')
@@ -49,6 +52,8 @@ export class UsersController {
   @ApiBody({ description: 'Register new user', type: RegisterUserDto })
   @UseInterceptors(FileInterceptor('avatar'))
   public async registerUser(@Body() model: RegisterUserDto, @UploadedFile() file: Express.Multer.File) {
+    console.log(file);
+
     let avatar: string;
     if (file) {
       avatar = await this.imageUploaderService.addJob({
@@ -61,7 +66,11 @@ export class UsersController {
     }
 
     const user = await this.usersService.createUser(model.userName, model.email, model.password, avatar);
-    console.log(user);
+
+    return {
+      id: user._id,
+      email: user.email,
+    };
   }
 
   @Delete()
@@ -168,6 +177,11 @@ export class UsersController {
 
   @Post('/forgot-password')
   public async forgotPassword(@Body() model: ForgotPasswordDto) {
+    const result = await this.captchaService.verify(model.captchaResponse);
+    if (!result) {
+      throw new BadRequestException('Failed to verify captcha token');
+    }
+
     const user = await this.usersService.findByEmail(model.email);
     if (user === null) {
       throw new BadRequestException('user was not found by this email');

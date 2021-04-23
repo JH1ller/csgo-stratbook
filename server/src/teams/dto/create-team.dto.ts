@@ -24,4 +24,8 @@ export class CreateTeamDto {
   @Length(1, 30)
   @ApiProperty({ example: 'hello' })
   public readonly serverPassword: string;
+
+  @IsOptional()
+  @ApiProperty({ type: 'string', format: 'binary', required: false })
+  public readonly avatar: any;
 }

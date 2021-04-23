@@ -1,5 +1,5 @@
 import { Controller, Post, Request, UseGuards, Logger, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiBody, ApiOkResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Express } from 'express';
 
 import { AuthService } from './auth.service';
@@ -10,6 +10,7 @@ import { LocalSignInDto } from './dto/local-sign-in.dto';
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 
 @Controller('auth')
+@ApiTags('Auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 

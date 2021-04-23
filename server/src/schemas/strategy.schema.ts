@@ -18,26 +18,26 @@ export class Strategy {
     required: true,
     maxlength: 50,
   })
-  name: string;
+  public name: string;
 
   @Prop({
     required: true,
     enum: Object.values(GameMap),
   })
-  map: string;
+  public map: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Team',
     required: true,
   })
-  team: Team;
+  public team: Team;
 
   @Prop({
     enum: Object.values(PlayerSide),
     required: true,
   })
-  side: string;
+  public side: string;
 
   @Prop({
     enum: Object.values(StrategyType),
@@ -48,51 +48,51 @@ export class Strategy {
   @Prop({
     default: true,
   })
-  active: boolean;
+  public active: boolean;
 
-  @Prop()
-  videoLink: string;
+  @Prop({
+    maxlength: 256,
+  })
+  public videoLink: string;
 
   @Prop({
     maxlength: 100,
   })
-  note: string;
+  public note: string;
 
   @Prop()
-  drawData: string;
+  public drawData: string;
 
   @Prop({
     default: '',
   })
-  content: string;
+  public content: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   })
-  createdBy: User;
+  public createdBy: User;
 
   @Prop()
-  createdAt: Date;
+  public createdAt: Date;
 
   @Prop()
-  modifiedAt: Date;
+  public modifiedAt: Date;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   })
-  modifiedBy: User;
+  public modifiedBy: User;
 
   @Prop({
     default: false,
   })
-  shared: boolean;
+  public shared: boolean;
 }
 
 export type StrategyDocument = Strategy & Document;
 
 export const StrategySchema = SchemaFactory.createForClass(Strategy);
-
-// stratSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });

@@ -7,6 +7,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import { User, UserDocument } from 'src/schemas/user.schema';
+import { Team } from 'src/schemas/team.schema';
 
 import { MailerService } from 'src/services/mail/mailer.service';
 import { ResourceManagerService } from 'src/services/resource-manager/resource-manager.service';
@@ -25,11 +26,23 @@ export class UsersService {
    * @param id user document id
    */
   public findById(id: string) {
-    return this.userModel.findById(id).exec();
+    return this.userModel.findById(id).populate('team').exec();
   }
 
   public existsById(id: Schema.Types.ObjectId) {
     return this.userModel.exists({ _id: id });
+  }
+
+  public existsByEmail(email: string) {
+    return this.userModel.exists({
+      email,
+    });
+  }
+
+  public async isEmailInUse(email: string) {
+    return await this.userModel.exists({
+      email,
+    });
   }
 
   /**
@@ -65,12 +78,6 @@ export class UsersService {
     if (user.avatar) {
       await this.resourceManagerService.deleteImage(user.avatar);
     }
-  }
-
-  public async isEmailInUse(email: string) {
-    return await this.userModel.exists({
-      email,
-    });
   }
 
   /**
@@ -109,5 +116,29 @@ export class UsersService {
 
     const { email, userName } = user;
     await this.mailerService.sendPasswordResetMail(email, userName, token);
+  }
+
+  public joinTeam(id: Schema.Types.ObjectId, team: Team) {
+    return this.userModel
+      .updateOne({
+        _id: id,
+        team: team,
+      })
+      .exec();
+  }
+
+  public async getTeamMembers(teamId: Schema.Types.ObjectId) {
+    return await this.userModel
+      .find({
+        id: teamId,
+      })
+      .exec();
+  }
+
+  public leaveTeam(userId: Schema.Types.ObjectId) {
+    return this.userModel.updateOne({
+      _id: userId,
+      team: null,
+    });
   }
 }

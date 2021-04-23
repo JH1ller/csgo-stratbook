@@ -68,7 +68,7 @@ module.exports = (env) => {
 
     watchOptions: {
       aggregateTimeout: 200,
-      // poll: 1000,
+      poll: 1000,
     },
 
     module: {

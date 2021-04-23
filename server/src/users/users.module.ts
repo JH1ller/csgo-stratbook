@@ -11,6 +11,7 @@ import { MulterConfigService } from 'src/services/multer-config.service';
 import { MailerModule } from 'src/services/mail/mailer.module';
 import { ImageUploaderModule } from 'src/services/image-uploader/image-uploader.module';
 import { ResourceManagerModule } from 'src/services/resource-manager/resource-manager.module';
+import { CaptchaModule } from 'src/services/captcha/captcha.module';
 
 @Module({
   controllers: [UsersController],
@@ -24,6 +25,7 @@ import { ResourceManagerModule } from 'src/services/resource-manager/resource-ma
     MailerModule,
     ImageUploaderModule,
     ResourceManagerModule,
+    CaptchaModule,
   ],
   providers: [UsersService],
   exports: [UsersService],

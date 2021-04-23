@@ -14,7 +14,7 @@ export class UserMailExistsRule implements ValidatorConstraintInterface {
   constructor(private usersService: UsersService) {}
 
   public validate(value: string) {
-    return this.usersService.isEmailInUse(value);
+    return this.usersService.existsByEmail(value);
   }
 
   public defaultMessage() {

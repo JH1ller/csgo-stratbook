@@ -123,7 +123,7 @@ class Main {
     const config = new DocumentBuilder()
       .setTitle('csgo-stratbook api')
       .setDescription('Stratbook REST API')
-      .setVersion('0.1')
+      .setVersion('2.0.1')
       .build();
 
     const document = SwaggerModule.createDocument(this.app, config);

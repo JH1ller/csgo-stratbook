@@ -18,88 +18,90 @@ export class Utility {
   @Prop({
     required: true,
   })
-  name: string;
+  public name: string;
 
   @Prop({
     required: true,
     enum: Object.values(UtilityType),
   })
-  type: string;
+  public type: string;
 
   @Prop({
     enum: Object.values(GameMap),
     required: true,
   })
-  map: string;
+  public map: string;
 
   @Prop({
     required: true,
     enum: Object.values(UtilityMouseButton),
   })
-  mouseButton: string;
+  public mouseButton: string;
 
   @Prop({
     required: true,
     default: false,
   })
-  crouch: boolean;
+  public crouch: boolean;
 
   @Prop({
     required: true,
     default: false,
   })
-  jump: boolean;
+  public jump: boolean;
 
   @Prop({
     enum: Object.values(UtilityMovement),
     required: true,
     default: UtilityMovement.Still,
   })
-  movement: string;
+  public movement: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Team',
     required: true,
   })
-  team: Team;
+  public team: Team;
 
-  @Prop([String])
-  images: [string];
+  @Prop({
+    type: [String],
+  })
+  public images: string[];
 
   @Prop({
     maxlength: 200,
   })
-  description: string;
+  public description: string;
 
   @Prop({
     enum: Object.values(PlayerSide),
     required: true,
   })
-  side: string;
+  public side: string;
 
   @Prop({
     maxlength: 300,
   })
-  videoLink: string;
+  public videoLink: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   })
-  createdBy: User;
+  public createdBy: User;
 
   @Prop()
-  createdAt: Date;
+  public createdAt: Date;
 
   @Prop()
-  modifiedAt: Date;
+  public modifiedAt: Date;
 
   @Prop({
     default: false,
   })
-  shared: boolean;
+  public shared: boolean;
 }
 
 export type UtilityDocument = Utility & Document;

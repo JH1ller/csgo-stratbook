@@ -12,9 +12,9 @@ export class UserMailNotInUseRule implements ValidatorConstraintInterface {
    * @param value user email
    */
   public async validate(value: string) {
-    const isInUse = await this.usersService.isEmailInUse(value);
+    const userExists = await this.usersService.existsByEmail(value);
 
-    return isInUse === false;
+    return userExists === false;
   }
 
   public defaultMessage(args: ValidationArguments) {

@@ -1,6 +1,6 @@
 import { Controller, Post, UploadedFiles, UseGuards, UseInterceptors, Body, Request } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { ApiOkResponse, ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { ApiOkResponse, ApiConsumes, ApiBody, ApiTags } from '@nestjs/swagger';
 
 import { Express } from 'express';
 
@@ -13,6 +13,7 @@ import { ImageUploaderService } from 'src/services/image-uploader/image-uploader
 
 @Controller('utilities')
 @UseGuards(AuthenticatedGuard)
+@ApiTags('Utilities')
 export class UtilitiesController {
   constructor(
     private readonly utilitiesService: UtilitiesService,

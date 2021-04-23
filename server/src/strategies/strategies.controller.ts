@@ -1,5 +1,5 @@
 import { Controller, Delete, Get, UseGuards, Param, BadRequestException, Req, Post, Body } from '@nestjs/common';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import Mongoose from 'mongoose';
 
@@ -12,6 +12,7 @@ import { CreateStrategyDto } from './dto/create-strategy.dto';
 
 @Controller('strategies')
 @UseGuards(AuthenticatedGuard)
+@ApiTags('Strategies')
 export class StrategiesController {
   constructor(private readonly strategiesService: StrategiesService) {}
 
