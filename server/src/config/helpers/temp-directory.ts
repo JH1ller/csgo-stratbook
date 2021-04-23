@@ -50,7 +50,10 @@ export function resolvePrepareDirectory(dir: string) {
     // to prevent double reloading of webpack in watch mode.
     fs.readdirSync(resolved).forEach((file) => {
       const filePath = path.join(resolved, file);
-      fs.unlinkSync(filePath);
+
+      if (!isDirectory(filePath)) {
+        fs.unlinkSync(filePath);
+      }
     });
   }
 
