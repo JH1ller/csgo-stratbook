@@ -1,7 +1,4 @@
 {
-  "eslint.workingDirectories": [
-    "./client",
-    "./landingpage",
-    "./server"
-  ]
+  "eslint.workingDirectories": ["./client", "./landingpage", "./server"],
+  "files.eol": "\n"
 }
