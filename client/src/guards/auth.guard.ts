@@ -1,10 +1,9 @@
 import { Routes, RouteNames } from '@/router/router.models';
 import store from '@/store';
-import { Status } from '@/store/modules/auth';
 import { NavigationGuard } from 'vue-router';
 
 export const authGuard: NavigationGuard = (to, _from, next): boolean => {
-  if (store.state.auth.status === Status.NO_AUTH) {
+  if (!store.getters['auth/hasAuth']) {
     if (to.name !== RouteNames.Login) {
       store.dispatch('app/showToast', { id: 'authGuard/noAuth', text: 'You need to login first.' });
       next(Routes.Login);

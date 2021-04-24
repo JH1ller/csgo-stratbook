@@ -32,7 +32,7 @@ export interface CreateStrategyDto {
      * @type {string}
      * @memberof CreateStrategyDto
      */
-    map: CreateStrategyDtoMapEnum;
+    gameMap: GameMap;
     /**
      * 
      * @type {string}
@@ -44,13 +44,13 @@ export interface CreateStrategyDto {
      * @type {string}
      * @memberof CreateStrategyDto
      */
-    type?: CreateStrategyDtoTypeEnum;
+    type?: Type;
     /**
      * 
      * @type {string}
      * @memberof CreateStrategyDto
      */
-    side: CreateStrategyDtoSideEnum;
+    side: Side;
     /**
      * 
      * @type {boolean}
@@ -75,7 +75,7 @@ export interface CreateStrategyDto {
     * @export
     * @enum {string}
     */
-export enum CreateStrategyDtoMapEnum {
+export enum GameMap {
     Dust2 = 'DUST_2',
     Mirage = 'MIRAGE',
     Overpass = 'OVERPASS',
@@ -88,7 +88,7 @@ export enum CreateStrategyDtoMapEnum {
     * @export
     * @enum {string}
     */
-export enum CreateStrategyDtoTypeEnum {
+export enum Type {
     Pistol = 'PISTOL',
     Force = 'FORCE',
     Buyround = 'BUYROUND'
@@ -97,7 +97,7 @@ export enum CreateStrategyDtoTypeEnum {
     * @export
     * @enum {string}
     */
-export enum CreateStrategyDtoSideEnum {
+export enum Side {
     Ct = 'CT',
     T = 'T'
 }
@@ -1338,7 +1338,7 @@ export const UtilitiesApiAxiosParamCreator = function (configuration?: Configura
     return {
         /**
          * 
-         * @param {string} map 
+         * @param {string} gameMap 
          * @param {string} name 
          * @param {string} side 
          * @param {string} mouseButton 
@@ -1352,9 +1352,9 @@ export const UtilitiesApiAxiosParamCreator = function (configuration?: Configura
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        utilitiesControllerAddUtility: async (map: string, name: string, side: string, mouseButton: string, crouch: boolean, movement: string, jump: boolean, type: string, images: Array<any>, description?: string, videoLink?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'map' is not null or undefined
-            assertParamExists('utilitiesControllerAddUtility', 'map', map)
+        utilitiesControllerAddUtility: async (gameMap: string, name: string, side: string, mouseButton: string, crouch: boolean, movement: string, jump: boolean, type: string, images: Array<any>, description?: string, videoLink?: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'gameMap' is not null or undefined
+            assertParamExists('utilitiesControllerAddUtility', 'gameMap', gameMap)
             // verify required parameter 'name' is not null or undefined
             assertParamExists('utilitiesControllerAddUtility', 'name', name)
             // verify required parameter 'side' is not null or undefined
@@ -1385,8 +1385,8 @@ export const UtilitiesApiAxiosParamCreator = function (configuration?: Configura
             const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
 
-            if (map !== undefined) { 
-                localVarFormParams.append('map', map as any);
+            if (gameMap !== undefined) { 
+                localVarFormParams.append('gameMap', gameMap as any);
             }
     
             if (name !== undefined) { 
@@ -1456,7 +1456,7 @@ export const UtilitiesApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {string} map 
+         * @param {string} gameMap 
          * @param {string} name 
          * @param {string} side 
          * @param {string} mouseButton 
@@ -1470,8 +1470,8 @@ export const UtilitiesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async utilitiesControllerAddUtility(map: string, name: string, side: string, mouseButton: string, crouch: boolean, movement: string, jump: boolean, type: string, images: Array<any>, description?: string, videoLink?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.utilitiesControllerAddUtility(map, name, side, mouseButton, crouch, movement, jump, type, images, description, videoLink, options);
+        async utilitiesControllerAddUtility(gameMap: string, name: string, side: string, mouseButton: string, crouch: boolean, movement: string, jump: boolean, type: string, images: Array<any>, description?: string, videoLink?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.utilitiesControllerAddUtility(gameMap, name, side, mouseButton, crouch, movement, jump, type, images, description, videoLink, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -1486,7 +1486,7 @@ export const UtilitiesApiFactory = function (configuration?: Configuration, base
     return {
         /**
          * 
-         * @param {string} map 
+         * @param {string} gameMap 
          * @param {string} name 
          * @param {string} side 
          * @param {string} mouseButton 
@@ -1500,8 +1500,8 @@ export const UtilitiesApiFactory = function (configuration?: Configuration, base
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        utilitiesControllerAddUtility(map: string, name: string, side: string, mouseButton: string, crouch: boolean, movement: string, jump: boolean, type: string, images: Array<any>, description?: string, videoLink?: string, options?: any): AxiosPromise<void> {
-            return localVarFp.utilitiesControllerAddUtility(map, name, side, mouseButton, crouch, movement, jump, type, images, description, videoLink, options).then((request) => request(axios, basePath));
+        utilitiesControllerAddUtility(gameMap: string, name: string, side: string, mouseButton: string, crouch: boolean, movement: string, jump: boolean, type: string, images: Array<any>, description?: string, videoLink?: string, options?: any): AxiosPromise<void> {
+            return localVarFp.utilitiesControllerAddUtility(gameMap, name, side, mouseButton, crouch, movement, jump, type, images, description, videoLink, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1515,7 +1515,7 @@ export const UtilitiesApiFactory = function (configuration?: Configuration, base
 export class UtilitiesApi extends BaseAPI {
     /**
      * 
-     * @param {string} map 
+     * @param {string} gameMap 
      * @param {string} name 
      * @param {string} side 
      * @param {string} mouseButton 
@@ -1530,8 +1530,8 @@ export class UtilitiesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UtilitiesApi
      */
-    public utilitiesControllerAddUtility(map: string, name: string, side: string, mouseButton: string, crouch: boolean, movement: string, jump: boolean, type: string, images: Array<any>, description?: string, videoLink?: string, options?: any) {
-        return UtilitiesApiFp(this.configuration).utilitiesControllerAddUtility(map, name, side, mouseButton, crouch, movement, jump, type, images, description, videoLink, options).then((request) => request(this.axios, this.basePath));
+    public utilitiesControllerAddUtility(gameMap: string, name: string, side: string, mouseButton: string, crouch: boolean, movement: string, jump: boolean, type: string, images: Array<any>, description?: string, videoLink?: string, options?: any) {
+        return UtilitiesApiFp(this.configuration).utilitiesControllerAddUtility(gameMap, name, side, mouseButton, crouch, movement, jump, type, images, description, videoLink, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

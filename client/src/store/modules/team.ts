@@ -38,7 +38,7 @@ export const teamModule: Module<TeamState, RootState> = {
       }`;
     },
     isManager(state, _getters, rootState): boolean {
-      return (state.teamInfo as Team).manager === (rootState.auth.profile as Player)._id;
+      return (state.teamInfo as Team).manager === (rootState.auth.profile as Player).id;
     },
   },
   actions: {
@@ -182,11 +182,11 @@ export const teamModule: Module<TeamState, RootState> = {
       state.teamMembers = members;
     },
     [UPDATE_TEAM_MEMBER](state, player: Player) {
-      const member = state.teamMembers.find(member => member._id === player._id);
+      const member = state.teamMembers.find(member => member.id === player.id);
       if (member) Object.assign(member, player);
     },
     [DELETE_TEAM_MEMBER](state, playerID: string) {
-      state.teamMembers = state.teamMembers.filter(member => member._id !== playerID);
+      state.teamMembers = state.teamMembers.filter(member => member.id !== playerID);
     },
     [RESET_STATE](state) {
       Object.assign(state, teamInitialState());

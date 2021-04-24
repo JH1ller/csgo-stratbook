@@ -37,7 +37,7 @@ export default class StratEditor extends Vue {
       ...this.utilitiesOfCurrentMap
         .filter(utility => utility.side === this.stratSide)
         .map(utility => ({
-          id: utility._id,
+          id: utility.id,
           icon: utility.type.toLowerCase(),
           label: utility.name,
           query: `${utility.type} ${utility.name}`,
@@ -68,7 +68,7 @@ export default class StratEditor extends Vue {
   private get mentionOptionList(): LinkOption[] {
     return [
       ...this.teamMembers.map(member => ({
-        id: member._id,
+        id: member.id,
         icon: member.avatar,
         query: member.name,
         label: member.name,
@@ -226,7 +226,7 @@ export default class StratEditor extends Vue {
     utilNodes.forEach(node => {
       const id = node.getAttribute('data-util-id');
       if (!node.onclick) {
-        if (this.utilitiesOfCurrentMap.find(utility => utility._id === id)) {
+        if (this.utilitiesOfCurrentMap.find(utility => utility.id === id)) {
           node.onclick = () => this.utilClicked(id as string);
           node.classList.add('-linked');
         } else {
@@ -242,14 +242,14 @@ export default class StratEditor extends Vue {
     const playerNodes: NodeListOf<HTMLElement> = this.textarea.querySelectorAll('[data-player-id]');
     playerNodes.forEach(node => {
       const id = node.getAttribute('data-player-id');
-      if (id === this.profile._id && !node.classList.contains('-is-user')) {
+      if (id === this.profile.id && !node.classList.contains('-is-user')) {
         node.classList.add('-is-user');
       }
     });
   }
 
   private utilClicked(id: string) {
-    const utility = this.utilitiesOfCurrentMap.find(utility => utility._id === id);
+    const utility = this.utilitiesOfCurrentMap.find(utility => utility.id === id);
     if (utility) this.showLightboxFunc(utility);
   }
 

@@ -21,7 +21,7 @@ export class Strategy {
     required: true,
     enum: Object.values(GameMap),
   })
-  public map: string;
+  public gameMap: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,

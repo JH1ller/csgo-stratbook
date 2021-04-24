@@ -40,7 +40,7 @@
       <a class="main-menu__list-item main-menu__link --kofi" @click="openDonationLink()">
         <fa-icon icon="coffee" />Buy me a coffee
       </a>
-      <router-link to="/profile" class="main-menu__profile" v-if="profile._id">
+      <router-link to="/profile" class="main-menu__profile" v-if="profile.id">
         <img :src="avatarUrl" class="main-menu__avatar" alt="User Avatar" />
         <span class="main-menu__label main-menu__profile-label">{{ profile.name }}</span>
       </router-link>

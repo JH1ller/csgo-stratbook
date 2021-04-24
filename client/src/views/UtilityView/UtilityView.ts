@@ -55,7 +55,7 @@ export default class UtilityView extends Vue {
   private filterMenuOpen = false;
 
   private utilityFormSubmitted(data: FormData) {
-    if (data.has('_id')) {
+    if (data.has('id')) {
       this.updateUtility(data);
     } else {
       this.createUtility(data);
@@ -69,7 +69,7 @@ export default class UtilityView extends Vue {
         key: 'utility-view/confirm-delete',
         text: 'Are you sure you want to delete this utility?',
       }),
-      () => this.deleteUtility(utility._id)
+      () => this.deleteUtility(utility.id)
     );
   }
 
@@ -79,14 +79,14 @@ export default class UtilityView extends Vue {
         key: 'utility-view/confirm-share',
         text: 'Do you want to create a share-link to let other teams add this utility to their stratbook?',
       }),
-      () => this.shareUtility(utility._id)
+      () => this.shareUtility(utility.id)
     );
   }
 
   private showUtilityForm(utility: Utility) {
     this.utilityFormOpen = true;
-    this.editUtility = utility._id ? utility : null;
-    this.utilityFormEditMode = utility._id ? true : false;
+    this.editUtility = utility.id ? utility : null;
+    this.utilityFormEditMode = utility.id ? true : false;
   }
 
   private hideUtilityForm() {

@@ -2,14 +2,14 @@
   <div class="member-item">
     <li
       class="member-item__wrapper"
-      :class="{ '-self': member._id === profile._id, '-online': member.isOnline }"
-      :key="member._id"
+      :class="{ '-self': member.id === profile.id, '-online': member.isOnline }"
+      :key="member.id"
       @click.prevent="openMenu"
       @contextmenu.prevent="openMenu"
     >
       <div class="member-item__text">
         <span class="member-item__name">
-          <fa-icon v-if="member._id === teamInfo.manager" icon="crown" class="member-item__captain-icon" />
+          <fa-icon v-if="member.id === teamInfo.manager" icon="crown" class="member-item__captain-icon" />
           {{ member.name }}
         </span>
         <p class="member-item__last-online">

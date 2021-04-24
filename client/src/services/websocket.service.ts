@@ -39,7 +39,7 @@ class WebSocketService {
       Log.info('ws::connected', 'Websocket connection established.');
       this.socket.emit('join-room', {
         teamID: (store.state.auth.profile as Player).team,
-        playerID: (store.state.auth.profile as Player)._id,
+        playerID: (store.state.auth.profile as Player).id,
       });
     });
 

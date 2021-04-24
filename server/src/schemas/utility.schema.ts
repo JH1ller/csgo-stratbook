@@ -26,7 +26,7 @@ export class Utility {
     enum: Object.values(GameMap),
     required: true,
   })
-  public map: string;
+  public gameMap: string;
 
   @Prop({
     required: true,

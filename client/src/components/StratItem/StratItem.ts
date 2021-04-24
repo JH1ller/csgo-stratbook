@@ -35,7 +35,7 @@ export default class StratItem extends Vue {
 
   @Emit()
   private deleteStrat() {
-    return this.strat._id;
+    return this.strat.id;
   }
 
   @Emit()
@@ -45,12 +45,12 @@ export default class StratItem extends Vue {
 
   @Emit()
   private shareStrat() {
-    return this.strat._id;
+    return this.strat.id;
   }
 
   @Emit()
   private unshareStrat() {
-    return this.strat._id;
+    return this.strat.id;
   }
 
   private editorUpdated(content: string) {
@@ -63,7 +63,7 @@ export default class StratItem extends Vue {
 
   @Emit()
   private toggleActive(): Partial<Strat> {
-    return { _id: this.strat._id, active: !this.strat.active };
+    return { id: this.strat.id, active: !this.strat.active };
   }
 
   @Emit()
@@ -74,7 +74,7 @@ export default class StratItem extends Vue {
   @Emit()
   private updateContent(): Partial<Strat> {
     this.editMode = false;
-    return { _id: this.strat._id, content: this.editor.textarea.innerHTML };
+    return { id: this.strat.id, content: this.editor.textarea.innerHTML };
   }
 
   private discardContent(): void {

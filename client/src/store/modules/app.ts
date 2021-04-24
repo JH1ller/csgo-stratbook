@@ -44,7 +44,7 @@ export const appModule: Module<AppState, RootState> = {
     updateLoading({ commit }, value: boolean) {
       commit(SET_LOADING, value);
     },
-    showDialog({ commit, state }, dialogData: Partial<Dialog>) {
+    showDialog({ commit, state }, dialogData: Omit<Dialog, 'resolve' | 'reject'>) {
       return new Promise<void>((resolve, reject) => {
         if (!state.openDialogs.some(dialog => dialog.key === dialogData.key)) {
           commit(OPEN_DIALOG, {
@@ -62,6 +62,15 @@ export const appModule: Module<AppState, RootState> = {
     },
     updateLatency({ commit }, latency: number) {
       commit(SET_LATENCY, latency);
+    },
+    async showErrorDialog({ dispatch }) {
+      await dispatch('showDialog', {
+        key: 'error/ApiError',
+        text: 'An error occurred while loading the page.',
+        confirmOnly: true,
+        resolveBtn: 'Retry',
+      });
+      window.location.reload();
     },
     resetState({ commit }) {
       commit(RESET_STATE);

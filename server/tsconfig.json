@@ -17,18 +17,12 @@
     "outDir": "./dist",
     "noEmitHelpers": true,
     "importHelpers": false,
-
+    "noImplicitAny": true,
     "paths": {
-      "src/*": ["src/*"],
+      "src/*": ["src/*"]
     },
 
-    "types": [
-      "node",
-      "webpack-env",
-      "jest"
-    ]
+    "types": ["node", "webpack-env", "jest"]
   },
-  "exclude": [
-    "/dist"
-  ]
+  "exclude": ["/dist"]
 }

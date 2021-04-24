@@ -69,7 +69,7 @@ export default class StratsView extends Vue {
   private tutorialStrat: Strat | null = null;
 
   private async stratFormSubmitted(data: Partial<Strat>) {
-    if (data._id) {
+    if (data.id) {
       this.updateStrat(data);
     } else {
       const newStrat = await this.createStrat(data);
@@ -99,8 +99,8 @@ export default class StratsView extends Vue {
 
   private showStratForm(strat: Strat) {
     this.stratFormOpen = true;
-    this.editStrat = strat._id ? strat : null;
-    this.stratFormEditMode = strat._id ? true : false;
+    this.editStrat = strat.id ? strat : null;
+    this.stratFormEditMode = strat.id ? true : false;
   }
 
   private hideStratForm() {

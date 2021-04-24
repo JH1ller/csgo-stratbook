@@ -42,14 +42,14 @@ export class StrategiesController {
   @Post('add')
   @UseGuards(HasTeamGuard)
   public async addStrategy(@Req() req: Request, @Body() model: CreateStrategyDto) {
-    const { name, type, map, side, active, videoLink, note } = model;
+    const { name, type, gameMap, side, active, videoLink, note } = model;
 
     const team = await this.teamsService.findById(req.user.team);
 
     const strategy = await this.strategiesService.addStrategy(
       name,
       type,
-      map,
+      gameMap,
       side,
       active,
       videoLink,

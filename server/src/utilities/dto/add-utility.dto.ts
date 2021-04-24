@@ -7,7 +7,7 @@ import { UtilityType, UtilityMouseButton, UtilityMovement } from 'src/schemas/en
 export class AddUtilityDto {
   @IsEnum(GameMap)
   @ApiProperty({ default: GameMap.Dust2, enum: GameMap })
-  public readonly map: GameMap;
+  public readonly gameMap: GameMap;
 
   @IsString()
   @ApiProperty({ example: 'Smoke A-Long' })

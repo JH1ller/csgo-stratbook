@@ -94,7 +94,7 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
       requestFormData.append(key, data.value);
     }
 
-    if (this.isEdit) requestFormData.append('_id', this.utility._id);
+    if (this.isEdit) requestFormData.append('id', this.utility.id);
 
     requestFormData.append('type', this.type);
     requestFormData.append('side', this.side);
