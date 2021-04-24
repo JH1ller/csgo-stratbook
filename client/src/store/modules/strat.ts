@@ -82,19 +82,19 @@ export const stratModule: Module<StratState, RootState> = {
       api.strat.updateStrat(payload);
     },
     async shareStrat({ dispatch, state, rootState }, stratID: string) {
-      const res = await api.strat.updateStrat({ _id: stratID, shared: true });
+      const res = await api.strat.updateStrat({ id: stratID, shared: true });
       if (res.success) {
         const shareLink = `${window.location.origin}/#/share/${stratID}`;
         navigator.clipboard.writeText(shareLink);
         dispatch('app/showToast', { id: 'strat/shareStrat', text: 'Copied share link to clipboard.' }, { root: true });
         trackingService.track('strat:shared', {
-          name: state.strats.find(strat => strat._id === stratID)?.name as string,
+          name: state.strats.find(strat => strat.id === stratID)?.name as string,
           team: (rootState.team.teamInfo as Team)?.name,
         });
       }
     },
     async unshareStrat({ dispatch }, stratID: string) {
-      const res = await api.strat.updateStrat({ _id: stratID, shared: false });
+      const res = await api.strat.updateStrat({ id: stratID, shared: false });
       if (res.success) {
         dispatch('app/showToast', { id: 'strat/unshareStrat', text: 'Strat is no longer shared.' }, { root: true });
       }
@@ -134,11 +134,11 @@ export const stratModule: Module<StratState, RootState> = {
       state.strats.push(strat);
     },
     [UPDATE_STRAT](state, payload: { strat: Strat }) {
-      const strat = state.strats.find(strat => strat._id === payload.strat._id);
+      const strat = state.strats.find(strat => strat.id === payload.strat.id);
       if (strat) Object.assign(strat, payload.strat);
     },
     [DELETE_STRAT](state, stratID: string) {
-      state.strats = state.strats.filter(strat => strat._id !== stratID);
+      state.strats = state.strats.filter(strat => strat.id !== stratID);
     },
     [RESET_STATE](state) {
       Object.assign(state, stratInitialState());

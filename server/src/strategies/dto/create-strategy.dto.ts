@@ -8,7 +8,7 @@ import { StrategyType } from 'src/schemas/enums/strategy';
 export class CreateStrategyDto {
   @IsEnum(GameMap)
   @ApiProperty({ example: GameMap.Dust2, enum: GameMap })
-  public readonly map: GameMap;
+  public readonly gameMap: GameMap;
 
   @IsString()
   @ApiProperty({ example: 'Test Strategy', type: String })

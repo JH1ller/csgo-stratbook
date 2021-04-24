@@ -9,6 +9,8 @@ import { TOKEN_TTL } from '@/config';
 import TrackingService from '@/services/tracking.service';
 import { Team } from '@/api/models/Team';
 import StorageService from '@/services/storage.service';
+import { UsersApiFp } from '@/api';
+import ApiService from '@/services/api.service';
 
 const SET_TOKEN = 'SET_TOKEN';
 const SET_PROFILE = 'SET_PROFILE';
@@ -23,23 +25,30 @@ export enum Status {
 
 export interface AuthState {
   status: Status;
-  token: string;
   profile: Player | Record<string, unknown>;
 }
 
 const authInitialState = (): AuthState => ({
   status: Status.NO_AUTH,
-  token: '',
+  // TODO: instead of initializing with empty object for reactivity, ensure that data is fetched in resolver before reactivity issues can occur.
   profile: {},
 });
 
 const trackingService = TrackingService.getInstance();
 const storageService = StorageService.getInstance();
+const apiService = ApiService.getInstance();
 
 export const authModule: Module<AuthState, RootState> = {
   namespaced: true,
   state: authInitialState(),
-  getters: {},
+  getters: {
+    hasAuth(state): boolean {
+      return state.status !== Status.NO_AUTH;
+    },
+    hasTeam(state): boolean {
+      return state.status === Status.LOGGED_IN_WITH_TEAM;
+    },
+  },
   actions: {
     async fetchProfile({ dispatch }) {
       const res = await api.player.getPlayer();
@@ -88,9 +97,9 @@ export const authModule: Module<AuthState, RootState> = {
     setProfile({ commit, rootState }, profile: Player) {
       commit(SET_PROFILE, profile);
       commit(SET_STATUS, profile.team ? Status.LOGGED_IN_WITH_TEAM : Status.LOGGED_IN_NO_TEAM);
-      trackingService.setUser({ userId: profile._id, name: profile.name });
+      trackingService.setUser({ userId: profile.id, name: profile.name });
       storageService.set('username', profile.name);
-      storageService.set('userId', profile._id);
+      storageService.set('userId', profile.id);
       if (profile.team) {
         WebSocketService.getInstance().connect();
         trackingService.setUser({ team: (rootState.team.teamInfo as Team)?.name });

@@ -21,7 +21,7 @@ export class StrategiesService {
   public addStrategy(
     name: string,
     type: StrategyType,
-    map: GameMap,
+    gameMap: GameMap,
     side: PlayerSide,
     active: boolean,
     videoLink: string,
@@ -32,7 +32,7 @@ export class StrategiesService {
     const strategy = new this.strategyModel({
       name,
       type,
-      map,
+      gameMap,
       side,
       active,
       videoLink,

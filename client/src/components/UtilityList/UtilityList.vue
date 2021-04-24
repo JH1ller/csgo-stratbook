@@ -4,7 +4,7 @@
       class="utility-list__item"
       v-for="(utility, index) in utilities"
       :utility="utility"
-      :key="utility._id"
+      :key="utility.id"
       :style="{ 'animation-delay': 0.025 * index + 's' }"
       @open-in-lightbox="openInLightbox"
       @open-menu="openMenu($event, utility)"

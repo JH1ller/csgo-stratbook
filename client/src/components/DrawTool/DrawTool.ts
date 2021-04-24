@@ -133,7 +133,7 @@ export default class DrawTool extends Mixins(CloseOnEscape) {
   @Emit()
   private save() {
     return {
-      _id: this.strat._id,
+      id: this.strat.id,
       drawData: JSON.stringify(this.editor.serialize()),
     };
   }

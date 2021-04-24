@@ -1,19 +1,9 @@
 import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
 import SmartImage from '@/components/SmartImage/SmartImage.vue';
-
-export enum MapID {
-  Dust2 = 'DUST_2',
-  Mirage = 'MIRAGE',
-  Overpass = 'OVERPASS',
-  Nuke = 'NUKE',
-  Vertigo = 'VERTIGO',
-  Inferno = 'INFERNO',
-  Train = 'TRAIN',
-}
-export interface Map {
-  _id: MapID;
+import { GameMap } from '@/api';
+export interface MapDisplay {
+  id: GameMap;
   name: string;
-  active: boolean;
 }
 
 @Component({
@@ -23,54 +13,47 @@ export interface Map {
 })
 export default class MapPicker extends Vue {
   @Prop() private currentMap!: string;
-  private maps: Map[] = [
+  private maps: MapDisplay[] = [
     {
-      _id: MapID.Dust2,
+      id: GameMap.Dust2,
       name: 'Dust 2',
-      active: true,
     },
     {
-      _id: MapID.Mirage,
+      id: GameMap.Mirage,
       name: 'Mirage',
-      active: true,
     },
     {
-      _id: MapID.Overpass,
+      id: GameMap.Overpass,
       name: 'Overpass',
-      active: true,
     },
     {
-      _id: MapID.Nuke,
+      id: GameMap.Nuke,
       name: 'Nuke',
-      active: true,
     },
     {
-      _id: MapID.Vertigo,
+      id: GameMap.Vertigo,
       name: 'Vertigo',
-      active: true,
     },
     {
-      _id: MapID.Inferno,
+      id: GameMap.Inferno,
       name: 'Inferno',
-      active: true,
     },
     {
-      _id: MapID.Train,
+      id: GameMap.Train,
       name: 'Train',
-      active: true,
     },
   ];
 
   @Emit()
-  private mapClicked(mapID: MapID) {
-    return mapID;
+  private mapClicked(map: GameMap) {
+    return map;
   }
 
-  private isCurrentMap(mapID: MapID) {
-    return mapID === this.currentMap;
+  private isCurrentMap(map: GameMap) {
+    return map === this.currentMap;
   }
 
-  private getMapImage(mapID: MapID) {
-    return `maps/${mapID.toLowerCase()}.jpg`;
+  private getMapImage(map: GameMap) {
+    return `maps/${map.toLowerCase()}.jpg`;
   }
 }

@@ -41,14 +41,14 @@ export default class MemberList extends Vue {
   }
 
   private get isManager(): boolean {
-    return this.teamInfo.manager === this.profile._id;
+    return this.teamInfo.manager === this.profile.id;
   }
 
   private shouldShowMenu(member: Player): boolean {
     return (
-      (this.isManager && member._id !== this.teamInfo.manager) ||
-      (this.isManager && member._id !== this.profile._id) ||
-      member._id === this.profile._id
+      (this.isManager && member.id !== this.teamInfo.manager) ||
+      (this.isManager && member.id !== this.profile.id) ||
+      member.id === this.profile.id
     );
   }
 

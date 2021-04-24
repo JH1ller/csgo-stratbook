@@ -8,15 +8,15 @@
     "url": "https://jhiller.me"
   },
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --mode development",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "electron:build": "vue-cli-service electron:build",
     "electron:publish": "SET BUILD_TARGET=ELECTRON && vue-cli-service electron:build --publish always",
-    "electron:serve": "vue-cli-service electron:serve",
+    "electron:serve": "vue-cli-service electron:serve --mode development",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "api:generate": "docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/spec/spec.json -g typescript-axios -o /local/src/api/swagger/"
+    "api:generate": "node swagger/generate.js"
   },
   "main": "background.js",
   "dependencies": {

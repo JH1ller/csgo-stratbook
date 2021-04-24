@@ -44,7 +44,7 @@ export default class MainMenu extends Vue {
         label: 'Team',
         icon: 'users',
         link: this.profile.team ? '/team' : '/team/join', // TODO: check if this works!
-        show: !!this.profile._id,
+        show: !!this.profile.id,
       },
     ].filter(item => item.show);
   }

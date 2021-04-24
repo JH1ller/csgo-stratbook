@@ -16,7 +16,7 @@ export class UtilitiesService {
       describe: model.description,
       videoLink: model.videoLink,
       type: model.type,
-      map: model.map,
+      gameMap: model.gameMap,
       side: model.side,
       mouseButton: model.mouseButton,
       crouch: model.crouch,

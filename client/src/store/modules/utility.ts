@@ -80,7 +80,7 @@ export const utilityModule: Module<UtilityState, RootState> = {
       );
       return;
       const formData = new FormData();
-      formData.append('_id', utilityID);
+      formData.append('id', utilityID);
       formData.append('shared', 'true');
       const res = await api.utility.updateUtility(formData);
       if (res.success) {
@@ -95,7 +95,7 @@ export const utilityModule: Module<UtilityState, RootState> = {
     },
     async unshareUtility({ dispatch }, utilityID: string) {
       const formData = new FormData();
-      formData.append('_id', utilityID);
+      formData.append('id', utilityID);
       formData.append('shared', 'false');
       const res = await api.utility.updateUtility(formData);
       if (res.success) {
@@ -137,11 +137,11 @@ export const utilityModule: Module<UtilityState, RootState> = {
       state.utilities.push(utility);
     },
     [UPDATE_UTILITY](state, payload: { utility: Utility }) {
-      const utility = state.utilities.find(utility => utility._id === payload.utility._id);
+      const utility = state.utilities.find(utility => utility.id === payload.utility.id);
       if (utility) Object.assign(utility, payload.utility);
     },
     [DELETE_UTILITY](state, utilityID: string) {
-      state.utilities = state.utilities.filter(utility => utility._id !== utilityID);
+      state.utilities = state.utilities.filter(utility => utility.id !== utilityID);
     },
     [RESET_STATE](state) {
       Object.assign(state, utilityInitialState());

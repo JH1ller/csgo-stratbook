@@ -37,20 +37,22 @@ module.exports = {
 
     'standard',
 
-
     // https://github.com/prettier/eslint-config-prettier#installation
     // usage with Prettier, provided by 'eslint-config-prettier'.
     'prettier',
   ],
 
   rules: {
-    'prettier/prettier': ['warn', {}, { usePrettierrc: true }],  // Use our .prettierrc file as source
+    'prettier/prettier': ['warn', {}, { usePrettierrc: true }], // Use our .prettierrc file as source
 
-    'max-len': ['warn', {
-      'code': 120,
-      'tabWidth': 2,
-      'ignoreUrls': true,
-    }],
+    'max-len': [
+      'warn',
+      {
+        code: 120,
+        tabWidth: 2,
+        ignoreUrls: true,
+      },
+    ],
 
     // allow async-await
     'generator-star-spacing': 'off',
@@ -69,7 +71,7 @@ module.exports = {
     'import/no-extraneous-dependencies': 'off',
 
     'prefer-promise-reject-errors': 'off',
-    'semi': ["error", "always"],
+    semi: ['error', 'always'],
     '@typescript-eslint/semi': ['error', 'always'],
     'space-before-function-paren': 'off',
     'no-void': 'off',
@@ -83,35 +85,42 @@ module.exports = {
     // required for mongoose document creation
     'new-cap': 'off',
 
-    'space-before-function-paren': ['error', {
-      'anonymous': 'never',
-      'named': 'never',
-      'asyncArrow': 'always'
-    }],
-
-    '@typescript-eslint/member-delimiter-style': ['error', {
-      'multiline': {
-        'delimiter': 'semi',
-        'requireLast': true
+    'space-before-function-paren': [
+      'error',
+      {
+        anonymous: 'never',
+        named: 'never',
+        asyncArrow: 'always',
       },
-      'singleline': {
-        'delimiter': 'comma',
-        'requireLast': false
-      }
-    }],
+    ],
 
-    'comma-dangle': ['warn', {
-      'arrays': 'always-multiline',
-      'objects': 'always-multiline',
-      'imports': 'always-multiline',
-      'exports': 'always-multiline',
-      'functions': 'never'
-    }],
+    '@typescript-eslint/member-delimiter-style': [
+      'error',
+      {
+        multiline: {
+          delimiter: 'semi',
+          requireLast: true,
+        },
+        singleline: {
+          delimiter: 'comma',
+          requireLast: false,
+        },
+      },
+    ],
 
-
+    'comma-dangle': [
+      'warn',
+      {
+        arrays: 'always-multiline',
+        objects: 'always-multiline',
+        imports: 'always-multiline',
+        exports: 'always-multiline',
+        functions: 'never',
+      },
+    ],
 
     // TypeScript
-    'quotes': 'off',
+    quotes: 'off',
     '@typescript-eslint/quotes': ['error', 'single'],
 
     // Turn it off because already in @typescript-eslint
@@ -122,5 +131,6 @@ module.exports = {
 
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/require-await': 'off',
   },
 };
