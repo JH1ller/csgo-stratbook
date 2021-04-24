@@ -1,8 +1,5 @@
-import * as mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-
-import { User } from './user.schema';
 
 export interface TeamServerConnection {
   ip?: string;
@@ -53,7 +50,7 @@ export class Team {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   })
-  public owner: User;
+  public owner: mongoose.Schema.Types.ObjectId;
 
   @Prop()
   public createdAt: Date;
@@ -62,7 +59,7 @@ export class Team {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   })
-  public modifiedBy: User;
+  public modifiedBy: mongoose.Schema.Types.ObjectId;
 
   @Prop()
   public modifiedAt: Date;
@@ -71,9 +68,9 @@ export class Team {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   })
-  public manager: User;
+  public manager: mongoose.Schema.Types.ObjectId;
 }
 
-export type TeamDocument = Team & Document;
+export type TeamDocument = Team & Document<mongoose.Schema.Types.ObjectId>;
 
 export const TeamSchema = SchemaFactory.createForClass(Team);

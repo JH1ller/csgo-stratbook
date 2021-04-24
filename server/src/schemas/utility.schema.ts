@@ -1,9 +1,5 @@
-import * as mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-
-import { Team } from './team.schema';
-import { User } from './user.schema';
 
 import { PlayerSide, GameMap } from './enums';
 import { UtilityType, UtilityMouseButton, UtilityMovement } from './enums/utility';
@@ -62,7 +58,7 @@ export class Utility {
     ref: 'Team',
     required: true,
   })
-  public team: Team;
+  public team: mongoose.Schema.Types.ObjectId;
 
   @Prop({
     type: [String],
@@ -90,7 +86,7 @@ export class Utility {
     ref: 'User',
     required: true,
   })
-  public createdBy: User;
+  public createdBy: mongoose.Schema.Types.ObjectId;
 
   @Prop()
   public createdAt: Date;
@@ -104,6 +100,6 @@ export class Utility {
   public shared: boolean;
 }
 
-export type UtilityDocument = Utility & Document;
+export type UtilityDocument = Utility & Document<mongoose.Schema.Types.ObjectId>;
 
 export const UtilitySchema = SchemaFactory.createForClass(Utility);

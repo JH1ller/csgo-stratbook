@@ -14,7 +14,7 @@ export class UserMailNotInUseRule implements ValidatorConstraintInterface {
   public async validate(value: string) {
     const userExists = await this.usersService.existsByEmail(value);
 
-    return userExists === false;
+    return !userExists;
   }
 
   public defaultMessage(args: ValidationArguments) {

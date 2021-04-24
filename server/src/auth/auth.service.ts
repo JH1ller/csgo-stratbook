@@ -1,6 +1,9 @@
+import { validate } from 'class-validator';
 import { Injectable, BadRequestException } from '@nestjs/common';
 
 import bcrypt from 'bcrypt';
+
+import { LocalSignInDto } from './dto/local-sign-in.dto';
 
 import { UsersService } from 'src/users/users.service';
 
@@ -15,8 +18,18 @@ export class AuthService {
    * @returns user document
    */
   public async localValidateUser(email: string, password: string) {
+    const model: LocalSignInDto = {
+      email,
+      password,
+    };
+
+    const result = await validate(model);
+    if (result.length > 0) {
+      throw new BadRequestException(result);
+    }
+
     const user = await this.usersService.findByEmail(email);
-    if (user == null) {
+    if (user === null) {
       throw new BadRequestException({
         error: 'Email or password is invalid.',
       });
