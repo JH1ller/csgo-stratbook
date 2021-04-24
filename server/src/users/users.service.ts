@@ -11,14 +11,38 @@ import { User, UserDocument } from 'src/schemas/user.schema';
 import { MailerService } from 'src/services/mail/mailer.service';
 import { ResourceManagerService } from 'src/services/resource-manager/resource-manager.service';
 
+/**
+ * jwt encoded password reset data
+ */
+interface PasswordResetData {
+  id: string;
+}
+
+/**
+ * jwt encoded email confirmation data
+ */
+interface EmailConfirmationData {
+  id: string;
+}
+
+interface EmailChangeData {
+  id: string;
+
+  email: string;
+}
+
 @Injectable()
 export class UsersService {
+  private readonly mailTokenSecret: string;
+
   constructor(
     private readonly configService: ConfigService,
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private readonly mailerService: MailerService,
     private readonly resourceManagerService: ResourceManagerService
-  ) {}
+  ) {
+    this.mailTokenSecret = this.configService.get<string>('mail.tokenSecret');
+  }
 
   /**
    * Find user by document id
@@ -58,7 +82,10 @@ export class UsersService {
     });
 
     if (this.configService.get<boolean>('debug.createUserWithConfirmedMail')) {
-      createdUser.mailConfirmed = true;
+      createdUser.emailConfirmed = true;
+    } else {
+      const token = this.signEmailConfirmRequest(createdUser.id);
+      await this.mailerService.sendVerifyEmail(email, userName, token);
     }
 
     return await createdUser.save();
@@ -94,17 +121,32 @@ export class UsersService {
     return this.userModel.updateOne({ _id: id }, { completedTutorial }).exec();
   }
 
-  public async sendForgotPasswordRequest(user: UserDocument) {
-    const tokenSecret = this.configService.get<string>('mail.tokenSecret');
+  public updateEmailConfirmed(id: Schema.Types.ObjectId, emailConfirmed: boolean) {
+    return this.userModel.updateOne({ _id: id }, { emailConfirmed }).exec();
+  }
 
-    const data = {
-      _id: user._id,
+  public async sendForgotPasswordRequest(user: UserDocument) {
+    const data: PasswordResetData = {
+      id: user._id.toString(),
     };
 
-    const token = jwt.sign(data, tokenSecret, { expiresIn: '30m' });
+    const token = this.signJsonWebToken(data);
 
     const { email, userName } = user;
     await this.mailerService.sendPasswordResetMail(email, userName, token);
+  }
+
+  /**
+   * verifies a user specified @param token and return its data
+   * @param token jwt token
+   * @returns jwt encoded email confirm data
+   */
+  public verifyEmailConfirmRequest(token: string) {
+    return this.verifyJsonWebToken(token) as EmailConfirmationData;
+  }
+
+  public verifyForgotPasswordRequest(token: string) {
+    return this.verifyJsonWebToken(token) as PasswordResetData;
   }
 
   /**
@@ -141,7 +183,41 @@ export class UsersService {
     return this.setTeam(userId, null);
   }
 
+  /**
+   * removes all team members of the specified @param teamId
+   * @param teamId team id
+   */
   public removeTeamMembers(teamId: Schema.Types.ObjectId) {
     return this.userModel.updateMany({ team: teamId }, { team: null }).exec();
+  }
+
+  private signEmailConfirmRequest(userId: Schema.Types.ObjectId) {
+    const data: EmailConfirmationData = {
+      id: userId.toString(),
+    };
+
+    return this.signJsonWebToken(data);
+  }
+
+  private signEmailChangeRequest(userId: Schema.Types.ObjectId, email: string) {
+    const data: EmailChangeData = {
+      id: userId.toString(),
+      email,
+    };
+
+    return this.signJsonWebToken(data);
+  }
+
+  private signJsonWebToken(data: Record<string, any>) {
+    return jwt.sign(data, this.mailTokenSecret, { expiresIn: '30m' });
+  }
+
+  private verifyJsonWebToken(token: string) {
+    const result = jwt.verify(token, this.mailTokenSecret);
+    if (typeof result === 'string') {
+      throw new Error('jwt content must be an object');
+    }
+
+    return result;
   }
 }

@@ -42,7 +42,7 @@ export class AuthService {
       });
     }
 
-    if (!user.mailConfirmed) {
+    if (!user.emailConfirmed) {
       throw new BadRequestException({
         error: 'Please confirm your email to log in.',
       });

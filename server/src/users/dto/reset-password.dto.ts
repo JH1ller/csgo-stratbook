@@ -1,22 +1,22 @@
-import { IsEmail, IsString, Matches, MaxLength, Length } from 'class-validator';
+import { IsString, Matches, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { PasswordPattern } from 'src/common/validation-helpers';
 
-/**
- * swagger definitions dto
- */
-export class LocalSignInDto {
-  @IsEmail()
-  @MaxLength(128)
-  @ApiProperty({ example: 'test@stratbook.live' })
-  public readonly email: string;
-
+export class ResetPasswordDto {
   @IsString()
-  @Length(6, 128)
+  @MinLength(6)
   @Matches(PasswordPattern, {
     message: 'password too weak',
   })
   @ApiProperty({ example: 'HelloWorld12345!' })
   public readonly password: string;
+
+  @IsString()
+  @ApiProperty()
+  public readonly token: string;
+
+  @IsString()
+  @ApiProperty()
+  public readonly captchaResponse: string;
 }

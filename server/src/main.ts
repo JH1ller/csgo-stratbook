@@ -1,10 +1,10 @@
 import chalk from 'chalk';
 import { useContainer } from 'class-validator';
 
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 
@@ -94,6 +94,12 @@ class Main {
         whitelist: true,
         forbidNonWhitelisted: true,
         validationError: { target: false, value: false },
+      })
+    );
+
+    this.app.useGlobalInterceptors(
+      new ClassSerializerInterceptor(this.app.get(Reflector), {
+        strategy: 'excludeAll',
       })
     );
 

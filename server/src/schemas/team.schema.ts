@@ -1,9 +1,13 @@
+import { Expose } from 'class-transformer';
 import mongoose, { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 
-export interface TeamServerConnection {
-  ip?: string;
-  password?: string;
+export class TeamServerConnection {
+  @Expose()
+  public ip?: string;
+
+  @Expose()
+  public password?: string;
 }
 
 @Schema({

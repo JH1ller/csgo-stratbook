@@ -1,7 +1,7 @@
 import { IsString, MinLength, MaxLength, IsEmail, Matches, IsOptional, Validate } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { passwordPattern } from 'src/common/validation-helpers';
+import { PasswordPattern } from 'src/common/validation-helpers';
 import { UserMailNotInUseRule } from 'src/common/validators/user-mail-not-in-use.validator';
 
 export class RegisterUserDto {
@@ -19,7 +19,7 @@ export class RegisterUserDto {
 
   @IsString()
   @MinLength(6)
-  @Matches(passwordPattern, {
+  @Matches(PasswordPattern, {
     message: 'password too weak',
   })
   @ApiProperty({ example: 'HelloWorld12345!' })

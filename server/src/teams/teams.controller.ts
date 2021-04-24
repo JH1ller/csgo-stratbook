@@ -104,7 +104,10 @@ export class TeamsController {
   }
 
   @Get('players')
-  public getPlayers() {
-    // this.usersService.
+  public async getPlayers(@Req() req: Request) {
+    const teamId = req.user.team;
+
+    const users = await this.usersService.getTeamMembers(teamId);
+    console.log(users);
   }
 }

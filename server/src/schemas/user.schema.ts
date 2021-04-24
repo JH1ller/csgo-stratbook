@@ -33,7 +33,7 @@ export class User {
   @Prop({
     default: false,
   })
-  public mailConfirmed: boolean;
+  public emailConfirmed: boolean;
 
   /**
    * s3 image bucket key

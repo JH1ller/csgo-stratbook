@@ -14,13 +14,15 @@ import {
   Param,
   Res,
   Logger,
+  OnModuleInit,
 } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOkResponse, ApiCreatedResponse, ApiConsumes, ApiBody, ApiTags } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
+import { Schema } from 'mongoose';
 import { Express, Response, Request } from 'express';
-
 import urljoin from 'url-join';
 
 import { UsersService } from './users.service';
@@ -29,22 +31,39 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import { ProfileUpdateDto } from './dto/profile-update.dto';
 import { DeleteUserDto } from './dto/delete-user.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+
+import { GetUserResponse } from './responses/get-user.response';
+import { RegisterUserResponse } from './responses/register-user.response';
+import { GetTeamResponse } from 'src/teams/responses/get-team.response';
 
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
+
 import { ImageUploaderService } from 'src/services/image-uploader/image-uploader.service';
 import { CaptchaService } from 'src/services/captcha/captcha.service';
 
+import { TeamsService } from 'src/teams/teams.service';
+
 @Controller('users')
 @ApiTags('Users')
-export class UsersController {
+export class UsersController implements OnModuleInit {
   private readonly logger = new Logger(UsersController.name);
+
+  private teamsService: TeamsService;
 
   constructor(
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
     private readonly imageUploaderService: ImageUploaderService,
-    private readonly captchaService: CaptchaService
+    private readonly captchaService: CaptchaService,
+    private moduleRef: ModuleRef
   ) {}
+
+  public onModuleInit() {
+    // get teams service after construction to prevent a circular dependency between
+    // UserModule and TeamsModule.
+    this.teamsService = this.moduleRef.get(TeamsService, { strict: false });
+  }
 
   @Post('register')
   @ApiConsumes('multipart/form-data')
@@ -52,8 +71,6 @@ export class UsersController {
   @ApiBody({ description: 'Register new user', type: RegisterUserDto })
   @UseInterceptors(FileInterceptor('avatar'))
   public async registerUser(@Body() model: RegisterUserDto, @UploadedFile() file: Express.Multer.File) {
-    console.log(file);
-
     let avatar: string;
     if (file) {
       avatar = await this.imageUploaderService.addJob({
@@ -66,11 +83,12 @@ export class UsersController {
     }
 
     const user = await this.usersService.createUser(model.userName, model.email, model.password, avatar);
+    const { _id, email } = user;
 
-    return {
-      id: user._id,
-      email: user.email,
-    };
+    return new RegisterUserResponse({
+      _id,
+      email,
+    });
   }
 
   @Delete()
@@ -96,44 +114,41 @@ export class UsersController {
     await this.usersService.deleteUser(userId);
   }
 
+  /**
+   * User confirms email by token
+   */
   @Get('/confirmation/:token')
-  public userConfirmation(@Param('token') token: string, @Req() req: Request, @Res() res: Response) {
+  public async userConfirmation(@Param('token') token: string, @Req() req: Request, @Res() res: Response) {
+    const { id } = this.usersService.verifyEmailConfirmRequest(token);
+
+    const user = await this.usersService.findById(id);
+    if (!user) {
+      throw new InternalServerErrorException('user does not exists with the specified id');
+    }
+
     const baseUrl = this.configService.get<string>('baseUrl');
 
-    if (req.user.mailConfirmed) {
-      res.redirect(urljoin(baseUrl, `/#/login?already_confirmed=${req.user.email}`));
+    // simply redirect the user if the mail already has been confirmed
+    if (user.emailConfirmed) {
+      return res.redirect(urljoin(baseUrl, `/#/login?already_confirmed=${user.email}`));
     }
+
+    await this.usersService.updateEmailConfirmed(user._id, true);
+    return res.redirect(urljoin(baseUrl, `/#/login?confirmed=${user.email}`));
   }
 
   @Get()
   @UseGuards(AuthenticatedGuard)
   @ApiOkResponse()
-  public getUser(@Req() req: Request) {
-    const {
-      _id,
-      userName,
-      avatar,
-      team,
-      email,
-      mailConfirmed,
-      isAdmin,
-      createdAt,
-      lastOnline,
-      completedTutorial,
-    } = req.user;
+  public async getUser(@Req() req: Request) {
+    const team = await this.teamsService.findById(req.user.team);
 
-    return {
-      id: _id.toString(),
-      userName,
-      avatar,
-      team,
-      email,
-      mailConfirmed,
-      isAdmin,
-      createdAt,
-      lastOnline,
-      completedTutorial,
-    };
+    const obj = new GetUserResponse({
+      ...req.user.toObject(),
+      team: team ? new GetTeamResponse(team.toObject()) : null,
+    });
+
+    return obj;
   }
 
   @Patch()
@@ -188,5 +203,22 @@ export class UsersController {
     }
 
     await this.usersService.sendForgotPasswordRequest(user);
+  }
+
+  @Patch('/reset-password')
+  public async resetPassword(@Body() model: ResetPasswordDto) {
+    const result = await this.captchaService.verify(model.captchaResponse);
+    if (!result) {
+      return new BadRequestException('failed to verify captcha');
+    }
+
+    const { id } = this.usersService.verifyForgotPasswordRequest(model.token);
+
+    const user = await this.usersService.findById(id);
+    if (!user) {
+      throw new InternalServerErrorException('invalid user specified in token');
+    }
+
+    await this.usersService.updatePassword(new Schema.Types.ObjectId(id), model.password);
   }
 }

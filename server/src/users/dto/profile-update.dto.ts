@@ -1,7 +1,7 @@
 import { IsString, MinLength, MaxLength, IsEmail, Matches, IsBoolean, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { passwordPattern } from 'src/common/validation-helpers';
+import { PasswordPattern } from 'src/common/validation-helpers';
 
 export class ProfileUpdateDto {
   @IsString()
@@ -19,7 +19,7 @@ export class ProfileUpdateDto {
 
   @IsString()
   @MinLength(6)
-  @Matches(passwordPattern, {
+  @Matches(PasswordPattern, {
     message: 'password too weak',
   })
   @IsOptional()
