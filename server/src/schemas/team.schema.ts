@@ -1,12 +1,15 @@
 import { Expose } from 'class-transformer';
 import mongoose, { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class TeamServerConnection {
   @Expose()
+  @ApiProperty()
   public ip?: string;
 
   @Expose()
+  @ApiProperty()
   public password?: string;
 }
 

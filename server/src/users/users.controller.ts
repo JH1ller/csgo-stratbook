@@ -18,7 +18,7 @@ import {
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiOkResponse, ApiCreatedResponse, ApiConsumes, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiCreatedResponse, ApiConsumes, ApiBody, ApiTags, ApiResponse } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
 import { Schema } from 'mongoose';
@@ -67,9 +67,9 @@ export class UsersController implements OnModuleInit {
 
   @Post('register')
   @ApiConsumes('multipart/form-data')
-  @ApiCreatedResponse()
-  @ApiBody({ description: 'Register new user', type: RegisterUserDto })
   @UseInterceptors(FileInterceptor('avatar'))
+  @ApiCreatedResponse({ type: RegisterUserResponse })
+  @ApiBody({ description: 'Register new user', type: RegisterUserDto })
   public async registerUser(@Body() model: RegisterUserDto, @UploadedFile() file: Express.Multer.File) {
     let avatar: string;
     if (file) {
@@ -139,7 +139,7 @@ export class UsersController implements OnModuleInit {
 
   @Get()
   @UseGuards(AuthenticatedGuard)
-  @ApiOkResponse()
+  @ApiOkResponse({ type: GetUserResponse })
   public async getUser(@Req() req: Request) {
     const team = await this.teamsService.findById(req.user.team);
 
