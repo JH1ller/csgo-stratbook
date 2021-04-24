@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import Mongoose, { Model } from 'mongoose';
+import { Schema, Model } from 'mongoose';
 
 import { GameMap, PlayerSide } from 'src/schemas/enums';
 import { StrategyType } from 'src/schemas/enums/strategy';
@@ -14,7 +14,7 @@ import { User } from 'src/schemas/user.schema';
 export class StrategiesService {
   constructor(@InjectModel(Strategy.name) private readonly strategyModel: Model<StrategyDocument>) {}
 
-  public findById(id: Mongoose.Types.ObjectId) {
+  public findById(id: Schema.Types.ObjectId) {
     return this.strategyModel.findById(id).exec();
   }
 
@@ -44,7 +44,15 @@ export class StrategiesService {
     return strategy.save();
   }
 
-  public deleteStrategy(id: Mongoose.Types.ObjectId) {
+  public deleteStrategy(id: Schema.Types.ObjectId) {
     return this.strategyModel.deleteOne({ _id: id }).exec();
+  }
+
+  public deleteAllByTeamId(teamId: Schema.Types.ObjectId) {
+    return this.strategyModel
+      .deleteMany({
+        team: teamId,
+      })
+      .exec();
   }
 }

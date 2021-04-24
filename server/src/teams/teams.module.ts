@@ -8,6 +8,7 @@ import { TeamsService } from './teams.service';
 import { Team, TeamSchema } from 'src/schemas/team.schema';
 
 import { UsersModule } from 'src/users/users.module';
+import { StrategiesModule } from 'src/strategies/strategies.module';
 
 import { MulterConfigService } from 'src/services/multer-config.service';
 import { ImageUploaderModule } from 'src/services/image-uploader/image-uploader.module';
@@ -18,7 +19,10 @@ import { ImageUploaderModule } from 'src/services/image-uploader/image-uploader.
       useClass: MulterConfigService,
     }),
     MongooseModule.forFeature([{ name: Team.name, schema: TeamSchema }]),
+
     UsersModule,
+    StrategiesModule,
+
     ImageUploaderModule,
   ],
   controllers: [TeamsController],

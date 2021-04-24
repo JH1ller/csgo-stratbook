@@ -77,6 +77,9 @@ module.exports = {
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': ['error'],
 
+    "no-undefined": ['error'],
+    "no-eq-null": ['error'],
+
     // empty constructors are often used by nestjs
     'no-useless-constructor': 'off',
 

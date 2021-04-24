@@ -1,8 +1,6 @@
 import mongoose, { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { Team } from './team.schema';
-
 @Schema({
   timestamps: {
     // https://mongoosejs.com/docs/guide.html#timestamps
@@ -47,7 +45,7 @@ export class User {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Team',
   })
-  public team?: Team;
+  public team?: mongoose.Schema.Types.ObjectId;
 
   @Prop()
   public createdAt: Date;
@@ -71,6 +69,6 @@ export class User {
   public completedTutorial: boolean;
 }
 
-export type UserDocument = User & Document<mongoose.ObjectId>;
+export type UserDocument = User & Document<mongoose.Schema.Types.ObjectId>;
 
 export const UserSchema = SchemaFactory.createForClass(User);

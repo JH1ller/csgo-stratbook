@@ -7,7 +7,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import { User, UserDocument } from 'src/schemas/user.schema';
-import { Team } from 'src/schemas/team.schema';
 
 import { MailerService } from 'src/services/mail/mailer.service';
 import { ResourceManagerService } from 'src/services/resource-manager/resource-manager.service';
@@ -26,7 +25,15 @@ export class UsersService {
    * @param id user document id
    */
   public findById(id: string) {
-    return this.userModel.findById(id).populate('team').exec();
+    return this.userModel.findById(id).exec();
+  }
+
+  /**
+   * Find a user by email
+   * @param email email of the corresponding account
+   */
+  public findByEmail(email: string) {
+    return this.userModel.findOne({ email }).exec();
   }
 
   public existsById(id: Schema.Types.ObjectId) {
@@ -37,20 +44,6 @@ export class UsersService {
     return this.userModel.exists({
       email,
     });
-  }
-
-  public async isEmailInUse(email: string) {
-    return await this.userModel.exists({
-      email,
-    });
-  }
-
-  /**
-   * Find a user by email
-   * @param email email of the corresponding account
-   */
-  public findByEmail(email: string) {
-    return this.userModel.findOne({ email }).exec();
   }
 
   public async createUser(userName: string, email: string, password: string, avatar?: string) {
@@ -90,20 +83,16 @@ export class UsersService {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-    return await this.userModel.updateOne({ _id: id }, { password: hashedPassword });
+    return await this.userModel.updateOne({ _id: id }, { password: hashedPassword }).exec();
   }
 
   public updateUserName(id: Schema.Types.ObjectId, userName: string) {
-    return this.userModel.updateOne({ _id: id }, { userName });
+    return this.userModel.updateOne({ _id: id }, { userName }).exec();
   }
 
   public updateCompletedTutorial(id: Schema.Types.ObjectId, completedTutorial: boolean) {
-    return this.userModel.updateOne({ _id: id }, { completedTutorial });
+    return this.userModel.updateOne({ _id: id }, { completedTutorial }).exec();
   }
-
-  // public getUsersByTeamId(teamId: Mongoose.Types.ObjectId) {
-  //   return this.userModel.find({ team: teamId });
-  // }
 
   public async sendForgotPasswordRequest(user: UserDocument) {
     const tokenSecret = this.configService.get<string>('mail.tokenSecret');
@@ -118,27 +107,41 @@ export class UsersService {
     await this.mailerService.sendPasswordResetMail(email, userName, token);
   }
 
-  public joinTeam(id: Schema.Types.ObjectId, team: Team) {
+  /**
+   * Assigns the @param teamId to the user specified @param id
+   * @param id userId
+   * @param teamId teamId
+   */
+  public setTeam(userId: Schema.Types.ObjectId, teamId: Schema.Types.ObjectId | null) {
     return this.userModel
       .updateOne({
-        _id: id,
-        team: team,
+        _id: userId,
+        team: teamId,
       })
       .exec();
   }
 
   public async getTeamMembers(teamId: Schema.Types.ObjectId) {
-    return await this.userModel
+    return this.userModel
       .find({
-        id: teamId,
+        team: teamId,
+      })
+      .exec();
+  }
+
+  public async getTeamMemberCount(teamId: Schema.Types.ObjectId) {
+    return this.userModel
+      .count({
+        team: teamId,
       })
       .exec();
   }
 
   public leaveTeam(userId: Schema.Types.ObjectId) {
-    return this.userModel.updateOne({
-      _id: userId,
-      team: null,
-    });
+    return this.setTeam(userId, null);
+  }
+
+  public removeTeamMembers(teamId: Schema.Types.ObjectId) {
+    return this.userModel.updateMany({ team: teamId }, { team: null }).exec();
   }
 }

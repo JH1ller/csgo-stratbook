@@ -6,12 +6,17 @@ import { Schema, Model } from 'mongoose';
 import { Team, TeamDocument } from 'src/schemas/team.schema';
 import { User } from 'src/schemas/user.schema';
 
+import { StrategiesService } from 'src/strategies/strategies.service';
+
 @Injectable()
 export class TeamsService {
-  constructor(@InjectModel(Team.name) private readonly teamsModel: Model<TeamDocument>) {}
+  constructor(
+    @InjectModel(Team.name) private readonly teamsModel: Model<TeamDocument>,
+    private readonly strategiesService: StrategiesService
+  ) {}
 
   public findById(id: Schema.Types.ObjectId) {
-    return this.teamsModel.findById(id);
+    return this.teamsModel.findById(id).exec();
   }
 
   public async createTeam(
@@ -45,6 +50,12 @@ export class TeamsService {
     const code = await this.generateTeamCode();
 
     return this.teamsModel.updateOne({ _id: id }, { code }).exec();
+  }
+
+  public async deleteTeam(id: Schema.Types.ObjectId) {
+    await this.strategiesService.deleteAllByTeamId(id);
+
+    return this.teamsModel.deleteOne({ _id: id }).exec();
   }
 
   private async generateTeamCode() {

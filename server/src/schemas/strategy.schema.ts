@@ -1,9 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 
-import { Team } from './team.schema';
-import { User } from './user.schema';
-
 import { PlayerSide, GameMap } from './enums';
 import { StrategyType } from './enums/strategy';
 
@@ -31,7 +28,7 @@ export class Strategy {
     ref: 'Team',
     required: true,
   })
-  public team: Team;
+  public team: mongoose.Schema.Types.ObjectId;
 
   @Prop({
     enum: Object.values(PlayerSide),
@@ -73,7 +70,7 @@ export class Strategy {
     ref: 'User',
     required: true,
   })
-  public createdBy: User;
+  public createdBy: mongoose.Schema.Types.ObjectId;
 
   @Prop()
   public createdAt: Date;
@@ -85,7 +82,7 @@ export class Strategy {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   })
-  public modifiedBy: User;
+  public modifiedBy: mongoose.Schema.Types.ObjectId;
 
   @Prop({
     default: false,
@@ -93,6 +90,6 @@ export class Strategy {
   public shared: boolean;
 }
 
-export type StrategyDocument = Strategy & Document;
+export type StrategyDocument = Strategy & Document<mongoose.Schema.Types.ObjectId>;
 
 export const StrategySchema = SchemaFactory.createForClass(Strategy);
