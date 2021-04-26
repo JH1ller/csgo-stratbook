@@ -5,6 +5,7 @@ const generatorOptions = {
   enumNameSuffix: '',
   supportsES6: true,
   withoutPrefixEnums: true,
+  useSingleRequestParameter: true,
 };
 
 const command = `docker run --rm -v ${
