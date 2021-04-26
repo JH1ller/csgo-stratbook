@@ -38,7 +38,7 @@ export class MailerService {
   }
 
   /**
-   * Sends the confirm-email-mail to the specified @param email
+   * Sends the confirm-email-mail to the specified @name email
    * @param email destination email
    * @param userName name of the user, used in email titles
    * @param token jwt encoded confirmation token

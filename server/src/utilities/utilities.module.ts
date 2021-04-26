@@ -7,8 +7,9 @@ import { UtilitiesService } from './utilities.service';
 
 import { Utility, UtilitySchema } from 'src/schemas/utility.schema';
 
-import { ImageUploaderModule } from 'src/services/image-uploader/image-uploader.module';
 import { MulterConfigService } from 'src/services/multer-config.service';
+import { ImageUploaderModule } from 'src/services/image-uploader/image-uploader.module';
+import { ResourceManagerModule } from 'src/services/resource-manager/resource-manager.module';
 
 @Module({
   imports: [
@@ -17,7 +18,9 @@ import { MulterConfigService } from 'src/services/multer-config.service';
     }),
 
     MongooseModule.forFeature([{ name: Utility.name, schema: UtilitySchema }]),
+
     ImageUploaderModule,
+    ResourceManagerModule,
   ],
   controllers: [UtilitiesController],
   providers: [UtilitiesService],

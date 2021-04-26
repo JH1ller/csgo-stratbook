@@ -18,6 +18,10 @@ export class StrategiesService {
     return this.strategyModel.findById(id).exec();
   }
 
+  public findByTeamId(teamId: Schema.Types.ObjectId) {
+    return this.strategyModel.find({ team: teamId }).exec();
+  }
+
   public addStrategy(
     name: string,
     type: StrategyType,
@@ -54,5 +58,17 @@ export class StrategiesService {
         team: teamId,
       })
       .exec();
+  }
+
+  public async replaceUserName(teamId: Schema.Types.ObjectId, oldUserName: string, newUserName: string) {
+    const strategies = await this.findByTeamId(teamId);
+
+    const promises = strategies.map(async (strategy) => {
+      // simply replace the content (for now)
+      strategy.content = strategy.content.replace(oldUserName, newUserName);
+      await strategy.save();
+    });
+
+    return Promise.allSettled(promises);
   }
 }

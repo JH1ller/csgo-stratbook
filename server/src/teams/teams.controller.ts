@@ -84,23 +84,10 @@ export class TeamsController {
   @Patch('leave')
   @UseGuards(HasTeamGuard)
   public async leaveTeam(@Req() req: Request) {
-    console.log(req.user);
+    const { _id, team } = req.user;
 
-    const teamId = req.user.team;
-    const team = await this.teamsService.findById(teamId);
-
-    const memberCount = await this.usersService.getTeamMemberCount(teamId);
-    if (memberCount > 1) {
-      if (team.manager.toString() === req.user._id.toString()) {
-        throw new BadRequestException('You need to transfer leadership first.');
-      }
-
-      await this.teamsService.updateJoinCode(teamId);
-    } else {
-      await this.teamsService.deleteTeam(teamId);
-    }
-
-    await this.usersService.leaveTeam(req.user._id);
+    await this.teamsService.leaveTeam(team, _id, false);
+    await this.usersService.unassignTeam(_id);
   }
 
   @Get('players')

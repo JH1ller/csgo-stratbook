@@ -30,4 +30,12 @@ export class ProfileUpdateDto {
   @IsOptional()
   @ApiProperty({ example: false })
   public readonly completedTutorial?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  @ApiProperty({
+    example: true,
+    description: 'true if user name should be replaced in strategies',
+  })
+  public readonly updateStrategies?: boolean;
 }

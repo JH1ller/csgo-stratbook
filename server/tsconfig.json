@@ -14,6 +14,11 @@
     "sourceMap": true,
     "baseUrl": "./",
 
+    "lib": [
+      "ESNext",
+    ],
+
+
     "outDir": "./dist",
     "noEmitHelpers": true,
     "importHelpers": false,

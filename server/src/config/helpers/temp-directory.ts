@@ -29,7 +29,7 @@ function isDirectory(dir: string) {
 }
 
 /**
- * Resolves, verifies the location and prepares to directory pointed at by @param dir
+ * Resolves, verifies the location and prepares to directory pointed at by @name dir
  * @param dir relative path to temp directory
  * @returns resolved, absolute path to prepare directory
  */

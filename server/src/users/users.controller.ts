@@ -18,7 +18,7 @@ import {
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiOkResponse, ApiCreatedResponse, ApiConsumes, ApiBody, ApiTags, ApiResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiCreatedResponse, ApiConsumes, ApiBody, ApiTags } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
 import { Schema } from 'mongoose';
@@ -37,12 +37,16 @@ import { GetUserResponse } from './responses/get-user.response';
 import { RegisterUserResponse } from './responses/register-user.response';
 import { GetTeamResponse } from 'src/teams/responses/get-team.response';
 
+import { User } from 'src/schemas/user.schema';
+
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
+
+import { TeamsService } from 'src/teams/teams.service';
+import { StrategiesService } from 'src/strategies/strategies.service';
 
 import { ImageUploaderService } from 'src/services/image-uploader/image-uploader.service';
 import { CaptchaService } from 'src/services/captcha/captcha.service';
-
-import { TeamsService } from 'src/teams/teams.service';
+import { ResourceManagerService } from 'src/services/resource-manager/resource-manager.service';
 
 @Controller('users')
 @ApiTags('Users')
@@ -51,11 +55,14 @@ export class UsersController implements OnModuleInit {
 
   private teamsService: TeamsService;
 
+  private strategiesService: StrategiesService;
+
   constructor(
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
     private readonly imageUploaderService: ImageUploaderService,
     private readonly captchaService: CaptchaService,
+    private readonly resourceManagerService: ResourceManagerService,
     private moduleRef: ModuleRef
   ) {}
 
@@ -63,6 +70,7 @@ export class UsersController implements OnModuleInit {
     // get teams service after construction to prevent a circular dependency between
     // UserModule and TeamsModule.
     this.teamsService = this.moduleRef.get(TeamsService, { strict: false });
+    this.strategiesService = this.moduleRef.get(StrategiesService, { strict: false });
   }
 
   @Post('register')
@@ -100,6 +108,7 @@ export class UsersController implements OnModuleInit {
 
     // user object will be destroy on logout
     const userId = req.user._id;
+    const teamId = req.user.team;
 
     // logout user
     req.logout();
@@ -111,30 +120,9 @@ export class UsersController implements OnModuleInit {
       }
     });
 
+    // force team leave on deletion
+    await this.teamsService.leaveTeam(teamId, userId, true);
     await this.usersService.deleteUser(userId);
-  }
-
-  /**
-   * User confirms email by token
-   */
-  @Get('/confirmation/:token')
-  public async userConfirmation(@Param('token') token: string, @Req() req: Request, @Res() res: Response) {
-    const { id } = this.usersService.verifyEmailConfirmRequest(token);
-
-    const user = await this.usersService.findById(id);
-    if (!user) {
-      throw new InternalServerErrorException('user does not exists with the specified id');
-    }
-
-    const baseUrl = this.configService.get<string>('baseUrl');
-
-    // simply redirect the user if the mail already has been confirmed
-    if (user.emailConfirmed) {
-      return res.redirect(urljoin(baseUrl, `/#/login?already_confirmed=${user.email}`));
-    }
-
-    await this.usersService.updateEmailConfirmed(user._id, true);
-    return res.redirect(urljoin(baseUrl, `/#/login?confirmed=${user.email}`));
   }
 
   @Get()
@@ -160,34 +148,88 @@ export class UsersController implements OnModuleInit {
     @UploadedFile() file: Express.Multer.File,
     @Req() req: Request
   ) {
-    // #todo: reduce update queries
+    const { user } = req;
+    const userDiff: Partial<User> = {};
+
+    if (file !== null) {
+      userDiff.avatar = await this.imageUploaderService.addJob({
+        source: file.path,
+        resize: {
+          width: 256,
+          height: 256,
+        },
+      });
+
+      // delete old user avatar from s3 bucket
+      await this.resourceManagerService.deleteImage(user.avatar);
+    }
+
+    if (model.email !== null) {
+      await this.usersService.sendEmailChangeRequest(user, model.email);
+    }
 
     if (model.password !== null) {
-      const result = await this.usersService.updatePassword(req.user.id, model.password);
-      if (!result.ok) {
-        throw new InternalServerErrorException('failed to update user password');
-      }
+      userDiff.password = await this.usersService.createPasswordHash(model.password);
     }
 
     if (model.userName !== null) {
-      const result = await this.usersService.updateUserName(req.user.id, model.userName);
-      if (!result.ok) {
-        throw new InternalServerErrorException('failed to update user name');
-      }
-    }
+      userDiff.userName = model.userName;
 
-    if (file !== null) {
-      console.log(file);
+      // replace the user name inside strategies
+      if (model.updateStrategies && user.team) {
+        await this.strategiesService.replaceUserName(user.team, user.userName, model.userName);
+      }
     }
 
     if (model.completedTutorial !== null) {
-      const result = await this.usersService.updateCompletedTutorial(req.user.id, model.completedTutorial);
-      if (!result.ok) {
-        throw new InternalServerErrorException('failed to update completed tutorial');
-      }
+      userDiff.completedTutorial = model.completedTutorial;
     }
 
-    await req.user.save();
+    // finally update user data by passing our diff object
+    await this.usersService.updateUser(user._id, userDiff);
+  }
+
+  /**
+   * User confirms email by token
+   */
+  @Get('/confirmation/:token')
+  public async userConfirmation(@Param('token') token: string, @Res() res: Response) {
+    const { id } = this.usersService.verifyEmailConfirmRequest(token);
+
+    const user = await this.usersService.findById(id);
+    if (!user) {
+      throw new InternalServerErrorException('user does not exists with the specified id');
+    }
+
+    const baseUrl = this.configService.get<string>('baseUrl');
+
+    // simply redirect the user if the mail already has been confirmed
+    if (user.emailConfirmed) {
+      return res.redirect(urljoin(baseUrl, `/#/login?already_confirmed=${user.email}`));
+    }
+
+    await this.usersService.updateEmailConfirmed(user._id, true);
+    return res.redirect(urljoin(baseUrl, `/#/login?confirmed=${user.email}`));
+  }
+
+  @Get('/confirmation-change-email/:token')
+  public async confirmEmailChange(@Param('token') token: string, @Res() res: Response) {
+    const { id, email } = this.usersService.verifyEmailChangeRequest(token);
+
+    const user = await this.usersService.findById(id);
+    if (!user) {
+      throw new InternalServerErrorException('user does not exists with the specified id');
+    }
+
+    // don't hit the db if the user attempts to update the mail multiple times.
+    if (email === user.email) {
+      throw new BadRequestException('Email has already been updated!');
+    }
+
+    await this.usersService.updateEmailAddress(user._id, email);
+
+    const baseUrl = this.configService.get<string>('baseUrl');
+    return res.redirect(urljoin(baseUrl, '/#/profile?confirmed=1'));
   }
 
   @Post('/forgot-password')

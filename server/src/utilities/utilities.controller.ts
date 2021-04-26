@@ -1,18 +1,33 @@
-import { Controller, Post, UploadedFiles, UseGuards, UseInterceptors, Body, Request } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UploadedFiles,
+  UseGuards,
+  UseInterceptors,
+  Body,
+  Req,
+  Delete,
+  BadRequestException,
+} from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiOkResponse, ApiConsumes, ApiBody, ApiTags } from '@nestjs/swagger';
 
-import { Express } from 'express';
+import { Request, Express } from 'express';
+import { Schema } from 'mongoose';
 
 import { UtilitiesService } from './utilities.service';
+
 import { AddUtilityDto } from './dto/add-utility.dto';
+import { DeleteUtilityDto } from './dto/delete-utility.dto';
 
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
+import { HasTeamGuard } from 'src/common/guards/has-team.guard';
 
 import { ImageUploaderService } from 'src/services/image-uploader/image-uploader.service';
 
 @Controller('utilities')
 @UseGuards(AuthenticatedGuard)
+@UseGuards(HasTeamGuard)
 @ApiTags('Utilities')
 export class UtilitiesController {
   constructor(
@@ -28,16 +43,29 @@ export class UtilitiesController {
   public async addUtility(
     @UploadedFiles() files: { images: Express.Multer.File[] },
     @Body() model: AddUtilityDto,
-    @Request() req: Express.Request
+    @Req() req: Request
   ) {
+    let images: string[] = [];
     if (files) {
-      const result = await Promise.all(
-        files.images.map((file) => this.imageUploaderService.addJob({ source: file.path }))
-      );
-
-      for (const i of result) {
-        console.log('uploaded: ', i);
-      }
+      const tasks = files.images.map((file) => this.imageUploaderService.addJob({ source: file.path }));
+      images = await Promise.all(tasks);
     }
+
+    const userId = req.user._id;
+    const teamId = req.user.team;
+
+    await this.utilitiesService.addUtility(teamId, userId, model, images);
+  }
+
+  @Delete()
+  public async deleteUtility(@Body() model: DeleteUtilityDto, @Req() req: Request) {
+    const teamId = req.user.team;
+
+    const utility = await this.utilitiesService.findById(new Schema.Types.ObjectId(model.id));
+    if (utility.team !== teamId) {
+      throw new BadRequestException('Cannot delete a utility of another team.');
+    }
+
+    await this.utilitiesService.deleteById(utility._id);
   }
 }

@@ -9,6 +9,7 @@ import { Team, TeamSchema } from 'src/schemas/team.schema';
 
 import { UsersModule } from 'src/users/users.module';
 import { StrategiesModule } from 'src/strategies/strategies.module';
+import { UtilitiesModule } from 'src/utilities/utilities.module';
 
 import { MulterConfigService } from 'src/services/multer-config.service';
 import { ImageUploaderModule } from 'src/services/image-uploader/image-uploader.module';
@@ -22,6 +23,7 @@ import { ImageUploaderModule } from 'src/services/image-uploader/image-uploader.
 
     UsersModule,
     StrategiesModule,
+    UtilitiesModule,
 
     ImageUploaderModule,
   ],
