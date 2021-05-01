@@ -46,6 +46,9 @@ import {
   faCoffee,
   faHeadset,
   faThList,
+  faCompressAlt,
+  faExpandAlt,
+  faCrosshairs,
 } from '@fortawesome/free-solid-svg-icons';
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -109,7 +112,10 @@ library.add(
   faCoffee,
   faDiscord,
   faHeadset,
-  faThList
+  faThList,
+  faCompressAlt,
+  faExpandAlt,
+  faCrosshairs
 );
 
 Vue.component('fa-icon', FontAwesomeIcon);

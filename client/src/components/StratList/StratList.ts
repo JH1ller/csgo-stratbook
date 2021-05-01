@@ -10,6 +10,11 @@ export default class StratList extends Vue {
   @Prop() completedTutorial!: boolean;
   @Prop() tutorialStrat!: Strat | null;
   @Prop() strats!: Strat[];
+  @Prop() collapsedStrats!: string[];
+
+  private isCollapsed(strat: Strat) {
+    return this.collapsedStrats.some(id => id === strat._id);
+  }
 
   // TODO: solve this drilling with provide/inject
   // Emitted through from strat-item
@@ -52,5 +57,11 @@ export default class StratList extends Vue {
   @Emit()
   private showMap(strat: Strat) {
     return strat;
+  }
+
+  // Emitted through from strat-item
+  @Emit()
+  private toggleCollapse(stratID: string) {
+    return stratID;
   }
 }

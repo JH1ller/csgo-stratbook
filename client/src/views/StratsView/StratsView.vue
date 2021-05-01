@@ -22,17 +22,31 @@
       @share-strat="requestShareStrat"
       @unshare-strat="unshareStrat"
       @show-map="showDrawTool"
+      @toggle-collapse="toggleStratCollapse"
       :completedTutorial="profile.completedTutorial"
       :tutorialStrat="tutorialStrat"
       :strats="sortedFilteredStratsOfCurrentMap"
+      :collapsedStrats="collapsedStrats"
     />
     <transition name="fade">
       <div class="strats-view__fab-group" v-if="!filterMenuOpen && !stratFormOpen">
         <FloatingButton
           class="strats-view__floating-game-mode"
-          label="Game Mode"
-          icon="headset"
+          label="Focus Mode"
+          icon="crosshairs"
           @click="toggleGameMode"
+        />
+        <FloatingButton
+          class="strats-view__floating-collapse"
+          icon="compress-alt"
+          label="Collapse All"
+          @click="collapseAll"
+        />
+        <FloatingButton
+          class="strats-view__floating-collapse"
+          icon="expand-alt"
+          label="Expand All"
+          @click="expandAll"
         />
         <FilterButton
           class="strats-view__filter-button"
@@ -43,7 +57,7 @@
           <FloatingButton
             v-if="!gameMode"
             class="strats-view__floating-add"
-            label="Add strat"
+            label="Add Strat"
             icon="plus"
             @click="showStratForm"
           />

@@ -5,24 +5,29 @@ import api from '@/api/base';
 import { Team } from '@/api/models/Team';
 import TrackingService from '@/services/tracking.service';
 import { extractTextFromHTML } from '@/utils/extractTextFromHTML';
+import StorageService from '@/services/storage.service';
 
 const SET_STRATS = 'SET_STRATS';
 
 const ADD_STRAT = 'ADD_STRAT';
 const UPDATE_STRAT = 'UPDATE_STRAT';
 const DELETE_STRAT = 'DELETE_STRAT';
+const SET_COLLAPSED = 'SET_COLLAPSED';
 
 const RESET_STATE = 'RESET_STATE';
 
 export interface StratState {
   strats: Strat[];
+  collapsedStrats: string[];
 }
 
 const stratInitialState = (): StratState => ({
   strats: [],
+  collapsedStrats: [],
 });
 
 const trackingService = TrackingService.getInstance();
+const storageService = StorageService.getInstance();
 
 export const stratModule: Module<StratState, RootState> = {
   namespaced: true,
@@ -122,6 +127,26 @@ export const stratModule: Module<StratState, RootState> = {
     deleteStratLocally({ commit }, payload: { stratID: string }) {
       commit(DELETE_STRAT, payload.stratID);
     },
+    collapseAll({ commit, state }) {
+      const collapsed = state.strats.map(strat => strat._id);
+      commit(SET_COLLAPSED, collapsed);
+      storageService.set('collapsed', state.collapsedStrats);
+    },
+    expandAll({ commit, state }) {
+      commit(SET_COLLAPSED, []);
+      storageService.set('collapsed', state.collapsedStrats);
+    },
+    toggleStratCollapse({ commit, state }, stratID: string) {
+      if (state.collapsedStrats.some(id => id === stratID)) {
+        commit(
+          SET_COLLAPSED,
+          state.collapsedStrats.filter(id => id !== stratID)
+        );
+      } else {
+        commit(SET_COLLAPSED, [...state.collapsedStrats, stratID]);
+      }
+      storageService.set('collapsed', state.collapsedStrats);
+    },
     resetState({ commit }) {
       commit(RESET_STATE);
     },
@@ -139,6 +164,9 @@ export const stratModule: Module<StratState, RootState> = {
     },
     [DELETE_STRAT](state, stratID: string) {
       state.strats = state.strats.filter(strat => strat._id !== stratID);
+    },
+    [SET_COLLAPSED](state, collapsed: string[]) {
+      state.collapsedStrats = collapsed;
     },
     [RESET_STATE](state) {
       Object.assign(state, stratInitialState());

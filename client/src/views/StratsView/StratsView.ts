@@ -36,6 +36,7 @@ export default class StratsView extends Vue {
   @Provide('lightbox') showLightboxFunc = this.showLightbox;
 
   @mapModule.State currentMap!: MapID;
+  @stratModule.State collapsedStrats!: string[];
   @stratModule.Getter sortedFilteredStratsOfCurrentMap!: Strat[];
   @filterModule.State stratFilters!: StratFilters;
   @filterModule.Getter activeStratFilterCount!: number;
@@ -56,6 +57,9 @@ export default class StratsView extends Vue {
   @stratModule.Action deleteStrat!: (stratID: string) => Promise<void>;
   @stratModule.Action shareStrat!: (stratID: string) => Promise<void>;
   @stratModule.Action unshareStrat!: (stratID: string) => Promise<void>;
+  @stratModule.Action collapseAll!: () => Promise<void>;
+  @stratModule.Action expandAll!: () => Promise<void>;
+  @stratModule.Action toggleStratCollapse!: (stratID: string) => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
   @appModule.Action startGameMode!: () => Promise<void>;
   @appModule.Action exitGameMode!: () => Promise<void>;

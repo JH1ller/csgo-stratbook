@@ -68,11 +68,11 @@ export const appModule: Module<AppState, RootState> = {
     },
     startGameMode({ commit }) {
       commit(SET_GAME_MODE, true);
-      document.title = document.title += ' | Game Mode';
+      document.title = document.title += ' | Focus Mode';
     },
     exitGameMode({ commit }) {
       commit(SET_GAME_MODE, false);
-      document.title = document.title.replace(' | Game Mode', '');
+      document.title = document.title.replace(' | Focus Mode', '');
     },
     resetState({ commit }) {
       commit(RESET_STATE);
