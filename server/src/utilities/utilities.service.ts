@@ -5,6 +5,7 @@ import { Schema, Model } from 'mongoose';
 import { AddUtilityDto } from './dto/add-utility.dto';
 
 import { Utility, UtilityDocument } from 'src/schemas/utility.schema';
+import { GameMap } from 'src/schemas/enums';
 
 import { ResourceManagerService } from 'src/services/resource-manager/resource-manager.service';
 
@@ -23,30 +24,57 @@ export class UtilitiesService {
     return this.utilityModel.find({ team: teamId }).exec();
   }
 
-  public addUtility(
+  public findByTeamIdAndMap(teamId: Schema.Types.ObjectId, gameMap: GameMap) {
+    return this.utilityModel
+      .find(
+        {
+          team: teamId,
+          gameMap,
+        },
+        null,
+        {
+          sort: {
+            displayPosition: 'desc',
+          },
+        }
+      )
+      .populate('createdBy')
+      .exec();
+  }
+
+  public async addUtility(
     teamId: Schema.Types.ObjectId,
     userId: Schema.Types.ObjectId,
     model: AddUtilityDto,
     images: string[]
   ) {
-    const utility = new this.utilityModel({
-      name: model.name,
-      description: model.description,
-      videoLink: model.videoLink,
-      type: model.type,
-      gameMap: model.gameMap,
-      side: model.side,
-      mouseButton: model.mouseButton,
-      crouch: model.crouch,
-      jump: model.jump,
-      movement: model.movement,
-
+    const document = await this.utilityModel.findOne({
       team: teamId,
-      createdBy: userId,
-      images,
+      gameMap: model.gameMap,
     });
 
-    return utility.save();
+    if (document.$isEmpty) {
+      await this.utilityModel.updateOne({ team: teamId, gameMap: model.gameMap }, {}).exec();
+    } else {
+      const utility = new this.utilityModel({
+        name: model.name,
+        description: model.description,
+        videoLink: model.videoLink,
+        type: model.type,
+        gameMap: model.gameMap,
+        side: model.side,
+        mouseButton: model.mouseButton,
+        crouch: model.crouch,
+        jump: model.jump,
+        movement: model.movement,
+
+        team: teamId,
+        createdBy: userId,
+        images,
+      });
+
+      await utility.save();
+    }
   }
 
   /**

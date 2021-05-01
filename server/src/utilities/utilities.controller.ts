@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   Post,
   UploadedFiles,
   UseGuards,
@@ -19,6 +20,7 @@ import { UtilitiesService } from './utilities.service';
 
 import { AddUtilityDto } from './dto/add-utility.dto';
 import { DeleteUtilityDto } from './dto/delete-utility.dto';
+import { GetUtilityDto } from './dto/get-utility.dto';
 
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 import { HasTeamGuard } from 'src/common/guards/has-team.guard';
@@ -34,6 +36,13 @@ export class UtilitiesController {
     private readonly utilitiesService: UtilitiesService,
     private readonly imageUploaderService: ImageUploaderService
   ) {}
+
+  @Get()
+  public async getUtility(@Body() model: GetUtilityDto, @Req() req: Request) {
+    const teamId = req.user.team;
+    const result = await this.utilitiesService.findByTeamIdAndMap(teamId, model.gameMap);
+    console.log(result);
+  }
 
   @Post()
   @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 3 }]))
