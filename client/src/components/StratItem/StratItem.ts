@@ -84,4 +84,9 @@ export default class StratItem extends Vue {
     // * force refresh of editor
     this.editorKey++;
   }
+
+  private insertPlayerRows(): void {
+    // TODO: find better way to structure this, instead of calling method on child component directly
+    this.editor.insertPlayerRows();
+  }
 }

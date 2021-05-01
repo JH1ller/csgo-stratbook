@@ -78,6 +78,11 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '1.7.7',
+        date: '2021-04-21',
+        changes: ['Auto-generate row for each player', 'Allow empty lines'],
+      },
+      {
         version: '1.7.6',
         date: '2021-02-26',
         changes: [

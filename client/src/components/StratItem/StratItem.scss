@@ -158,6 +158,10 @@
       height: 18px;
     }
 
+    &.--insert {
+      margin-right: auto;
+    }
+
     &.--save {
       @include viewport_mq3 {
         width: 70px;

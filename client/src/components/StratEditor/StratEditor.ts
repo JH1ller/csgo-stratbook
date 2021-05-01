@@ -202,7 +202,7 @@ export default class StratEditor extends Vue {
 
   private get sanitizedHtml(): string {
     return sanitizeHtml(this.htmlContent, {
-      allowedTags: ['span', 'img', 'div'],
+      allowedTags: ['span', 'img', 'div', 'br'],
       allowedAttributes: {
         span: ['contenteditable', 'class', 'data-*', 'style'],
         img: ['class', 'src'],
@@ -251,6 +251,21 @@ export default class StratEditor extends Vue {
   private utilClicked(id: string) {
     const utility = this.utilitiesOfCurrentMap.find(utility => utility._id === id);
     if (utility) this.showLightboxFunc(utility);
+  }
+
+  private insertPlayerRows(): void {
+    // * this is pretty ghetto, should think of a better way
+    const playerRows = this.teamMembers.reduce<string>((acc, curr, i) => {
+      acc += `${this.textarea.innerHTML.length || i > 0 ? '<br/>' : ''}<span 
+      contenteditable="false" 
+      class="strat-editor__tag --mention" 
+      data-player-id="${curr._id}">${curr.name}</span>&nbsp;`;
+      return acc;
+    }, '');
+    this.textarea.innerHTML += playerRows;
+    this.addClickListeners();
+    this.update();
+    return;
   }
 
   @Emit()
