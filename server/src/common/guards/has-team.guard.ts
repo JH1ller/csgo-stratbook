@@ -6,11 +6,11 @@ export class HasTeamGuard implements CanActivate {
   public canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<Request>();
 
-    if (request.user === null) {
+    if (!request.user) {
       throw new UnauthorizedException();
     }
 
-    if (request.user.team === null) {
+    if (!request.user.team) {
       throw new BadRequestException('You need to join a team first');
     }
 

@@ -16,6 +16,8 @@ import MongoStore from 'connect-mongo';
 import helmet from 'helmet';
 import passport from 'passport';
 
+import mongoose from 'mongoose';
+
 import { AppModule } from './app.module';
 import { isDevEnv } from './common/env';
 
@@ -111,6 +113,9 @@ class Main {
     if (isDevEnv()) {
       this.useSwagger();
     }
+
+    // all executed methods log output to console
+    mongoose.set('debug', true);
 
     const port = configService.get<number>('port');
     await this.app.listen(port);

@@ -1,7 +1,7 @@
 import mongoose, { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { PlayerSide, GameMap } from './enums';
+import { PlayerSide } from './enums';
 import { UtilityType, UtilityMouseButton, UtilityMovement } from './enums/utility';
 
 @Schema({

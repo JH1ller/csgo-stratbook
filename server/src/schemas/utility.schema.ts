@@ -2,7 +2,7 @@ import mongoose, { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { GameMap } from './enums';
-import { UtilityDataSchema, UtilityDataDocument } from './utility-data.schema';
+import { UtilityDataSchema, UtilityData } from './utility-data.schema';
 
 @Schema({
   timestamps: {
@@ -25,7 +25,7 @@ export class Utility {
   public gameMap: string;
 
   @Prop({ type: [UtilityDataSchema] })
-  public utilities?: UtilityDataDocument[];
+  public utilities: UtilityData[];
 }
 
 export type UtilityDocument = Utility & Document<mongoose.Schema.Types.ObjectId>;

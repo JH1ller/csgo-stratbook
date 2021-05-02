@@ -62,7 +62,11 @@ module.exports = (env) => {
 
     externals: [
       NodeExternals({
-        allowlist: ['webpack/hot/poll?100', 'tslib'],
+        allowlist: [
+          'webpack/hot/poll?100',
+          'tslib',
+          /^lodash-es/,
+        ],
       }),
     ],
 

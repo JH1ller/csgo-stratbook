@@ -9,6 +9,7 @@ import {
   Req,
   Delete,
   BadRequestException,
+  Param,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiOkResponse, ApiConsumes, ApiBody, ApiTags } from '@nestjs/swagger';
@@ -20,7 +21,7 @@ import { UtilitiesService } from './utilities.service';
 
 import { AddUtilityDto } from './dto/add-utility.dto';
 import { DeleteUtilityDto } from './dto/delete-utility.dto';
-import { GetUtilityDto } from './dto/get-utility.dto';
+import { GetUtilityParamsDto } from './dto/get-utility-params.dto';
 
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 import { HasTeamGuard } from 'src/common/guards/has-team.guard';
@@ -37,11 +38,17 @@ export class UtilitiesController {
     private readonly imageUploaderService: ImageUploaderService
   ) {}
 
-  @Get()
-  public async getUtility(@Body() model: GetUtilityDto, @Req() req: Request) {
+  @Get('/:gameMap')
+  public async getUtility(@Param() params: GetUtilityParamsDto, @Req() req: Request) {
     const teamId = req.user.team;
-    const result = await this.utilitiesService.findByTeamIdAndMap(teamId, model.gameMap);
+    const result = await this.utilitiesService.findByTeamIdAndMap(teamId, params.gameMap);
     console.log(result);
+
+    // for (const i of result.utilities) {
+    //   console.log(i.createdBy);
+    // }
+
+    return result;
   }
 
   @Post()
@@ -55,7 +62,7 @@ export class UtilitiesController {
     @Req() req: Request
   ) {
     let images: string[] = [];
-    if (files) {
+    if (files && files.images) {
       const tasks = files.images.map((file) => this.imageUploaderService.addJob({ source: file.path }));
       images = await Promise.all(tasks);
     }
