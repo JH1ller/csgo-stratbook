@@ -26,19 +26,22 @@ export class UtilitiesService {
 
   public findByTeamIdAndMap(teamId: Schema.Types.ObjectId, gameMap: GameMap) {
     return this.utilityModel
-      .find(
+      .findOne(
         {
           team: teamId,
           gameMap,
         },
-        null,
+        {
+          // only project utilities for this query
+          utilities: 1,
+        },
         {
           sort: {
-            displayPosition: 'desc',
+            'utilities.displayPosition': 1,
           },
         }
       )
-      .populate('createdBy')
+      .populate('utilities.createdBy')
       .exec();
   }
 
@@ -48,33 +51,44 @@ export class UtilitiesService {
     model: AddUtilityDto,
     images: string[]
   ) {
-    const document = await this.utilityModel.findOne({
+    let document = await this.utilityModel.findOne({
       team: teamId,
       gameMap: model.gameMap,
     });
 
-    if (document.$isEmpty) {
-      await this.utilityModel.updateOne({ team: teamId, gameMap: model.gameMap }, {}).exec();
-    } else {
-      const utility = new this.utilityModel({
-        name: model.name,
-        description: model.description,
-        videoLink: model.videoLink,
-        type: model.type,
-        gameMap: model.gameMap,
-        side: model.side,
-        mouseButton: model.mouseButton,
-        crouch: model.crouch,
-        jump: model.jump,
-        movement: model.movement,
-
+    if (!document) {
+      document = new this.utilityModel({
         team: teamId,
-        createdBy: userId,
-        images,
+        gameMap: model.gameMap,
       });
-
-      await utility.save();
     }
+
+    // shift display position + 1
+    for (const utility of document.utilities) {
+      utility.displayPosition++;
+    }
+
+    document.utilities.push({
+      displayPosition: 0,
+      name: model.name,
+      type: model.type,
+      mouseButton: model.mouseButton,
+      crouch: model.crouch,
+      jump: model.jump,
+      movement: model.movement,
+      images,
+
+      description: model.description,
+      side: model.side,
+      videoLink: model.videoLink,
+      createdBy: userId,
+
+      createdAt: new Date(Date.now()),
+      modifiedAt: new Date(Date.now()),
+      shared: false,
+    });
+
+    await document.save();
   }
 
   /**
@@ -85,8 +99,10 @@ export class UtilitiesService {
     const utilities = await this.findByTeamId(teamId);
 
     const tasks = utilities.map(async (utility) => {
-      for (const image of utility.images) {
-        await this.resourceManagerService.deleteImage(image);
+      for (const entry of utility.utilities) {
+        for (const image of entry.images) {
+          await this.resourceManagerService.deleteImage(image);
+        }
       }
     });
 
