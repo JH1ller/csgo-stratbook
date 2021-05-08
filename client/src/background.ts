@@ -10,7 +10,7 @@ import { autoUpdater, UpdateInfo } from 'electron-updater';
 import ElectronLog from 'electron-log';
 import debug from 'electron-debug';
 import ElectronStore from 'electron-store';
-import GSIServer from './main_process/gsi-server';
+// import GSIServer from './main_process/gsi-server';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -21,7 +21,7 @@ const isDebug = !!store.get('debug') || false;
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null;
 
-let gsiServer: GSIServer;
+// let gsiServer: GSIServer;
 
 debug({ isEnabled: isDebug || isDevelopment });
 
@@ -113,14 +113,14 @@ app.on('ready', async () => {
   createWindow();
 });
 
-ipcMain.on('start-game-mode', () => {
-  gsiServer = new GSIServer();
-  gsiServer.init();
-});
+// ipcMain.on('start-game-mode', () => {
+//   gsiServer = new GSIServer();
+//   gsiServer.init();
+// });
 
-ipcMain.on('exit-game-mode', () => {
-  gsiServer?.stopServer();
-});
+// ipcMain.on('exit-game-mode', () => {
+//   gsiServer?.stopServer();
+// });
 
 ipcMain.on('restart-app', () => {
   autoUpdater.quitAndInstall();

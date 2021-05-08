@@ -90,8 +90,7 @@ export default class App extends Vue {
       catchPromise(
         this.showDialog({
           key: 'app/update-notice',
-          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><br>
-          <blockquote class="twitter-tweet"><p lang="en" dir="ltr">1.7.0 📈<br>I heard you guys like to use -&gt; arrows in your strats?<br>Arrows and timestamps are now magically visually highlighted! <a href="https://t.co/Z8NOEy0Rgb">pic.twitter.com/Z8NOEy0Rgb</a></p>&mdash; Stratbook (@csgostratbook) <a href="https://twitter.com/csgostratbook/status/1365608034936979457?ref_src=twsrc%5Etfw">February 27, 2021</a></blockquote>`,
+          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1>`,
           resolveBtn: 'OK',
           confirmOnly: true,
           htmlMode: true,

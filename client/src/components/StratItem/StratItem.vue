@@ -1,10 +1,6 @@
 <template>
-  <div
-    class="strat-item"
-    :class="{ '-inactive': !strat.active, '-collapsed': deferredCollapsed }"
-    @transitionend="transitionEndHandler"
-  >
-    <div class="strat-item__header" @click="toggleCollapse()">
+  <div class="strat-item" :class="{ '-inactive': !strat.active, '-collapsed': deferredCollapsed }">
+    <div class="strat-item__header" @click="!editMode && toggleCollapse()">
       <div class="strat-item__title-wrapper">
         <span class="strat-item__title">
           {{ strat.name }}
@@ -26,6 +22,8 @@
       :htmlContent="strat.content"
       :stratSide="strat.side"
       @update="editorUpdated"
+      @focus="editorFocussed"
+      @blur="editorBlurred"
     />
     <div class="strat-item__btn-wrapper">
       <div class="strat-item__btn --insert" @click="insertPlayerRows" content="Insert line for each player" v-tippy>

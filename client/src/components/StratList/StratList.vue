@@ -7,6 +7,7 @@
       :completedTutorial="completedTutorial"
       :isTutorial="strat._id === (tutorialStrat && tutorialStrat._id)"
       :collapsed="isCollapsed(strat)"
+      :editMode="isEdited(strat)"
       @delete-strat="deleteStrat"
       @toggle-active="toggleActive"
       @edit-strat="editStrat"
@@ -14,7 +15,10 @@
       @share-strat="shareStrat"
       @unshare-strat="unshareStrat"
       @toggle-collapse="toggleCollapse"
+      @edit-changed="editChanged"
       @show-map="showMap(strat)"
+      @editor-focussed="editorFocussed"
+      @editor-blurred="editorBlurred"
       :style="{ 'animation-delay': 0.05 * index + 's' }"
     />
   </div>

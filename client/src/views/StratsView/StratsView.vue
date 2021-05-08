@@ -23,10 +23,14 @@
       @unshare-strat="unshareStrat"
       @show-map="showDrawTool"
       @toggle-collapse="toggleStratCollapse"
+      @edit-changed="updateEdited"
+      @editor-focussed="hasEditorFocus = true"
+      @editor-blurred="hasEditorFocus = false"
       :completedTutorial="profile.completedTutorial"
       :tutorialStrat="tutorialStrat"
       :strats="sortedFilteredStratsOfCurrentMap"
       :collapsedStrats="collapsedStrats"
+      :editedStrats="editedStrats"
     />
     <transition name="fade">
       <div class="strats-view__fab-group" v-if="!filterMenuOpen && !stratFormOpen">

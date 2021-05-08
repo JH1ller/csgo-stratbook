@@ -50,6 +50,7 @@ export default new Vuex.Store({
     },
     loadDataFromStorage({ dispatch }) {
       dispatch('map/loadCurrentMapFromStorage');
+      dispatch('strat/loadCollapsedStratsFromStorage');
     },
   },
   getters: {},

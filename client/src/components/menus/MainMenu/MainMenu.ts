@@ -66,7 +66,7 @@ export default class MainMenu extends Vue {
       }),
       () => {
         // TODO: consider if we should just insert current version here
-        window.open('https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+1.7.7.exe');
+        window.open('https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+1.8.0.exe');
       }
     );
     this.trackingService.track('click:get-desktop-client');

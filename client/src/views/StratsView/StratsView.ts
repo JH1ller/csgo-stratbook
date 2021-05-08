@@ -18,6 +18,7 @@ import { MapID } from '@/components/MapPicker/MapPicker';
 import UtilityLightbox from '@/components/UtilityLightbox/UtilityLightbox.vue';
 import { Utility } from '@/api/models/Utility';
 import { catchPromise } from '@/utils/catchPromise';
+import ShortcutService from '@/services/shortcut.service';
 
 @Component({
   components: {
@@ -37,6 +38,7 @@ export default class StratsView extends Vue {
 
   @mapModule.State currentMap!: MapID;
   @stratModule.State collapsedStrats!: string[];
+  @stratModule.State editedStrats!: string[];
   @stratModule.Getter sortedFilteredStratsOfCurrentMap!: Strat[];
   @filterModule.State stratFilters!: StratFilters;
   @filterModule.Getter activeStratFilterCount!: number;
@@ -60,9 +62,12 @@ export default class StratsView extends Vue {
   @stratModule.Action collapseAll!: () => Promise<void>;
   @stratModule.Action expandAll!: () => Promise<void>;
   @stratModule.Action toggleStratCollapse!: (stratID: string) => Promise<void>;
+  @stratModule.Action updateEdited!: (payload: { stratID: string; value: boolean }) => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
   @appModule.Action startGameMode!: () => Promise<void>;
   @appModule.Action exitGameMode!: () => Promise<void>;
+
+  private shortcutService = ShortcutService.getInstance();
 
   private stratFormOpen = false;
   private stratFormEditMode = false;
@@ -72,8 +77,45 @@ export default class StratsView extends Vue {
   private filterMenuOpen = false;
   private drawToolOpen = false;
   private currentDrawToolStrat: Strat | null = null;
-
+  private hasEditorFocus = false;
   private tutorialStrat: Strat | null = null;
+
+  private created() {
+    this.shortcutService.add([
+      {
+        shortcut: 'E',
+        handler: () => this.execShortcut(this.expandAll),
+      },
+      {
+        shortcut: 'C',
+        handler: () => this.execShortcut(this.collapseAll),
+      },
+      {
+        shortcut: 'Plus',
+        handler: () => this.execShortcut(this.showStratForm),
+      },
+      {
+        shortcut: 'F',
+        handler: () => this.execShortcut(this.toggleFilterMenu),
+      },
+      {
+        shortcut: 'Ctrl+F',
+        handler: () => this.execShortcut(this.toggleGameMode),
+      },
+    ]);
+    // TODO: add map change shortcut
+  }
+
+  private beforeDestroy() {
+    this.shortcutService.reset();
+  }
+
+  private execShortcut(action: () => unknown): boolean | void {
+    if (!this.editedStrats.length && !this.stratFormOpen && !this.hasEditorFocus) {
+      action();
+      return true;
+    }
+  }
 
   private async stratFormSubmitted(data: Partial<Strat>) {
     if (data._id) {
@@ -104,10 +146,11 @@ export default class StratsView extends Vue {
     this.hideStratForm();
   }
 
-  private showStratForm(strat: Strat) {
+  private showStratForm(strat?: Strat) {
     this.stratFormOpen = true;
-    this.editStrat = strat._id ? strat : null;
-    this.stratFormEditMode = strat._id ? true : false;
+    this.filterMenuOpen = false;
+    this.editStrat = strat ?? null;
+    this.stratFormEditMode = !!strat;
   }
 
   private hideStratForm() {
@@ -162,6 +205,10 @@ export default class StratsView extends Vue {
     this.updateStrat(data);
     this.currentDrawToolStrat = null;
     this.drawToolOpen = false;
+  }
+
+  private toggleFilterMenu() {
+    this.filterMenuOpen = !this.filterMenuOpen;
   }
 
   private toggleGameMode() {

@@ -78,6 +78,16 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '1.8.0',
+        date: '2021-05-08',
+        changes: [
+          'Add "Focus Mode", which currently hides the map picker and menu but more features are planned for the future!',
+          'Make strats collapsable to improve maintainability of larger strat amounts',
+          'Add shortcuts to strats view and utility view. (Documentation will follow!)',
+          'Various small fixes and improvements',
+        ],
+      },
+      {
         version: '1.7.7',
         date: '2021-04-21',
         changes: ['Auto-generate row for each player', 'Allow empty lines'],

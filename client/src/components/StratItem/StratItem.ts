@@ -23,6 +23,7 @@ export default class StratItem extends Vue {
   @Prop() private completedTutorial!: boolean;
   @Prop() private isTutorial!: boolean;
   @Prop() private collapsed!: boolean;
+  @Prop() private editMode!: boolean;
   @Ref() editor!: any;
   @filterModule.State filters!: StratFilters;
 
@@ -30,9 +31,8 @@ export default class StratItem extends Vue {
   private deferredCollapsed = false;
 
   private componentEl!: HTMLElement;
-  private componentHeight!: number;
+  private componentHeight: number = 0;
 
-  private editMode = false;
   private editorKey = 0;
 
   private mounted() {
@@ -42,26 +42,26 @@ export default class StratItem extends Vue {
     this.setComponentHeight();
   }
 
-  private transitionEndHandler() {
-    if (!this.deferredCollapsed) {
-      this.componentEl.style.height = '';
-    }
-  }
-
   // TODO: handle window resize
   @Watch('collapsed')
   private async collapsedChanged(to: boolean) {
-    if (to) {
-      this.componentHeight = this.componentEl.clientHeight;
-      this.setComponentHeight();
-      await this.$nextTick();
-    }
     this.deferredCollapsed = to;
     this.setComponentHeight();
   }
 
+  @Watch('editMode')
+  private async editModeChanged(to: boolean) {
+    await this.$nextTick();
+    if (to) {
+      this.componentEl.style.height = '';
+    } else {
+      this.componentHeight = this.componentEl.clientHeight;
+      this.setComponentHeight();
+    }
+  }
+
   private setComponentHeight() {
-    this.componentEl.style.height = this.deferredCollapsed ? '59px' : `${this.componentHeight + 5}px`;
+    this.componentEl.style.height = this.deferredCollapsed ? '54px' : `${this.componentHeight + 5}px`;
   }
 
   private get isCtSide(): boolean {
@@ -97,12 +97,9 @@ export default class StratItem extends Vue {
     return this.strat._id;
   }
 
-  private editorUpdated(content: string) {
-    if (content !== this.strat.content) {
-      this.editMode = true;
-    } else {
-      this.editMode = false;
-    }
+  @Emit()
+  private editChanged(value: boolean) {
+    return { stratID: this.strat._id, value };
   }
 
   @Emit()
@@ -116,13 +113,30 @@ export default class StratItem extends Vue {
   }
 
   @Emit()
+  private editorFocussed() {
+    return;
+  }
+
+  @Emit()
+  private editorBlurred() {
+    return;
+  }
+
+  @Emit()
   private updateContent(): Partial<Strat> {
-    this.editMode = false;
+    this.editChanged(false);
     return { _id: this.strat._id, content: this.editor.textarea.innerHTML };
   }
 
+  private editorUpdated(content: string) {
+    const editMode = content !== this.strat.content;
+    if (editMode !== this.editMode) {
+      this.editChanged(editMode);
+    }
+  }
+
   private discardContent(): void {
-    this.editMode = false;
+    this.editChanged(false);
     // * force refresh of editor
     this.editorKey++;
   }
