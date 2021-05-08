@@ -156,7 +156,9 @@ export const stratModule: Module<StratState, RootState> = {
     },
     loadCollapsedStratsFromStorage({ commit }) {
       const collapsed = storageService.get<string[]>('collapsed');
-      commit(SET_COLLAPSED, collapsed);
+      if (collapsed?.length) {
+        commit(SET_COLLAPSED, collapsed);
+      }
     },
     resetState({ commit }) {
       commit(RESET_STATE);

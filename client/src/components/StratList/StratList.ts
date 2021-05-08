@@ -10,15 +10,15 @@ export default class StratList extends Vue {
   @Prop() completedTutorial!: boolean;
   @Prop() tutorialStrat!: Strat | null;
   @Prop() strats!: Strat[];
-  @Prop({ default: () => [] }) collapsedStrats!: string[];
-  @Prop({ default: () => [] }) editedStrats!: string[];
+  @Prop() collapsedStrats!: string[];
+  @Prop() editedStrats!: string[];
 
   private isCollapsed(strat: Strat) {
-    return this.collapsedStrats?.some(id => id === strat._id);
+    return this.collapsedStrats.some(id => id === strat._id);
   }
 
   private isEdited(strat: Strat) {
-    return this.editedStrats?.some(id => id === strat._id);
+    return this.editedStrats.some(id => id === strat._id);
   }
 
   // TODO: solve this drilling with provide/inject
