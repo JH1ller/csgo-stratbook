@@ -90,7 +90,7 @@ export default class App extends Vue {
       catchPromise(
         this.showDialog({
           key: 'app/update-notice',
-          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1>`,
+          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><br/><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Stratbook 1.8.0 is out 🙌 The update includes some quality of life features including<br>👥 insert rows for each member of the team<br>↔️ make strats collapsable/expandable<br>🎯 Focus Mode<br>⌨️ Shortcuts (E = expand, C = collapse, F = filters, + = Add strat, CTRL + F = Focus Mode) <a href="https://t.co/MFKi1KQPxA">pic.twitter.com/MFKi1KQPxA</a></p>&mdash; Stratbook (@csgostratbook) <a href="https://twitter.com/csgostratbook/status/1391364354545700865?ref_src=twsrc%5Etfw">May 9, 2021</a></blockquote>`,
           resolveBtn: 'OK',
           confirmOnly: true,
           htmlMode: true,

@@ -15,7 +15,7 @@ const utilitySchema = new mongoose.Schema({
 
   map: {
     type: String,
-    enum: ['DUST_2', 'MIRAGE', 'OVERPASS', 'NUKE', 'VERTIGO', 'INFERNO', 'TRAIN'],
+    enum: ['DUST_2', 'MIRAGE', 'OVERPASS', 'NUKE', 'VERTIGO', 'INFERNO', 'TRAIN', 'ANCIENT'],
     required: true,
   },
 

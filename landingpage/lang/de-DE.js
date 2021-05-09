@@ -78,6 +78,11 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '1.8.1',
+        date: '2021-05-09',
+        changes: ['Add Ancient to the mappool'],
+      },
+      {
         version: '1.8.0',
         date: '2021-05-08',
         changes: [

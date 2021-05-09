@@ -9,6 +9,7 @@ export enum MapID {
   Vertigo = 'VERTIGO',
   Inferno = 'INFERNO',
   Train = 'TRAIN',
+  Ancient = 'ANCIENT',
 }
 export interface Map {
   _id: MapID;
@@ -57,6 +58,11 @@ export default class MapPicker extends Vue {
     {
       _id: MapID.Train,
       name: 'Train',
+      active: true,
+    },
+    {
+      _id: MapID.Ancient,
+      name: 'Ancient',
       active: true,
     },
   ];
