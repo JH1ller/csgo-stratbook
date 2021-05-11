@@ -78,9 +78,35 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '1.8.1',
+        date: '2021-05-09',
+        changes: ['Add Ancient to the mappool'],
+      },
+      {
+        version: '1.8.0',
+        date: '2021-05-08',
+        changes: [
+          'Add "Focus Mode", which currently hides the map picker and menu but more features are planned for the future!',
+          'Make strats collapsable to improve maintainability of larger strat amounts',
+          'Add shortcuts to strats view and utility view. (Documentation will follow!)',
+          'Various small fixes and improvements',
+        ],
+      },
+      {
         version: '1.7.7',
         date: '2021-04-21',
         changes: ['Auto-generate row for each player', 'Allow empty lines'],
+      },
+      {
+        version: '1.7.6',
+        date: '2021-02-26',
+        changes: [
+          'Add "Jumpthrow" pose option to utilities',
+          'Improve utility lightbox and display utility description',
+          'Add discord link to menu',
+          'Improve version check on app start: Only display notice for new feature version, not patches',
+          'Desktop App: Update electron to v9.4',
+        ],
       },
       {
         version: '1.7.0',

@@ -254,7 +254,7 @@ export default class StratEditor extends Vue {
   }
 
   private insertPlayerRows(): void {
-    // * this is pretty ghetto, should think of a better way
+    // * this is pretty bad, should think of a better way
     const playerRows = this.teamMembers.reduce<string>((acc, curr, i) => {
       acc += `${this.textarea.innerHTML.length || i > 0 ? '<br/>' : ''}<span 
       contenteditable="false" 

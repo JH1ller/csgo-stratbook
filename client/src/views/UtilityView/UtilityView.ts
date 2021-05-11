@@ -15,6 +15,7 @@ import { UtilityTypes } from '@/api/models/UtilityTypes';
 import { Sides } from '@/api/models/Sides';
 import { UtilityFilters } from '@/store/modules/filter';
 import { catchPromise } from '@/utils/catchPromise';
+import ShortcutService from '@/services/shortcut.service';
 
 @Component({
   components: {
@@ -47,12 +48,38 @@ export default class UtilityView extends Vue {
   @utilityModule.Action shareUtility!: (utilityID: string) => Promise<void>;
   @utilityModule.Action unshareUtility!: (utilityID: string) => Promise<void>;
 
+  private shortcutService = ShortcutService.getInstance();
+
   private utilityFormOpen = false;
   private utilityFormEditMode = false;
   private editUtility: Utility | null = null;
   private lightboxOpen = false;
   private currentLightboxUtility: Utility | null = null;
   private filterMenuOpen = false;
+
+  private created() {
+    this.shortcutService.add([
+      {
+        shortcut: 'F',
+        handler: () => this.execShortcut(this.toggleFilterMenu),
+      },
+      {
+        shortcut: 'Plus',
+        handler: () => this.execShortcut(this.showUtilityForm),
+      },
+    ]);
+  }
+
+  private beforeDestroy() {
+    this.shortcutService.reset();
+  }
+
+  private execShortcut(action: () => unknown): boolean | void {
+    if (!this.utilityFormOpen) {
+      action();
+      return true;
+    }
+  }
 
   private utilityFormSubmitted(data: FormData) {
     if (data.has('_id')) {
@@ -83,10 +110,11 @@ export default class UtilityView extends Vue {
     );
   }
 
-  private showUtilityForm(utility: Utility) {
+  private showUtilityForm(utility?: Utility) {
     this.utilityFormOpen = true;
-    this.editUtility = utility._id ? utility : null;
-    this.utilityFormEditMode = utility._id ? true : false;
+    this.filterMenuOpen = false;
+    this.editUtility = utility ?? null;
+    this.utilityFormEditMode = !!utility;
   }
 
   private hideUtilityForm() {
@@ -101,5 +129,9 @@ export default class UtilityView extends Vue {
   private hideLightbox() {
     this.currentLightboxUtility = null;
     this.lightboxOpen = false;
+  }
+
+  private toggleFilterMenu() {
+    this.filterMenuOpen = !this.filterMenuOpen;
   }
 }

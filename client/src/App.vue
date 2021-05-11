@@ -4,9 +4,11 @@
     <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi"/></span>
     <DialogWrapper />
     <ToastWrapper />
-    <MainMenu :menuOpen="menuOpen" @toggle-menu="toggleMenu" @close-menu="closeMenu" />
+    <transition name="fade">
+      <MainMenu v-show="!gameMode" :menuOpen="menuOpen" @toggle-menu="toggleMenu" @close-menu="closeMenu" />
+    </transition>
     <transition name="fade" mode="out-in">
-      <router-view @click.native="closeMenu" class="router-view"></router-view>
+      <router-view @click.native="closeMenu" class="router-view" :class="{ '-game-mode': gameMode }"></router-view>
     </transition>
     <transition name="fade">
       <CookieBanner v-if="showCookieBanner && isDesktop === false" @close="closeCookieBanner" />
@@ -28,7 +30,7 @@ import TrackingService from '@/services/tracking.service';
 import { Dialog } from './components/DialogWrapper/DialogWrapper.models';
 import { catchPromise } from './utils/catchPromise';
 import StorageService from './services/storage.service';
-import { satisfies, gt, major, minor } from 'semver';
+import { gt, major, minor } from 'semver';
 
 @Component({
   components: {
@@ -45,6 +47,7 @@ export default class App extends Vue {
   @Provide() storageService: StorageService = StorageService.getInstance();
 
   @appModule.State latency!: number;
+  @appModule.State gameMode!: boolean;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
 
   private menuOpen: boolean = false;
@@ -87,8 +90,7 @@ export default class App extends Vue {
       catchPromise(
         this.showDialog({
           key: 'app/update-notice',
-          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><br>
-          <blockquote class="twitter-tweet"><p lang="en" dir="ltr">1.7.0 📈<br>I heard you guys like to use -&gt; arrows in your strats?<br>Arrows and timestamps are now magically visually highlighted! <a href="https://t.co/Z8NOEy0Rgb">pic.twitter.com/Z8NOEy0Rgb</a></p>&mdash; Stratbook (@csgostratbook) <a href="https://twitter.com/csgostratbook/status/1365608034936979457?ref_src=twsrc%5Etfw">February 27, 2021</a></blockquote>`,
+          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><br/><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Stratbook 1.8.0 is out 🙌 The update includes some quality of life features including<br>👥 insert rows for each member of the team<br>↔️ make strats collapsable/expandable<br>🎯 Focus Mode<br>⌨️ Shortcuts (E = expand, C = collapse, F = filters, + = Add strat, CTRL + F = Focus Mode) <a href="https://t.co/MFKi1KQPxA">pic.twitter.com/MFKi1KQPxA</a></p>&mdash; Stratbook (@csgostratbook) <a href="https://twitter.com/csgostratbook/status/1391364354545700865?ref_src=twsrc%5Etfw">May 9, 2021</a></blockquote>`,
           resolveBtn: 'OK',
           confirmOnly: true,
           htmlMode: true,
@@ -115,6 +117,7 @@ export default class App extends Vue {
     });
 
     ipcRenderer.send('app-ready');
+    ipcRenderer.send('start-game-mode');
   }
 
   private checkCookies() {
@@ -182,7 +185,6 @@ export default class App extends Vue {
 
 .router-view {
   height: 100%;
-  //padding: 12px;
   overflow-y: scroll;
   overflow-x: hidden;
 
@@ -190,6 +192,12 @@ export default class App extends Vue {
     margin-left: 70px;
     width: calc(100% - 70px);
     padding: 24px;
+    transition: margin-left 0.3s ease, width 0.3s ease;
+
+    &.-game-mode {
+      margin-left: 0;
+      width: 100%;
+    }
   }
 }
 
