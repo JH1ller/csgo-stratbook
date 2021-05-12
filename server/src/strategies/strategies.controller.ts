@@ -11,7 +11,7 @@ import {
   forwardRef,
   Inject,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags, ApiBody } from '@nestjs/swagger';
 import { Request } from 'express';
 import { Schema } from 'mongoose';
 
@@ -19,12 +19,13 @@ import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 import { HasTeamGuard } from 'src/common/guards/has-team.guard';
 
 import { StrategiesService } from './strategies.service';
-import { CreateStrategyDto } from './dto/create-strategy.dto';
+import { AddStrategyDto } from './dto/add-strategy.dto';
 
 import { TeamsService } from 'src/teams/teams.service';
 
 @Controller('strategies')
 @UseGuards(AuthenticatedGuard)
+@UseGuards(HasTeamGuard)
 @ApiTags('Strategies')
 export class StrategiesController {
   constructor(
@@ -34,14 +35,13 @@ export class StrategiesController {
   ) {}
 
   @Get()
-  @UseGuards(HasTeamGuard)
-  public getStrategy(@Req() req: Request) {
+  public getStrategy() {
     console.log('hello world');
   }
 
-  @Post('add')
-  @UseGuards(HasTeamGuard)
-  public async addStrategy(@Req() req: Request, @Body() model: CreateStrategyDto) {
+  @Post()
+  @ApiBody({ description: 'Adds a new strategy' })
+  public async addStrategy(@Req() req: Request, @Body() model: AddStrategyDto) {
     const { name, type, gameMap, side, active, videoLink, note } = model;
 
     const team = await this.teamsService.findById(req.user.team);
@@ -61,7 +61,7 @@ export class StrategiesController {
     return strategy;
   }
 
-  @Delete('delete/:id')
+  @Delete(':id')
   @ApiOkResponse()
   public async deleteStrategy(@Param('id') id: string) {
     const strategy = await this.strategiesService.findById(new Schema.Types.ObjectId(id));

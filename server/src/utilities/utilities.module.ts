@@ -6,6 +6,7 @@ import { UtilitiesController } from './utilities.controller';
 import { UtilitiesService } from './utilities.service';
 
 import { Utility, UtilitySchema } from 'src/schemas/utility.schema';
+import { User, UserSchema } from 'src/schemas/user.schema';
 
 import { MulterConfigService } from 'src/services/multer-config.service';
 import { ImageUploaderModule } from 'src/services/image-uploader/image-uploader.module';
@@ -17,7 +18,10 @@ import { ResourceManagerModule } from 'src/services/resource-manager/resource-ma
       useClass: MulterConfigService,
     }),
 
-    MongooseModule.forFeature([{ name: Utility.name, schema: UtilitySchema }]),
+    MongooseModule.forFeature([
+      { name: Utility.name, schema: UtilitySchema },
+      { name: User.name, schema: UserSchema },
+    ]),
 
     ImageUploaderModule,
     ResourceManagerModule,

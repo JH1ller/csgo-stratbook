@@ -10,18 +10,22 @@ import {
   Delete,
   BadRequestException,
   Param,
+  Patch,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiOkResponse, ApiConsumes, ApiBody, ApiTags } from '@nestjs/swagger';
 
 import { Request, Express } from 'express';
-import { Schema } from 'mongoose';
+import Mongoose, { Schema } from 'mongoose';
 
 import { UtilitiesService } from './utilities.service';
 
 import { AddUtilityDto } from './dto/add-utility.dto';
 import { DeleteUtilityDto } from './dto/delete-utility.dto';
 import { GetUtilityParamsDto } from './dto/get-utility-params.dto';
+import { UpdateUtilityPositionDto } from './dto/update-utility-position.dto';
+
+import { GetUtilityResponse } from './responses/get-utility.response';
 
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 import { HasTeamGuard } from 'src/common/guards/has-team.guard';
@@ -39,16 +43,21 @@ export class UtilitiesController {
   ) {}
 
   @Get('/:gameMap')
+  @ApiOkResponse({ description: 'Gets utility data for a specified team and map', type: [GetUtilityResponse] })
   public async getUtility(@Param() params: GetUtilityParamsDto, @Req() req: Request) {
     const teamId = req.user.team;
     const result = await this.utilitiesService.findByTeamIdAndMap(teamId, params.gameMap);
+
     console.log(result);
 
-    // for (const i of result.utilities) {
-    //   console.log(i.createdBy);
-    // }
+    // transform to response array
+    const response: GetUtilityResponse[] = [];
+    for (const i of result) {
+      // any cast is required as type reflection doesn't work correctly
+      response.push(new GetUtilityResponse(i as any));
+    }
 
-    return result;
+    return response;
   }
 
   @Post()
@@ -83,5 +92,10 @@ export class UtilitiesController {
     }
 
     await this.utilitiesService.deleteById(utility._id);
+  }
+
+  @Patch('/position')
+  public async updateUtilityPosition(@Body() model: UpdateUtilityPositionDto) {
+    await this.utilitiesService.updateDisplayPosition(new Mongoose.Types.ObjectId(model.id), 0, 2);
   }
 }

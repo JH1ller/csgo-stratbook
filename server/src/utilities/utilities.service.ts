@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Schema, Model } from 'mongoose';
+import Mongoose, { Schema, Model } from 'mongoose';
 
 import { AddUtilityDto } from './dto/add-utility.dto';
 
 import { Utility, UtilityDocument } from 'src/schemas/utility.schema';
+import { UtilityData } from 'src/schemas/utility-data.schema';
+import { User, UserDocument } from 'src/schemas/user.schema';
+
 import { GameMap } from 'src/schemas/enums';
 
 import { ResourceManagerService } from 'src/services/resource-manager/resource-manager.service';
@@ -13,6 +16,7 @@ import { ResourceManagerService } from 'src/services/resource-manager/resource-m
 export class UtilitiesService {
   constructor(
     @InjectModel(Utility.name) private readonly utilityModel: Model<UtilityDocument>,
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private readonly resourceManagerService: ResourceManagerService
   ) {}
 
@@ -24,25 +28,23 @@ export class UtilitiesService {
     return this.utilityModel.find({ team: teamId }).exec();
   }
 
-  public findByTeamIdAndMap(teamId: Schema.Types.ObjectId, gameMap: GameMap) {
-    return this.utilityModel
-      .findOne(
-        {
-          team: teamId,
-          gameMap,
-        },
-        {
-          // only project utilities for this query
-          utilities: 1,
-        },
-        {
-          sort: {
-            'utilities.displayPosition': 1,
-          },
-        }
-      )
-      .populate('utilities.createdBy')
-      .exec();
+  public async findByTeamIdAndMap(teamId: Schema.Types.ObjectId, gameMap: GameMap) {
+    const utilities = await this.utilityModel
+      .aggregate<UtilityData>()
+      .match({ team: teamId, gameMap })
+      .unwind({
+        path: '$utilities',
+      })
+      .replaceRoot('$utilities')
+      .sort({
+        displayPosition: 1,
+      })
+      .allowDiskUse(false);
+
+    // now populate createdBy with a sub query
+    await this.userModel.populate(utilities, { path: 'createdBy' });
+
+    return utilities;
   }
 
   public async addUtility(
@@ -115,5 +117,28 @@ export class UtilitiesService {
 
   public deleteById(id: Schema.Types.ObjectId) {
     return this.utilityModel.deleteOne({ _id: id }).exec();
+  }
+
+  /**
+   *
+   * @param id id of the dragged strategy
+   * @param position new display position of the dragged strategy
+   */
+  public async updateDisplayPosition(id: Mongoose.Types.ObjectId, newPosition: number, oldPosition: number) {
+    const sortDirection = newPosition < oldPosition ? 1 : -1;
+
+    const utilities = await this.utilityModel
+      .aggregate<UtilityData>()
+      .match({ _id: id })
+      .unwind({
+        path: '$utilities',
+      })
+      .replaceRoot('$utilities')
+      .sort({
+        displayPosition: sortDirection,
+      })
+      .allowDiskUse(false);
+
+    console.log(utilities);
   }
 }

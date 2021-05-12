@@ -8,13 +8,13 @@ import { UtilityType, UtilityMouseButton, UtilityMovement } from 'src/schemas/en
 export class GetUtilityCratedByResponse {
   @Expose()
   @ApiProperty()
-  public readonly name: string;
+  public readonly userName: string;
 }
 
 export class GetUtilityResponse {
   @Expose({ name: 'id' })
   @Type(() => String)
-  @ApiProperty()
+  @ApiProperty({ name: 'id', type: String })
   public readonly _id: Schema.Types.ObjectId;
 
   @Expose()
