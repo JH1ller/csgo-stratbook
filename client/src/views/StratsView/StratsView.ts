@@ -149,8 +149,8 @@ export default class StratsView extends Vue {
   private showStratForm(strat?: Strat) {
     this.stratFormOpen = true;
     this.filterMenuOpen = false;
-    this.editStrat = strat ?? null;
-    this.stratFormEditMode = !!strat;
+    this.editStrat = strat?._id ? strat : null;
+    this.stratFormEditMode = !!strat?._id;
   }
 
   private hideStratForm() {

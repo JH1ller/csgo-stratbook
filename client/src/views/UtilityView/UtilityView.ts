@@ -113,8 +113,8 @@ export default class UtilityView extends Vue {
   private showUtilityForm(utility?: Utility) {
     this.utilityFormOpen = true;
     this.filterMenuOpen = false;
-    this.editUtility = utility ?? null;
-    this.utilityFormEditMode = !!utility;
+    this.editUtility = utility?._id ? utility : null;
+    this.utilityFormEditMode = !!utility?._id;
   }
 
   private hideUtilityForm() {
