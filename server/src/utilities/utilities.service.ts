@@ -5,12 +5,17 @@ import Mongoose, { Schema, Model } from 'mongoose';
 import { AddUtilityDto } from './dto/add-utility.dto';
 
 import { Utility, UtilityDocument } from 'src/schemas/utility.schema';
-import { UtilityData } from 'src/schemas/utility-data.schema';
+import { UtilityData, UtilityDataDocument } from 'src/schemas/utility-data.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
 
 import { GameMap } from 'src/schemas/enums';
 
 import { ResourceManagerService } from 'src/services/resource-manager/resource-manager.service';
+
+interface UtilitySortType {
+  id: Mongoose.Schema.Types.ObjectId;
+  displayPosition: number;
+}
 
 @Injectable()
 export class UtilitiesService {
@@ -20,11 +25,11 @@ export class UtilitiesService {
     private readonly resourceManagerService: ResourceManagerService
   ) {}
 
-  public findById(id: Schema.Types.ObjectId) {
+  public findById(id: Mongoose.Types.ObjectId) {
     return this.utilityModel.findById(id).exec();
   }
 
-  public findByTeamId(teamId: Schema.Types.ObjectId) {
+  public findByTeamId(teamId: Mongoose.Types.ObjectId) {
     return this.utilityModel.find({ team: teamId }).exec();
   }
 
@@ -119,26 +124,95 @@ export class UtilitiesService {
     return this.utilityModel.deleteOne({ _id: id }).exec();
   }
 
+  public async pullUtilityById(documentId: Schema.Types.ObjectId, utilityId: Schema.Types.ObjectId) {
+    // await this.utilityModel.updateOne({
+    //   _id: id,
+    // });
+
+    console.log(documentId, utilityId);
+  }
+
   /**
    *
    * @param id id of the dragged strategy
    * @param position new display position of the dragged strategy
    */
-  public async updateDisplayPosition(id: Mongoose.Types.ObjectId, newPosition: number, oldPosition: number) {
-    const sortDirection = newPosition < oldPosition ? 1 : -1;
-
+  public async updateDisplayPosition(id: string, oldPosition: number, newPosition: number) {
     const utilities = await this.utilityModel
-      .aggregate<UtilityData>()
-      .match({ _id: id })
+      .aggregate<UtilityDataDocument>()
+      .match({ _id: new Mongoose.Types.ObjectId(id) })
       .unwind({
         path: '$utilities',
       })
       .replaceRoot('$utilities')
       .sort({
-        displayPosition: sortDirection,
+        displayPosition: 1,
       })
       .allowDiskUse(false);
 
-    console.log(utilities);
+    // return if didn't found any utilities
+    if (utilities.length <= 0) {
+      return;
+    }
+
+    // find affected rows
+    const affected: UtilitySortType[] = [];
+
+    if (newPosition > oldPosition) {
+      // force oldPosition to be at least 0, and cap newPosition to array length
+      oldPosition = Math.max(oldPosition, 0);
+      newPosition = Math.min(utilities.length - 1, newPosition);
+
+      if (newPosition - oldPosition <= 0) {
+        return;
+      }
+
+      for (let i = oldPosition + 1; i <= newPosition; i++) {
+        const item = utilities[i];
+
+        affected.push({
+          id: item._id,
+          displayPosition: item.displayPosition - 1,
+        });
+      }
+    } else {
+      oldPosition = Math.min(utilities.length - 1, oldPosition);
+      newPosition = Math.max(0, newPosition);
+
+      if (oldPosition - newPosition <= 0) {
+        return;
+      }
+
+      for (let i = newPosition; i < oldPosition; i++) {
+        const item = utilities[i];
+
+        affected.push({
+          id: item._id,
+          displayPosition: item.displayPosition + 1,
+        });
+      }
+    }
+
+    affected.push({
+      id: utilities[oldPosition]._id,
+      displayPosition: newPosition,
+    });
+
+    // prepare and execute update queries
+    await this.utilityModel.bulkWrite(
+      affected.map((item) => ({
+        updateOne: {
+          filter: {
+            _id: new Mongoose.Types.ObjectId(id),
+            'utilities._id': item.id,
+          },
+          update: {
+            $set: {
+              'utilities.$.displayPosition': item.displayPosition,
+            },
+          },
+        },
+      }))
+    );
   }
 }

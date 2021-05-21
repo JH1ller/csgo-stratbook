@@ -8,6 +8,11 @@ export class UpdateUtilityPositionDto {
 
   @IsInt()
   @Min(0)
-  @ApiProperty({ description: 'Position where the utility should be placed at' })
-  public readonly position: number;
+  @ApiProperty({ description: 'Old position where the utility was located' })
+  public readonly oldPosition: number;
+
+  @IsInt()
+  @Min(0)
+  @ApiProperty({ description: 'New position where the utility should be placed at' })
+  public readonly newPosition: number;
 }

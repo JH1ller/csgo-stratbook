@@ -2,6 +2,7 @@ const { resolve } = require('path');
 
 module.exports = {
   root: true,
+
   env: {
     node: true,
     jest: true,
@@ -10,7 +11,7 @@ module.exports = {
   parserOptions: {
     parser: '@typescript-eslint/parser',
 
-    project: resolve(__dirname, './tsconfig.json'),
+    project: resolve(__dirname, './tsconfig.eslint.json'),
     tsconfigRootDir: __dirname,
 
     sourceType: 'module',
@@ -33,7 +34,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
 
     // consider disabling this class of rules if linting takes too long
-    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    // 'plugin:@typescript-eslint/recommended-requiring-type-checking',
 
     'standard',
 
@@ -135,5 +136,6 @@ module.exports = {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/require-await': 'off',
+
   },
 };

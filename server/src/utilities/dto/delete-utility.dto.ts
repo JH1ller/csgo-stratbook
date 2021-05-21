@@ -3,6 +3,10 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class DeleteUtilityDto {
   @IsMongoId()
-  @ApiProperty()
-  public readonly id: string;
+  @ApiProperty({ description: 'Mongodb document Id' })
+  public readonly documentId: string;
+
+  @IsMongoId()
+  @ApiProperty({ description: 'Utility array document id' })
+  public readonly utilityId: string;
 }

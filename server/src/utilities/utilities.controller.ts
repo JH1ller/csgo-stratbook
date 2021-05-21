@@ -13,7 +13,14 @@ import {
   Patch,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { ApiOkResponse, ApiConsumes, ApiBody, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiConsumes,
+  ApiBody,
+  ApiTags,
+  ApiUnauthorizedResponse,
+  ApiBadRequestResponse,
+} from '@nestjs/swagger';
 
 import { Request, Express } from 'express';
 import Mongoose, { Schema } from 'mongoose';
@@ -83,10 +90,17 @@ export class UtilitiesController {
   }
 
   @Delete()
+  @ApiBadRequestResponse({ description: 'Invalid model or no utility found under the specified id' })
+  @ApiUnauthorizedResponse()
   public async deleteUtility(@Body() model: DeleteUtilityDto, @Req() req: Request) {
     const teamId = req.user.team;
 
-    const utility = await this.utilitiesService.findById(new Schema.Types.ObjectId(model.id));
+    const documentId = new Mongoose.Types.ObjectId(model.documentId);
+    const utility = await this.utilitiesService.findById(documentId);
+    if (utility === null) {
+      throw new BadRequestException('Invalid utility id');
+    }
+
     if (utility.team !== teamId) {
       throw new BadRequestException('Cannot delete a utility of another team.');
     }
@@ -95,7 +109,14 @@ export class UtilitiesController {
   }
 
   @Patch('/position')
+  @ApiOkResponse({ description: 'Moves the selected utility from oldPosition to newPosition' })
   public async updateUtilityPosition(@Body() model: UpdateUtilityPositionDto) {
-    await this.utilitiesService.updateDisplayPosition(new Mongoose.Types.ObjectId(model.id), 0, 2);
+    const { id, oldPosition, newPosition } = model;
+
+    if (oldPosition === newPosition) {
+      return;
+    }
+
+    await this.utilitiesService.updateDisplayPosition(id, oldPosition, newPosition);
   }
 }

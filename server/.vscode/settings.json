@@ -4,6 +4,7 @@
     "javascript",
     "typescript"
   ],
+
   "typescript.tsdk": "node_modules/typescript/lib",
   "[typescript]": {
     "editor.codeActionsOnSave": {

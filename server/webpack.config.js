@@ -155,17 +155,17 @@ module.exports = (env) => {
       new ForkTsCheckerWebpackPlugin({
         eslint: {
           // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
-          files: './src/**/*.{ts,tsx,js,jsx}',
+          files: [
+            './src/**/*.{ts,tsx,js,jsx}',
+            './src-processors/**/*.{ts,tsx,js,jsx}',
+            // './test/**/*.{ts,tsx,js,jsx}',
+          ],
         },
       }),
 
       new webpack.WatchIgnorePlugin({
         paths: [path.resolve(__dirname, './public'), path.resolve(__dirname, './dist')],
       }),
-
-      // new ESLintPlugin({
-      //   extensions: ['ts', 'tsx']
-      // }),
     ].concat(
       isStandalone
         ? [
