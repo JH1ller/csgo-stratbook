@@ -23,7 +23,7 @@ import {
 } from '@nestjs/swagger';
 
 import { Request, Express } from 'express';
-import Mongoose, { Schema } from 'mongoose';
+import Mongoose from 'mongoose';
 
 import { UtilitiesService } from './utilities.service';
 

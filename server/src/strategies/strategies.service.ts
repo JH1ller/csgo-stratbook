@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { Schema, Model } from 'mongoose';
+import { Types, Model } from 'mongoose';
 
 import { GameMap, PlayerSide } from 'src/schemas/enums';
 import { StrategyType } from 'src/schemas/enums/strategy';
@@ -14,11 +14,11 @@ import { User } from 'src/schemas/user.schema';
 export class StrategiesService {
   constructor(@InjectModel(Strategy.name) private readonly strategyModel: Model<StrategyDocument>) {}
 
-  public findById(id: Schema.Types.ObjectId) {
+  public findById(id: Types.ObjectId) {
     return this.strategyModel.findById(id).exec();
   }
 
-  public findByTeamId(teamId: Schema.Types.ObjectId) {
+  public findByTeamId(teamId: Types.ObjectId) {
     return this.strategyModel.find({ team: teamId }).exec();
   }
 
@@ -48,11 +48,11 @@ export class StrategiesService {
     return strategy.save();
   }
 
-  public deleteStrategy(id: Schema.Types.ObjectId) {
+  public deleteStrategy(id: Types.ObjectId) {
     return this.strategyModel.deleteOne({ _id: id }).exec();
   }
 
-  public deleteAllByTeamId(teamId: Schema.Types.ObjectId) {
+  public deleteAllByTeamId(teamId: Types.ObjectId) {
     return this.strategyModel
       .deleteMany({
         team: teamId,
@@ -60,7 +60,7 @@ export class StrategiesService {
       .exec();
   }
 
-  public async replaceUserName(teamId: Schema.Types.ObjectId, oldUserName: string, newUserName: string) {
+  public async replaceUserName(teamId: Types.ObjectId, oldUserName: string, newUserName: string) {
     const strategies = await this.findByTeamId(teamId);
 
     const promises = strategies.map(async (strategy) => {

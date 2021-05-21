@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags, ApiBody } from '@nestjs/swagger';
 import { Request } from 'express';
-import { Schema } from 'mongoose';
+import { Types } from 'mongoose';
 
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 import { HasTeamGuard } from 'src/common/guards/has-team.guard';
@@ -64,7 +64,7 @@ export class StrategiesController {
   @Delete(':id')
   @ApiOkResponse()
   public async deleteStrategy(@Param('id') id: string) {
-    const strategy = await this.strategiesService.findById(new Schema.Types.ObjectId(id));
+    const strategy = await this.strategiesService.findById(new Types.ObjectId(id));
     if (strategy === null) {
       throw new BadRequestException('strategy was not found');
     }

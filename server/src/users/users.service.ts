@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { Model, Schema } from 'mongoose';
+import { Types, Model } from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -60,7 +60,7 @@ export class UsersService {
     return this.userModel.findOne({ email }).exec();
   }
 
-  public existsById(id: Schema.Types.ObjectId) {
+  public existsById(id: Types.ObjectId) {
     return this.userModel.exists({ _id: id });
   }
 
@@ -94,7 +94,7 @@ export class UsersService {
     return await createdUser.save();
   }
 
-  public async deleteUser(id: Schema.Types.ObjectId) {
+  public async deleteUser(id: Types.ObjectId) {
     const user = await this.userModel.findByIdAndDelete(id);
 
     // delete avatar from S3
@@ -109,25 +109,25 @@ export class UsersService {
    * @param password new password
    * @returns query promise
    */
-  public async updatePassword(id: Schema.Types.ObjectId, password: string) {
+  public async updatePassword(id: Types.ObjectId, password: string) {
     const hashedPassword = await this.createPasswordHash(password);
 
     return await this.userModel.updateOne({ _id: id }, { hashedPassword }).exec();
   }
 
-  public updateEmailAddress(id: Schema.Types.ObjectId, email: string) {
+  public updateEmailAddress(id: Types.ObjectId, email: string) {
     return this.userModel.updateOne({ _id: id }, { email }).exec();
   }
 
-  public updateCompletedTutorial(id: Schema.Types.ObjectId, completedTutorial: boolean) {
+  public updateCompletedTutorial(id: Types.ObjectId, completedTutorial: boolean) {
     return this.userModel.updateOne({ _id: id }, { completedTutorial }).exec();
   }
 
-  public updateEmailConfirmed(id: Schema.Types.ObjectId, emailConfirmed: boolean) {
+  public updateEmailConfirmed(id: Types.ObjectId, emailConfirmed: boolean) {
     return this.userModel.updateOne({ _id: id }, { emailConfirmed }).exec();
   }
 
-  public updateUser(id: Schema.Types.ObjectId, userData: Partial<User>) {
+  public updateUser(id: Types.ObjectId, userData: Partial<User>) {
     return this.userModel.updateOne({ _id: id }, userData);
   }
 
@@ -174,7 +174,7 @@ export class UsersService {
    * @param id userId
    * @param teamId teamId
    */
-  public setTeam(userId: Schema.Types.ObjectId, teamId: Schema.Types.ObjectId | null) {
+  public setTeam(userId: Types.ObjectId, teamId: Types.ObjectId | null) {
     return this.userModel
       .updateOne({
         _id: userId,
@@ -183,7 +183,7 @@ export class UsersService {
       .exec();
   }
 
-  public async getTeamMembers(teamId: Schema.Types.ObjectId) {
+  public async getTeamMembers(teamId: Types.ObjectId) {
     return this.userModel
       .find({
         team: teamId,
@@ -191,7 +191,7 @@ export class UsersService {
       .exec();
   }
 
-  public async getTeamMemberCount(teamId: Schema.Types.ObjectId) {
+  public async getTeamMemberCount(teamId: Types.ObjectId) {
     return this.userModel
       .count({
         team: teamId,
@@ -199,7 +199,7 @@ export class UsersService {
       .exec();
   }
 
-  public unassignTeam(userId: Schema.Types.ObjectId) {
+  public unassignTeam(userId: Types.ObjectId) {
     return this.setTeam(userId, null);
   }
 
@@ -207,7 +207,7 @@ export class UsersService {
    * removes all team members of the specified @name teamId
    * @param teamId team id
    */
-  public removeTeamMembers(teamId: Schema.Types.ObjectId) {
+  public removeTeamMembers(teamId: Types.ObjectId) {
     return this.userModel.updateMany({ team: teamId }, { team: null }).exec();
   }
 

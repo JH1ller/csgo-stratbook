@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Schema, Model } from 'mongoose';
+import { Types, Model } from 'mongoose';
 
 import { Team, TeamDocument } from 'src/schemas/team.schema';
 import { User } from 'src/schemas/user.schema';
@@ -19,7 +19,7 @@ export class TeamsService {
     private readonly utilitiesService: UtilitiesService
   ) {}
 
-  public findById(id: Schema.Types.ObjectId) {
+  public findById(id: Types.ObjectId) {
     return this.teamsModel.findById(id).exec();
   }
 
@@ -50,13 +50,13 @@ export class TeamsService {
     return await team.save();
   }
 
-  public async updateJoinCode(id: Schema.Types.ObjectId) {
+  public async updateJoinCode(id: Types.ObjectId) {
     const code = await this.generateTeamCode();
 
     return this.teamsModel.updateOne({ _id: id }, { code }).exec();
   }
 
-  private updateTeam(id: Schema.Types.ObjectId, data: Partial<Team>) {
+  private updateTeam(id: Types.ObjectId, data: Partial<Team>) {
     return this.teamsModel.updateOne({ _id: id }, data).exec();
   }
 
@@ -64,7 +64,7 @@ export class TeamsService {
    * Deletes a team with all resources and removes all team members.
    * @param teamId Team to be removed
    */
-  public async deleteTeam(teamId: Schema.Types.ObjectId) {
+  public async deleteTeam(teamId: Types.ObjectId) {
     const members = await this.usersService.getTeamMembers(teamId);
     for (const member of members) {
       await this.usersService.unassignTeam(member._id);
@@ -83,7 +83,7 @@ export class TeamsService {
    * @param force True if the user account is being deleted through user action, false prompts the user
    * to transfer the team leadership first.
    */
-  public async leaveTeam(teamId: Schema.Types.ObjectId, userId: Schema.Types.ObjectId, force: boolean) {
+  public async leaveTeam(teamId: Types.ObjectId, userId: Types.ObjectId, force: boolean) {
     const team = await this.findById(teamId);
 
     const memberCount = await this.usersService.getTeamMemberCount(teamId);

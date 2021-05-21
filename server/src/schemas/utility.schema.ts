@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import { Types, Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { GameMap } from './enums';
@@ -16,11 +16,11 @@ import { UtilityDataSchema, UtilityData } from './utility-data.schema';
 })
 export class Utility {
   @Prop({
-    type: mongoose.Schema.Types.ObjectId,
+    type: Types.ObjectId,
     ref: 'Team',
     required: true,
   })
-  public team: mongoose.Schema.Types.ObjectId;
+  public team: Types.ObjectId;
 
   @Prop({
     enum: Object.values(GameMap),
@@ -32,7 +32,7 @@ export class Utility {
   public utilities: UtilityData[];
 }
 
-export type UtilityDocument = Utility & Document<mongoose.Schema.Types.ObjectId>;
+export type UtilityDocument = Utility & Document<Types.ObjectId>;
 
 export const UtilitySchema = SchemaFactory.createForClass(Utility);
 

@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import { Types, Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({
@@ -42,10 +42,10 @@ export class User {
   public avatar?: string;
 
   @Prop({
-    type: mongoose.Schema.Types.ObjectId,
+    type: Types.ObjectId,
     ref: 'Team',
   })
-  public team?: mongoose.Schema.Types.ObjectId;
+  public team?: Types.ObjectId;
 
   @Prop()
   public createdAt: Date;
@@ -69,6 +69,6 @@ export class User {
   public completedTutorial: boolean;
 }
 
-export type UserDocument = User & Document<mongoose.Schema.Types.ObjectId>;
+export type UserDocument = User & Document<Types.ObjectId>;
 
 export const UserSchema = SchemaFactory.createForClass(User);

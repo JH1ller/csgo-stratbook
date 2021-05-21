@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import { Types, Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { PlayerSide } from './enums';
@@ -67,11 +67,11 @@ export class UtilityData {
   public videoLink: string;
 
   @Prop({
-    type: mongoose.Schema.Types.ObjectId,
+    type: Types.ObjectId,
     ref: 'User',
     required: true,
   })
-  public createdBy: mongoose.Schema.Types.ObjectId;
+  public createdBy: Types.ObjectId;
 
   @Prop()
   public createdAt: Date;
@@ -83,6 +83,6 @@ export class UtilityData {
   public shared: boolean;
 }
 
-export type UtilityDataDocument = UtilityData & Document<mongoose.Schema.Types.ObjectId>;
+export type UtilityDataDocument = UtilityData & Document<Types.ObjectId>;
 
 export const UtilityDataSchema = SchemaFactory.createForClass(UtilityData);

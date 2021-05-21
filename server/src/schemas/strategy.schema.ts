@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import { Types, Document } from 'mongoose';
 
 import { PlayerSide, GameMap } from './enums';
 import { StrategyType } from './enums/strategy';
@@ -24,11 +24,11 @@ export class Strategy {
   public gameMap: string;
 
   @Prop({
-    type: mongoose.Schema.Types.ObjectId,
+    type: Types.ObjectId,
     ref: 'Team',
     required: true,
   })
-  public team: mongoose.Schema.Types.ObjectId;
+  public team: Types.ObjectId;
 
   @Prop({
     enum: Object.values(PlayerSide),
@@ -66,11 +66,11 @@ export class Strategy {
   public content: string;
 
   @Prop({
-    type: mongoose.Schema.Types.ObjectId,
+    type: Types.ObjectId,
     ref: 'User',
     required: true,
   })
-  public createdBy: mongoose.Schema.Types.ObjectId;
+  public createdBy: Types.ObjectId;
 
   @Prop()
   public createdAt: Date;
@@ -79,10 +79,10 @@ export class Strategy {
   public modifiedAt: Date;
 
   @Prop({
-    type: mongoose.Schema.Types.ObjectId,
+    type: Types.ObjectId,
     ref: 'User',
   })
-  public modifiedBy: mongoose.Schema.Types.ObjectId;
+  public modifiedBy: Types.ObjectId;
 
   @Prop({
     default: false,
@@ -90,6 +90,6 @@ export class Strategy {
   public shared: boolean;
 }
 
-export type StrategyDocument = Strategy & Document<mongoose.Schema.Types.ObjectId>;
+export type StrategyDocument = Strategy & Document<Types.ObjectId>;
 
 export const StrategySchema = SchemaFactory.createForClass(Strategy);

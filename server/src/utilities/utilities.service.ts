@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import Mongoose, { Schema, Model } from 'mongoose';
+import { Types, Model } from 'mongoose';
 
 import { AddUtilityDto } from './dto/add-utility.dto';
 
@@ -13,7 +13,7 @@ import { GameMap } from 'src/schemas/enums';
 import { ResourceManagerService } from 'src/services/resource-manager/resource-manager.service';
 
 interface UtilitySortType {
-  id: Mongoose.Schema.Types.ObjectId;
+  id: Types.ObjectId;
   displayPosition: number;
 }
 
@@ -25,15 +25,15 @@ export class UtilitiesService {
     private readonly resourceManagerService: ResourceManagerService
   ) {}
 
-  public findById(id: Mongoose.Types.ObjectId) {
+  public findById(id: Types.ObjectId) {
     return this.utilityModel.findById(id).exec();
   }
 
-  public findByTeamId(teamId: Mongoose.Types.ObjectId) {
+  public findByTeamId(teamId: Types.ObjectId) {
     return this.utilityModel.find({ team: teamId }).exec();
   }
 
-  public async findByTeamIdAndMap(teamId: Schema.Types.ObjectId, gameMap: GameMap) {
+  public async findByTeamIdAndMap(teamId: Types.ObjectId, gameMap: GameMap) {
     const utilities = await this.utilityModel
       .aggregate<UtilityData>()
       .match({ team: teamId, gameMap })
@@ -52,12 +52,7 @@ export class UtilitiesService {
     return utilities;
   }
 
-  public async addUtility(
-    teamId: Schema.Types.ObjectId,
-    userId: Schema.Types.ObjectId,
-    model: AddUtilityDto,
-    images: string[]
-  ) {
+  public async addUtility(teamId: Types.ObjectId, userId: Types.ObjectId, model: AddUtilityDto, images: string[]) {
     let document = await this.utilityModel.findOne({
       team: teamId,
       gameMap: model.gameMap,
@@ -102,7 +97,7 @@ export class UtilitiesService {
    * Removes all utilities from a team. This includes shared utilities.
    * @param teamId Target team id.
    */
-  public async deleteAllByTeamId(teamId: Schema.Types.ObjectId) {
+  public async deleteAllByTeamId(teamId: Types.ObjectId) {
     const utilities = await this.findByTeamId(teamId);
 
     const tasks = utilities.map(async (utility) => {
@@ -120,11 +115,11 @@ export class UtilitiesService {
     });
   }
 
-  public deleteById(id: Schema.Types.ObjectId) {
+  public deleteById(id: Types.ObjectId) {
     return this.utilityModel.deleteOne({ _id: id }).exec();
   }
 
-  public async pullUtilityById(documentId: Schema.Types.ObjectId, utilityId: Schema.Types.ObjectId) {
+  public async pullUtilityById(documentId: Types.ObjectId, utilityId: Types.ObjectId) {
     // await this.utilityModel.updateOne({
     //   _id: id,
     // });
@@ -140,7 +135,7 @@ export class UtilitiesService {
   public async updateDisplayPosition(id: string, oldPosition: number, newPosition: number) {
     const utilities = await this.utilityModel
       .aggregate<UtilityDataDocument>()
-      .match({ _id: new Mongoose.Types.ObjectId(id) })
+      .match({ _id: new Types.ObjectId(id) })
       .unwind({
         path: '$utilities',
       })
@@ -203,7 +198,7 @@ export class UtilitiesService {
       affected.map((item) => ({
         updateOne: {
           filter: {
-            _id: new Mongoose.Types.ObjectId(id),
+            _id: new Types.ObjectId(id),
             'utilities._id': item.id,
           },
           update: {
