@@ -1,9 +1,22 @@
 {
-  "moduleFileExtensions": ["js", "json", "ts"],
+  "verbose": true,
+
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+
   "rootDir": ".",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
+
   "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
+    "^.+\\.(t|j)s$": "ts-jest",
+    "^.+\\.hbs$": "<rootDir>/__transform__/html-loader.js"
+  },
+
+  "moduleNameMapper": {
+    "^src\/(.*)$": "<rootDir>/../src/$1"
   }
 }

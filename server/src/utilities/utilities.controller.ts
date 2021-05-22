@@ -51,6 +51,8 @@ export class UtilitiesController {
 
   @Get('/:gameMap')
   @ApiOkResponse({ description: 'Gets utility data for a specified team and map', type: [GetUtilityResponse] })
+  @ApiBadRequestResponse()
+  @ApiUnauthorizedResponse()
   public async getUtility(@Param() params: GetUtilityParamsDto, @Req() req: Request) {
     const teamId = req.user.team;
     const result = await this.utilitiesService.findByTeamIdAndMap(teamId, params.gameMap);
@@ -71,6 +73,7 @@ export class UtilitiesController {
   @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 3 }]))
   @ApiConsumes('multipart/form-data')
   @ApiOkResponse({ description: 'Creates a new utility' })
+  @ApiBadRequestResponse()
   @ApiBody({ description: 'Add Utility', type: AddUtilityDto })
   public async addUtility(
     @UploadedFiles() files: { images: Express.Multer.File[] },
@@ -90,13 +93,14 @@ export class UtilitiesController {
   }
 
   @Delete()
+  @ApiOkResponse()
   @ApiBadRequestResponse({ description: 'Invalid model or no utility found under the specified id' })
   @ApiUnauthorizedResponse()
   public async deleteUtility(@Body() model: DeleteUtilityDto, @Req() req: Request) {
     const teamId = req.user.team;
 
-    const documentId = new Mongoose.Types.ObjectId(model.documentId);
-    const utility = await this.utilitiesService.findById(documentId);
+    const id = new Mongoose.Types.ObjectId(model.id);
+    const utility = await this.utilitiesService.findByUtilityId(id);
     if (utility === null) {
       throw new BadRequestException('Invalid utility id');
     }
@@ -110,6 +114,7 @@ export class UtilitiesController {
 
   @Patch('/position')
   @ApiOkResponse({ description: 'Moves the selected utility from oldPosition to newPosition' })
+  @ApiBadRequestResponse()
   public async updateUtilityPosition(@Body() model: UpdateUtilityPositionDto) {
     const { id, oldPosition, newPosition } = model;
 

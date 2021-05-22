@@ -1,5 +1,5 @@
 import { Expose, Type } from 'class-transformer';
-import { Schema } from 'mongoose';
+import { Types } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { TeamServerConnection } from 'src/schemas/team.schema';
@@ -8,7 +8,7 @@ export class GetTeamResponse {
   @Expose({ name: 'id' })
   @Type(() => String)
   @ApiProperty({ name: 'id', type: String })
-  public _id: Schema.Types.ObjectId;
+  public _id: Types.ObjectId;
 
   @Expose()
   @ApiProperty()
@@ -34,7 +34,7 @@ export class GetTeamResponse {
   @Expose()
   @Type(() => String)
   @ApiProperty({ type: String })
-  public manager: Schema.Types.ObjectId;
+  public manager: Types.ObjectId;
 
   constructor(partial: Partial<GetTeamResponse>) {
     Object.assign(this, partial);

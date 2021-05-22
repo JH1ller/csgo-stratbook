@@ -4,7 +4,7 @@ import { useContainer } from 'class-validator';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
-import { Logger, ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common';
+import { Logger, ValidationPipe, ClassSerializerInterceptor, INestApplication } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 
@@ -15,30 +15,91 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import helmet from 'helmet';
 import passport from 'passport';
+import mongoose from 'mongoose';
+import { MongoClient } from 'mongodb';
 
 import { AppModule } from './app.module';
 import { isDevEnv } from './common/env';
 
+import { BullConfigService } from 'src/services/bull-config.service';
+import { ImageUploaderService } from 'src/services/image-uploader/image-uploader.service';
+
 /**
  * @summary Helper for HMR - Api reloading
  */
-class Main {
-  private readonly logger = new Logger(Main.name);
+export class ServerEntry {
+  private readonly logger = new Logger(ServerEntry.name);
 
-  private app: NestExpressApplication;
+  public app: INestApplication;
 
   private ioAdapter: IoAdapter;
 
+  private sessionConnection: MongoClient;
+
+  /**
+   * Constructor used, to assigned an already created nest application.
+   * Used to set app to testing fixtures.
+   */
+  constructor(testFixture?: INestApplication) {
+    this.app = testFixture;
+  }
+
+  /**
+   * Actual entry point for full server execution.
+   */
   public async bootstrap() {
     this.logger.debug(
       `Build: ${chalk.green(process.env.BUILD_TIME)} ` +
         `git-commit: ${chalk.magenta(process.env.GIT_VERSION)} (${chalk.magenta(process.env.GIT_AUTHOR_DATE)})`
     );
 
+    if (this.app) {
+      throw new Error('do not use bootstrap with test fixtures!');
+    }
+
     this.app = await NestFactory.create<NestExpressApplication>(AppModule, {});
 
+    // configure nest application
+    await this.configure();
+
+    if (isDevEnv()) {
+      this.useSwagger();
+    }
+
+    // all executed methods log output to console
+    // mongoose.set('debug', true);
+
+    const configService = this.app.get(ConfigService);
+    const port = configService.get<number>('port');
+    await this.app.listen(port);
+
+    this.logger.debug(chalk.cyan(`Application is running on: ${chalk.magenta(await this.app.getUrl())}`));
+  }
+
+  public async dispose() {
+    await this.app.close();
+
+    const service = this.app.get(ImageUploaderService);
+    await service.obliterateQueue();
+
+    const bullConfig = this.app.get(BullConfigService);
+    bullConfig.closeConnections();
+
+    await Promise.all(mongoose.connections.map((con) => con.close()));
+    await mongoose.disconnect();
+
+    await this.sessionConnection.close();
+  }
+
+  /**
+   * Configure app.
+   * Split to allow code sharing between the actual server application and test fixtures.
+   */
+  public async configure() {
     // set all routes to /api/<controller_name>
     this.app.setGlobalPrefix('api');
+
+    this.app.enableShutdownHooks();
 
     const configService = this.app.get(ConfigService);
 
@@ -61,19 +122,28 @@ class Main {
     this.app.use(json());
 
     // setup session-storage
+    this.sessionConnection = await MongoClient.connect(configService.get<string>('database.url'), {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    // don't merge mongoStore with session({}) as this causes resource leaks in jest
+    // todo: investigate why...
+    const mongoStore = MongoStore.create({
+      client: this.sessionConnection,
+      collectionName: 'sessions',
+      ttl: 14 * 24 * 60 * 60, // = 14 days. Default
+      autoRemove: 'interval',
+      autoRemoveInterval: 10, // In minutes. Default
+    });
+
     this.app.use(
       session({
         name: 'sid',
         secret: configService.get<string>('session.secret'),
         resave: false,
         saveUninitialized: false,
-
-        store: MongoStore.create({
-          mongoUrl: configService.get<string>('database.url'),
-          collectionName: 'sessions',
-          ttl: 14 * 24 * 60 * 60, // = 14 days. Default
-        }),
-
+        store: mongoStore,
         cookie: {
           maxAge: configService.get<number>('session.cookie.ttl'),
           httpOnly: true,
@@ -107,22 +177,6 @@ class Main {
       credentials: true,
       origin: true,
     });
-
-    if (isDevEnv()) {
-      this.useSwagger();
-    }
-
-    // all executed methods log output to console
-    // mongoose.set('debug', true);
-
-    const port = configService.get<number>('port');
-    await this.app.listen(port);
-
-    this.logger.debug(chalk.cyan(`Application is running on: ${chalk.magenta(await this.app.getUrl())}`));
-  }
-
-  public dispose() {
-    return this.app.close();
   }
 
   private useSwagger() {
@@ -143,14 +197,14 @@ class Main {
 }
 
 /**
- * this export for webpack-watch-sandbox.js
+ * this export, for webpack-watch-sandbox.js
  */
-export default () => new Main();
+export default () => new ServerEntry();
 
 if (process.env.STANDALONE_BUILD) {
-  const main = new Main();
+  const entry = new ServerEntry();
 
-  main
+  entry
     .bootstrap() // launch app entry
     .catch((err) => console.log(chalk.red(`failed to start service ${err as string}`)));
 }

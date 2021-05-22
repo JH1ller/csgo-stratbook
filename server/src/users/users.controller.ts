@@ -21,7 +21,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOkResponse, ApiCreatedResponse, ApiConsumes, ApiBody, ApiTags } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
-import { Schema } from 'mongoose';
+import { Types } from 'mongoose';
 import { Express, Response, Request } from 'express';
 import urljoin from 'url-join';
 
@@ -192,8 +192,8 @@ export class UsersController implements OnModuleInit {
   /**
    * User confirms email by token
    */
-  @Get('/confirmation/:token')
-  public async userConfirmation(@Param('token') token: string, @Res() res: Response) {
+  @Get('/confirm/email/:token')
+  public async userConfirmEmail(@Param('token') token: string, @Res() res: Response) {
     const { id } = this.usersService.verifyEmailConfirmRequest(token);
 
     const user = await this.usersService.findById(id);
@@ -212,8 +212,8 @@ export class UsersController implements OnModuleInit {
     return res.redirect(urljoin(baseUrl, `/#/login?confirmed=${user.email}`));
   }
 
-  @Get('/confirmation-change-email/:token')
-  public async confirmEmailChange(@Param('token') token: string, @Res() res: Response) {
+  @Get('/confirm/update-email/:token')
+  public async userConfirmEmailUpdate(@Param('token') token: string, @Res() res: Response) {
     const { id, email } = this.usersService.verifyEmailChangeRequest(token);
 
     const user = await this.usersService.findById(id);
@@ -261,6 +261,6 @@ export class UsersController implements OnModuleInit {
       throw new InternalServerErrorException('invalid user specified in token');
     }
 
-    await this.usersService.updatePassword(new Schema.Types.ObjectId(id), model.password);
+    await this.usersService.updatePassword(new Types.ObjectId(id), model.password);
   }
 }

@@ -5,10 +5,7 @@ const child_process = require('child_process');
 
 const NodeExternals = require('webpack-node-externals');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-
-const { RunScriptWebpackPlugin } = require('run-script-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
 
 const WebpackWatchSandboxPlugin = require('./webpack-watch-sandbox');
 
@@ -158,13 +155,16 @@ module.exports = (env) => {
           files: [
             './src/**/*.{ts,tsx,js,jsx}',
             './src-processors/**/*.{ts,tsx,js,jsx}',
-            // './test/**/*.{ts,tsx,js,jsx}',
           ],
         },
       }),
 
       new webpack.WatchIgnorePlugin({
-        paths: [path.resolve(__dirname, './public'), path.resolve(__dirname, './dist')],
+        paths: [
+          path.resolve(__dirname, './public'),
+          path.resolve(__dirname, './dist'),
+          path.resolve(__dirname, './test'),
+        ],
       }),
     ].concat(
       isStandalone
@@ -180,8 +180,6 @@ module.exports = (env) => {
             new WebpackWatchSandboxPlugin({
               name: 'server.js',
             }),
-
-            // new RunScriptWebpackPlugin({ name: 'server.js' }),
           ]
     ),
   };

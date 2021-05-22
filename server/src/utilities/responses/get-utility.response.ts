@@ -1,5 +1,5 @@
 import { Expose, Type } from 'class-transformer';
-import { Schema } from 'mongoose';
+import { Types } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { PlayerSide } from 'src/schemas/enums';
@@ -15,7 +15,7 @@ export class GetUtilityResponse {
   @Expose({ name: 'id' })
   @Type(() => String)
   @ApiProperty({ name: 'id', type: String })
-  public readonly _id: Schema.Types.ObjectId;
+  public readonly _id: Types.ObjectId;
 
   @Expose()
   @ApiProperty()

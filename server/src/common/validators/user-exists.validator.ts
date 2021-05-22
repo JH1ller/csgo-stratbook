@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
-import { Schema } from 'mongoose';
+import { Types } from 'mongoose';
 
 import { UsersService } from 'src/users/users.service';
 
@@ -14,7 +14,7 @@ export class UserExistsRule implements ValidatorConstraintInterface {
    * @param value user id
    */
   public validate(value: string) {
-    const id = new Schema.Types.ObjectId(value);
+    const id = new Types.ObjectId(value);
     return this.usersService.existsById(id);
   }
 

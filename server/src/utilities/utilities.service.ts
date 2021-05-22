@@ -33,6 +33,15 @@ export class UtilitiesService {
     return this.utilityModel.find({ team: teamId }).exec();
   }
 
+  /**
+   * Find document by utility (sub-document) id
+   * @param utilityId sub-document id
+   * @returns utility document
+   */
+  public findByUtilityId(utilityId: Types.ObjectId) {
+    return this.utilityModel.findOne({ 'utilities._id': utilityId }).exec();
+  }
+
   public async findByTeamIdAndMap(teamId: Types.ObjectId, gameMap: GameMap) {
     const utilities = await this.utilityModel
       .aggregate<UtilityData>()
@@ -119,12 +128,24 @@ export class UtilitiesService {
     return this.utilityModel.deleteOne({ _id: id }).exec();
   }
 
-  public async pullUtilityById(documentId: Types.ObjectId, utilityId: Types.ObjectId) {
-    // await this.utilityModel.updateOne({
-    //   _id: id,
-    // });
-
-    console.log(documentId, utilityId);
+  /**
+   * Deletes (pulls) sub-document from utility array
+   * @param id sub-document id
+   * @returns updateOne result
+   */
+  public deleteUtilityById(id: Types.ObjectId) {
+    return this.utilityModel
+      .updateOne(
+        {
+          'utilities.id': id,
+        },
+        {
+          $pull: {
+            _id: id,
+          },
+        }
+      )
+      .exec();
   }
 
   /**

@@ -11,9 +11,20 @@ export class BullConfigService implements SharedBullConfigurationFactory {
 
   private subscriber: Redis.Redis;
 
+  private connections: Redis.Redis[] = [];
+
   constructor(private readonly configService: ConfigService) {}
 
-  createSharedConfiguration(): Promise<QueueOptions> | QueueOptions {
+  public closeConnections() {
+    this.client.disconnect();
+    this.subscriber.disconnect();
+
+    for (const i of this.connections) {
+      i.disconnect();
+    }
+  }
+
+  public createSharedConfiguration(): Promise<QueueOptions> | QueueOptions {
     const url = this.configService.get<string>('bull.redis.url');
 
     // reuse connections
@@ -28,8 +39,11 @@ export class BullConfigService implements SharedBullConfigurationFactory {
             return this.client;
           case 'subscriber':
             return this.subscriber;
-          default:
-            return new Redis(url);
+          default: {
+            const connection = new Redis(url);
+            this.connections.push(connection);
+            return connection;
+          }
         }
       },
     };
