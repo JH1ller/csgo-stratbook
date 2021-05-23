@@ -18,7 +18,14 @@ import {
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiOkResponse, ApiCreatedResponse, ApiConsumes, ApiBody, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiCreatedResponse,
+  ApiConsumes,
+  ApiBody,
+  ApiTags,
+  ApiBadRequestResponse,
+} from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
 import { Types } from 'mongoose';
@@ -233,6 +240,8 @@ export class UsersController implements OnModuleInit {
   }
 
   @Post('/forgot-password')
+  @ApiOkResponse()
+  @ApiBadRequestResponse()
   public async forgotPassword(@Body() model: ForgotPasswordDto) {
     const result = await this.captchaService.verify(model.captchaResponse);
     if (!result) {

@@ -8,7 +8,7 @@ import { ImageUploadJob } from './jobs/image-upload';
 export class ImageUploaderService {
   constructor(@InjectQueue('image-uploader') private readonly imageQueue: Queue<ImageUploadJob>) {}
 
-  public obliterateQueue() {
+  public shutdownQueue() {
     return this.imageQueue.obliterate();
   }
 

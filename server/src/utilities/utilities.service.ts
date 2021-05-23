@@ -7,15 +7,11 @@ import { AddUtilityDto } from './dto/add-utility.dto';
 import { Utility, UtilityDocument } from 'src/schemas/utility.schema';
 import { UtilityData, UtilityDataDocument } from 'src/schemas/utility-data.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
+import { sortArrayDisplayOrder } from 'src/schemas';
 
 import { GameMap } from 'src/schemas/enums';
 
 import { ResourceManagerService } from 'src/services/resource-manager/resource-manager.service';
-
-interface UtilitySortType {
-  id: Types.ObjectId;
-  displayPosition: number;
-}
 
 @Injectable()
 export class UtilitiesService {
@@ -153,10 +149,10 @@ export class UtilitiesService {
    * @param id id of the dragged strategy
    * @param position new display position of the dragged strategy
    */
-  public async updateDisplayPosition(id: string, oldPosition: number, newPosition: number) {
+  public async updateDisplayPosition(id: Types.ObjectId, oldPosition: number, newPosition: number) {
     const utilities = await this.utilityModel
       .aggregate<UtilityDataDocument>()
-      .match({ _id: new Types.ObjectId(id) })
+      .match({ _id: id })
       .unwind({
         path: '$utilities',
       })
@@ -172,54 +168,14 @@ export class UtilitiesService {
     }
 
     // find affected rows
-    const affected: UtilitySortType[] = [];
-
-    if (newPosition > oldPosition) {
-      // force oldPosition to be at least 0, and cap newPosition to array length
-      oldPosition = Math.max(oldPosition, 0);
-      newPosition = Math.min(utilities.length - 1, newPosition);
-
-      if (newPosition - oldPosition <= 0) {
-        return;
-      }
-
-      for (let i = oldPosition + 1; i <= newPosition; i++) {
-        const item = utilities[i];
-
-        affected.push({
-          id: item._id,
-          displayPosition: item.displayPosition - 1,
-        });
-      }
-    } else {
-      oldPosition = Math.min(utilities.length - 1, oldPosition);
-      newPosition = Math.max(0, newPosition);
-
-      if (oldPosition - newPosition <= 0) {
-        return;
-      }
-
-      for (let i = newPosition; i < oldPosition; i++) {
-        const item = utilities[i];
-
-        affected.push({
-          id: item._id,
-          displayPosition: item.displayPosition + 1,
-        });
-      }
-    }
-
-    affected.push({
-      id: utilities[oldPosition]._id,
-      displayPosition: newPosition,
-    });
+    const affected = sortArrayDisplayOrder(utilities, oldPosition, newPosition);
 
     // prepare and execute update queries
     await this.utilityModel.bulkWrite(
       affected.map((item) => ({
         updateOne: {
           filter: {
-            _id: new Types.ObjectId(id),
+            _id: id,
             'utilities._id': item.id,
           },
           update: {

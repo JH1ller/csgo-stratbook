@@ -1,4 +1,4 @@
-import { IsBoolean, IsEnum, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
+import { IsEnum, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { GameMap, PlayerSide } from 'src/schemas/enums';
@@ -20,10 +20,6 @@ export class AddStrategyDto {
   @IsEnum(PlayerSide)
   @ApiProperty({ example: PlayerSide.CounterTerrorists, enum: PlayerSide })
   public readonly side: PlayerSide;
-
-  @IsBoolean()
-  @ApiProperty({ example: true })
-  public readonly active: boolean;
 
   @IsString()
   @IsOptional()

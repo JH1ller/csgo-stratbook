@@ -79,15 +79,19 @@ export class ServerEntry {
   public async dispose() {
     await this.app.close();
 
+    // dispose worker queues
     const service = this.app.get(ImageUploaderService);
-    await service.obliterateQueue();
+    await service.shutdownQueue();
 
+    // dispose bulljs redis connections
     const bullConfig = this.app.get(BullConfigService);
     bullConfig.closeConnections();
 
+    // shutdown all mongoose connections
     await Promise.all(mongoose.connections.map((con) => con.close()));
     await mongoose.disconnect();
 
+    // dispose session-store mongodb connection
     await this.sessionConnection.close();
   }
 

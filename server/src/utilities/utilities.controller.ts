@@ -23,7 +23,7 @@ import {
 } from '@nestjs/swagger';
 
 import { Request, Express } from 'express';
-import Mongoose from 'mongoose';
+import Mongoose, { Types } from 'mongoose';
 
 import { UtilitiesService } from './utilities.service';
 
@@ -122,6 +122,12 @@ export class UtilitiesController {
       return;
     }
 
-    await this.utilitiesService.updateDisplayPosition(id, oldPosition, newPosition);
+    await this.utilitiesService.updateDisplayPosition(new Types.ObjectId(id), oldPosition, newPosition);
+  }
+
+  @Patch()
+  @ApiOkResponse()
+  public async updateUtility() {
+    //
   }
 }

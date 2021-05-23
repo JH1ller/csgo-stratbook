@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types, Document } from 'mongoose';
 
-import { PlayerSide, GameMap } from './enums';
-import { StrategyType } from './enums/strategy';
+import { GameMap } from './enums';
+import { StrategyData, StrategyDataSchema } from './strategy-data.schema';
 
 @Schema({
   timestamps: {
@@ -11,12 +11,6 @@ import { StrategyType } from './enums/strategy';
   },
 })
 export class Strategy {
-  @Prop({
-    required: true,
-    maxlength: 50,
-  })
-  public name: string;
-
   @Prop({
     required: true,
     enum: Object.values(GameMap),
@@ -30,66 +24,19 @@ export class Strategy {
   })
   public team: Types.ObjectId;
 
-  @Prop({
-    enum: Object.values(PlayerSide),
-    required: true,
-  })
-  public side: string;
-
-  @Prop({
-    enum: Object.values(StrategyType),
-    default: StrategyType.BuyRound,
-  })
-  type: string;
-
-  @Prop({
-    default: true,
-  })
-  public active: boolean;
-
-  @Prop({
-    maxlength: 256,
-  })
-  public videoLink: string;
-
-  @Prop({
-    maxlength: 100,
-  })
-  public note: string;
-
-  @Prop()
-  public drawData: string;
-
-  @Prop({
-    default: '',
-  })
-  public content: string;
-
-  @Prop({
-    type: Types.ObjectId,
-    ref: 'User',
-    required: true,
-  })
-  public createdBy: Types.ObjectId;
-
-  @Prop()
-  public createdAt: Date;
-
-  @Prop()
-  public modifiedAt: Date;
-
-  @Prop({
-    type: Types.ObjectId,
-    ref: 'User',
-  })
-  public modifiedBy: Types.ObjectId;
-
-  @Prop({
-    default: false,
-  })
-  public shared: boolean;
+  @Prop({ type: [StrategyDataSchema] })
+  public strategies: StrategyData[];
 }
 
 export type StrategyDocument = Strategy & Document<Types.ObjectId>;
 
 export const StrategySchema = SchemaFactory.createForClass(Strategy);
+
+// create compound index (team, gameMap)
+StrategySchema.index(
+  {
+    team: 1,
+    gameMap: 1,
+  },
+  { unique: true }
+);

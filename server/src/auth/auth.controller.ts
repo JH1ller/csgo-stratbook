@@ -1,5 +1,5 @@
 import { Controller, Post, Request, UseGuards, Logger, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Express } from 'express';
 
 import { AuthService } from './auth.service';
@@ -21,6 +21,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiBody({ type: LocalSignInDto })
   @ApiOkResponse()
+  @ApiBadRequestResponse()
   public login() {
     // login is performed by LocalAuthGuard.
   }
@@ -29,6 +30,7 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
+  @ApiUnauthorizedResponse()
   public logout(@Request() req: Express.Request) {
     req.logout();
 
