@@ -34,14 +34,6 @@ export default class StratEditor extends Vue {
 
   private get utilityOptionList(): LinkOption[] {
     return [
-      ...this.utilitiesOfCurrentMap
-        .filter(utility => utility.side === this.stratSide)
-        .map(utility => ({
-          id: utility._id,
-          icon: utility.type.toLowerCase(),
-          label: utility.name,
-          query: `${utility.type} ${utility.name}`,
-        })),
       {
         icon: UtilityTypes.FLASH.toLowerCase(),
         query: UtilityTypes.FLASH,
@@ -62,6 +54,14 @@ export default class StratEditor extends Vue {
         query: UtilityTypes.MOLOTOV,
         label: 'Molotov',
       },
+      ...this.utilitiesOfCurrentMap
+        .filter(utility => utility.side === this.stratSide)
+        .map(utility => ({
+          id: utility._id,
+          icon: utility.type.toLowerCase(),
+          label: utility.name,
+          query: `${utility.type} ${utility.name}`,
+        })),
     ];
   }
 
@@ -104,6 +104,7 @@ export default class StratEditor extends Vue {
           noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
           spaceSelectsMatch: true,
+          menuItemLimit: 6,
         },
         {
           values: this.utilityOptionList,
@@ -124,7 +125,7 @@ export default class StratEditor extends Vue {
           noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
           spaceSelectsMatch: true,
-          menuItemLimit: 5,
+          menuItemLimit: 6,
         },
         {
           values: [
