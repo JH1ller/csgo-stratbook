@@ -3,6 +3,7 @@ import splitbee from '@splitbee/web';
 import Analytics, { AnalyticsInstance } from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
 import pkg from '../../package.json';
+import { GA_ID, SPLITBEE_ID } from '@/config';
 
 export default class TrackingService {
   private static instance: TrackingService;
@@ -21,14 +22,14 @@ export default class TrackingService {
   }
 
   init(disableCookie = false) {
-    splitbee.init({ disableCookie, token: 'J3KX6SRRBPBD' });
+    splitbee.init({ disableCookie, token: SPLITBEE_ID });
 
     this.analyticsInstance = Analytics({
       app: 'cs-stratbook',
       version: pkg.version,
       plugins: [
         googleAnalytics({
-          trackingId: 'G-787NDTZVPN',
+          trackingId: GA_ID,
           ...(disableCookie && {
             cookieConfig: {
               storage: 'none',

@@ -8,7 +8,6 @@ import TrackingService from '@/services/tracking.service';
 import { catchPromise } from '@/utils/catchPromise';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { openLink } from '@/utils/openLink';
-import { RouteRecord } from 'vue-router';
 
 @Component({
   components: {
