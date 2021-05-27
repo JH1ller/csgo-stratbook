@@ -1,13 +1,15 @@
 import { Component, Prop, Vue, Emit, Ref, Watch } from 'vue-property-decorator';
 import StratEditor from '@/components/StratEditor/StratEditor.vue';
+import IStratEditor from '@/components/StratEditor/StratEditor';
 import TypeBadge from '@/components/TypeBadge/TypeBadge.vue';
 import SideBadge from '@/components/SideBadge/SideBadge.vue';
-import { appModule, filterModule } from '@/store/namespaces';
+import { appModule } from '@/store/namespaces';
 import { Strat } from '@/api/models/Strat';
 import { Sides } from '@/api/models/Sides';
-import { StratFilters } from '@/store/modules/filter';
 import { openLink } from '@/utils/openLink';
 import { StratTypes } from '@/api/models/StratTypes';
+import { Toast } from '../ToastWrapper/ToastWrapper.models';
+import { titleCase } from '@/utils/titleCase';
 
 @Component({
   components: {
@@ -17,15 +19,14 @@ import { StratTypes } from '@/api/models/StratTypes';
   },
 })
 export default class StratItem extends Vue {
-  @appModule.State gameMode!: boolean;
-
+  @Prop() private gameMode!: boolean;
   @Prop() private strat!: Strat;
   @Prop() private completedTutorial!: boolean;
   @Prop() private isTutorial!: boolean;
   @Prop() private collapsed!: boolean;
   @Prop() private editMode!: boolean;
-  @Ref() editor!: any;
-  @filterModule.State filters!: StratFilters;
+  @Ref() private editor!: IStratEditor;
+  @appModule.Action private showToast!: (toast: Toast) => Promise<void>;
 
   //* defer initial collapsed state to get max item height first
   private deferredCollapsed = false;
@@ -70,6 +71,18 @@ export default class StratItem extends Vue {
 
   private openVideo() {
     openLink(this.strat.videoLink as string);
+  }
+
+  @Emit()
+  private filterType() {
+    this.showToast({ id: 'strat-item/filter-type', text: `Applied filter: ${titleCase(this.strat.type)}`});
+    return this.strat.type;
+  }
+
+  @Emit()
+  private filterSide() {
+    this.showToast({ id: 'strat-item/filter-side', text: `Applied filter: ${this.strat.side} side`});
+    return this.strat.side;
   }
 
   @Emit()

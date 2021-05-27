@@ -15,6 +15,12 @@
     <StratList
       class="strats-view__strat-list"
       :class="{ '-game-mode': gameMode }"
+      :completedTutorial="profile.completedTutorial"
+      :tutorialStrat="tutorialStrat"
+      :strats="sortedFilteredStratsOfCurrentMap"
+      :collapsedStrats="collapsedStrats"
+      :editedStrats="editedStrats"
+      :gameMode="gameMode"
       @delete-strat="requestDeleteStrat"
       @edit-strat="showStratForm"
       @toggle-active="toggleStratActive"
@@ -26,11 +32,8 @@
       @edit-changed="updateEdited"
       @editor-focussed="hasEditorFocus = true"
       @editor-blurred="hasEditorFocus = false"
-      :completedTutorial="profile.completedTutorial"
-      :tutorialStrat="tutorialStrat"
-      :strats="sortedFilteredStratsOfCurrentMap"
-      :collapsedStrats="collapsedStrats"
-      :editedStrats="editedStrats"
+      @filter-type="updateStratTypeFilter"
+      @filter-side="updateStratSideFilter"
     />
     <transition name="fade">
       <div class="strats-view__fab-group" v-if="!filterMenuOpen && !stratFormOpen">

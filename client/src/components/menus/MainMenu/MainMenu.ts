@@ -2,13 +2,13 @@ import { Component, Emit, Inject, Prop, Vue } from 'vue-property-decorator';
 import { appModule, authModule } from '@/store/namespaces';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import { Player } from '@/api/models/Player';
-import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { FeedbackFish } from '@feedback-fish/vue';
 import { Routes } from '@/router/router.models';
 import TrackingService from '@/services/tracking.service';
 import { catchPromise } from '@/utils/catchPromise';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { openLink } from '@/utils/openLink';
+import { RouteRecord } from 'vue-router';
 
 @Component({
   components: {
@@ -66,7 +66,7 @@ export default class MainMenu extends Vue {
       }),
       () => {
         // TODO: consider if we should just insert current version here
-        window.open('https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+1.8.4.exe');
+        window.open('https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+1.8.3.exe');
       }
     );
     this.trackingService.track('click:get-desktop-client');

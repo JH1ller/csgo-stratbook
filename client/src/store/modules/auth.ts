@@ -88,12 +88,12 @@ export const authModule: Module<AuthState, RootState> = {
     setProfile({ commit, rootState }, profile: Player) {
       commit(SET_PROFILE, profile);
       commit(SET_STATUS, profile.team ? Status.LOGGED_IN_WITH_TEAM : Status.LOGGED_IN_NO_TEAM);
-      trackingService.setUser({ userId: profile._id, name: profile.name });
+      trackingService.setUser(profile.name, { userId: profile._id, name: profile.name });
       storageService.set('username', profile.name);
       storageService.set('userId', profile._id);
       if (profile.team) {
         WebSocketService.getInstance().connect();
-        trackingService.setUser({ team: (rootState.team.teamInfo as Team)?.name });
+        trackingService.setUser(profile.name, { team: (rootState.team.teamInfo as Team)?.name });
       } else {
         WebSocketService.getInstance().disconnect(); // TODO: maybe find a way to call this earlier, because socket update will cause console error
       }

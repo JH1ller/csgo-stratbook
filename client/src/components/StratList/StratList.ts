@@ -1,6 +1,8 @@
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
 import StratItem from '@/components/StratItem/StratItem.vue';
 import { Strat } from '@/api/models/Strat';
+import { StratTypes } from '@/api/models/StratTypes';
+import { Sides } from '@/api/models/Sides';
 @Component({
   components: {
     StratItem,
@@ -12,6 +14,7 @@ export default class StratList extends Vue {
   @Prop() strats!: Strat[];
   @Prop() collapsedStrats!: string[];
   @Prop() editedStrats!: string[];
+  @Prop() gameMode!: boolean;
 
   private isCollapsed(strat: Strat) {
     return this.collapsedStrats.some(id => id === strat._id);
@@ -76,5 +79,15 @@ export default class StratList extends Vue {
   @Emit()
   private editorBlurred() {
     return;
+  }
+
+  @Emit()
+  private filterType(value: StratTypes) {
+    return value;
+  }
+
+  @Emit()
+  private filterSide(value: Sides) {
+    return value;
   }
 }

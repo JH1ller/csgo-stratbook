@@ -1,5 +1,5 @@
 import { Component, Emit, Inject, Prop, Ref, Vue } from 'vue-property-decorator';
-import Tribute, { TributeCollection, TributeOptions } from 'tributejs';
+import Tribute, { TributeCollection, TributeItem, TributeOptions } from 'tributejs';
 import { appModule, authModule, teamModule, utilityModule } from '@/store/namespaces';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import sanitizeHtml from 'sanitize-html';
@@ -81,15 +81,15 @@ export default class StratEditor extends Vue {
     ];
   }
 
-  private get tributeOptions(): TributeOptions<any> & {
-    collection: Array<TributeCollection<any> & { spaceSelectsMatch?: boolean; menuItemLimit?: number }>;
+  private get tributeOptions(): TributeOptions<LinkOption> & {
+    collection: Array<TributeCollection<LinkOption> & { spaceSelectsMatch?: boolean; menuItemLimit?: number }>;
   } {
     return {
       collection: [
         {
           values: this.mentionOptionList,
           lookup: 'query',
-          selectTemplate: item =>
+          selectTemplate: (item: TributeItem<LinkOption>) =>
             `<span 
                 contenteditable="false" 
                 class="strat-editor__tag --mention${item.original.id?.startsWith('spawn') ? ' -is-spawn' : ''}" 
@@ -97,7 +97,7 @@ export default class StratEditor extends Vue {
           itemClass: 'strat-editor__mention-item',
           containerClass: 'strat-editor__mention-container',
           selectClass: 'strat-editor__mention-selected',
-          menuItemTemplate: item =>
+          menuItemTemplate: (item: TributeItem<LinkOption>)  =>
             `<img class="strat-editor__mention-item-image" src="${resolveStaticImageUrl(item.original.icon)}"/>${
               item.original.label
             }`,
@@ -110,7 +110,7 @@ export default class StratEditor extends Vue {
           values: this.utilityOptionList,
           trigger: '#',
           lookup: 'query',
-          selectTemplate: item =>
+          selectTemplate: (item: TributeItem<LinkOption>)  =>
             `<span 
                 contenteditable="false" ${item.original.id ? `data-util-id="${item.original.id}"` : ''}
                 class="strat-editor__tag --utility"><img 
@@ -120,7 +120,7 @@ export default class StratEditor extends Vue {
           itemClass: 'strat-editor__mention-item',
           containerClass: 'strat-editor__mention-container',
           selectClass: 'strat-editor__mention-selected',
-          menuItemTemplate: item =>
+          menuItemTemplate: (item: TributeItem<LinkOption>)  =>
             `<img class="strat-editor__mention-item-image" src="utility/${item.original.icon}.png"/>${item.original.label}`,
           noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
@@ -148,7 +148,7 @@ export default class StratEditor extends Vue {
           itemClass: 'strat-editor__mention-item',
           containerClass: 'strat-editor__mention-container',
           selectClass: 'strat-editor__mention-selected',
-          menuItemTemplate: item =>
+          menuItemTemplate: (item: TributeItem<LinkOption>)  =>
             `<img class="strat-editor__mention-item-image" src="utility/${item.original.icon}.png"/> ${item.original.label} `,
           noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
@@ -158,13 +158,13 @@ export default class StratEditor extends Vue {
           values: generateWeaponData(this.stratSide),
           trigger: 'w:',
           lookup: 'query',
-          selectTemplate: item =>
+          selectTemplate: (item: TributeItem<LinkOption>)  =>
             `<span contenteditable="false" class="strat-editor__tag --weapon"><img class="strat-editor__tag-img" 
               src="utility/${item.original.icon}.png" />${item.original.label}</span>`,
           itemClass: 'strat-editor__mention-item',
           containerClass: 'strat-editor__mention-container',
           selectClass: 'strat-editor__mention-selected',
-          menuItemTemplate: item =>
+          menuItemTemplate: (item: TributeItem<LinkOption>)  =>
             `<img class="strat-editor__mention-item-image" src="utility/${item.original.icon}.png"/> ${item.original.label} `,
           noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
@@ -174,13 +174,13 @@ export default class StratEditor extends Vue {
           values: generateEquipmentData(this.stratSide),
           trigger: 'e:',
           lookup: 'query',
-          selectTemplate: item =>
+          selectTemplate: (item: TributeItem<LinkOption>)  =>
             `<span contenteditable="false" class="strat-editor__tag --equipment"><img class="strat-editor__tag-img" 
               src="utility/${item.original.icon}.png" />${item.original.label}</span>`,
           itemClass: 'strat-editor__mention-item',
           containerClass: 'strat-editor__mention-container',
           selectClass: 'strat-editor__mention-selected',
-          menuItemTemplate: item =>
+          menuItemTemplate: (item: TributeItem<LinkOption>)  =>
             `<img class="strat-editor__mention-item-image" src="utility/${item.original.icon}.png"/> ${item.original.label} `,
           noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
@@ -188,6 +188,21 @@ export default class StratEditor extends Vue {
         },
       ],
     };
+  }
+
+  public insertPlayerRows(): void {
+    // * this is pretty bad, should think of a better way
+    const playerRows = this.teamMembers.reduce<string>((acc, curr, i) => {
+      acc += `${this.textarea.innerHTML.length || i > 0 ? '<br/>' : ''}<span 
+      contenteditable="false" 
+      class="strat-editor__tag --mention" 
+      data-player-id="${curr._id}">${curr.name}</span>&nbsp;`;
+      return acc;
+    }, '');
+    this.textarea.innerHTML += playerRows;
+    this.addClickListeners();
+    this.update();
+    return;
   }
 
   private htmlInserted(e: CustomEvent) {
@@ -252,21 +267,6 @@ export default class StratEditor extends Vue {
   private utilClicked(id: string) {
     const utility = this.utilitiesOfCurrentMap.find(utility => utility._id === id);
     if (utility) this.showLightboxFunc(utility);
-  }
-
-  private insertPlayerRows(): void {
-    // * this is pretty bad, should think of a better way
-    const playerRows = this.teamMembers.reduce<string>((acc, curr, i) => {
-      acc += `${this.textarea.innerHTML.length || i > 0 ? '<br/>' : ''}<span 
-      contenteditable="false" 
-      class="strat-editor__tag --mention" 
-      data-player-id="${curr._id}">${curr.name}</span>&nbsp;`;
-      return acc;
-    }, '');
-    this.textarea.innerHTML += playerRows;
-    this.addClickListeners();
-    this.update();
-    return;
   }
 
   @Emit()

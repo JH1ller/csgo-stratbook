@@ -2,7 +2,7 @@ import { Sides } from '@/api/models/Sides';
 import { Utility } from '@/api/models/Utility';
 import { UtilityMovement } from '@/api/models/UtilityMovement';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
-import { Component, Emit, Prop, Ref, Vue } from 'vue-property-decorator';
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 import MouseButtonDisplay from '@/components/MouseButtonDisplay/MouseButtonDisplay.vue';
 import UtilityTypeDisplay from '@/components/UtilityTypeDisplay/UtilityTypeDisplay.vue';
 import { extractVideoId, getThumbnailURL } from '@/utils/youtubeUtils';
@@ -17,7 +17,6 @@ import SmartImage from '@/components/SmartImage/SmartImage.vue';
 })
 export default class UtilityItem extends Vue {
   @Prop() private utility!: Utility;
-  @Ref() private menu!: any;
 
   private UtilityMovement: typeof UtilityMovement = UtilityMovement;
   private Sides: typeof Sides = Sides;

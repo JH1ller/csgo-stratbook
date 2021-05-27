@@ -14,7 +14,6 @@
       <router-link
         v-for="(item, index) in menuItems"
         :to="item.link"
-        @click.native="closeMenu"
         class="main-menu__list-item"
         :key="item.label"
       >
@@ -30,13 +29,14 @@
       <a v-if="!isDesktop" class="main-menu__list-item main-menu__link --download" @click="downloadDesktopClient"
         ><fa-icon icon="download" />Get desktop app</a
       >
-      <a
+      <!-- Removed for now because it's not working anymore -->
+      <!-- <a
         class="main-menu__list-item main-menu__link --feedback"
         data-feedback-fish
         :data-feedback-fish-userid="profile.email"
       >
         <fa-icon icon="comment" />Feedback
-      </a>
+      </a> -->
       <a class="main-menu__list-item main-menu__link --kofi" @click="openDonationLink()">
         <fa-icon icon="coffee" />Buy me a coffee
       </a>
