@@ -8,6 +8,7 @@
       :isTutorial="strat._id === (tutorialStrat && tutorialStrat._id)"
       :collapsed="isCollapsed(strat)"
       :editMode="isEdited(strat)"
+      :gameMode="gameMode"
       @delete-strat="deleteStrat"
       @toggle-active="toggleActive"
       @edit-strat="editStrat"
@@ -19,6 +20,8 @@
       @show-map="showMap(strat)"
       @editor-focussed="editorFocussed"
       @editor-blurred="editorBlurred"
+      @filter-type="filterType"
+      @filter-side="filterSide"
       :style="{ 'animation-delay': 0.05 * index + 's' }"
     />
   </div>

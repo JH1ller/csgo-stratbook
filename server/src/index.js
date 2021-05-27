@@ -1,5 +1,4 @@
 require('dotenv').config();
-const fs = require('fs');
 const express = require('express');
 require('express-async-errors');
 const rateLimit = require('express-rate-limit');
