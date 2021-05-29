@@ -8,6 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  animation: 0.3s ease-in-out fade;
 
   &__content {
     padding: 16px;
@@ -20,6 +21,7 @@
       height: auto;
       min-width: 320px;
       border-radius: 10px;
+      animation: 0.3s ease-in-out expand;
     }
 
     @include viewport_mq7 {
