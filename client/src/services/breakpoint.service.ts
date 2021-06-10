@@ -31,34 +31,24 @@ export class BreakpointService {
   }
 
   private get mediaQueries(): MediaQuery[] {
-    const mediaQueries: MediaQuery[] = [];
-
-    Object.entries(BreakpointMapping)
-      .filter(([, value]) => !isNaN(Number(value)))
-      .forEach(([key, value], index, array) => {
-        switch (index) {
-          case array.length - 1: {
-            mediaQueries.push({
-              MQ: key,
-              query: `(min-width: ${value}px)`,
-            });
-
-            break;
-          }
-          default: {
-            mediaQueries.push({
-              MQ: key,
-              query: `(min-width: ${value}px) and (max-width: ${Number(array[index + 1][1]) - 1}px)`,
-            });
-          }
-        }
-      });
-
-    return mediaQueries;
+    return Object.entries(BreakpointMapping).reduce<MediaQuery[]>((acc, [key, value], i, arr) => {
+      if (i === arr.length - 1) {
+        acc.push({
+          MQ: key,
+          query: `(min-width: ${value}px)`,
+        });
+      } else {
+        acc.push({
+          MQ: key,
+          query: `(min-width: ${value}px) and (max-width: ${Number(arr[i + 1][1]) - 1}px)`,
+        });
+      }
+      return acc;
+    }, []);
   }
 
   private initListeners() {
-    this.mediaQueries.forEach(mediaQuery => {
+    for (const mediaQuery of this.mediaQueries) {
       const matcher: MediaQueryList = window.matchMedia(mediaQuery.query);
 
       matcher.addEventListener('change', event => {
@@ -70,6 +60,6 @@ export class BreakpointService {
       if (matcher.matches) {
         this.callback(mediaQuery.MQ);
       }
-    });
+    }
   }
 }
