@@ -1,6 +1,6 @@
 import { Component, Emit, Mixins, Prop, Ref, Watch } from 'vue-property-decorator';
 import ImageEditor from 'vue-image-markup';
-import { mapModule } from '@/store/namespaces';
+import { appModule, mapModule } from '@/store/namespaces';
 import { MapID } from '../MapPicker/MapPicker';
 import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
@@ -18,10 +18,12 @@ import SmartImage from '@/components/SmartImage/SmartImage.vue';
 })
 export default class DrawTool extends Mixins(CloseOnEscape) {
   @mapModule.State private currentMap!: MapID;
+  @appModule.Getter private isMobile!: boolean;
   @Ref() private editor!: any;
-  @Ref() private wrapper!: any;
+  @Ref() private wrapper!: HTMLDivElement;
   @Prop() private strat!: Strat;
   private canvas!: any;
+  private resizeObserver!: ResizeObserver;
   private activeTool = 'freeDrawing';
 
   private canvasWidth = 512;
@@ -52,26 +54,22 @@ export default class DrawTool extends Mixins(CloseOnEscape) {
     this.setTool('freeDrawing');
 
     this.setupEventlisteners();
-    this.setCanvasDynamicWidth();
+
+    this.setWrapperHeight();
+
+    this.resizeObserver = new ResizeObserver(() => this.setWrapperHeight());
+    this.resizeObserver.observe(this.wrapper);
   }
 
-  private setCanvasDynamicWidth() {
-    const dynamicWidth = this.wrapper.getBoundingClientRect().width + 'px';
-
-    const canvasContainer = document.querySelector('.canvas-container') as HTMLDivElement;
-    const lowerCanvas = document.querySelector('.lower-canvas') as HTMLCanvasElement;
-    const upperCanvas = document.querySelector('.upper-canvas') as HTMLCanvasElement;
-
-    canvasContainer.style.width = dynamicWidth;
-    canvasContainer.style.height = dynamicWidth;
-    lowerCanvas.style.width = dynamicWidth;
-    lowerCanvas.style.height = dynamicWidth;
-    upperCanvas.style.width = dynamicWidth;
-    upperCanvas.style.height = dynamicWidth;
+  private setWrapperHeight() {
+    //* temp fix. This method is called when modal is closed because resizeobserver is not disconnected soon enough
+    if (!this.wrapper) return;
+    this.wrapper.style.height = this.wrapper.getBoundingClientRect().width + 'px';
   }
 
   private beforeUnmount() {
     this.removeEventListeners();
+    this.resizeObserver.disconnect();
   }
 
   private loadData(newData: string) {

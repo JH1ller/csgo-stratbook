@@ -2,15 +2,20 @@
   $root: &;
   &__wrapper {
     width: 100%;
+
     position: relative;
 
     @include viewport_mq3 {
       width: 512px;
       height: 512px;
+      min-height: 512px;
     }
   }
 
   &__editor {
+    width: 100%;
+    height: 100%;
+
     & canvas {
       opacity: 0;
       transition: opacity 0.3s ease;
@@ -84,4 +89,16 @@
 
 .canvas-container {
   z-index: 1;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.lower-canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.upper-canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
