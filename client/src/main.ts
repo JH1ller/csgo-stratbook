@@ -56,6 +56,7 @@ import VueTippy, { TippyComponent } from 'vue-tippy';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 import { isDesktop } from './utils/isDesktop';
 import StorageService from './services/storage.service';
+import { BreakpointService } from './services/breakpoint.service';
 
 Vue.use(VueTippy, {
   directive: 'tippy',
@@ -126,6 +127,8 @@ window.debugMode = process.env.NODE_ENV === 'development' || !!localStorage.getI
 window.desktopMode = isDesktop();
 
 const storageService = StorageService.getInstance();
+
+new BreakpointService(MQ => store.dispatch('app/updateBreakpoint', MQ));
 
 const hasSession = !!storageService.get('has-session');
 

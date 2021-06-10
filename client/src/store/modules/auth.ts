@@ -93,7 +93,6 @@ export const authModule: Module<AuthState, RootState> = {
       storageService.set('userId', profile._id);
       if (profile.team) {
         WebSocketService.getInstance().connect();
-        trackingService.setUser(profile.name, { team: (rootState.team.teamInfo as Team)?.name });
       } else {
         WebSocketService.getInstance().disconnect(); // TODO: maybe find a way to call this earlier, because socket update will cause console error
       }

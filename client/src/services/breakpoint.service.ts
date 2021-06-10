@@ -1,0 +1,75 @@
+export enum Breakpoints {
+  MQ1 = 'MQ1',
+  MQ2 = 'MQ2',
+  MQ3 = 'MQ3',
+  MQ4 = 'MQ4',
+  MQ5 = 'MQ5',
+  MQ6 = 'MQ6',
+}
+
+export enum BreakpointMapping {
+  MQ1 = 0,
+  MQ2 = 480,
+  MQ3 = 768,
+  MQ4 = 1024,
+  MQ5 = 1280,
+  MQ6 = 1440,
+}
+
+export interface MediaQuery {
+  MQ: string;
+  query: string;
+}
+
+export class BreakpointService {
+  private callback: (MQ: string) => void;
+
+  constructor(callback: (MQ: string) => void) {
+    this.callback = callback;
+
+    this.initListeners();
+  }
+
+  private get mediaQueries(): MediaQuery[] {
+    const mediaQueries: MediaQuery[] = [];
+
+    Object.entries(BreakpointMapping)
+      .filter(([, value]) => !isNaN(Number(value)))
+      .forEach(([key, value], index, array) => {
+        switch (index) {
+          case array.length - 1: {
+            mediaQueries.push({
+              MQ: key,
+              query: `(min-width: ${value}px)`,
+            });
+
+            break;
+          }
+          default: {
+            mediaQueries.push({
+              MQ: key,
+              query: `(min-width: ${value}px) and (max-width: ${Number(array[index + 1][1]) - 1}px)`,
+            });
+          }
+        }
+      });
+
+    return mediaQueries;
+  }
+
+  private initListeners() {
+    this.mediaQueries.forEach(mediaQuery => {
+      const matcher: MediaQueryList = window.matchMedia(mediaQuery.query);
+
+      matcher.addEventListener('change', event => {
+        if (event.matches) {
+          this.callback(mediaQuery.MQ);
+        }
+      });
+
+      if (matcher.matches) {
+        this.callback(mediaQuery.MQ);
+      }
+    });
+  }
+}

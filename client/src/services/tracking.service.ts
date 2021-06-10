@@ -1,7 +1,7 @@
 import { Log } from '@/utils/logger';
 import splitbee from '@splitbee/web';
-import Analytics, { AnalyticsInstance } from 'analytics'
-import googleAnalytics from '@analytics/google-analytics'
+import Analytics, { AnalyticsInstance } from 'analytics';
+import googleAnalytics from '@analytics/google-analytics';
 import pkg from '../../package.json';
 import { GA_ID, SPLITBEE_ID } from '@/config';
 
@@ -27,20 +27,22 @@ export default class TrackingService {
     this.analyticsInstance = Analytics({
       app: 'cs-stratbook',
       version: pkg.version,
+      debug: process.env.NODE_ENV === 'development',
       plugins: [
         googleAnalytics({
           trackingId: GA_ID,
           ...(disableCookie && {
             cookieConfig: {
               storage: 'none',
-              storeGac: false
-            }
-          })
+              storeGac: false,
+            },
+          }),
         }),
-      ]
+      ],
     });
 
     this.initialized = true;
+    (window as any).ts = TrackingService.instance;
   }
 
   track(event: string, data?: Record<string, string | number | boolean>) {

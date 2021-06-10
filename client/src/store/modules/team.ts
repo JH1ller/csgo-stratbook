@@ -42,10 +42,11 @@ export const teamModule: Module<TeamState, RootState> = {
     },
   },
   actions: {
-    async fetchTeamInfo({ commit, dispatch }) {
+    async fetchTeamInfo({ commit, dispatch, state, rootState }) {
       const res = await api.team.getTeam();
       if (res.success) {
         commit(SET_TEAM_INFO, res.success);
+        trackingService.setUser(rootState.auth.profile?.name as string, { team: state.teamInfo?.name as string });
         await dispatch('auth/updateStatus', Status.LOGGED_IN_WITH_TEAM, { root: true });
         await dispatch('fetchTeamMembers');
         return { success: res.success };
