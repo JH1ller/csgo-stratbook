@@ -42,7 +42,7 @@ describe('CaptchaService', () => {
     expect(service).toBeDefined();
   });
 
-  it('verifyDisabledCheck', async () => {
+  it('verify disabled check', async () => {
     const module = await compileModule(() => ({
       hcaptcha: {
         secret: 'hello-world',

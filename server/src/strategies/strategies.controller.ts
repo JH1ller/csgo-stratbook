@@ -23,10 +23,10 @@ import { AddSharedStrategyDto } from './dto/add-shared-strategy.dto';
 
 import { StrategyItemResponse } from './responses/strategy-item.response';
 
+@ApiTags('Strategies')
 @Controller('strategies')
 @UseGuards(AuthenticatedGuard)
 @UseGuards(HasTeamGuard)
-@ApiTags('Strategies')
 export class StrategiesController {
   constructor(private readonly strategiesService: StrategiesService) {}
 
