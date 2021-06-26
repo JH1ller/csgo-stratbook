@@ -43,7 +43,7 @@ export class StrategiesController {
   }
 
   @Post()
-  @ApiBody({ description: 'Adds a new strategy', type: StrategyItemResponse })
+  @ApiOkResponse({ description: 'Adds a new strategy', type: StrategyItemResponse })
   public async addStrategy(@Req() req: Request, @Body() model: AddStrategyDto) {
     const teamId = req.user.team;
 
@@ -52,17 +52,21 @@ export class StrategiesController {
   }
 
   @Patch()
-  @ApiBody({ description: 'Updates strategy' })
-  @ApiOkResponse()
+  @ApiOkResponse({ description: 'Updates strategy' })
   @ApiNotFoundResponse()
   public async updateStrategy(@Req() req: Request, @Body() model: UpdateStrategyDto) {
     const id = new Types.ObjectId(model.id);
     const teamId = req.user.team;
 
     const strategy = await this.strategiesService.findByStrategyId(id);
+    console.log(strategy);
+
     if (!strategy || strategy.team !== teamId) {
       throw new NotFoundException('strategy not found!');
     }
+
+    const result = await this.strategiesService.updateStrategy(id, model);
+    console.log(result);
   }
 
   @Delete('/:id')
@@ -72,12 +76,13 @@ export class StrategiesController {
     const id = new Types.ObjectId(model.id);
     const teamId = req.user.team;
 
-    const strategy = await this.strategiesService.findById(id);
+    const strategy = await this.strategiesService.findByStrategyId(id);
     if (!strategy || strategy.team !== teamId) {
       throw new NotFoundException('strategy was not found');
     }
 
-    await this.strategiesService.deleteStrategyById(id);
+    const result = await this.strategiesService.deleteStrategyById(id);
+    console.log(result);
   }
 
   @Patch('/position')

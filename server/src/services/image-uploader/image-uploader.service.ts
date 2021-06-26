@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 
 import { ImageUploadJob } from './jobs/image-upload';
 
 @Injectable()
-export class ImageUploaderService {
+export class ImageUploaderService implements OnModuleDestroy {
   constructor(@InjectQueue('image-uploader') private readonly imageQueue: Queue<ImageUploadJob>) {}
+
+  public async onModuleDestroy() {
+    await this.shutdownQueue();
+  }
 
   public shutdownQueue() {
     return this.imageQueue.obliterate();

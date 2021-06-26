@@ -151,6 +151,10 @@ export class StrategiesService {
       diff.name = model.name;
     }
 
+    if (model.note) {
+      diff.note = model.note;
+    }
+
     if (model.side) {
       diff.side = model.side;
     }
@@ -167,9 +171,35 @@ export class StrategiesService {
       diff.videoLink = model.videoLink;
     }
 
-    if (model.note) {
-      diff.note = model.note;
+    if (model.content) {
+      diff.content = model.content;
     }
+
+    if (model.shared) {
+      diff.shared = model.shared;
+    }
+
+    const setObject: Record<string, unknown> = {};
+
+    for (const i in diff) {
+      setObject[`strategies.$.${i}`] = diff[i];
+    }
+
+    return this.strategyModel
+      .updateOne(
+        {
+          'strategies._id': strategyId,
+        },
+        {
+          $set: {
+            // 'strategies.$': diff,
+            'strategies.$.content': model.content,
+            'strategies.$.shared': model.shared,
+            'strategies.$.note': model.note,
+          },
+        }
+      )
+      .exec();
   }
 
   /**

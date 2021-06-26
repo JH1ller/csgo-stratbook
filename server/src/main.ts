@@ -34,15 +34,7 @@ export class ServerEntry {
 
   private ioAdapter: IoAdapter;
 
-  private sessionConnection: MongoClient;
-
-  /**
-   * Constructor used, to assigned an already created nest application.
-   * Used to set app to testing fixtures.
-   */
-  constructor(testFixture?: INestApplication) {
-    this.app = testFixture;
-  }
+  // private sessionConnection: MongoClient;
 
   /**
    * Actual entry point for full server execution.
@@ -53,57 +45,15 @@ export class ServerEntry {
         `git-commit: ${chalk.magenta(process.env.GIT_VERSION)} (${chalk.magenta(process.env.GIT_AUTHOR_DATE)})`
     );
 
-    if (this.app) {
-      throw new Error('do not use bootstrap with test fixtures!');
-    }
-
     this.app = await NestFactory.create<NestExpressApplication>(AppModule, {});
 
-    // configure nest application
-    await this.configure();
-
-    if (isDevEnv()) {
-      this.useSwagger();
+    if (process.env.STANDALONE_BUILD) {
+      this.app.enableShutdownHooks();
     }
 
-    // all executed methods log output to console
-    // mongoose.set('debug', true);
-
-    const configService = this.app.get(ConfigService);
-    const port = configService.get<number>('port');
-    await this.app.listen(port);
-
-    this.logger.debug(chalk.cyan(`Application is running on: ${chalk.magenta(await this.app.getUrl())}`));
-  }
-
-  public async dispose() {
-    await this.app.close();
-
-    // dispose worker queues
-    const service = this.app.get(ImageUploaderService);
-    await service.shutdownQueue();
-
-    // dispose bulljs redis connections
-    const bullConfig = this.app.get(BullConfigService);
-    bullConfig.closeConnections();
-
-    // shutdown all mongoose connections
-    await Promise.all(mongoose.connections.map((con) => con.close()));
-    await mongoose.disconnect();
-
-    // dispose session-store mongodb connection
-    await this.sessionConnection.close();
-  }
-
-  /**
-   * Configure app.
-   * Split to allow code sharing between the actual server application and test fixtures.
-   */
-  public async configure() {
+    // configure nest application
     // set all routes to /api/<controller_name>
     this.app.setGlobalPrefix('api');
-
-    this.app.enableShutdownHooks();
 
     const configService = this.app.get(ConfigService);
 
@@ -125,21 +75,21 @@ export class ServerEntry {
     // parse application/json
     this.app.use(json());
 
-    // setup session-storage
-    this.sessionConnection = await MongoClient.connect(configService.get<string>('database.url'), {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    // // setup session-storage
+    // this.sessionConnection = await MongoClient.connect(configService.get<string>('database.url'), {
+    //   useNewUrlParser: true,
+    //   useUnifiedTopology: true,
+    // });
 
-    // don't merge mongoStore with session({}) as this causes resource leaks in jest
-    // todo: investigate why...
-    const mongoStore = MongoStore.create({
-      client: this.sessionConnection,
-      collectionName: 'sessions',
-      ttl: 14 * 24 * 60 * 60, // = 14 days. Default
-      autoRemove: 'interval',
-      autoRemoveInterval: 10, // In minutes. Default
-    });
+    // // don't merge mongoStore with session({}) as this causes resource leaks in jest
+    // // todo: investigate why...
+    // const mongoStore = MongoStore.create({
+    //   client: this.sessionConnection,
+    //   collectionName: 'sessions',
+    //   ttl: 14 * 24 * 60 * 60, // = 14 days. Default
+    //   autoRemove: 'interval',
+    //   autoRemoveInterval: 10, // In minutes. Default
+    // });
 
     this.app.use(
       session({
@@ -147,7 +97,12 @@ export class ServerEntry {
         secret: configService.get<string>('session.secret'),
         resave: false,
         saveUninitialized: false,
-        store: mongoStore,
+        store: MongoStore.create({
+          mongoUrl: configService.get<string>('database.url'),
+          collectionName: 'sessions',
+          autoRemove: 'interval',
+          ttl: 14 * 24 * 60 * 60, // = 14 days. Default
+        }),
         cookie: {
           maxAge: configService.get<number>('session.cookie.ttl'),
           httpOnly: true,
@@ -181,6 +136,37 @@ export class ServerEntry {
       credentials: true,
       origin: true,
     });
+
+    if (isDevEnv()) {
+      this.useSwagger();
+    }
+
+    // all executed methods log output to console
+    mongoose.set('debug', true);
+
+    const port = configService.get<number>('port');
+    await this.app.listen(port);
+
+    this.logger.debug(chalk.cyan(`Application is running on: ${chalk.magenta(await this.app.getUrl())}`));
+  }
+
+  public async dispose() {
+    await this.app.close();
+
+    // dispose worker queues
+    const service = this.app.get(ImageUploaderService);
+    await service.shutdownQueue();
+
+    // dispose bulljs redis connections
+    const bullConfig = this.app.get(BullConfigService);
+    bullConfig.closeConnections();
+
+    // shutdown all mongoose connections
+    await Promise.all(mongoose.connections.map((con) => con.close()));
+    await mongoose.disconnect();
+
+    // dispose session-store mongodb connection
+    // await this.sessionConnection.close();
   }
 
   private useSwagger() {

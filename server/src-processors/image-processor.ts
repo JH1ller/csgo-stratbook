@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import fs from 'fs';
 import { unlink } from 'fs/promises';
 import path from 'path';
@@ -115,3 +116,5 @@ export default async (job: Job<ImageUploadJob>) => {
     stream.destroy();
   }
 };
+
+console.log(chalk.green(`[image-processor] launched with pid: ${process.pid}`));

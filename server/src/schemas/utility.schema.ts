@@ -8,12 +8,7 @@ import { UtilityDataSchema, UtilityData } from './utility-data.schema';
  * Utility schema
  * be careful, updating fields here as aggregation is uses on this schema
  */
-@Schema({
-  timestamps: {
-    createdAt: 'createdAt',
-    updatedAt: 'modifiedAt',
-  },
-})
+@Schema()
 export class Utility {
   @Prop({
     type: Types.ObjectId,

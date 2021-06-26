@@ -4,12 +4,7 @@ import { Types, Document } from 'mongoose';
 import { GameMap } from './enums';
 import { StrategyData, StrategyDataSchema } from './strategy-data.schema';
 
-@Schema({
-  timestamps: {
-    createdAt: 'createdAt',
-    updatedAt: 'modifiedAt',
-  },
-})
+@Schema()
 export class Strategy {
   @Prop({
     required: true,
