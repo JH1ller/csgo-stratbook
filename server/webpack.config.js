@@ -13,6 +13,10 @@ function git(command) {
   return child_process.execSync(`git ${command}`, { encoding: 'utf8' }).trim();
 }
 
+/**
+ * @param {Record<string, unknown>} env
+ * @returns {webpack.Configuration}
+ */
 module.exports = (env) => {
   // default object
   env = env || {};
@@ -33,7 +37,7 @@ module.exports = (env) => {
     devtool: 'source-map',
 
     entry: {
-      server: isStandalone ? './src/main.ts' : ['webpack/hot/poll?100', './src/main.ts'],
+      server: isDevBuild ? ['webpack/hot/poll?100', './src/main.ts'] : './src/main.ts',
       'image-processor': './src-processors/image-processor.ts',
     },
 
@@ -59,11 +63,7 @@ module.exports = (env) => {
 
     externals: [
       NodeExternals({
-        allowlist: [
-          'webpack/hot/poll?100',
-          'tslib',
-          /^lodash-es/,
-        ],
+        allowlist: ['webpack/hot/poll?100', 'tslib', /^lodash-es/],
       }),
     ],
 
@@ -142,22 +142,22 @@ module.exports = (env) => {
       }),
 
       new webpack.EnvironmentPlugin({
-        BUILD_TIME: JSON.stringify(new Date().toLocaleString()),
+        BUILD_TIME: new Date().toLocaleString(),
 
         GIT_VERSION: git('describe --always'),
         GIT_AUTHOR_DATE: git('log -1 --format=%aI'),
       }),
 
       new CaseSensitivePathsPlugin(),
-      new ForkTsCheckerWebpackPlugin({
-        eslint: {
-          // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
-          files: [
-            './src/**/*.{ts,tsx,js,jsx}',
-            './src-processors/**/*.{ts,tsx,js,jsx}',
-          ],
-        },
-      }),
+      // new ForkTsCheckerWebpackPlugin({
+      //   eslint: {
+      //     // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
+      //     files: [
+      //       './src/**/*.{ts,tsx,js,jsx}',
+      //       './src-processors/**/*.{ts,tsx,js,jsx}',
+      //     ],
+      //   },
+      // }),
 
       new webpack.WatchIgnorePlugin({
         paths: [
@@ -166,21 +166,28 @@ module.exports = (env) => {
           path.resolve(__dirname, './test'),
         ],
       }),
-    ].concat(
-      isStandalone
-        ? [
-            new webpack.EnvironmentPlugin({
-              STANDALONE_BUILD: JSON.stringify(true),
-            }),
-          ]
-        : [
-            // hot reload specific plugins
-            new webpack.HotModuleReplacementPlugin(),
+    ]
+      .concat(
+        isDevBuild
+          ? [
+              // hot reload specific plugins
+              new webpack.HotModuleReplacementPlugin(),
 
-            new WebpackWatchSandboxPlugin({
-              name: 'server.js',
-            }),
-          ]
-    ),
+              // used to disable auto watcher in jest
+              new WebpackWatchSandboxPlugin({
+                name: 'server.js',
+              }),
+            ]
+          : []
+      )
+      .concat(
+        isStandalone
+          ? [
+              new webpack.EnvironmentPlugin({
+                STANDALONE_BUILD: JSON.stringify(isStandalone),
+              }),
+            ]
+          : []
+      ),
   };
 };

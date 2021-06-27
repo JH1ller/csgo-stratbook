@@ -5,5 +5,8 @@
     "src/**/*.ts",
     "src-processors/**/*.ts",
     "test/**/*.ts",
+    "jest.integration.global-setup.ts",
+    "jest.integration.config.ts",
+    "jest.integration.global-teardown.ts"
   ]
 }

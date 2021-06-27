@@ -16,7 +16,6 @@ import MongoStore from 'connect-mongo';
 import helmet from 'helmet';
 import passport from 'passport';
 import mongoose from 'mongoose';
-import { MongoClient } from 'mongodb';
 
 import { AppModule } from './app.module';
 import { isDevEnv } from './common/env';
@@ -34,7 +33,7 @@ export class ServerEntry {
 
   private ioAdapter: IoAdapter;
 
-  // private sessionConnection: MongoClient;
+  private mongoStore: MongoStore;
 
   /**
    * Actual entry point for full server execution.
@@ -75,21 +74,12 @@ export class ServerEntry {
     // parse application/json
     this.app.use(json());
 
-    // // setup session-storage
-    // this.sessionConnection = await MongoClient.connect(configService.get<string>('database.url'), {
-    //   useNewUrlParser: true,
-    //   useUnifiedTopology: true,
-    // });
-
-    // // don't merge mongoStore with session({}) as this causes resource leaks in jest
-    // // todo: investigate why...
-    // const mongoStore = MongoStore.create({
-    //   client: this.sessionConnection,
-    //   collectionName: 'sessions',
-    //   ttl: 14 * 24 * 60 * 60, // = 14 days. Default
-    //   autoRemove: 'interval',
-    //   autoRemoveInterval: 10, // In minutes. Default
-    // });
+    this.mongoStore = MongoStore.create({
+      mongoUrl: configService.get<string>('database.url'),
+      collectionName: 'sessions',
+      autoRemove: 'interval',
+      ttl: 14 * 24 * 60 * 60, // = 14 days. Default
+    });
 
     this.app.use(
       session({
@@ -97,12 +87,7 @@ export class ServerEntry {
         secret: configService.get<string>('session.secret'),
         resave: false,
         saveUninitialized: false,
-        store: MongoStore.create({
-          mongoUrl: configService.get<string>('database.url'),
-          collectionName: 'sessions',
-          autoRemove: 'interval',
-          ttl: 14 * 24 * 60 * 60, // = 14 days. Default
-        }),
+        store: this.mongoStore,
         cookie: {
           maxAge: configService.get<number>('session.cookie.ttl'),
           httpOnly: true,
@@ -151,6 +136,8 @@ export class ServerEntry {
   }
 
   public async dispose() {
+    this.logger.debug('service is going down...');
+
     await this.app.close();
 
     // dispose worker queues
@@ -166,7 +153,10 @@ export class ServerEntry {
     await mongoose.disconnect();
 
     // dispose session-store mongodb connection
-    // await this.sessionConnection.close();
+    await this.mongoStore.close();
+
+    // wait a bit, until all queues are flushed out
+    await new Promise((resolve) => setTimeout(resolve, 2000));
   }
 
   private useSwagger() {
@@ -187,16 +177,15 @@ export class ServerEntry {
 }
 
 /**
- * this export, for webpack-watch-sandbox.js
+ * export entry point factory
  */
 export default () => new ServerEntry();
 
 if (process.env.STANDALONE_BUILD) {
   const entry = new ServerEntry();
 
-  entry
-    .bootstrap() // launch app entry
-    .catch((err) => console.log(chalk.red(`failed to start service ${err as string}`)));
+  // launch server
+  void entry.bootstrap();
 }
 
 if (module.hot) {

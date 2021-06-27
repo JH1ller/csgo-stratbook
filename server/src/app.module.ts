@@ -13,7 +13,6 @@ import { UsersModule } from './users/users.module';
 import { TeamsModule } from './teams/teams.module';
 import { StrategiesModule } from './strategies/strategies.module';
 import { UtilitiesModule } from './utilities/utilities.module';
-import { LandingModule } from './landing/landing.module';
 import { DrawToolModule } from './draw-tool/draw-tool.module';
 import { AdministrationModule } from './administration/administration.module';
 
@@ -59,7 +58,6 @@ import { ResourceManagerModule } from './services/resource-manager/resource-mana
     StrategiesModule,
     TeamsModule,
     UtilitiesModule,
-    LandingModule,
     DrawToolModule,
     AdministrationModule,
   ],

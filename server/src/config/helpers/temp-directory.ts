@@ -44,7 +44,7 @@ export function resolvePrepareDirectory(dir: string) {
     // directory doesn't exist, create one
     fs.mkdirSync(resolved, { recursive: true });
   } else {
-    Logger.debug(`Deleting files from temp directory: ${resolved}`, 'temp-directory');
+    Logger.debug(`Deleting files in temp directory: ${resolved}`, 'TempDirectory');
 
     // delete single files instead of deleting the whole directory,
     // to prevent double reloading of webpack in watch mode.

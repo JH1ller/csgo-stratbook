@@ -74,7 +74,6 @@ module.exports = {
     'prefer-promise-reject-errors': 'off',
     semi: ['error', 'always'],
     '@typescript-eslint/semi': ['error', 'always'],
-    'space-before-function-paren': 'off',
     'no-void': 'off',
     '@typescript-eslint/no-inferrable-types': 0,
     'no-unused-vars': 'off',
@@ -92,7 +91,7 @@ module.exports = {
     'space-before-function-paren': [
       'error',
       {
-        anonymous: 'never',
+        anonymous: 'always',
         named: 'never',
         asyncArrow: 'always',
       },

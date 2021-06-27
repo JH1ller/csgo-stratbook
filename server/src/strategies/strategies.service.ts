@@ -179,11 +179,11 @@ export class StrategiesService {
       diff.shared = model.shared;
     }
 
-    const setObject: Record<string, unknown> = {};
+    // const setObject: Record<string, unknown> = {};
 
-    for (const i in diff) {
-      setObject[`strategies.$.${i}`] = diff[i];
-    }
+    // for (const i in diff) {
+    //   setObject[`strategies.$.${i}`] = diff[i];
+    // }
 
     return this.strategyModel
       .updateOne(
