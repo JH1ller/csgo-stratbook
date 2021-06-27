@@ -83,8 +83,8 @@ export class UsersController implements OnModuleInit {
   @Post('register')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('avatar'))
-  @ApiCreatedResponse({ type: RegisterUserResponse })
   @ApiBody({ description: 'Register new user', type: RegisterUserDto })
+  @ApiCreatedResponse({ type: RegisterUserResponse })
   public async registerUser(@Body() model: RegisterUserDto, @UploadedFile() file: Express.Multer.File) {
     let avatar: string;
     if (file) {

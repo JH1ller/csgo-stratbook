@@ -16,6 +16,7 @@ import MongoStore from 'connect-mongo';
 import helmet from 'helmet';
 import passport from 'passport';
 import mongoose from 'mongoose';
+import { Express } from 'express';
 
 import { AppModule } from './app.module';
 import { isDevEnv } from './common/env';
@@ -90,9 +91,11 @@ export class ServerEntry {
         store: this.mongoStore,
         cookie: {
           maxAge: configService.get<number>('session.cookie.ttl'),
+
           httpOnly: true,
-          // disable https only cookie in dev mode
-          secure: !isDevEnv(),
+
+          // disable secure cookies as this site is only served by a proxy
+          secure: false,
         },
       })
     );
