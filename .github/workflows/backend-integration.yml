@@ -45,7 +45,9 @@ jobs:
         mongodb-version: ${{ matrix.mongodb-version }}
         mongodb-port: 27018
     - name: setup environment
-      uses: c-py/action-dotenv-to-setenv@v3
+      uses: falti/dotenv-action@v0.2.5
+      with:
+        path: './server/.env.example'
     - name: run integration
       working-directory: ./server
       run: | 
