@@ -5,8 +5,9 @@ name: Server Integration CI
 
 on:
   push:
-    branches:
-    - nest_backend
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build:
