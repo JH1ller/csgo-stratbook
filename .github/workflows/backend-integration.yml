@@ -3,9 +3,11 @@ name: Server Integration CI
 on:
   push:
     branches:
+    - master
     - 'nest_backend'
   pull_request:
     branches:
+    - master
     - 'nest_backend'
 
 jobs:
