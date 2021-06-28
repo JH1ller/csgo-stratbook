@@ -3,10 +3,10 @@ name: Server Integration CI
 on:
   push:
     branches:
-    - 'nest_backend'
+    - nest_backend
   pull_request:
     branches:
-    - 'nest_backend'
+    - nest_backend
 
 jobs:
   build:
@@ -44,7 +44,7 @@ jobs:
       with:
         mongodb-version: ${{ matrix.mongodb-version }}
         mongodb-port: 27018
-        
+    - run: cd /server
     - run: npm ci
     - run: npm run test:integration
     - run: npm run deploy
