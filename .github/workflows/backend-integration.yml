@@ -52,6 +52,7 @@ jobs:
       working-directory: ./server
       run: | 
         ls -l
+        printenv
         npm ci
         npm run test:integration
         npm run deploy
