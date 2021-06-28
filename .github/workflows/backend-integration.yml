@@ -46,8 +46,6 @@ jobs:
         mongodb-port: 27018
     - name: setup environment
       uses: c-py/action-dotenv-to-setenv@v3
-      with:
-        env-file: './server/.env.example'
     - name: run integration
       working-directory: ./server
       run: | 
