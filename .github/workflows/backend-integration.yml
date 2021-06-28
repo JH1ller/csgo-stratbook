@@ -44,15 +44,11 @@ jobs:
       with:
         mongodb-version: ${{ matrix.mongodb-version }}
         mongodb-port: 27018
-    - name: setup environment
-      uses: falti/dotenv-action@v0.2.5
-      with:
-        path: './server/.env.example'
     - name: run integration
       working-directory: ./server
       run: | 
         ls -l
-        printenv
+        cp ./.env.example ./.env
         npm ci
         npm run test:integration
         npm run deploy
