@@ -44,6 +44,10 @@ jobs:
       with:
         mongodb-version: ${{ matrix.mongodb-version }}
         mongodb-port: 27018
+    - name: setup environment
+      uses: c-py/action-dotenv-to-setenv@v2
+      with:
+        env-file: ./server/.env.example
     - name: run integration
       working-directory: ./server
       run: | 
@@ -51,3 +55,5 @@ jobs:
         npm ci
         npm run test:integration
         npm run deploy
+
+
