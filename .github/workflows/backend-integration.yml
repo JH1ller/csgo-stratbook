@@ -47,7 +47,7 @@ jobs:
     - name: setup environment
       uses: c-py/action-dotenv-to-setenv@v3
       with:
-        env-file: ./server/.env.example
+        env-file: './server/.env.example'
     - name: run integration
       working-directory: ./server
       run: | 
