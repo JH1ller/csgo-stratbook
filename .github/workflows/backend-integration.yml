@@ -1,0 +1,50 @@
+name: Server Integration CI
+
+on:
+  push:
+    branches:
+    - 'nest_backend'
+  pull_request:
+    branches:
+    - 'nest_backend'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        mongodb-version: ['4.4']
+    
+    services:
+      # Label used to access the service container
+      redis:
+        # Docker Hub image
+        image: redis
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps port 6379 on service container to the host
+          - 6379:6379
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+    
+    - name: Start MongoDB
+      uses: supercharge/mongodb-github-action@1.6.0
+      with:
+        mongodb-version: ${{ matrix.mongodb-version }}
+        mongodb-port: 27018
+        
+    - run: npm ci
+    - run: npm run test:integration
+    - run: npm run deploy
