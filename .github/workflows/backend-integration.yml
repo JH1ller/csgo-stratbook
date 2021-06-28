@@ -45,6 +45,7 @@ jobs:
         mongodb-version: ${{ matrix.mongodb-version }}
         mongodb-port: 27018
     - run: cd ./server
+    - run: ls -l
     - run: npm ci
     - run: npm run test:integration
     - run: npm run deploy
