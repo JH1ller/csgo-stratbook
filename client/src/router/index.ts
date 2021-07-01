@@ -98,6 +98,4 @@ const router = new VueRouter({
   routes,
 });
 
-router.afterEach(() => trackingService.page());
-
 export default router;

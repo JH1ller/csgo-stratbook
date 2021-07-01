@@ -15,6 +15,7 @@ export interface Utility extends Model {
   jump: boolean;
   movement: UtilityMovement;
   videoLink?: string;
+  setpos?: string;
   description?: string;
   createdBy: string;
   createdAt: Date;

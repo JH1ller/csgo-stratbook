@@ -64,11 +64,11 @@ export const filterModule: Module<FilterState, RootState> = {
     },
     updateStratTypeFilter({ commit }, value: StratTypes | null) {
       commit(SET_STRAT_TYPE_FILTER, value);
-      trackingService.track('filter:strat-type');
+      trackingService.track('Filter: Strat Type', { value: value as string });
     },
     updateStratSideFilter({ commit }, value: Sides | null) {
       commit(SET_STRAT_SIDE_FILTER, value);
-      trackingService.track('filter:strat-side');
+      trackingService.track('Filter: Strat Side', { value: value as string });
     },
     updateStratNameFilter({ commit }, value: string) {
       commit(SET_STRAT_NAME_FILTER, value);
@@ -78,15 +78,14 @@ export const filterModule: Module<FilterState, RootState> = {
       commit(SET_STRAT_TYPE_FILTER, null);
       commit(SET_STRAT_SIDE_FILTER, null);
       commit(SET_STRAT_NAME_FILTER, '');
-      trackingService.track('filter:strat-clear');
     },
     updateUtilityTypeFilter({ commit }, value: UtilityTypes | null) {
       commit(SET_UTILITY_TYPE_FILTER, value);
-      trackingService.track('filter:utility-type');
+      trackingService.track('Filter: Utility Type', { value: value as string });
     },
     updateUtilitySideFilter({ commit }, value: Sides | null) {
       commit(SET_UTILITY_SIDE_FILTER, value);
-      trackingService.track('filter:utility-side');
+      trackingService.track('Filter: Utility Side', { value: value as string });
     },
     updateUtilityNameFilter({ commit }, value: string) {
       commit(SET_UTILITY_NAME_FILTER, value);
@@ -95,7 +94,6 @@ export const filterModule: Module<FilterState, RootState> = {
       commit(SET_UTILITY_TYPE_FILTER, null);
       commit(SET_UTILITY_SIDE_FILTER, null);
       commit(SET_UTILITY_NAME_FILTER, '');
-      trackingService.track('filter:utility-clear');
     },
     resetState({ commit }) {
       commit(RESET_STATE);

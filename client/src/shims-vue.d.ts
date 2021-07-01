@@ -13,6 +13,7 @@ declare module 'vue-image-markup';
 declare module 'vue-swatches';
 declare module 'vuex/dist/logger';
 declare module '@analytics/google-analytics';
+declare module '@analytics/google-tag-manager';
 
 declare module '*.json' {
   const value: { [key: string]: any };

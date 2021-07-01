@@ -70,6 +70,10 @@ const utilitySchema = new mongoose.Schema({
     type: String,
   },
 
+  setpos: {
+    type: String,
+  },
+
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Player',

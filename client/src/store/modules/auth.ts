@@ -24,7 +24,7 @@ export enum Status {
 export interface AuthState {
   status: Status;
   token: string;
-  profile: Player | Record<string, unknown>;
+  profile: Player | Record<string, any>;
 }
 
 const authInitialState = (): AuthState => ({
@@ -88,7 +88,7 @@ export const authModule: Module<AuthState, RootState> = {
     setProfile({ commit, rootState }, profile: Player) {
       commit(SET_PROFILE, profile);
       commit(SET_STATUS, profile.team ? Status.LOGGED_IN_WITH_TEAM : Status.LOGGED_IN_NO_TEAM);
-      trackingService.setUser(profile.name, { userId: profile._id, name: profile.name });
+      trackingService.identify(profile._id, profile.name);
       storageService.set('username', profile.name);
       storageService.set('userId', profile._id);
       if (profile.team) {
@@ -97,7 +97,7 @@ export const authModule: Module<AuthState, RootState> = {
         WebSocketService.getInstance().disconnect(); // TODO: maybe find a way to call this earlier, because socket update will cause console error
       }
     },
-    async login({ commit, dispatch }, { email, password }) {
+    async login({ commit, dispatch, state }, { email, password }) {
       const res = await api.auth.login(email, password);
       if (res.success) {
         commit(SET_TOKEN, res.success.token);
@@ -109,20 +109,22 @@ export const authModule: Module<AuthState, RootState> = {
         await dispatch('fetchProfile');
         storageService.set('has-session', '1');
         dispatch('app/showToast', { id: 'auth/login', text: 'Logged in successfully.' }, { root: true });
-        trackingService.track('auth:login', { email });
+        trackingService.track('Action: Login', { email, name: state.profile.name });
         setTimeout(() => dispatch('refresh'), TOKEN_TTL - 10000);
         return { success: true };
       } else {
         return { error: res.error };
       }
     },
-    async logout({ dispatch }) {
+    async logout({ dispatch, state }) {
+      trackingService.track('Action: Logout', { email: state.profile.email, name: state.profile.name });
       await api.auth.logout();
       dispatch('resetState', null, { root: true });
       WebSocketService.getInstance().disconnect();
       dispatch('app/showToast', { id: 'auth/logout', text: 'Logged out successfully.' }, { root: true });
     },
-    async deleteAccount({ dispatch }) {
+    async deleteAccount({ dispatch, state }) {
+      trackingService.track('Action: Delete Account', { email: state.profile.email, name: state.profile.name });
       await api.auth.deleteAccount();
       dispatch('resetState', null, { root: true });
       WebSocketService.getInstance().disconnect();
@@ -186,7 +188,7 @@ export const authModule: Module<AuthState, RootState> = {
           { id: 'auth/register', text: 'Registered successfully. A confirmation email has been sent.' },
           { root: true }
         );
-        trackingService.track('auth:register', {
+        trackingService.track('Action: Register', {
           email: formData.get('email') as string,
           name: formData.get('name') as string,
         });

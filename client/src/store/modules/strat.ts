@@ -70,18 +70,25 @@ export const stratModule: Module<StratState, RootState> = {
         return { error: res.error };
       }
     },
-    async deleteStrat({ dispatch }, stratID: string) {
+    async deleteStrat({ dispatch, state, rootState }, stratID: string) {
       const res = await api.strat.deleteStrat(stratID);
-      if (res.success) dispatch('app/showToast', { id: 'strat/deleteStrat', text: 'Deleted strat.' }, { root: true });
+      if (res.success) {
+        dispatch('app/showToast', { id: 'strat/deleteStrat', text: 'Deleted strat.' }, { root: true });
+        trackingService.track('Action: Delete Strat', {
+          name: state.strats.find(strat => strat._id === stratID)?.name as string,
+        });
+      }
     },
     async createStrat({ dispatch, rootState }, payload: Partial<Strat>) {
       const newStrat = { ...payload, map: rootState.map.currentMap };
       const res = await api.strat.createStrat(newStrat);
       if (res.success) {
         dispatch('app/showToast', { id: 'strat/createStrat', text: 'Added strat.' }, { root: true });
-        trackingService.track('strat:created', {
+        trackingService.track('Action: Create Strat', {
           name: payload.name!,
-          team: (rootState.team.teamInfo as Team)?.name,
+          type: payload.type!,
+          side: payload.side!,
+          note: payload.note!,
         });
         return res.success;
       }
@@ -89,15 +96,14 @@ export const stratModule: Module<StratState, RootState> = {
     updateStrat(_, payload: Partial<Strat>) {
       api.strat.updateStrat(payload);
     },
-    async shareStrat({ dispatch, state, rootState }, stratID: string) {
+    async shareStrat({ dispatch, state }, stratID: string) {
       const res = await api.strat.updateStrat({ _id: stratID, shared: true });
       if (res.success) {
         const shareLink = `${window.location.origin}/#/share/${stratID}`;
         navigator.clipboard.writeText(shareLink);
         dispatch('app/showToast', { id: 'strat/shareStrat', text: 'Copied share link to clipboard.' }, { root: true });
-        trackingService.track('strat:shared', {
+        trackingService.track('Action: Share Strat', {
           name: state.strats.find(strat => strat._id === stratID)?.name as string,
-          team: (rootState.team.teamInfo as Team)?.name,
         });
       }
     },
@@ -107,7 +113,7 @@ export const stratModule: Module<StratState, RootState> = {
         dispatch('app/showToast', { id: 'strat/unshareStrat', text: 'Strat is no longer shared.' }, { root: true });
       }
     },
-    async addSharedStrat({ dispatch, rootState }, stratID: string) {
+    async addSharedStrat({ dispatch, state }, stratID: string) {
       const res = await api.strat.addSharedStrat(stratID);
       if (res.success) {
         dispatch(
@@ -115,9 +121,8 @@ export const stratModule: Module<StratState, RootState> = {
           { id: 'strat/addedShared', text: 'Strat successfully added to your stratbook.' },
           { root: true }
         );
-        trackingService.track('strat:shared-added', {
-          stratID,
-          team: (rootState.team.teamInfo as Team)?.name,
+        trackingService.track('Action: Add Shared Strat', {
+          name: state.strats.find(strat => strat._id === stratID)?.name as string,
         });
       }
     },

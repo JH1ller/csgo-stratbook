@@ -14,7 +14,7 @@ const DELETE_TEAM_MEMBER = 'DELETE_TEAM_MEMBER';
 const RESET_STATE = 'RESET_STATE';
 
 export interface TeamState {
-  teamInfo: Team | Record<string, unknown>;
+  teamInfo: Team | Record<string, any>;
   teamMembers: Player[];
 }
 
@@ -46,7 +46,9 @@ export const teamModule: Module<TeamState, RootState> = {
       const res = await api.team.getTeam();
       if (res.success) {
         commit(SET_TEAM_INFO, res.success);
-        trackingService.setUser(rootState.auth.profile?.name as string, { team: state.teamInfo?.name as string });
+        trackingService.identify(rootState.auth.profile._id, rootState.auth.profile.name, {
+          team: state.teamInfo.name,
+        });
         await dispatch('auth/updateStatus', Status.LOGGED_IN_WITH_TEAM, { root: true });
         await dispatch('fetchTeamMembers');
         return { success: res.success };

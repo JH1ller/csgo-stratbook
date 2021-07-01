@@ -129,8 +129,8 @@ export default class StratsView extends Vue {
           this.showDialog({
             key: 'strats-view/confirm-tutorial',
             text: `Hey there! Looks like you just created your first strat.<br>You can now edit the content of the strat by clicking the blinking box.<br>
-              You can mention teammates with "<bold>@</bold>".<br>You can link utility from the nadebook with "<bold>#</bold>"<br>You can
-              link weapons or equipment with "<bold>/</bold>".`,
+              You can mention teammates with "<b>@</b>".<br>You can link utility from the nadebook with "<b>#</b>"<br>You can
+              link weapons or equipment with "<b>/</b>".`,
             resolveBtn: 'OK',
             confirmOnly: true,
             htmlMode: true,

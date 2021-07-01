@@ -9,6 +9,8 @@ import SmartImage from '@/components/SmartImage/SmartImage.vue';
 import isMobile from 'is-mobile';
 import { extractTimestamp, extractVideoId, getEmbedURL, getThumbnailURL } from '@/utils/youtubeUtils';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
+import { Toast } from '../ToastWrapper/ToastWrapper.models';
+import { appModule } from '@/store/namespaces';
 
 interface LightboxMedia {
   type: 'image' | 'video';
@@ -23,6 +25,7 @@ interface LightboxMedia {
   },
 })
 export default class UtilityLightbox extends Mixins(CloseOnEscape) {
+  @appModule.Action private showToast!: (toast: Toast) => void;
   @Prop() private utility!: Utility;
   private showCrosshair = false;
   private currentMediaIndex = 0;
@@ -36,8 +39,8 @@ export default class UtilityLightbox extends Mixins(CloseOnEscape) {
   private extractVideoId: typeof extractVideoId = extractVideoId;
   private extractTimestamp: typeof extractTimestamp = extractTimestamp;
 
-  private get currentMedia(): LightboxMedia {
-    return this.mediaList[this.currentMediaIndex] ?? { type: 'image', src: '' };
+  private get currentMedia(): LightboxMedia | undefined {
+    return this.mediaList[this.currentMediaIndex];
   }
 
   private get mediaList(): LightboxMedia[] {
@@ -79,5 +82,10 @@ export default class UtilityLightbox extends Mixins(CloseOnEscape) {
 
   private goPrev() {
     this.currentMediaIndex === 0 ? (this.currentMediaIndex = this.mediaList.length - 1) : this.currentMediaIndex--;
+  }
+
+  private copySetpos() {
+    navigator.clipboard.writeText(this.utility.setpos!);
+    this.showToast({ id: 'utilityLightbox/copySetpos', text: 'Setpos Command copied!' });
   }
 }
