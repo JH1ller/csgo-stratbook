@@ -32,6 +32,7 @@ router.post('/', verifyAuth, uploadMultiple('images'), async (req, res) => {
     jump: JSON.parse(req.body.jump),
     movement: req.body.movement,
     videoLink: req.body.videoLink,
+    setpos: req.body.setpos,
     description: req.body.description,
     team: res.player.team,
     createdBy: res.player._id,
@@ -67,6 +68,7 @@ router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, 
     'description',
     'shared',
     'videoLink',
+    'setpos',
   ];
   Object.entries(req.body).forEach(([key, value]) => {
     // check for undefined / null, but accept empty string ''

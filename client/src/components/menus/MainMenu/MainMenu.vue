@@ -11,12 +11,7 @@
         <span class="main-menu__label main-menu__logo-label">{{ appName }}</span>
       </router-link>
 
-      <router-link
-        v-for="(item, index) in menuItems"
-        :to="item.link"
-        class="main-menu__list-item"
-        :key="item.label"
-      >
+      <router-link v-for="(item, index) in menuItems" :to="item.link" class="main-menu__list-item" :key="item.label">
         <fa-icon :icon="item.icon" class="main-menu__icon" />
         <span class="main-menu__label" :style="{ transitionDelay: '0.' + index + 's' }">{{ item.label }}</span>
       </router-link>
@@ -52,7 +47,7 @@
         <span></span>
       </div>
     </div>
-    <FeedbackFish projectId="092eb5ee119a8c" />
+    <!-- <FeedbackFish projectId="092eb5ee119a8c" /> -->
   </div>
 </template>
 

@@ -24,10 +24,14 @@ export default class UtilityItem extends Vue {
   private getThumbnailURL: typeof getThumbnailURL = getThumbnailURL;
   private extractVideoId: typeof extractVideoId = extractVideoId;
 
-  private get utilityImage(): string {
-    return this.utility.images.length
-      ? resolveStaticImageUrl(this.utility.images[0])
-      : getThumbnailURL(extractVideoId(this.utility.videoLink!)!) ?? '';
+  private get utilityImage(): string | undefined {
+    if (this.utility.images.length) {
+      return resolveStaticImageUrl(this.utility.images[0]);
+    }
+
+    if (this.utility.videoLink) {
+      return getThumbnailURL(extractVideoId(this.utility.videoLink)!);
+    }
   }
 
   @Emit()

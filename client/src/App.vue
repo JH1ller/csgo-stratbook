@@ -25,12 +25,14 @@ import MainMenu from '@/components/menus/MainMenu/MainMenu.vue';
 import DialogWrapper from './components/DialogWrapper/DialogWrapper.vue';
 import CookieBanner from './components/CookieBanner/CookieBanner.vue';
 import pkg from '../package.json';
-import { appModule } from './store/namespaces';
+import { appModule, teamModule } from './store/namespaces';
 import TrackingService from '@/services/tracking.service';
 import { Dialog } from './components/DialogWrapper/DialogWrapper.models';
 import { catchPromise } from './utils/catchPromise';
 import StorageService from './services/storage.service';
 import { gt, major, minor } from 'semver';
+import { Breakpoints } from './services/breakpoint.service';
+import { Team } from './api/models/Team';
 
 @Component({
   components: {
@@ -48,6 +50,8 @@ export default class App extends Vue {
 
   @appModule.State latency!: number;
   @appModule.State gameMode!: boolean;
+  @appModule.State breakpoint!: Breakpoints;
+  @teamModule.State teamInfo!: Team;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
 
   private menuOpen: boolean = false;
@@ -90,7 +94,7 @@ export default class App extends Vue {
       catchPromise(
         this.showDialog({
           key: 'app/update-notice',
-          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><br/><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Stratbook 1.8.0 is out 🙌 The update includes some quality of life features including<br>👥 insert rows for each member of the team<br>↔️ make strats collapsable/expandable<br>🎯 Focus Mode<br>⌨️ Shortcuts (E = expand, C = collapse, F = filters, + = Add strat, CTRL + F = Focus Mode) <a href="https://t.co/MFKi1KQPxA">pic.twitter.com/MFKi1KQPxA</a></p>&mdash; Stratbook (@csgostratbook) <a href="https://twitter.com/csgostratbook/status/1391364354545700865?ref_src=twsrc%5Etfw">May 9, 2021</a></blockquote>`,
+          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1>`,
           resolveBtn: 'OK',
           confirmOnly: true,
           htmlMode: true,
@@ -130,7 +134,7 @@ export default class App extends Vue {
   }
 
   private initTracking(disableCookie = false) {
-    this.trackingService.init(disableCookie);
+    this.trackingService.init(disableCookie, { breakpoint: this.breakpoint, team: this.teamInfo.name });
   }
 
   private closeMenu() {
@@ -204,6 +208,10 @@ export default class App extends Vue {
 .v-context {
   & > li {
     cursor: pointer;
+
+    &.hidden {
+      display: none;
+    }
 
     & > a {
       height: 36px;

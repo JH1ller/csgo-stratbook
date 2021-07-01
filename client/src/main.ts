@@ -49,6 +49,9 @@ import {
   faCompressAlt,
   faExpandAlt,
   faCrosshairs,
+  faExpand,
+  faMapMarkerAlt,
+  faPhotoVideo,
 } from '@fortawesome/free-solid-svg-icons';
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -116,7 +119,10 @@ library.add(
   faThList,
   faCompressAlt,
   faExpandAlt,
-  faCrosshairs
+  faCrosshairs,
+  faExpand,
+  faMapMarkerAlt,
+  faPhotoVideo
 );
 
 Vue.component('fa-icon', FontAwesomeIcon);

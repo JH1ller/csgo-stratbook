@@ -1,14 +1,14 @@
 import { Log } from '@/utils/logger';
 import splitbee from '@splitbee/web';
-import Analytics, { AnalyticsInstance } from 'analytics';
-import googleAnalytics from '@analytics/google-analytics';
 import pkg from '../../package.json';
-import { GA_ID, SPLITBEE_ID } from '@/config';
-
+import { MXP_TOKEN, SPLITBEE_ID } from '@/config';
+import mixpanel from 'mixpanel-browser';
+import { Breakpoints } from './breakpoint.service';
 export default class TrackingService {
   private static instance: TrackingService;
-  private analyticsInstance!: AnalyticsInstance;
   private initialized = false;
+  private breakpoint!: Breakpoints;
+  private team!: string;
 
   private constructor() {
     // private to prevent instantiation
@@ -21,52 +21,59 @@ export default class TrackingService {
     return TrackingService.instance;
   }
 
-  init(disableCookie = false) {
+  init(disableCookie = false, meta: { breakpoint: Breakpoints; team: string }) {
+    this.breakpoint = meta.breakpoint;
+    this.team = meta.team;
+
     splitbee.init({ disableCookie, token: SPLITBEE_ID });
 
-    this.analyticsInstance = Analytics({
-      app: 'cs-stratbook',
-      version: pkg.version,
+    mixpanel.init(MXP_TOKEN, {
       debug: process.env.NODE_ENV === 'development',
-      plugins: [
-        googleAnalytics({
-          trackingId: GA_ID,
-          ...(disableCookie && {
-            cookieConfig: {
-              storage: 'none',
-              storeGac: false,
-            },
-          }),
-        }),
-      ],
+      disable_cookie: disableCookie,
+      disable_persistence: disableCookie,
     });
 
+    Log.info('tracking:init', 'Tracking initialized');
+
     this.initialized = true;
-    (window as any).ts = TrackingService.instance;
   }
 
   track(event: string, data?: Record<string, string | number | boolean>) {
     if (!this.initialized) return;
 
-    if (window.splitbee) {
-      window.splitbee.track(event, data);
-      Log.info('tracking:track', event, data);
-    }
+    Log.info('tracking:track', event, data);
+
+    window.splitbee?.track(event, {
+      version: pkg.version,
+      appContext: window.desktopMode ? 'Electron' : 'Web',
+      breakpoint: this.breakpoint,
+      ...(this.team && { team: this.team }),
+      ...data,
+    });
+
+    mixpanel.track(event, {
+      version: pkg.version,
+      appContext: window.desktopMode ? 'Electron' : 'Web',
+      breakpoint: this.breakpoint,
+      ...(this.team && { team: this.team }),
+      ...data,
+    });
   }
 
-  page() {
-    this.analyticsInstance.page();
-  }
-
-  setUser(name: string, data: Record<string, string | number | boolean>) {
+  identify(id: string, name: string, data?: Record<string, unknown>) {
     if (!this.initialized) return;
 
-    if (window.splitbee) {
-      window.splitbee.user.set({ name, ...data, appContext: window.desktopMode ? 'Desktop App' : 'Web App' });
-    }
+    Log.info('tracking:identify', data);
 
-    this.analyticsInstance.identify(name, { ...data, appContext: window.desktopMode ? 'Desktop App' : 'Web App' });
+    window.splitbee?.user.set({
+      name,
+      userId: id,
+      appContext: window.desktopMode ? 'Desktop App' : 'Web App',
+      breakpoint: this.breakpoint,
+      ...(this.team && { team: this.team }),
+      ...data,
+    });
 
-    Log.info('tracking:setuser', data);
+    mixpanel.identify(id);
   }
 }
