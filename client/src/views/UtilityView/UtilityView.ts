@@ -1,6 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator';
 import MapPicker from '@/components/MapPicker/MapPicker.vue';
-import FloatingAdd from '@/components/FloatingAdd/FloatingAdd.vue';
+import FloatingButton from '@/components/FloatingButton/FloatingButton.vue';
 import UtilityForm from '@/components/UtilityForm/UtilityForm.vue';
 import UtilityList from '@/components/UtilityList/UtilityList.vue';
 import UtilityLightbox from '@/components/UtilityLightbox/UtilityLightbox.vue';
@@ -20,7 +20,7 @@ import ShortcutService from '@/services/shortcut.service';
 @Component({
   components: {
     MapPicker,
-    FloatingAdd,
+    FloatingButton,
     UtilityForm,
     UtilityList,
     UtilityLightbox,

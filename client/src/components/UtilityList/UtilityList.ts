@@ -4,6 +4,8 @@ import UtilityItem from '@/components/UtilityItem/UtilityItem.vue';
 import VueContext from 'vue-context';
 import { appModule } from '@/store/namespaces';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
+import TrackingService from '@/services/tracking.service';
+
 @Component({
   components: {
     UtilityItem,
@@ -14,6 +16,8 @@ export default class UtilityList extends Vue {
   @appModule.Action private showToast!: (toast: Toast) => void;
   @Prop() private utilities!: Utility[];
   @Ref() private menu!: any;
+
+  private trackingService = TrackingService.getInstance();
 
   @Emit()
   private openInLightbox(utility: Utility) {
@@ -38,6 +42,7 @@ export default class UtilityList extends Vue {
   private copySetpos(utility: Utility) {
     navigator.clipboard.writeText(utility.setpos!);
     this.showToast({ id: 'utilityList/copySetpos', text: 'Setpos Command copied!' });
+    this.trackingService.track('Action: Copy Setpos', { from: 'context-menu' });
   }
 
   private openMenu(e: Event, utility: Utility) {

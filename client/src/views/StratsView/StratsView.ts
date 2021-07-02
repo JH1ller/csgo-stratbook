@@ -1,4 +1,4 @@
-import { Component, Provide, Vue } from 'vue-property-decorator';
+import { Component, Provide, Ref, Vue } from 'vue-property-decorator';
 import MapPicker from '@/components/MapPicker/MapPicker.vue';
 import StratList from '@/components/StratList/StratList.vue';
 import FloatingButton from '@/components/FloatingButton/FloatingButton.vue';
@@ -19,6 +19,8 @@ import UtilityLightbox from '@/components/UtilityLightbox/UtilityLightbox.vue';
 import { Utility } from '@/api/models/Utility';
 import { catchPromise } from '@/utils/catchPromise';
 import ShortcutService from '@/services/shortcut.service';
+import { Sort } from '@/store/modules/strat';
+import TrackingService from '@/services/tracking.service';
 
 @Component({
   components: {
@@ -39,6 +41,7 @@ export default class StratsView extends Vue {
   @mapModule.State currentMap!: MapID;
   @stratModule.State collapsedStrats!: string[];
   @stratModule.State editedStrats!: string[];
+  @stratModule.State sort!: Sort;
   @stratModule.Getter sortedFilteredStratsOfCurrentMap!: Strat[];
   @filterModule.State stratFilters!: StratFilters;
   @filterModule.Getter activeStratFilterCount!: number;
@@ -63,10 +66,12 @@ export default class StratsView extends Vue {
   @stratModule.Action expandAll!: () => Promise<void>;
   @stratModule.Action toggleStratCollapse!: (stratID: string) => Promise<void>;
   @stratModule.Action updateEdited!: (payload: { stratID: string; value: boolean }) => Promise<void>;
+  @stratModule.Action updateSort!: (sort: Sort) => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
   @appModule.Action startGameMode!: () => Promise<void>;
   @appModule.Action exitGameMode!: () => Promise<void>;
 
+  @Ref() stratList!: Vue;
   private shortcutService = ShortcutService.getInstance();
 
   private stratFormOpen = false;
@@ -79,6 +84,10 @@ export default class StratsView extends Vue {
   private currentDrawToolStrat: Strat | null = null;
   private hasEditorFocus = false;
   private tutorialStrat: Strat | null = null;
+
+  private Sort: typeof Sort = Sort;
+
+  private trackingService = TrackingService.getInstance();
 
   private created() {
     this.shortcutService.add([
@@ -198,13 +207,7 @@ export default class StratsView extends Vue {
   private showDrawTool(strat: Strat) {
     this.currentDrawToolStrat = strat;
     this.drawToolOpen = true;
-  }
-
-  // * unused
-  private submitDrawing(data: Partial<Strat>) {
-    this.updateStrat(data);
-    this.currentDrawToolStrat = null;
-    this.drawToolOpen = false;
+    this.trackingService.track('Click: Show DrawTool', { strat: strat.name });
   }
 
   private toggleFilterMenu() {
@@ -213,5 +216,15 @@ export default class StratsView extends Vue {
 
   private toggleGameMode() {
     this.gameMode ? this.exitGameMode() : this.startGameMode();
+    this.trackingService.track('Action: Toggle GameMode', { value: this.gameMode });
+  }
+
+  private async toggleSort() {
+    await this.updateSort(this.sort === Sort.DateAddedASC ? Sort.DateAddedDESC : Sort.DateAddedASC);
+    // TODO: find better way
+    this.stratList.$forceUpdate();
+    this.trackingService.track('Action: Change Sort Direction', {
+      direction: this.sort === Sort.DateAddedASC ? 'Date Added ASC' : 'Date Added DESC',
+    });
   }
 }

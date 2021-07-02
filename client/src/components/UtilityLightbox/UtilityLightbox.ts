@@ -11,6 +11,7 @@ import { extractTimestamp, extractVideoId, getEmbedURL, getThumbnailURL } from '
 import CloseOnEscape from '@/mixins/CloseOnEscape';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import { appModule } from '@/store/namespaces';
+import TrackingService from '@/services/tracking.service';
 
 interface LightboxMedia {
   type: 'image' | 'video';
@@ -38,6 +39,8 @@ export default class UtilityLightbox extends Mixins(CloseOnEscape) {
   private getThumbnailURL: typeof getThumbnailURL = getThumbnailURL;
   private extractVideoId: typeof extractVideoId = extractVideoId;
   private extractTimestamp: typeof extractTimestamp = extractTimestamp;
+
+  private trackingService = TrackingService.getInstance();
 
   private get currentMedia(): LightboxMedia | undefined {
     return this.mediaList[this.currentMediaIndex];
@@ -87,5 +90,6 @@ export default class UtilityLightbox extends Mixins(CloseOnEscape) {
   private copySetpos() {
     navigator.clipboard.writeText(this.utility.setpos!);
     this.showToast({ id: 'utilityLightbox/copySetpos', text: 'Setpos Command copied!' });
+    this.trackingService.track('Action: Copy Setpos', { from: 'lightbox' });
   }
 }

@@ -52,6 +52,8 @@ import {
   faExpand,
   faMapMarkerAlt,
   faPhotoVideo,
+  faSortAmountUp,
+  faSortAmountDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -122,7 +124,9 @@ library.add(
   faCrosshairs,
   faExpand,
   faMapMarkerAlt,
-  faPhotoVideo
+  faPhotoVideo,
+  faSortAmountUp,
+  faSortAmountDown
 );
 
 Vue.component('fa-icon', FontAwesomeIcon);

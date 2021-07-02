@@ -6,6 +6,7 @@ import { Team } from '@/api/models/Team';
 import TrackingService from '@/services/tracking.service';
 import { extractTextFromHTML } from '@/utils/extractTextFromHTML';
 import StorageService from '@/services/storage.service';
+import { sortDateAddedASC, sortDateAddedDESC } from '@/utils/sortFunctions';
 
 const SET_STRATS = 'SET_STRATS';
 
@@ -14,19 +15,27 @@ const UPDATE_STRAT = 'UPDATE_STRAT';
 const DELETE_STRAT = 'DELETE_STRAT';
 const SET_COLLAPSED = 'SET_COLLAPSED';
 const SET_EDITED = 'SET_EDITED';
+const SET_SORT = 'SET_SORT';
 
 const RESET_STATE = 'RESET_STATE';
+
+export enum Sort {
+  DateAddedASC,
+  DateAddedDESC,
+}
 
 export interface StratState {
   strats: Strat[];
   collapsedStrats: string[];
   editedStrats: string[];
+  sort: Sort;
 }
 
 const stratInitialState = (): StratState => ({
   strats: [],
   collapsedStrats: [],
   editedStrats: [],
+  sort: Sort.DateAddedASC,
 });
 
 const trackingService = TrackingService.getInstance();
@@ -54,9 +63,9 @@ export const stratModule: Module<StratState, RootState> = {
             : true)
       );
     },
-    sortedFilteredStratsOfCurrentMap(_state, getters): Strat[] {
+    sortedFilteredStratsOfCurrentMap(state, getters): Strat[] {
       return (getters.filteredStratsOfCurrentMap as Strat[])
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .sort(state.sort === Sort.DateAddedASC ? sortDateAddedASC : sortDateAddedDESC)
         .sort((a, b) => +b.active - +a.active);
     },
   },
@@ -165,6 +174,18 @@ export const stratModule: Module<StratState, RootState> = {
         commit(SET_COLLAPSED, collapsed);
       }
     },
+    updateSort({ commit, dispatch }, sort: Sort) {
+      commit(SET_SORT, sort);
+      dispatch(
+        'app/showToast',
+        {
+          id: 'strat/updateSort',
+          text: sort === Sort.DateAddedASC ? 'Sorting by: newest 🠖 oldest' : 'Sorting by: oldest 🠖 newest',
+          allowMultiple: true,
+        },
+        { root: true }
+      );
+    },
     resetState({ commit }) {
       commit(RESET_STATE);
     },
@@ -188,6 +209,9 @@ export const stratModule: Module<StratState, RootState> = {
     },
     [SET_EDITED](state, stratIDs: string[]) {
       state.editedStrats = stratIDs;
+    },
+    [SET_SORT](state, sort: Sort) {
+      state.sort = sort;
     },
     [RESET_STATE](state) {
       Object.assign(state, stratInitialState());

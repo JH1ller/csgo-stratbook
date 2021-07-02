@@ -14,6 +14,7 @@
     </FilterMenu>
     <StratList
       class="strats-view__strat-list"
+      ref="stratList"
       :class="{ '-game-mode': gameMode }"
       :completedTutorial="profile.completedTutorial"
       :tutorialStrat="tutorialStrat"
@@ -42,6 +43,12 @@
           label="Focus Mode"
           icon="crosshairs"
           @click="toggleGameMode"
+        />
+        <FloatingButton
+          class="strats-view__floating-sort"
+          :icon="sort === Sort.DateAddedASC ? 'sort-amount-down' : 'sort-amount-up'"
+          label="Sort"
+          @click="toggleSort"
         />
         <FloatingButton
           class="strats-view__floating-collapse"

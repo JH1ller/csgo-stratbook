@@ -40,7 +40,8 @@
     }
   }
 
-  &__floating-collapse {
+  &__floating-collapse,
+  &__floating-sort {
     background-color: $color--grey;
 
     &:hover {
