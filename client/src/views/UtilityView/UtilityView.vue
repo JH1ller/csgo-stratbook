@@ -24,7 +24,7 @@
           @click="filterMenuOpen = true"
           :activeFilterCount="activeUtilityFilterCount"
         />
-        <FloatingAdd class="utility-view__floating-add" label="Add utility" @click="showUtilityForm" />
+        <FloatingButton class="utility-view__floating-add" label="Add utility" icon="plus" @click="showUtilityForm" />
       </div>
     </transition>
     <transition name="fade">

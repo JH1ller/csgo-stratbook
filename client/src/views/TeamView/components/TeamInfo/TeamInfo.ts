@@ -2,6 +2,8 @@ import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { appModule } from '@/store/namespaces';
 import { Team } from '@/api/models/Team';
+import { openLink } from '@/utils/openLink';
+import TrackingService from '@/services/tracking.service';
 
 @Component({})
 export default class TeamInfo extends Vue {
@@ -10,17 +12,14 @@ export default class TeamInfo extends Vue {
   @Prop() private isManager!: boolean;
   @Prop() private teamInfo!: Team;
 
+  private trackingService = TrackingService.getInstance();
+
   private get serverIp() {
     return this.teamInfo.server?.ip;
   }
 
   private openWebsite() {
-    if (window.desktopMode) {
-      const { remote } = require('electron');
-      remote.shell.openExternal(this.teamInfo.website as string);
-    } else {
-      window.open(this.teamInfo.website, '_blank');
-    }
+    openLink(this.teamInfo.website!);
   }
 
   private copyCode() {
@@ -47,6 +46,7 @@ export default class TeamInfo extends Vue {
     }
 
     this.showToast({ id: 'teamInfo/runServer', text: `Launching game and connecting to ${this.teamInfo.server?.ip}` });
+    this.trackingService.track('Action: Run Game');
   }
 
   @Emit()

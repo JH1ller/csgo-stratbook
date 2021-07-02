@@ -3,6 +3,7 @@ import { RootState } from '..';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { Breakpoints } from '@/services/breakpoint.service';
+import { nanoid } from 'nanoid';
 
 const SET_LOADING = 'SET_LOADING';
 const SHOW_TOAST = 'SHOW_TOAST';
@@ -42,10 +43,14 @@ export const appModule: Module<AppState, RootState> = {
   },
   actions: {
     showToast({ commit, state }, toast: Toast) {
-      if (!state.toasts.find(item => item.id === toast.id)) {
-        commit(SHOW_TOAST, toast);
+      const toastCopy = {
+        ...toast,
+        id: toast.allowMultiple ? nanoid() : toast.id,
+      };
+      if (!state.toasts.find(item => item.id === toastCopy.id)) {
+        commit(SHOW_TOAST, toastCopy);
         setTimeout(() => {
-          commit(HIDE_TOAST, toast.id);
+          commit(HIDE_TOAST, toastCopy.id);
         }, 5000);
       }
     },
