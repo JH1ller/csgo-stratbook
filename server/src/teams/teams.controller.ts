@@ -25,7 +25,7 @@ import { UsersService } from 'src/users/users.service';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { DeleteTeamDto } from './dto/delete-team.dto';
 
-import { ImageUploaderService } from 'src/services/image-uploader/image-uploader.service';
+import { ImageProcessorService } from 'src/services/image-processor/image-processor.service';
 
 @Controller('teams')
 @UseGuards(AuthenticatedGuard)
@@ -34,7 +34,7 @@ export class TeamsController {
   constructor(
     private readonly teamsService: TeamsService,
     private readonly usersService: UsersService,
-    private readonly imageUploaderService: ImageUploaderService
+    private readonly imageProcessorService: ImageProcessorService
   ) {}
 
   @Get()
@@ -53,12 +53,9 @@ export class TeamsController {
   ) {
     let avatar: string;
     if (file) {
-      avatar = await this.imageUploaderService.addJob({
-        source: file.path,
-        resize: {
-          width: 256,
-          height: 256,
-        },
+      avatar = await this.imageProcessorService.addUploadJob(file.path, {
+        width: 256,
+        height: 256,
       });
     }
 

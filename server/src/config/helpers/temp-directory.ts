@@ -11,7 +11,7 @@ function isPathRelative(parent: string, dir: string) {
   return relative && !relative.startsWith('..') && !path.isAbsolute(relative);
 }
 
-function isDirectory(dir: string) {
+function isSafeDirectory(dir: string) {
   let stats: fs.Stats;
 
   try {
@@ -40,7 +40,7 @@ export function resolvePrepareDirectory(dir: string) {
     throw new Error('path is outside of our cwd!');
   }
 
-  if (!isDirectory(resolved)) {
+  if (!isSafeDirectory(resolved)) {
     // directory doesn't exist, create one
     fs.mkdirSync(resolved, { recursive: true });
   } else {
@@ -51,7 +51,8 @@ export function resolvePrepareDirectory(dir: string) {
     fs.readdirSync(resolved).forEach((file) => {
       const filePath = path.join(resolved, file);
 
-      if (!isDirectory(filePath)) {
+      const stats = fs.lstatSync(filePath);
+      if (stats.isFile()) {
         fs.unlinkSync(filePath);
       }
     });

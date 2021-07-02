@@ -36,7 +36,7 @@ export class User {
   public emailConfirmed: boolean;
 
   /**
-   * s3 image bucket key
+   * minio image bucket key
    */
   @Prop()
   public avatar?: string;

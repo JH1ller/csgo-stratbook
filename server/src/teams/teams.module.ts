@@ -12,7 +12,7 @@ import { StrategiesModule } from 'src/strategies/strategies.module';
 import { UtilitiesModule } from 'src/utilities/utilities.module';
 
 import { MulterConfigService } from 'src/services/multer-config.service';
-import { ImageUploaderModule } from 'src/services/image-uploader/image-uploader.module';
+import { ImageProcessorModule } from 'src/services/image-processor/image-processor.module';
 
 @Module({
   imports: [
@@ -25,7 +25,7 @@ import { ImageUploaderModule } from 'src/services/image-uploader/image-uploader.
     StrategiesModule,
     UtilitiesModule,
 
-    ImageUploaderModule,
+    ImageProcessorModule,
   ],
   controllers: [TeamsController],
   providers: [TeamsService],

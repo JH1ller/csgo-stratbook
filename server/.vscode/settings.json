@@ -21,6 +21,7 @@
     "Stratbook",
     "csrf",
     "hcaptcha",
+    "minio",
     "mjml",
     "nestjs",
     "originalname"

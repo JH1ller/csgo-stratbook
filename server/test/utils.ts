@@ -8,7 +8,7 @@ import { req, createAxiosCookieInstance, apiConfig, basePath } from './config';
 import { AuthApiFp } from './api';
 
 export function generatePassword() {
-  return new RandExp(PasswordPattern).gen();
+  return 'H' + new RandExp(PasswordPattern).gen() + '12345678!';
 }
 
 export interface TestUser {

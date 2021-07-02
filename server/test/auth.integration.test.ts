@@ -43,7 +43,7 @@ describe('Auth integration', () => {
     const logoutRoute = await AuthApiAxiosParamCreator(apiConfig).authControllerLogout();
     await req.post(logoutRoute.url).send(logoutRoute.options.data).set('Cookie', [cookies]).expect(201);
 
-    // now we the route guard should kick in
+    // now the route guard should prevent us from accessing anything
     return req.post(logoutRoute.url).send(logoutRoute.options.data).set('Cookie', [cookies]).expect(401);
   });
 });

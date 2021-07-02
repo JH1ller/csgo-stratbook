@@ -1,5 +1,4 @@
 import ms from 'ms';
-import process from 'process';
 
 import { resolvePrepareDirectory } from './helpers/temp-directory';
 
@@ -7,6 +6,7 @@ function getBooleanValue(value: string | undefined) {
   if (value && value.toLocaleLowerCase() === 'true') {
     return true;
   }
+
   return false;
 }
 
@@ -38,7 +38,7 @@ export default () => ({
 
   mail: {
     host: process.env.MAIL_HOST,
-    port: parseInt(process.env.MAIL_PORT, 10),
+    port: Number.parseInt(process.env.MAIL_PORT, 10),
 
     user: process.env.MAIL_USER,
     password: process.env.MAIL_PASSWORD,
@@ -51,12 +51,14 @@ export default () => ({
     tempDir: resolvePrepareDirectory(process.env.UPLOAD_TEMP_DIR),
   },
 
-  s3: {
-    accessKeyId: process.env.S3_ACCESS_KEY_ID,
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-    endpoint: process.env.S3_ENDPOINT,
+  minio: {
+    accessKeyId: process.env.MINIO_ACCESS_KEY_ID,
+    secretAccessKey: process.env.MINIO_SECRET_ACCESS_KEY,
+    endpoint: process.env.MINIO_ENDPOINT,
+    port: Number.parseInt(process.env.MINIO_PORT, 10),
+    useSSL: getBooleanValue(process.env.MINIO_USE_SSL),
 
-    imageBucket: process.env.S3_IMAGE_BUCKET,
+    imageBucket: process.env.MINIO_IMAGE_BUCKET,
   },
 
   hcaptcha: {

@@ -2,35 +2,56 @@ import chalk from 'chalk';
 import fs from 'fs';
 import { unlink } from 'fs/promises';
 import path from 'path';
-import { randomBytes } from 'crypto';
+import { v4 as uuid } from 'uuid';
 
 import { Job } from 'bull';
 import sharp from 'sharp';
-import AWS from 'aws-sdk';
+import * as Minio from 'minio';
 import imageType from 'image-type';
 
-import { ImageUploadJob } from 'src/services/image-uploader/jobs/image-upload';
+import {
+  ImageDeletionJob,
+  ImageProcessorJob,
+  ImageProcessorJobType,
+  ImageUploadJob,
+} from 'src/services/image-processor/jobs';
 import { isDevEnv } from 'src/common/env';
 
-// connect to minio/s3
-const s3Client = new AWS.S3({
-  credentials: new AWS.Credentials({
-    accessKeyId: process.env.S3_ACCESS_KEY_ID,
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-  }),
+// connect to minio
+const client = new Minio.Client({
+  accessKey: process.env.MINIO_ACCESS_KEY_ID,
+  secretKey: process.env.MINIO_SECRET_ACCESS_KEY,
 
-  endpoint: process.env.S3_ENDPOINT,
-  s3ForcePathStyle: true,
-  signatureVersion: 'v4',
+  endPoint: process.env.MINIO_ENDPOINT,
+  port: Number.parseInt(process.env.MINIO_PORT, 10),
+  useSSL: process.env.MINIO_USE_SSL.toLowerCase() === 'true',
 });
 
-// minor connection test
-if (isDevEnv()) {
-  s3Client.listBuckets((err, buckets) => {
-    console.log(err, buckets);
-  });
-}
+// specify image bucket name
+const imageBucket = process.env.MINIO_IMAGE_BUCKET;
 
+console.log(chalk.green(`[image-processor] launched with pid: ${process.pid} (bucket: ${imageBucket})`));
+
+export default async (job: Job<ImageProcessorJob>) => {
+  console.log(`[${process.pid}] ${JSON.stringify(job.data)}`);
+
+  const { jobType } = job.data;
+
+  switch (jobType) {
+    case ImageProcessorJobType.Upload: {
+      return uploadImage(job.data as ImageUploadJob);
+    }
+    case ImageProcessorJobType.Deletion: {
+      return deleteImagePair(job.data as ImageDeletionJob);
+    }
+  }
+};
+
+/**
+ * Test if the specified input file is an actual image
+ * @param source path to image
+ * @returns is image
+ */
 async function isFileImage(source: string) {
   const stream = fs.createReadStream(source, { start: 0, end: imageType.minimumBytes });
 
@@ -66,14 +87,12 @@ async function isFileImage(source: string) {
   } catch (err) {
     console.log(err);
   } finally {
-    stream.destroy();
+    stream.close();
   }
 }
 
-export default async (job: Job<ImageUploadJob>) => {
-  console.log(`[${process.pid}] ${JSON.stringify(job.data)}`);
-
-  const { source, resize } = job.data;
+async function uploadImage(jobData: ImageUploadJob) {
+  const { source, resize } = jobData;
 
   if (!(await isFileImage(source))) {
     throw new Error(`file is not an image: ${source}`);
@@ -86,35 +105,34 @@ export default async (job: Job<ImageUploadJob>) => {
     processor.resize(resize.width, resize.height);
   }
 
-  const newFileName = randomBytes(20).toString('hex') + path.extname(source);
+  const newFileName = uuid() + path.extname(source);
   const destination = path.resolve(path.dirname(source), newFileName);
 
   // run processor chain
   await processor.toFile(destination);
 
-  const stream = fs.createReadStream(destination, {
-    autoClose: true,
-  });
+  const stream = fs.createReadStream(destination);
 
   try {
-    const result = await s3Client
-      .upload({
-        Bucket: process.env.S3_IMAGE_BUCKET,
-        Key: newFileName,
-        Body: stream,
-      })
-      .promise();
+    const result = await client.putObject(imageBucket, newFileName, stream);
 
-    console.log(`File upload done: ${result.Location}`);
-
-    // delete both temp files
-    await unlink(source);
-    await unlink(destination);
-
-    return newFileName;
+    if (isDevEnv()) {
+      console.log(`File upload completed: ${result}`);
+    }
   } finally {
-    stream.destroy();
+    stream.close();
   }
-};
 
-console.log(chalk.green(`[image-processor] launched with pid: ${process.pid}`));
+  return newFileName;
+}
+
+async function deleteImagePair(jobData: ImageDeletionJob) {
+  const { sourceImage, targetImage } = jobData;
+
+  console.log('unlink dest');
+  await unlink(targetImage);
+
+  // delete source file
+  console.log('unlink src');
+  await unlink(sourceImage);
+}

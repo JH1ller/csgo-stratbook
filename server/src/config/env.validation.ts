@@ -1,5 +1,5 @@
 import { plainToClass } from 'class-transformer';
-import { IsString, IsBoolean, IsOptional, IsNumber, validateSync, MinLength, IsUrl } from 'class-validator';
+import { IsString, IsOptional, IsNumber, validateSync, MinLength, IsUrl, IsBooleanString } from 'class-validator';
 
 /**
  * @summary helper class for validating .env-file properties
@@ -74,16 +74,22 @@ class EnvironmentVariables {
   UPLOAD_TEMP_DIR: string;
 
   @IsString()
-  S3_ACCESS_KEY_ID: string;
+  MINIO_ACCESS_KEY_ID: string;
 
   @IsString()
-  S3_SECRET_ACCESS_KEY: string;
+  MINIO_SECRET_ACCESS_KEY: string;
 
   @IsUrl()
-  S3_ENDPOINT: string;
+  MINIO_ENDPOINT: string;
+
+  @IsNumber()
+  MINIO_PORT: number;
+
+  @IsBooleanString()
+  MINIO_USE_SSL: string;
 
   @IsString()
-  S3_IMAGE_BUCKET: string;
+  MINIO_IMAGE_BUCKET: string;
 
   @IsString()
   HCAPTCHA_SECRET: string;
@@ -91,20 +97,20 @@ class EnvironmentVariables {
   /**
    * Disables mail transport
    */
-  @IsBoolean()
+  @IsBooleanString()
   @IsOptional()
-  DEBUG_MAIL_TRANSPORT_DISABLED: boolean;
+  DEBUG_MAIL_TRANSPORT_DISABLED: string;
 
   /**
    * disables hcaptcha verify check (check always returns true)
    */
-  @IsBoolean()
+  @IsBooleanString()
   @IsOptional()
-  DEBUG_HCAPTCHA_VERIFY_DISABLED: boolean;
+  DEBUG_HCAPTCHA_VERIFY_DISABLED: string;
 
-  @IsBoolean()
+  @IsBooleanString()
   @IsOptional()
-  DEBUG_CREATE_USER_WITH_CONFIRMED_MAIL: boolean;
+  DEBUG_CREATE_USER_WITH_CONFIRMED_MAIL: string;
 }
 
 export function validate(config: Record<string, unknown>) {

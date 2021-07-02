@@ -9,8 +9,8 @@ import { User, UserSchema } from 'src/schemas/user.schema';
 
 import { MulterConfigService } from 'src/services/multer-config.service';
 import { MailerModule } from 'src/services/mail/mailer.module';
-import { ImageUploaderModule } from 'src/services/image-uploader/image-uploader.module';
-import { ResourceManagerModule } from 'src/services/resource-manager/resource-manager.module';
+import { ImageProcessorModule } from 'src/services/image-processor/image-processor.module';
+import { MinioModule } from 'src/services/minio/minio-service.module';
 import { CaptchaModule } from 'src/services/captcha/captcha.module';
 
 @Module({
@@ -23,8 +23,8 @@ import { CaptchaModule } from 'src/services/captcha/captcha.module';
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
 
     MailerModule,
-    ImageUploaderModule,
-    ResourceManagerModule,
+    ImageProcessorModule,
+    MinioModule,
     CaptchaModule,
   ],
   providers: [UsersService],

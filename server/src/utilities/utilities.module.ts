@@ -9,8 +9,8 @@ import { Utility, UtilitySchema } from 'src/schemas/utility.schema';
 import { User, UserSchema } from 'src/schemas/user.schema';
 
 import { MulterConfigService } from 'src/services/multer-config.service';
-import { ImageUploaderModule } from 'src/services/image-uploader/image-uploader.module';
-import { ResourceManagerModule } from 'src/services/resource-manager/resource-manager.module';
+import { ImageProcessorModule } from 'src/services/image-processor/image-processor.module';
+import { MinioModule } from 'src/services/minio/minio-service.module';
 
 @Module({
   imports: [
@@ -23,9 +23,10 @@ import { ResourceManagerModule } from 'src/services/resource-manager/resource-ma
       { name: User.name, schema: UserSchema },
     ]),
 
-    ImageUploaderModule,
-    ResourceManagerModule,
+    ImageProcessorModule,
+    MinioModule,
   ],
+
   controllers: [UtilitiesController],
   providers: [UtilitiesService],
   exports: [UtilitiesService],

@@ -9,7 +9,7 @@ import jwt from 'jsonwebtoken';
 import { User, UserDocument } from 'src/schemas/user.schema';
 
 import { MailerService } from 'src/services/mail/mailer.service';
-import { ResourceManagerService } from 'src/services/resource-manager/resource-manager.service';
+import { MinioService } from 'src/services/minio/minio-service.service';
 
 /**
  * jwt encoded password reset data
@@ -39,7 +39,7 @@ export class UsersService {
     private readonly configService: ConfigService,
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private readonly mailerService: MailerService,
-    private readonly resourceManagerService: ResourceManagerService
+    private readonly minioService: MinioService
   ) {
     this.mailTokenSecret = this.configService.get<string>('mail.tokenSecret');
   }
@@ -97,9 +97,9 @@ export class UsersService {
   public async deleteUser(id: Types.ObjectId) {
     const user = await this.userModel.findByIdAndDelete(id);
 
-    // delete avatar from S3
+    // delete avatar from minio bucket
     if (user.avatar) {
-      await this.resourceManagerService.deleteImage(user.avatar);
+      await this.minioService.deleteImage(user.avatar);
     }
   }
 

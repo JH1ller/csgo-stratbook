@@ -3,5 +3,7 @@ interface ServerEntry {
 }
 
 module.exports = async function () {
-  await ((global as any).__BACKEND_INSTANCE__ as ServerEntry).dispose();
+  if ((global as any).__BACKEND_INSTANCE__) {
+    await ((global as any).__BACKEND_INSTANCE__ as ServerEntry).dispose();
+  }
 };

@@ -1,10 +1,10 @@
+import multer from 'multer';
+import { v4 as uuid } from 'uuid';
+import { extname } from 'path';
+
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MulterOptionsFactory, MulterModuleOptions } from '@nestjs/platform-express';
-
-import multer from 'multer';
-import { randomBytes } from 'crypto';
-import { extname } from 'path';
 
 @Injectable()
 export class MulterConfigService implements MulterOptionsFactory {
@@ -19,7 +19,7 @@ export class MulterConfigService implements MulterOptionsFactory {
         destination,
 
         filename: (_req, file, next) => {
-          const newName = randomBytes(20).toString('hex') + extname(file.originalname);
+          const newName = uuid() + extname(file.originalname);
           next(null, newName);
         },
       }),

@@ -16,13 +16,13 @@ import MongoStore from 'connect-mongo';
 import helmet from 'helmet';
 import passport from 'passport';
 import mongoose from 'mongoose';
-import { Express } from 'express';
 
 import { AppModule } from './app.module';
 import { isDevEnv } from './common/env';
 
 import { BullConfigService } from 'src/services/bull-config.service';
-import { ImageUploaderService } from 'src/services/image-uploader/image-uploader.service';
+import { ImageProcessorService } from 'src/services/image-processor/image-processor.service';
+import { MinioService } from './services/minio/minio-service.service';
 
 /**
  * @summary Helper for HMR - Api reloading
@@ -46,10 +46,7 @@ export class ServerEntry {
     );
 
     this.app = await NestFactory.create<NestExpressApplication>(AppModule, {});
-
-    if (process.env.STANDALONE_BUILD) {
-      this.app.enableShutdownHooks();
-    }
+    this.app.enableShutdownHooks();
 
     // configure nest application
     // set all routes to /api/<controller_name>
@@ -125,12 +122,16 @@ export class ServerEntry {
       origin: true,
     });
 
+    // validate minio bucket configuration
+    const minioService = this.app.get(MinioService);
+    await minioService.validateBuckets();
+
     if (isDevEnv()) {
       this.useSwagger();
-    }
 
-    // all executed methods log output to console
-    mongoose.set('debug', true);
+      // all executed methods log output to console
+      mongoose.set('debug', true);
+    }
 
     const port = configService.get<number>('port');
     await this.app.listen(port);
@@ -144,7 +145,7 @@ export class ServerEntry {
     await this.app.close();
 
     // dispose worker queues
-    const service = this.app.get(ImageUploaderService);
+    const service = this.app.get(ImageProcessorService);
     await service.shutdownQueue();
 
     // dispose bulljs redis connections

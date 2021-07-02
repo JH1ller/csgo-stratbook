@@ -37,7 +37,7 @@ import { GetUtilityResponse } from './responses/get-utility.response';
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 import { HasTeamGuard } from 'src/common/guards/has-team.guard';
 
-import { ImageUploaderService } from 'src/services/image-uploader/image-uploader.service';
+import { ImageProcessorService } from 'src/services/image-processor/image-processor.service';
 
 @Controller('utilities')
 @UseGuards(AuthenticatedGuard)
@@ -46,7 +46,7 @@ import { ImageUploaderService } from 'src/services/image-uploader/image-uploader
 export class UtilitiesController {
   constructor(
     private readonly utilitiesService: UtilitiesService,
-    private readonly imageUploaderService: ImageUploaderService
+    private readonly imageProcessorService: ImageProcessorService
   ) {}
 
   @Get('/:gameMap')
@@ -82,7 +82,7 @@ export class UtilitiesController {
   ) {
     let images: string[] = [];
     if (files && files.images) {
-      const tasks = files.images.map((file) => this.imageUploaderService.addJob({ source: file.path }));
+      const tasks = files.images.map((file) => this.imageProcessorService.addUploadJob(file.path));
       images = await Promise.all(tasks);
     }
 

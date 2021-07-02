@@ -4,17 +4,17 @@ import { Module } from '@nestjs/common';
 import path from 'path';
 import process from 'process';
 
-import { ImageUploaderService } from './image-uploader.service';
+import { ImageProcessorService } from './image-processor.service';
 
 @Module({
   imports: [
     BullModule.registerQueue({
-      name: 'image-uploader',
+      name: 'image-processor',
       processors: [path.join(process.cwd(), 'dist/image-processor.js')],
     }),
   ],
 
-  providers: [ImageUploaderService],
-  exports: [ImageUploaderService],
+  providers: [ImageProcessorService],
+  exports: [ImageProcessorService],
 })
-export class ImageUploaderModule {}
+export class ImageProcessorModule {}

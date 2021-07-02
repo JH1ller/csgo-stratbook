@@ -11,14 +11,14 @@ import { sortArrayDisplayOrder } from 'src/schemas';
 
 import { GameMap } from 'src/schemas/enums';
 
-import { ResourceManagerService } from 'src/services/resource-manager/resource-manager.service';
+import { MinioService } from 'src/services/minio/minio-service.service';
 
 @Injectable()
 export class UtilitiesService {
   constructor(
     @InjectModel(Utility.name) private readonly utilityModel: Model<UtilityDocument>,
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
-    private readonly resourceManagerService: ResourceManagerService
+    private readonly minioService: MinioService
   ) {}
 
   public findById(id: Types.ObjectId) {
@@ -108,7 +108,7 @@ export class UtilitiesService {
     const tasks = utilities.map(async (utility) => {
       for (const entry of utility.utilities) {
         for (const image of entry.images) {
-          await this.resourceManagerService.deleteImage(image);
+          await this.minioService.deleteImage(image);
         }
       }
     });

@@ -51,9 +51,9 @@ import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 import { TeamsService } from 'src/teams/teams.service';
 import { StrategiesService } from 'src/strategies/strategies.service';
 
-import { ImageUploaderService } from 'src/services/image-uploader/image-uploader.service';
+import { ImageProcessorService } from 'src/services/image-processor/image-processor.service';
 import { CaptchaService } from 'src/services/captcha/captcha.service';
-import { ResourceManagerService } from 'src/services/resource-manager/resource-manager.service';
+import { MinioService } from 'src/services/minio/minio-service.service';
 
 @Controller('users')
 @ApiTags('Users')
@@ -67,9 +67,9 @@ export class UsersController implements OnModuleInit {
   constructor(
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
-    private readonly imageUploaderService: ImageUploaderService,
+    private readonly imageProcessorService: ImageProcessorService,
     private readonly captchaService: CaptchaService,
-    private readonly resourceManagerService: ResourceManagerService,
+    private readonly minioService: MinioService,
     private moduleRef: ModuleRef
   ) {}
 
@@ -88,12 +88,9 @@ export class UsersController implements OnModuleInit {
   public async registerUser(@Body() model: RegisterUserDto, @UploadedFile() file: Express.Multer.File) {
     let avatar: string;
     if (file) {
-      avatar = await this.imageUploaderService.addJob({
-        source: file.path,
-        resize: {
-          width: 256,
-          height: 256,
-        },
+      avatar = await this.imageProcessorService.addUploadJob(file.path, {
+        width: 256,
+        height: 256,
       });
     }
 
@@ -159,16 +156,13 @@ export class UsersController implements OnModuleInit {
     const userDiff: Partial<User> = {};
 
     if (file !== null) {
-      userDiff.avatar = await this.imageUploaderService.addJob({
-        source: file.path,
-        resize: {
-          width: 256,
-          height: 256,
-        },
+      userDiff.avatar = await this.imageProcessorService.addUploadJob(file.path, {
+        width: 256,
+        height: 256,
       });
 
-      // delete old user avatar from s3 bucket
-      await this.resourceManagerService.deleteImage(user.avatar);
+      // delete old user avatar from minio bucket
+      await this.minioService.deleteImage(user.avatar);
     }
 
     if (model.email !== null) {

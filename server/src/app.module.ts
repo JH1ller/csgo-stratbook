@@ -20,7 +20,7 @@ import { ValidatorsModule } from './common/validators/validators.module';
 
 import { BullConfigService } from './services/bull-config.service';
 import { CaptchaModule } from './services/captcha/captcha.module';
-import { ResourceManagerModule } from './services/resource-manager/resource-manager.module';
+import { MinioModule } from './services/minio/minio-service.module';
 
 @Module({
   imports: [
@@ -51,7 +51,7 @@ import { ResourceManagerModule } from './services/resource-manager/resource-mana
     ValidatorsModule,
 
     CaptchaModule,
-    ResourceManagerModule,
+    MinioModule,
 
     AuthModule,
     UsersModule,
