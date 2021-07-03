@@ -92,23 +92,23 @@ export default class StratsView extends Vue {
   private created() {
     this.shortcutService.add([
       {
-        shortcut: 'E',
+        shortcut: 'Ctrl+Shift+E',
         handler: () => this.execShortcut(this.expandAll),
       },
       {
-        shortcut: 'C',
+        shortcut: 'Ctrl+E',
         handler: () => this.execShortcut(this.collapseAll),
       },
       {
-        shortcut: 'Plus',
+        shortcut: 'Ctrl+A',
         handler: () => this.execShortcut(this.showStratForm),
       },
       {
-        shortcut: 'F',
+        shortcut: 'Ctrl+Shift+F',
         handler: () => this.execShortcut(this.toggleFilterMenu),
       },
       {
-        shortcut: 'Ctrl+F',
+        shortcut: 'Ctrl+G',
         handler: () => this.execShortcut(this.toggleGameMode),
       },
     ]);
@@ -148,6 +148,7 @@ export default class StratsView extends Vue {
             const formData = new FormData();
             formData.append('completedTutorial', 'true');
             this.updateProfile(formData);
+            this.trackingService.track('Action: Completed Tutorial');
           }
         );
       }

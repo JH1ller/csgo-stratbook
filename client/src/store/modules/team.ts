@@ -74,7 +74,7 @@ export const teamModule: Module<TeamState, RootState> = {
           },
           { root: true }
         );
-        trackingService.track('team:created', { name: formData.get('name') as string });
+        trackingService.track('Action: Team Created', { name: formData.get('name') as string });
         return { success: true }; // TODO: probably obsolete. remove
       } else {
         return { error: res.error };
@@ -108,7 +108,7 @@ export const teamModule: Module<TeamState, RootState> = {
           },
           { root: true }
         );
-        trackingService.track('team:joined', { name: (rootState.team?.teamInfo as Team)?.name ?? '' });
+        trackingService.track('Action: Team Joined', { name: (rootState.team?.teamInfo as Team)?.name ?? '' });
         return { success: 'Successfully joined team.' };
       } else {
         return { error: res.error };
