@@ -51,6 +51,7 @@ export default new Vuex.Store({
     loadDataFromStorage({ dispatch }) {
       dispatch('map/loadCurrentMapFromStorage');
       dispatch('strat/loadCollapsedStratsFromStorage');
+      dispatch('filter/loadFiltersFromStorage');
     },
   },
   getters: {},

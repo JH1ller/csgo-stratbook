@@ -1,4 +1,4 @@
-import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator';
+import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
 import StratItem from '@/components/StratItem/StratItem.vue';
 import { Strat } from '@/api/models/Strat';
 import { StratTypes } from '@/api/models/StratTypes';

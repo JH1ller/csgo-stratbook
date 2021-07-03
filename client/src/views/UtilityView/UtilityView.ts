@@ -60,11 +60,11 @@ export default class UtilityView extends Vue {
   private created() {
     this.shortcutService.add([
       {
-        shortcut: 'F',
+        shortcut: 'Ctrl+Shift+F',
         handler: () => this.execShortcut(this.toggleFilterMenu),
       },
       {
-        shortcut: 'Plus',
+        shortcut: 'Ctrl+A',
         handler: () => this.execShortcut(this.showUtilityForm),
       },
     ]);
