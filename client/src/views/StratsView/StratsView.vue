@@ -43,29 +43,39 @@
           label="Focus Mode"
           icon="crosshairs"
           @click="toggleGameMode"
+          v-tippy
+          content="CTRL+G"
         />
         <FloatingButton
           class="strats-view__floating-sort"
           :icon="sort === Sort.DateAddedASC ? 'sort-amount-down' : 'sort-amount-up'"
           label="Sort"
           @click="toggleSort"
+          v-tippy
+          content="CTRL+S"
         />
         <FloatingButton
           class="strats-view__floating-collapse"
           icon="compress-alt"
           label="Collapse All"
           @click="collapseAll"
+          v-tippy
+          content="CTRL+E"
         />
         <FloatingButton
           class="strats-view__floating-collapse"
           icon="expand-alt"
           label="Expand All"
           @click="expandAll"
+          v-tippy
+          content="CTRL+Shift+E"
         />
         <FilterButton
           class="strats-view__filter-button"
           @click="filterMenuOpen = true"
           :activeFilterCount="activeStratFilterCount"
+          v-tippy
+          content="CTRL+Shift+F"
         />
         <transition name="fade">
           <FloatingButton
@@ -74,6 +84,8 @@
             label="Add Strat"
             icon="plus"
             @click="showStratForm"
+            v-tippy
+            content="CTRL+A"
           />
         </transition>
       </div>

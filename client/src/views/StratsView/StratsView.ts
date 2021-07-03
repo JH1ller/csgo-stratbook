@@ -111,6 +111,10 @@ export default class StratsView extends Vue {
         shortcut: 'Ctrl+G',
         handler: () => this.execShortcut(this.toggleGameMode),
       },
+      {
+        shortcut: 'Ctrl+S',
+        handler: () => this.execShortcut(this.toggleSort),
+      },
     ]);
     // TODO: add map change shortcut
   }
