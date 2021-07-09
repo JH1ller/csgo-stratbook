@@ -75,8 +75,6 @@ describe('Teams integration', () => {
       .expect((result) => {
         const data = result.body as GetTeamResponse;
 
-        console.log(result.body);
-
         expect(data.id).toBeDefined();
         expect(data.name).toBe(name);
         expect(data.website).toBe(website);

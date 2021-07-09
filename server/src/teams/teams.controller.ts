@@ -58,7 +58,7 @@ export class TeamsController {
       throw new InternalServerErrorException('team not found!');
     }
 
-    return new GetTeamResponse(team);
+    return new GetTeamResponse(team.toObject());
   }
 
   @Post('create')
