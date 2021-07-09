@@ -31,6 +31,10 @@ jobs:
         ports:
           # Maps port 6379 on service container to the host
           - 6379:6379
+      minio:
+        image: fclairamb/minio-github-actions
+        ports:
+          - 9000:9000
 
     steps:
     - uses: actions/checkout@v2
