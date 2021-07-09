@@ -4,4 +4,4 @@
 /public
 
 # .eslintrc.js
-*.js
+# *.js

@@ -22,6 +22,8 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 // @ts-ignore
 import { DeleteTeamDto } from '../models';
+// @ts-ignore
+import { GetTeamResponse } from '../models';
 /**
  * TeamsApi - axios parameter creator
  * @export
@@ -134,8 +136,8 @@ export const TeamsApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        teamsControllerGet: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/teams`;
+        teamsControllerGetPlayers: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/teams/players`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -163,8 +165,8 @@ export const TeamsApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        teamsControllerGetPlayers: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/teams/players`;
+        teamsControllerGetTeamInfo: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/teams`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -255,8 +257,8 @@ export const TeamsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async teamsControllerGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.teamsControllerGet(options);
+        async teamsControllerGetPlayers(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.teamsControllerGetPlayers(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -264,8 +266,8 @@ export const TeamsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async teamsControllerGetPlayers(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.teamsControllerGetPlayers(options);
+        async teamsControllerGetTeamInfo(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetTeamResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.teamsControllerGetTeamInfo(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -314,16 +316,16 @@ export const TeamsApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        teamsControllerGet(options?: any): AxiosPromise<void> {
-            return localVarFp.teamsControllerGet(options).then((request) => request(axios, basePath));
+        teamsControllerGetPlayers(options?: any): AxiosPromise<void> {
+            return localVarFp.teamsControllerGetPlayers(options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        teamsControllerGetPlayers(options?: any): AxiosPromise<void> {
-            return localVarFp.teamsControllerGetPlayers(options).then((request) => request(axios, basePath));
+        teamsControllerGetTeamInfo(options?: any): AxiosPromise<GetTeamResponse> {
+            return localVarFp.teamsControllerGetTeamInfo(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -427,8 +429,8 @@ export class TeamsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof TeamsApi
      */
-    public teamsControllerGet(options?: any) {
-        return TeamsApiFp(this.configuration).teamsControllerGet(options).then((request) => request(this.axios, this.basePath));
+    public teamsControllerGetPlayers(options?: any) {
+        return TeamsApiFp(this.configuration).teamsControllerGetPlayers(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -437,8 +439,8 @@ export class TeamsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof TeamsApi
      */
-    public teamsControllerGetPlayers(options?: any) {
-        return TeamsApiFp(this.configuration).teamsControllerGetPlayers(options).then((request) => request(this.axios, this.basePath));
+    public teamsControllerGetTeamInfo(options?: any) {
+        return TeamsApiFp(this.configuration).teamsControllerGetTeamInfo(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

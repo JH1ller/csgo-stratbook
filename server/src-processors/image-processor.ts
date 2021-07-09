@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import fs from 'fs';
-import { unlink } from 'fs/promises';
 import path from 'path';
+import { unlink } from 'fs/promises';
 import { v4 as uuid } from 'uuid';
 
 import { Job } from 'bull';
@@ -15,7 +15,9 @@ import {
   ImageProcessorJobType,
   ImageUploadJob,
 } from 'src/services/image-processor/jobs';
-import { isDevEnv } from 'src/common/env';
+
+// disable sharp cache, else we may have dangling file handles
+sharp.cache(false);
 
 // connect to minio
 const client = new Minio.Client({
@@ -29,12 +31,19 @@ const client = new Minio.Client({
 
 // specify image bucket name
 const imageBucket = process.env.MINIO_IMAGE_BUCKET;
+const uploadTempDir = process.env.UPLOAD_TEMP_DIR;
 
-console.log(chalk.green(`[image-processor] launched with pid: ${process.pid} (bucket: ${imageBucket})`));
+console.log(chalk.green(`[image-processor] launched with pid: ${process.pid}`));
+console.log(chalk.green(`[image-processor] using bucket: ${imageBucket} and temp_dir: ${uploadTempDir}`));
 
+if (!fs.existsSync(uploadTempDir)) {
+  throw new Error(`upload temp dir ${uploadTempDir} does not exist!`);
+}
+
+/**
+ * bull-js entry point
+ */
 export default async (job: Job<ImageProcessorJob>) => {
-  console.log(`[${process.pid}] ${JSON.stringify(job.data)}`);
-
   const { jobType } = job.data;
 
   switch (jobType) {
@@ -42,7 +51,7 @@ export default async (job: Job<ImageProcessorJob>) => {
       return uploadImage(job.data as ImageUploadJob);
     }
     case ImageProcessorJobType.Deletion: {
-      return deleteImagePair(job.data as ImageDeletionJob);
+      return deleteTemporaryImages(job.data as ImageDeletionJob);
     }
   }
 };
@@ -53,10 +62,12 @@ export default async (job: Job<ImageProcessorJob>) => {
  * @returns is image
  */
 async function isFileImage(source: string) {
-  const stream = fs.createReadStream(source, { start: 0, end: imageType.minimumBytes });
+  const stream = fs.createReadStream(source, {
+    start: 0,
+    end: imageType.minimumBytes,
+  });
 
   try {
-    // await wrapper for read streams
     const chunk = await new Promise<Buffer>((resolve, reject) => {
       stream.on('data', (dataChunk) => {
         if (dataChunk instanceof Buffer) {
@@ -65,74 +76,94 @@ async function isFileImage(source: string) {
 
         return resolve(Buffer.from(dataChunk));
       });
-      stream.on('error', (error) => reject(error));
+
+      stream.on('error', reject);
     });
 
-    if (chunk === null) {
-      throw new Error(`failed to read image chunk: ${source}`);
+    if (chunk) {
+      const type = imageType(chunk);
+      switch (type.ext) {
+        case 'jpg':
+        case 'png':
+        case 'gif':
+        case 'webp':
+          return true;
+      }
     }
-
-    const type = imageType(chunk);
-    switch (type.ext) {
-      case 'jpg':
-      case 'jpm':
-      case 'png':
-      case 'gif':
-      case 'webp':
-      case 'bmp':
-        return true;
-    }
-
-    return false;
-  } catch (err) {
-    console.log(err);
   } finally {
     stream.close();
   }
+
+  return false;
 }
 
+/**
+ * upload file into the target minio bucket
+ * @param imagePath path of the object to upload to
+ * @param objectName stored object name
+ */
+async function putInBucket(imagePath: string, objectName: string) {
+  const stream = fs.createReadStream(imagePath);
+
+  try {
+    await client.putObject(imageBucket, objectName, stream);
+  } finally {
+    stream.destroy();
+  }
+}
+
+/**
+ * Upload image to minio bucket
+ * @param jobData job descriptor
+ * @returns name of the converted, compressed and resized image
+ */
 async function uploadImage(jobData: ImageUploadJob) {
   const { source, resize } = jobData;
 
-  if (!(await isFileImage(source))) {
+  const isImage = await isFileImage(source);
+  if (!isImage) {
     throw new Error(`file is not an image: ${source}`);
   }
 
-  // default webp quality is 80
-  const processor = sharp(source).webp({ quality: 90 });
+  const finalName = uuid();
+  const destination = path.resolve(uploadTempDir, finalName);
+
+  // splitting this declaration caused a file handle leak
+  // so for now keep both version.
+  // TODO: investigate why this happens
 
   if (resize) {
-    processor.resize(resize.width, resize.height);
+    await sharp(source)
+      .resize(resize.width, resize.height)
+      .webp({
+        quality: 90, // default webp quality is 80
+      })
+      .toFile(destination);
+  } else {
+    await sharp(source)
+      .webp({
+        quality: 90,
+      })
+      .toFile(destination);
   }
 
-  const newFileName = uuid() + path.extname(source);
-  const destination = path.resolve(path.dirname(source), newFileName);
+  await putInBucket(destination, finalName);
 
-  // run processor chain
-  await processor.toFile(destination);
-
-  const stream = fs.createReadStream(destination);
-
-  try {
-    const result = await client.putObject(imageBucket, newFileName, stream);
-
-    if (isDevEnv()) {
-      console.log(`File upload completed: ${result}`);
-    }
-  } finally {
-    stream.close();
-  }
-
-  return newFileName;
+  return finalName;
 }
 
-async function deleteImagePair(jobData: ImageDeletionJob) {
-  const { sourceImage, targetImage } = jobData;
+async function deleteTemporaryImages(jobData: ImageDeletionJob) {
+  const { source, finalFileName } = jobData;
 
-  console.log('unlink dest');
-  await unlink(targetImage);
+  if (fs.existsSync(source)) {
+    await unlink(source);
+  }
 
-  // delete source file
-  console.log('unlink src');
-  await unlink(sourceImage);
+  if (finalFileName) {
+    const destination = path.resolve(uploadTempDir, finalFileName);
+
+    if (fs.existsSync(destination)) {
+      await unlink(destination);
+    }
+  }
 }

@@ -4,12 +4,17 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "declaration": false,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "target": "es2017",
+
+    "alwaysStrict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
 
     "sourceMap": true,
     "baseUrl": "./",
@@ -22,7 +27,7 @@
     "outDir": "./dist",
     "noEmitHelpers": true,
     "importHelpers": false,
-    "noImplicitAny": true,
+
     "paths": {
       "src/*": ["src/*"]
     },

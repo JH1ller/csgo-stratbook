@@ -3,6 +3,11 @@ import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments 
 
 import { UsersService } from 'src/users/users.service';
 
+/**
+ * Validator, for checking if a user-email is already registered.
+ * We could handle this step inside the controller itself, but
+ * then we would have to accept every (multer-) file request.
+ */
 @Injectable()
 @ValidatorConstraint({ name: 'UserMailNotInUse', async: true })
 export class UserMailNotInUseRule implements ValidatorConstraintInterface {

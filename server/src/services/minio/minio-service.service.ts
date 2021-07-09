@@ -27,7 +27,7 @@ export class MinioService {
     if (!result) {
       this.logger.warn(`Minio bucket ${imageBucket} does not exist! creating...`);
 
-      // prevent auto setup in standalone mode to prevent accidental creation on AWS
+      // disable auto creation in standalone mode to prevent accidental creation on AWS
       if (process.env.STANDALONE_BUILD) {
         throw new Error('setup minio buckets first!');
       }

@@ -23,36 +23,49 @@ export class ImageProcessorService implements OnModuleDestroy {
 
   /**
    *
-   * @param data image upload job object
-   * @returns minio key (file name) of the newly added image
+   * @param source image upload job object
+   * @param resize resize operation params
+   * @returns generated name of the uploaded image
    */
-  public async addUploadJob(source: string, resize?: ResizeParameters) {
+  public async uploadImage(source: string, resize?: ResizeParameters) {
     const data: ImageUploadJob = {
       jobType: ImageProcessorJobType.Upload,
-
       source,
       resize,
     };
 
-    const result = await this.imageQueue.add(data, { timeout: ms('30s') });
+    const job = await this.imageQueue.add(data, {
+      timeout: ms('30s'),
+    });
 
-    // wait for completion of the job
-    const target = (await result.finished()) as string;
+    let finalName: string;
+    try {
+      finalName = (await job.finished()) as string;
+    } finally {
+      // enqueue the source and final image for deletion
+      await this.addDeletionJob(source, finalName);
+    }
 
-    // enqueue image deletion
-    await this.addDeletionJob(source, target);
-
-    return target;
+    return finalName;
   }
 
-  private addDeletionJob(sourceImage: string, targetImage: string) {
+  /**
+   * queues deletion operation
+   * @param source source image path
+   * @param finalFileName temp final image file name
+   */
+  private async addDeletionJob(source: string, finalFileName?: string) {
     const data: ImageDeletionJob = {
       jobType: ImageProcessorJobType.Deletion,
 
-      sourceImage,
-      targetImage,
+      source,
+      finalFileName,
     };
 
-    return this.imageQueue.add(data, { timeout: ms('30s') });
+    await this.imageQueue.add(data, {
+      // give the node runtime some time to free up handles
+      delay: ms('10s'),
+      removeOnFail: 5,
+    });
   }
 }

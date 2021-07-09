@@ -2,7 +2,6 @@ import { Controller, Delete, Get, UseGuards, Param, Req, Post, Body, Patch, NotF
 import {
   ApiOkResponse,
   ApiTags,
-  ApiBody,
   ApiBadRequestResponse,
   ApiUnauthorizedResponse,
   ApiNotFoundResponse,
@@ -110,11 +109,14 @@ export class StrategiesController {
   @ApiNotFoundResponse()
   @ApiBadRequestResponse()
   public async addSharedStrategy(@Req() req: Request, @Param() param: AddSharedStrategyDto) {
-    // const id = new Types.ObjectId(param.id);
-    // const teamId = req.user.team;
-    // const strategy = await this.strategiesService.findById(id);
-    // if (!strategy ||  ) {
-    //   throw new NotFoundException('strategy not found!');
-    // }
+    const id = new Types.ObjectId(param.id);
+    const teamId = req.user.team;
+    const strategy = await this.strategiesService.findById(id);
+
+    console.log(teamId, strategy);
+
+    //  if (!strategy ||  ) {
+    //    throw new NotFoundException('strategy not found!');
+    //  }
   }
 }

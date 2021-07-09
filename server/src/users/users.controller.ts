@@ -85,10 +85,11 @@ export class UsersController implements OnModuleInit {
   @UseInterceptors(FileInterceptor('avatar'))
   @ApiBody({ description: 'Register new user', type: RegisterUserDto })
   @ApiCreatedResponse({ type: RegisterUserResponse })
+  @ApiBadRequestResponse()
   public async registerUser(@Body() model: RegisterUserDto, @UploadedFile() file: Express.Multer.File) {
     let avatar: string;
     if (file) {
-      avatar = await this.imageProcessorService.addUploadJob(file.path, {
+      avatar = await this.imageProcessorService.uploadImage(file.path, {
         width: 256,
         height: 256,
       });
@@ -133,14 +134,17 @@ export class UsersController implements OnModuleInit {
   @UseGuards(AuthenticatedGuard)
   @ApiOkResponse({ type: GetUserResponse })
   public async getUser(@Req() req: Request) {
-    const team = await this.teamsService.findById(req.user.team);
-
-    const obj = new GetUserResponse({
+    const data: Partial<GetUserResponse> = {
       ...req.user.toObject(),
-      team: team ? new GetTeamResponse(team.toObject()) : null,
-    });
+      team: null,
+    };
 
-    return obj;
+    if (req.user.team) {
+      const team = await this.teamsService.findById(req.user.team);
+      data.team = new GetTeamResponse(team.toObject());
+    }
+
+    return new GetUserResponse(data);
   }
 
   @Patch()
@@ -156,7 +160,7 @@ export class UsersController implements OnModuleInit {
     const userDiff: Partial<User> = {};
 
     if (file !== null) {
-      userDiff.avatar = await this.imageProcessorService.addUploadJob(file.path, {
+      userDiff.avatar = await this.imageProcessorService.uploadImage(file.path, {
         width: 256,
         height: 256,
       });

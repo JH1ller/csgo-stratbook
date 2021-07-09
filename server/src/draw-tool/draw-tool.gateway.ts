@@ -12,7 +12,9 @@ export class DrawToolGateway {
   public readonly server: Server;
 
   @SubscribeMessage('events')
-  findAll(@MessageBody() data: any): Observable<WsResponse<number>> {
+  findAll(@MessageBody() data: Record<string, unknown>): Observable<WsResponse<number>> {
+    console.log(data);
+
     return from([1, 2, 3]).pipe(map((item) => ({ event: 'events', data: item })));
   }
 

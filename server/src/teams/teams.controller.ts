@@ -10,14 +10,24 @@ import {
   Patch,
   BadRequestException,
   Delete,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes, ApiBody, ApiTags } from '@nestjs/swagger';
+import {
+  ApiConsumes,
+  ApiBody,
+  ApiTags,
+  ApiCreatedResponse,
+  ApiBadRequestResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 
 import { Express, Request } from 'express';
 
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 import { HasTeamGuard } from 'src/common/guards/has-team.guard';
+
+import { ImageProcessorService } from 'src/services/image-processor/image-processor.service';
 
 import { TeamsService } from './teams.service';
 import { UsersService } from 'src/users/users.service';
@@ -25,11 +35,11 @@ import { UsersService } from 'src/users/users.service';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { DeleteTeamDto } from './dto/delete-team.dto';
 
-import { ImageProcessorService } from 'src/services/image-processor/image-processor.service';
+import { GetTeamResponse } from './responses/get-team.response';
 
+@ApiTags('Teams')
 @Controller('teams')
 @UseGuards(AuthenticatedGuard)
-@ApiTags('Teams')
 export class TeamsController {
   constructor(
     private readonly teamsService: TeamsService,
@@ -38,14 +48,25 @@ export class TeamsController {
   ) {}
 
   @Get()
-  public get(@Req() req: Express.Request) {
-    console.log(req);
+  @UseGuards(HasTeamGuard)
+  @ApiOkResponse({ type: GetTeamResponse })
+  @ApiBadRequestResponse()
+  public async getTeamInfo(@Req() req: Express.Request) {
+    const team = await this.teamsService.findById(req.user.team);
+
+    if (!team) {
+      throw new InternalServerErrorException('team not found!');
+    }
+
+    return new GetTeamResponse(team);
   }
 
   @Post('create')
   @ApiConsumes('multipart/form-data')
-  @ApiBody({ description: 'Create new Team', type: CreateTeamDto })
+  @ApiBody({ description: 'Creates and joins a new Team', type: CreateTeamDto })
   @UseInterceptors(FileInterceptor('avatar'))
+  @ApiCreatedResponse()
+  @ApiBadRequestResponse()
   public async createTeam(
     @Req() req: Request,
     @Body() model: CreateTeamDto,
@@ -53,7 +74,7 @@ export class TeamsController {
   ) {
     let avatar: string;
     if (file) {
-      avatar = await this.imageProcessorService.addUploadJob(file.path, {
+      avatar = await this.imageProcessorService.uploadImage(file.path, {
         width: 256,
         height: 256,
       });
@@ -62,7 +83,7 @@ export class TeamsController {
     const { name, website, serverIp, serverPassword } = model;
 
     const team = await this.teamsService.createTeam(name, website, serverIp, serverPassword, req.user, avatar);
-    await this.usersService.setTeam(req.user.id, team.id);
+    await this.usersService.joinTeam(req.user.id, team.id);
   }
 
   @Delete('delete')

@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { useContainer } from 'class-validator';
+import os from 'os';
 
 import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -44,6 +45,8 @@ export class ServerEntry {
       `Build: ${chalk.green(process.env.BUILD_TIME)} ` +
         `git-commit: ${chalk.magenta(process.env.GIT_VERSION)} (${chalk.magenta(process.env.GIT_AUTHOR_DATE)})`
     );
+
+    this.printOsDebugInfo();
 
     this.app = await NestFactory.create<NestExpressApplication>(AppModule, {});
     this.app.enableShutdownHooks();
@@ -105,6 +108,7 @@ export class ServerEntry {
 
     this.app.useGlobalPipes(
       new ValidationPipe({
+        transform: true,
         whitelist: true,
         forbidNonWhitelisted: true,
         validationError: { target: false, value: false },
@@ -177,6 +181,16 @@ export class ServerEntry {
     SwaggerModule.setup(route, this.app, document);
 
     this.logger.debug(`Swagger running on route: ${chalk.magenta(`/${route}`)}`);
+  }
+
+  private printOsDebugInfo() {
+    const cpus = os.cpus();
+
+    if (cpus.length < 1) {
+      this.logger.debug('Failed to get cpu info!');
+    } else {
+      this.logger.debug(`System processor: ${cpus[0].model.trimEnd()}, speed: ${cpus[0].speed}, ${cpus.length} cores`);
+    }
   }
 }
 

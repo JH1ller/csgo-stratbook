@@ -35,6 +35,8 @@ interface EmailChangeData {
 export class UsersService {
   private readonly mailTokenSecret: string;
 
+  private readonly createUserWithConfirmedMail: boolean;
+
   constructor(
     private readonly configService: ConfigService,
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
@@ -42,6 +44,7 @@ export class UsersService {
     private readonly minioService: MinioService
   ) {
     this.mailTokenSecret = this.configService.get<string>('mail.tokenSecret');
+    this.createUserWithConfirmedMail = configService.get<boolean>('debug.createUserWithConfirmedMail');
   }
 
   /**
@@ -80,7 +83,7 @@ export class UsersService {
       avatar,
     });
 
-    if (this.configService.get<boolean>('debug.createUserWithConfirmedMail')) {
+    if (this.createUserWithConfirmedMail) {
       createdUser.emailConfirmed = true;
     } else {
       const data: EmailConfirmationData = {
@@ -174,13 +177,8 @@ export class UsersService {
    * @param id userId
    * @param teamId teamId
    */
-  public setTeam(userId: Types.ObjectId, teamId: Types.ObjectId | null) {
-    return this.userModel
-      .updateOne({
-        _id: userId,
-        team: teamId,
-      })
-      .exec();
+  public joinTeam(userId: Types.ObjectId, teamId: Types.ObjectId | null) {
+    return this.userModel.updateOne({ _id: userId }, { team: teamId }).exec();
   }
 
   public async getTeamMembers(teamId: Types.ObjectId) {
@@ -200,7 +198,7 @@ export class UsersService {
   }
 
   public unassignTeam(userId: Types.ObjectId) {
-    return this.setTeam(userId, null);
+    return this.joinTeam(userId, null);
   }
 
   /**

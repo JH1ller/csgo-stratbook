@@ -1,8 +1,5 @@
-import { Controller, UseGuards, Get, Post, Res } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
-
-import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
+import { Controller, Get } from '@nestjs/common';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Administration')
 @Controller('administration')

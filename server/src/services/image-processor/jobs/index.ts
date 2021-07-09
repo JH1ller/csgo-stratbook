@@ -4,8 +4,14 @@ export interface ResizeParameters {
 }
 
 export enum ImageProcessorJobType {
+  /**
+   * upload task
+   */
   Upload,
 
+  /**
+   * delete task for image files from /public/
+   */
   Deletion,
 }
 
@@ -27,10 +33,20 @@ export interface ImageUploadJob extends ImageProcessorJob {
 }
 
 /**
- * delete image from /public/ io
+ * Delete job for uploaded image assets
+ *
+ * This operation is split from the upload job, as node cannot
+ * immediately free file handles. Therefore we run into access problems when
+ * attempting to delete these files immediately.
  */
 export interface ImageDeletionJob extends ImageProcessorJob {
-  sourceImage: string;
+  /**
+   * path to source image
+   */
+  source: string;
 
-  targetImage: string;
+  /**
+   * (file)-name of the newly converted and compressed image
+   */
+  finalFileName?: string;
 }

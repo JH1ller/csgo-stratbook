@@ -82,7 +82,7 @@ export class UtilitiesController {
   ) {
     let images: string[] = [];
     if (files && files.images) {
-      const tasks = files.images.map((file) => this.imageProcessorService.addUploadJob(file.path));
+      const tasks = files.images.map((file) => this.imageProcessorService.uploadImage(file.path));
       images = await Promise.all(tasks);
     }
 

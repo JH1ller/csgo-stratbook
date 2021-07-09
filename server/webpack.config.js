@@ -149,15 +149,15 @@ module.exports = (env) => {
       }),
 
       new CaseSensitivePathsPlugin(),
-      // new ForkTsCheckerWebpackPlugin({
-      //   eslint: {
-      //     // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
-      //     files: [
-      //       './src/**/*.{ts,tsx,js,jsx}',
-      //       './src-processors/**/*.{ts,tsx,js,jsx}',
-      //     ],
-      //   },
-      // }),
+      new ForkTsCheckerWebpackPlugin({
+        eslint: {
+          // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
+          files: [
+            './src/**/*.{ts,tsx,js,jsx}',
+            './src-processors/**/*.{ts,tsx,js,jsx}',
+          ],
+        },
+      }),
 
       new webpack.WatchIgnorePlugin({
         paths: [
