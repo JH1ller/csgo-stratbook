@@ -6,6 +6,8 @@ const NativeModule = require("module");
 const fs = require("fs");
 const path = require("path");
 
+const decache = require('decache');
+
 // WIP: hot reload helper
 
 function compileScript(code, filename, requireProxy) {
@@ -70,60 +72,10 @@ function requireModule(filePath, basedir, resolvedModules) {
   }
 }
 
-// WIP: code taken from decache https://github.com/dwyl/decache/blob/master/decache.js
-
-function decache(moduleName, basedir) {
-  // Run over the cache looking for the files
-  // loaded by the specified module name
-  searchCache(moduleName, basedir, function (mod) {
-    delete require.cache[mod.id];
-  });
-
-  // Remove cached paths to the module.
-  // Thanks to @bentael for pointing this out.
-  Object.keys(module.constructor._pathCache).forEach(function (cacheKey) {
-    if (cacheKey.indexOf(moduleName) > -1) {
-      delete module.constructor._pathCache[cacheKey];
-    }
-  });
-}
 
 /**
- * Runs over the cache to search for all the cached
- * files
+ * params schema definition
  */
-function searchCache(moduleName, basedir, callback) {
-  // Resolve the module identified by the specified name
-  var mod = require.resolve(moduleName, [basedir]);
-  var visited = {};
-
-  // Check if the module has been resolved and found within
-  // the cache no else so #ignore else http://git.io/vtgMI
-  /* istanbul ignore else */
-  if (mod && ((mod = require.cache[mod]) !== undefined)) {
-    // Recursively go over the results
-    (function run(current) {
-      visited[current.id] = true;
-      // Go over each of the module's children and
-      // run over it
-      current.children.forEach(function (child) {
-
-        // ignore .node files, decachine native modules throws a
-        // "module did not self-register" error on second require
-        if (path.extname(child.filename) !== '.node' && !visited[child.id]) {
-          run(child);
-        }
-      });
-
-      // Call the specified callback providing the
-      // found module
-      callback(current);
-    })(mod);
-  }
-};
-
-
-//
 const schema = {
   type: 'object',
   properties: {
@@ -149,8 +101,13 @@ class WebpackWatchSandboxPlugin {
     };
   }
 
+  /**
+   *
+   * @param {webpack.Compiler} compiler
+   */
   apply(compiler) {
-    compiler.hooks.afterEmit.tapAsync('WebpackWatchSandboxPlugin', (compilation, cb) => {
+
+    compiler.hooks.afterEmit.tapPromise('WebpackWatchSandboxPlugin', async (compilation) => {
       const { assets, compiler } = compilation;
       const { options } = this;
 
@@ -167,6 +124,7 @@ class WebpackWatchSandboxPlugin {
           console.log(`More than one entry built, selected ${name}. All names: ${names.join(' ')}`);
         }
       }
+
       if (!compiler.options.output || !compiler.options.output.path) {
         throw new Error('output.path should be defined in webpack config!');
       }
@@ -180,18 +138,15 @@ class WebpackWatchSandboxPlugin {
         console.log("reloading...")
         console.log()
 
+        // disposing currently running instance
+        await this.instance.dispose();
 
         for (const i in this.context.resolvedModules) {
-          if (
-            i === `@nestjs/passport` ||
-            i === `@nestjs/bull`
-          ) {
-            const mod = require.resolve(i, [__dirname]);
+          const mod = require.resolve(i, [__dirname]);
 
-            if (require.cache[mod]) {
-              console.log(`decache ${i}`)
-              decache(i, __dirname)
-            }
+          if (require.cache[mod]) {
+            console.log('decache', i)
+            decache(i, __dirname)
           }
         }
       }
@@ -216,25 +171,9 @@ class WebpackWatchSandboxPlugin {
           console.log(`[warning] module ${name} has no default export!`);
         }
 
-        if (this.instance != null) {
-          this.instance.dispose()
-            .then(() => {
-              this.instance = script.exports["default"]();
-
-              this.instance.bootstrap()
-                .then(() => {
-                  cb();
-                })
-            })
-        } else {
-          // construct instance
-          this.instance = script.exports["default"]();
-
-          this.instance.bootstrap()
-            .then(() => {
-              cb();
-            })
-        }
+        // construct instance
+        this.instance = script.exports["default"]();
+        await this.instance.bootstrap();
       }
       catch (err) {
         console.log(err)

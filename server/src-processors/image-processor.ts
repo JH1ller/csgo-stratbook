@@ -82,12 +82,14 @@ async function isFileImage(source: string) {
 
     if (chunk) {
       const type = imageType(chunk);
-      switch (type.ext) {
-        case 'jpg':
-        case 'png':
-        case 'gif':
-        case 'webp':
-          return true;
+      if (type) {
+        switch (type.ext) {
+          case 'jpg':
+          case 'png':
+          case 'gif':
+          case 'webp':
+            return true;
+        }
       }
     }
   } finally {

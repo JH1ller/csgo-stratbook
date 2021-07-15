@@ -146,8 +146,9 @@ export class UtilitiesService {
 
   /**
    *
-   * @param id id of the dragged strategy
-   * @param position new display position of the dragged strategy
+   * @param id id of the dragged utilities
+   * @param oldPosition old display position of the drag utility
+   * @param newPosition new display position of the dragged utility
    */
   public async updateDisplayPosition(id: Types.ObjectId, oldPosition: number, newPosition: number) {
     const utilities = await this.utilityModel
