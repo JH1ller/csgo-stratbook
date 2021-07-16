@@ -3,6 +3,7 @@ import { StratTypes } from '@/api/models/StratTypes';
 import { UtilityTypes } from '@/api/models/UtilityTypes';
 import StorageService from '@/services/storage.service';
 import TrackingService from '@/services/tracking.service';
+import { toggleArray } from '@/utils/toggleArray';
 import { Module } from 'vuex';
 import { RootState } from '..';
 
@@ -21,7 +22,7 @@ export interface StratFilters {
   name: string;
   content: string;
   side: Sides | null;
-  type: StratTypes | null;
+  types: StratTypes[];
 }
 export interface UtilityFilters {
   name: string;
@@ -39,7 +40,7 @@ const filterInitialState = (): FilterState => ({
     name: '',
     content: '',
     side: null,
-    type: null,
+    types: [],
   },
   utilityFilters: {
     name: '',
@@ -59,7 +60,7 @@ export const filterModule: Module<FilterState, RootState> = {
       return Object.values(state.utilityFilters).filter(v => v).length;
     },
     activeStratFilterCount(state): number {
-      return Object.values(state.stratFilters).filter(v => v).length;
+      return Object.values(state.stratFilters).filter(v => (Array.isArray(v) ? v.length : v)).length;
     },
   },
   actions: {
@@ -67,10 +68,10 @@ export const filterModule: Module<FilterState, RootState> = {
       commit(SET_STRAT_CONTENT_FILTER, value);
       storageService.set('filters', state);
     },
-    updateStratTypeFilter({ commit, state }, value: StratTypes | null) {
+    updateStratTypeFilter({ commit, state }, value: StratTypes[]) {
       commit(SET_STRAT_TYPE_FILTER, value);
       storageService.set('filters', state);
-      trackingService.track('Filter: Strat Type', { value: value as string });
+      trackingService.track('Filter: Strat Types', { value: value });
     },
     updateStratSideFilter({ commit, state }, value: Sides | null) {
       commit(SET_STRAT_SIDE_FILTER, value);
@@ -83,7 +84,7 @@ export const filterModule: Module<FilterState, RootState> = {
     },
     clearStratFilters({ commit }) {
       commit(SET_STRAT_CONTENT_FILTER, '');
-      commit(SET_STRAT_TYPE_FILTER, null);
+      commit(SET_STRAT_TYPE_FILTER, []);
       commit(SET_STRAT_SIDE_FILTER, null);
       commit(SET_STRAT_NAME_FILTER, '');
       storageService.remove('filters');
@@ -130,8 +131,8 @@ export const filterModule: Module<FilterState, RootState> = {
     [SET_STRAT_CONTENT_FILTER](state, value: string) {
       state.stratFilters.content = value;
     },
-    [SET_STRAT_TYPE_FILTER](state, value: StratTypes | null) {
-      state.stratFilters.type = value;
+    [SET_STRAT_TYPE_FILTER](state, value: StratTypes[]) {
+      state.stratFilters.types = value;
     },
     [SET_STRAT_SIDE_FILTER](state, value: Sides | null) {
       state.stratFilters.side = value;

@@ -32,7 +32,7 @@
           icon="plus"
           @click="showUtilityForm"
           v-tippy
-          content="CTRL+A"
+          content="CTRL+Shift+A"
         />
       </div>
     </transition>

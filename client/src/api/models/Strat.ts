@@ -5,7 +5,7 @@ import { StratTypes } from './StratTypes';
 
 export interface Strat extends Model {
   name: string;
-  type: StratTypes;
+  types: StratTypes[];
   map: MapID;
   side: Sides;
   active: boolean;

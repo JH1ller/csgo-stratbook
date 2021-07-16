@@ -72,6 +72,18 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '1.9.0',
+        date: '2021-07-16',
+        changes: [
+          'New "Setpos" Option for utilities',
+          'Multiple economy types now allowed for strats',
+          'Filter state is now persisted',
+          'Window size and location state is now persisted (Desktop Client)',
+          'Button to invert sort direction for strats',
+          'Desktop Client updates are now installed automatically',
+        ],
+      },
+      {
         version: '1.8.6',
         date: '2021-06-09',
         changes: ['Fix DrawTool drawable area not matching map size'],

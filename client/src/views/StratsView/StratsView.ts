@@ -50,7 +50,7 @@ export default class StratsView extends Vue {
   @appModule.State gameMode!: boolean;
 
   @filterModule.Action updateStratContentFilter!: (value: string) => Promise<void>;
-  @filterModule.Action updateStratTypeFilter!: (type: StratTypes | null) => Promise<void>;
+  @filterModule.Action updateStratTypeFilter!: (types: StratTypes[]) => Promise<void>;
   @filterModule.Action updateStratNameFilter!: (name: string) => Promise<void>;
   @filterModule.Action updateStratSideFilter!: (side: Sides | null) => Promise<void>;
   @filterModule.Action clearStratFilters!: () => Promise<void>;
@@ -100,7 +100,7 @@ export default class StratsView extends Vue {
         handler: () => this.execShortcut(this.collapseAll),
       },
       {
-        shortcut: 'Ctrl+A',
+        shortcut: 'Ctrl+Shift+A',
         handler: () => this.execShortcut(this.showStratForm),
       },
       {
@@ -231,5 +231,9 @@ export default class StratsView extends Vue {
     this.trackingService.track('Action: Change Sort Direction', {
       direction: this.sort === Sort.DateAddedASC ? 'Date Added ASC' : 'Date Added DESC',
     });
+  }
+
+  private applyStratTypeFilter(value: StratTypes) {
+    this.updateStratTypeFilter([value]);
   }
 }

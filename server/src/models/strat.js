@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
 
+const arrNotEmpty = (value) => !!value.length;
+
 const stratSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -30,6 +32,12 @@ const stratSchema = new mongoose.Schema({
     type: String,
     enum: ['PISTOL', 'FORCE', 'BUYROUND'],
     default: 'BUYROUND',
+  },
+
+  types: {
+    type: [String],
+    default: [],
+    validate: [arrNotEmpty, '{PATH} must have a length of >=1'],
   },
 
   active: {

@@ -82,6 +82,13 @@
   }
 
   &__type {
+    &:not(:first-child) {
+      margin-left: 12px;
+    }
+  }
+
+  &__types-wrapper {
+    display: flex;
     margin-left: auto;
   }
 

@@ -64,7 +64,7 @@ export default class UtilityView extends Vue {
         handler: () => this.execShortcut(this.toggleFilterMenu),
       },
       {
-        shortcut: 'Ctrl+A',
+        shortcut: 'Ctrl+Shift+A',
         handler: () => this.execShortcut(this.showUtilityForm),
       },
     ]);

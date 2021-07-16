@@ -1,6 +1,6 @@
 {
   "name": "csgo-stratbook",
-  "version": "1.8.8",
+  "version": "1.9.0",
   "private": true,
   "author": {
     "name": "Justin Hiller",
@@ -12,7 +12,8 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "electron:build": "vue-cli-service electron:build",
-    "electron:publish": "SET BUILD_TARGET=ELECTRON && vue-cli-service electron:build --publish always",
+    "electron:publish": "cross-env BUILD_TARGET=ELECTRON PUBLISHTO=prod vue-cli-service electron:build --publish always",
+    "electron:publish:dev": "cross-env BUILD_TARGET=ELECTRON AWS_ACCESS_KEY_ID=minioadmin AWS_SECRET_ACCESS_KEY=minioadmin vue-cli-service electron:build --publish always",
     "electron:serve": "vue-cli-service electron:serve"
   },
   "main": "background.js",
@@ -79,6 +80,7 @@
     "@vue/cli-service": "~4.2.0",
     "@vue/eslint-config-typescript": "^7.0.0",
     "babel-eslint": "^10.0.3",
+    "cross-env": "^7.0.3",
     "csgo-gsi-types": "^1.0.7",
     "devtron": "^1.4.0",
     "electron": "^9.4.0",

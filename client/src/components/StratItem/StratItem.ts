@@ -69,19 +69,23 @@ export default class StratItem extends Vue {
     return this.strat.side === Sides.CT;
   }
 
+  private get sortedTypes(): StratTypes[] {
+    return this.strat.types.sort((a, b) => a.localeCompare(b, 'en'));
+  }
+
   private openVideo() {
     openLink(this.strat.videoLink as string);
   }
 
   @Emit()
-  private filterType() {
-    this.showToast({ id: 'strat-item/filter-type', text: `Applied filter: ${titleCase(this.strat.type)}`});
-    return this.strat.type;
+  private filterType(type: StratTypes) {
+    this.showToast({ id: 'strat-item/filter-type', text: `Applied filter: ${titleCase(type)}` });
+    return type;
   }
 
   @Emit()
   private filterSide() {
-    this.showToast({ id: 'strat-item/filter-side', text: `Applied filter: ${this.strat.side} side`});
+    this.showToast({ id: 'strat-item/filter-side', text: `Applied filter: ${this.strat.side} side` });
     return this.strat.side;
   }
 
@@ -160,8 +164,8 @@ export default class StratItem extends Vue {
   }
 
   // TODO: replace with i18n implementation once vuei18n is in
-  private get typeTooltip() {
-    switch (this.strat.type) {
+  private typeTooltip(type: StratTypes): string {
+    switch (type) {
       case StratTypes.BUYROUND:
         return 'Buy-Round';
       case StratTypes.FORCE:

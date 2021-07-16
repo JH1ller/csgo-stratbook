@@ -33,7 +33,7 @@
       @edit-changed="updateEdited"
       @editor-focussed="hasEditorFocus = true"
       @editor-blurred="hasEditorFocus = false"
-      @filter-type="updateStratTypeFilter"
+      @filter-type="applyStratTypeFilter"
       @filter-side="updateStratSideFilter"
     />
     <transition name="fade">
@@ -85,7 +85,7 @@
             icon="plus"
             @click="showStratForm"
             v-tippy
-            content="CTRL+A"
+            content="CTRL+Shift+A"
           />
         </transition>
       </div>

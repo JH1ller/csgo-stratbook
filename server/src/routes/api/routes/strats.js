@@ -25,7 +25,8 @@ router.post('/', verifyAuth, async (req, res) => {
 
   const strat = new Strat({
     name: req.body.name,
-    type: req.body.type,
+    // TODO: remove compatability fallback after noone is using <=1.8.8 anymore
+    types: req.body.types ?? [req.body.type],
     map: req.body.map,
     side: req.body.side,
     active: req.body.active,
@@ -62,7 +63,7 @@ router.post('/share/:id', verifyAuth, async (req, res) => {
     note: strat.note,
     videoLink: strat.videoLink,
     side: strat.side,
-    type: strat.type,
+    types: strat.types,
     map: strat.map,
     createdBy: res.player._id,
     createdAt: Date.now(),
@@ -81,7 +82,9 @@ router.patch('/', verifyAuth, getStrat, async (req, res) => {
     'name',
     'map',
     'side',
+    // TODO: remove compatability fallback after noone is using <=1.8.8 anymore
     'type',
+    'types',
     'active',
     'videoLink',
     'note',

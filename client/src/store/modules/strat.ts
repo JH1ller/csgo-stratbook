@@ -51,8 +51,9 @@ export const stratModule: Module<StratState, RootState> = {
     filteredStratsOfCurrentMap(_state, getters, rootState): Strat[] {
       return (getters.stratsOfCurrentMap as Strat[]).filter(
         strat =>
-          (rootState.filter.stratFilters.side ? rootState.filter.stratFilters.side === strat.side : true) &&
-          (rootState.filter.stratFilters.type ? rootState.filter.stratFilters.type === strat.type : true) &&
+          (!rootState.filter.stratFilters.side || rootState.filter.stratFilters.side === strat.side) &&
+          (!rootState.filter.stratFilters.types.length ||
+            rootState.filter.stratFilters.types.some(typeFilter => strat.types.includes(typeFilter))) &&
           (rootState.filter.stratFilters.name
             ? strat.name.toLowerCase().includes(rootState.filter.stratFilters.name.toLowerCase())
             : true) &&
@@ -95,7 +96,7 @@ export const stratModule: Module<StratState, RootState> = {
         dispatch('app/showToast', { id: 'strat/createStrat', text: 'Added strat.' }, { root: true });
         trackingService.track('Action: Create Strat', {
           name: payload.name!,
-          type: payload.type!,
+          types: payload.types!,
           side: payload.side!,
           note: payload.note!,
         });
