@@ -29,7 +29,7 @@ export interface TestUser {
  */
 export async function createLoginAccount(): Promise<TestUser> {
   const userName = faker.internet.userName();
-  const email = faker.internet.email();
+  const email = generateEmail();
   const password = generatePassword();
 
   await req
@@ -81,6 +81,10 @@ export async function performLocalAuthentication(email: string, password: string
     instance,
     cookies,
   };
+}
+
+export function generateEmail() {
+  return faker.datatype.number().toString(10) + faker.internet.email();
 }
 
 export function generateTeamInfo() {

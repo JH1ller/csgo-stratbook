@@ -1,6 +1,9 @@
 // jest integration test entry
 import type { Config } from '@jest/types';
 import { defaults as tsjPreset } from 'ts-jest/presets';
+import { pathsToModuleNameMapper } from 'ts-jest/utils';
+
+import { compilerOptions } from './tsconfig.json';
 
 import 'ts-jest/dist/types';
 
@@ -10,11 +13,11 @@ export default async (): Promise<Config.InitialOptions> => {
 
     globals: {
       'ts-jest': {
-        tsconfig: {
-          importHelpers: true,
-        },
+        tsconfig: '<rootDir>/tsconfig.eslint.json',
       },
     },
+
+    collectCoverageFrom: ['!./dist/*.{js,jsx}'],
 
     moduleFileExtensions: ['js', 'json', 'ts'],
 
@@ -28,9 +31,7 @@ export default async (): Promise<Config.InitialOptions> => {
       '^.+\\.hbs$': '<rootDir>/test/__transform__/html-loader.js',
     },
 
-    moduleNameMapper: {
-      '^src/(.*)$': '<rootDir>/src/$1',
-    },
+    moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
 
     globalSetup: './jest.integration.global-setup.ts',
     globalTeardown: './jest.integration.global-teardown.ts',

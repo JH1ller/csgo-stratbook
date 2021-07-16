@@ -1,5 +1,11 @@
 {
   "extends": "./tsconfig.json",
+
+  "compilerOptions": {
+    "noEmitHelpers": false,
+    "importHelpers": true,
+  },
+
   "exclude": ["node_modules", "dist"],
   "include": [
     "src/**/*.ts",
@@ -7,6 +13,8 @@
     "test/**/*.ts",
     "jest.integration.global-setup.ts",
     "jest.integration.config.ts",
-    "jest.integration.global-teardown.ts"
+    "jest.integration.global-teardown.ts",
+    "webpack-watch-sandbox.js",
+    "webpack.config.js"
   ]
 }

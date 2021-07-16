@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
-import { unlink } from 'fs/promises';
+import { unlink, open } from 'fs/promises';
 import { v4 as uuid } from 'uuid';
 
 import { Job } from 'bull';
@@ -34,7 +34,11 @@ const imageBucket = process.env.MINIO_IMAGE_BUCKET;
 const uploadTempDir = process.env.UPLOAD_TEMP_DIR;
 
 console.log(chalk.green(`[image-processor] launched with pid: ${process.pid}`));
-console.log(chalk.green(`[image-processor] using bucket: ${imageBucket} and temp_dir: ${uploadTempDir}`));
+console.log(
+  chalk.green(
+    `[image-processor] using bucket: ${imageBucket}@${process.env.MINIO_ENDPOINT} and temp_dir: ${uploadTempDir}`
+  )
+);
 
 if (!fs.existsSync(uploadTempDir)) {
   throw new Error(`upload temp dir ${uploadTempDir} does not exist!`);
@@ -62,38 +66,30 @@ export default async (job: Job<ImageProcessorJob>) => {
  * @returns is image
  */
 async function isFileImage(source: string) {
-  const stream = fs.createReadStream(source, {
-    start: 0,
-    end: imageType.minimumBytes,
-  });
+  const { minimumBytes } = imageType;
 
+  let buffer = new Uint8Array(minimumBytes);
+
+  const file = await open(source, 'r');
   try {
-    const chunk = await new Promise<Buffer>((resolve, reject) => {
-      stream.on('data', (dataChunk) => {
-        if (dataChunk instanceof Buffer) {
-          return resolve(dataChunk);
-        }
+    const result = await file.read(buffer, 0, minimumBytes);
 
-        return resolve(Buffer.from(dataChunk));
-      });
+    if (result.bytesRead < minimumBytes) {
+      buffer = buffer.slice(0, result.bytesRead);
+    }
 
-      stream.on('error', reject);
-    });
-
-    if (chunk) {
-      const type = imageType(chunk);
-      if (type) {
-        switch (type.ext) {
-          case 'jpg':
-          case 'png':
-          case 'gif':
-          case 'webp':
-            return true;
-        }
+    const type = imageType(buffer);
+    if (type) {
+      switch (type.ext) {
+        case 'jpg':
+        case 'png':
+        case 'gif':
+        case 'webp':
+          return true;
       }
     }
   } finally {
-    stream.close();
+    await file.close();
   }
 
   return false;

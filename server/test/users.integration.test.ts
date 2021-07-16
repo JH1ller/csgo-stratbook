@@ -2,7 +2,7 @@ import faker from 'faker';
 import each from 'jest-each';
 
 import { req, apiConfig } from './config';
-import { createLoginAccount, performLocalAuthentication, generateTeamInfo } from './utils';
+import { createLoginAccount, performLocalAuthentication, generateEmail } from './utils';
 import { generatePassword } from './helpers';
 
 import { UsersApiAxiosParamCreator, TeamsApiAxiosParamCreator } from './api';
@@ -12,7 +12,7 @@ faker.seed(Math.floor(1000_000_000 * Math.random()));
 describe('Users integration', () => {
   it('register user - invalid user name', async () => {
     const userName = 'a';
-    const email = faker.internet.email();
+    const email = generateEmail();
     const password = generatePassword();
 
     await req
@@ -31,7 +31,7 @@ describe('Users integration', () => {
     './test/images/test_01.webp',
   ]).test('register user - avatar %s', async (image: string) => {
     const userName = faker.internet.userName();
-    const email = faker.internet.email();
+    const email = generateEmail();
     const password = generatePassword();
 
     await req
@@ -71,7 +71,7 @@ describe('Users integration', () => {
     './test/images/invalid-image-03.bin',
   ]).test('register user - avatar invalid file type (%s)', async (image: string) => {
     const userName = faker.internet.userName();
-    const email = faker.internet.email();
+    const email = generateEmail();
     const password = generatePassword();
 
     await req
@@ -109,7 +109,7 @@ describe('Users integration', () => {
 
   it('register user - weak password', async () => {
     const userName = faker.internet.userName();
-    const email = faker.internet.email();
+    const email = generateEmail();
     const password = 'weak';
 
     await req

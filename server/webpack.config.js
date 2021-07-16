@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const chalk = require('chalk');
 const webpack = require('webpack');
 const path = require('path');
-const child_process = require('child_process');
+const childProcess = require('child_process');
 
 const NodeExternals = require('webpack-node-externals');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
@@ -10,7 +11,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const WebpackWatchSandboxPlugin = require('./webpack-watch-sandbox');
 
 function git(command) {
-  return child_process.execSync(`git ${command}`, { encoding: 'utf8' }).trim();
+  return childProcess.execSync(`git ${command}`, { encoding: 'utf8' }).trim();
 }
 
 /**
@@ -23,6 +24,7 @@ module.exports = (env) => {
 
   const isDevBuild = !env.prod;
   const isStandalone = !!env.standalone;
+  const instrumentCode = !!env.instrumentCode;
 
   console.log(chalk.green('mode:', isDevBuild ? 'development' : 'production'));
 
@@ -76,12 +78,38 @@ module.exports = (env) => {
       rules: [
         {
           test: /.tsx?$/,
-          loader: 'ts-loader',
           exclude: /node_modules/,
-          options: {
-            // disable type checker - we will use it in fork plugin
-            transpileOnly: true,
-          },
+          use: (instrumentCode
+            ? [
+                {
+                  loader: 'babel-loader',
+                  options: {
+                    presets: [
+                      [
+                        '@babel/preset-env',
+                        {
+                          // don't emit regenerator runtime code
+                          targets: {
+                            node: '16',
+                          },
+                          debug: true,
+                        },
+                      ],
+                    ],
+                    plugins: ['istanbul'],
+                  },
+                },
+              ]
+            : []
+          ).concat([
+            {
+              loader: 'ts-loader',
+              options: {
+                // disable type checker - we will use it in fork plugin
+                transpileOnly: true,
+              },
+            },
+          ]),
         },
         {
           test: /\.hbs$/i,
@@ -152,10 +180,7 @@ module.exports = (env) => {
       new ForkTsCheckerWebpackPlugin({
         eslint: {
           // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
-          files: [
-            './src/**/*.{ts,tsx,js,jsx}',
-            './src-processors/**/*.{ts,tsx,js,jsx}',
-          ],
+          files: ['./src/**/*.{ts,tsx,js,jsx}', './src-processors/**/*.{ts,tsx,js,jsx}'],
         },
       }),
 

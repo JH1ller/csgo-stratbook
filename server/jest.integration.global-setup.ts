@@ -27,7 +27,9 @@ module.exports = async function () {
 
   const config = configFactory({
     prod: true,
+    instrumentCode: true,
   });
+
   const compiler = webpack(config);
 
   await new Promise<webpack.Stats>((resolve, reject) => {

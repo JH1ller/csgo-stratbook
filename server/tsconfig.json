@@ -19,9 +19,7 @@
     "sourceMap": true,
     "baseUrl": "./",
 
-    "lib": [
-      "ESNext",
-    ],
+    "lib": ["ESNext"],
 
 
     "outDir": "./dist",
@@ -34,5 +32,6 @@
 
     "types": ["node", "webpack-env", "jest"]
   },
+
   "exclude": ["/dist"]
 }

@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const schemaUtils = require('schema-utils');
 
 const webpack = require('webpack');
-const vm = require("vm");
-const NativeModule = require("module");
-const fs = require("fs");
-const path = require("path");
+const vm = require('vm');
+const NativeModule = require('module');
+const fs = require('fs');
+const path = require('path');
 
 const decache = require('decache');
 
@@ -29,18 +30,13 @@ function compileScript(code, filename, requireProxy) {
 
   // execute the wrapped bundle code
   // (this requires: libraryTarget: "commonjs2")
-  compiledScript.call(
-    m.exports,
-    m.exports,
-    requireProxy,
-    m,
-  );
+  compiledScript.call(m.exports, m.exports, requireProxy, m);
 
   return m;
 }
 
 function requireProxy(filePath) {
-  if (filePath.charAt(0) == ".") {
+  if (filePath.charAt(0) === '.') {
     return requireLocalFile(filePath, this.outputDir);
   }
 
@@ -56,22 +52,18 @@ function requireLocalFile(filePath, outputDir) {
 }
 
 function requireModule(filePath, basedir, resolvedModules) {
-  filePath = path.posix.join(".", filePath);
+  filePath = path.posix.join('.', filePath);
 
   try {
     console.log(`(require-proxy) require: ${filePath}`);
 
-    return require(resolvedModules[filePath] || (
-      resolvedModules[filePath] = require.resolve(filePath, [basedir])),
-    );
-  }
-  catch (e) {
-    console.log("exception in require proxy:");
+    return require(resolvedModules[filePath] || (resolvedModules[filePath] = require.resolve(filePath, [basedir])));
+  } catch (e) {
+    console.log('exception in require proxy:');
     console.log(e);
     return null;
   }
 }
-
 
 /**
  * params schema definition
@@ -86,10 +78,10 @@ const schema = {
 };
 
 class WebpackWatchSandboxPlugin {
-  instance = null
-  disposeCache = false
+  instance = null;
+  disposeCache = false;
 
-  context = {}
+  context = {};
 
   constructor(options = {}) {
     schemaUtils.validate(schema, options, {
@@ -106,7 +98,6 @@ class WebpackWatchSandboxPlugin {
    * @param {webpack.Compiler} compiler
    */
   apply(compiler) {
-
     compiler.hooks.afterEmit.tapPromise('WebpackWatchSandboxPlugin', async (compilation) => {
       const { assets, compiler } = compilation;
       const { options } = this;
@@ -131,12 +122,12 @@ class WebpackWatchSandboxPlugin {
 
       const entryPoint = `${compiler.options.output.path}/${name}`;
 
-      const file = fs.readFileSync(path.resolve(entryPoint), "utf-8");
+      const file = fs.readFileSync(path.resolve(entryPoint), 'utf-8');
 
       if (this.instance !== null) {
-        console.log()
-        console.log("reloading...")
-        console.log()
+        console.log();
+        console.log('reloading...');
+        console.log();
 
         // disposing currently running instance
         await this.instance.dispose();
@@ -145,8 +136,8 @@ class WebpackWatchSandboxPlugin {
           const mod = require.resolve(i, [__dirname]);
 
           if (require.cache[mod]) {
-            console.log('decache', i)
-            decache(i, __dirname)
+            console.log('decache', i);
+            decache(i, __dirname);
           }
         }
       }
@@ -155,28 +146,23 @@ class WebpackWatchSandboxPlugin {
         basedir: __dirname,
         outputDir: compiler.options.output.path,
         resolvedModules: {},
-      }
+      };
 
       try {
         // compile script
-        const script = compileScript(
-          file,
-          name,
-          requireProxy.bind(this.context),
-        );
+        const script = compileScript(file, name, requireProxy.bind(this.context));
 
         // get <default> export from entry module
-        const hasDefaultExport = Object.hasOwnProperty.call(script.exports, "default");
+        const hasDefaultExport = Object.hasOwnProperty.call(script.exports, 'default');
         if (!hasDefaultExport) {
           console.log(`[warning] module ${name} has no default export!`);
         }
 
         // construct instance
-        this.instance = script.exports["default"]();
+        this.instance = script.exports.default();
         await this.instance.bootstrap();
-      }
-      catch (err) {
-        console.log(err)
+      } catch (err) {
+        console.log(err);
       }
     });
   }

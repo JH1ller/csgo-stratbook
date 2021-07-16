@@ -1,14 +1,12 @@
-import faker from 'faker';
-
 import { req, apiConfig } from './config';
-import { generatePassword, createLoginAccount } from './utils';
+import { generatePassword, createLoginAccount, generateEmail } from './utils';
 
 import { AuthApiAxiosParamCreator } from './api';
 
 describe('Auth integration', () => {
   it('local sign in (user does not exist)', async () => {
     const route = await AuthApiAxiosParamCreator(apiConfig).authControllerLogin({
-      email: faker.internet.email(),
+      email: generateEmail(),
       password: generatePassword(),
     });
 
@@ -26,7 +24,7 @@ describe('Auth integration', () => {
 
     return req
       .post(route.url)
-      .set('Cookie', [`sid=${faker.internet.password(12)}`])
+      .set('Cookie', [`sid=${generatePassword()}`])
       .expect(401);
   });
 
