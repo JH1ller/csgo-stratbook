@@ -1,7 +1,9 @@
 <template>
   <div class="app">
-    <span class="app__version">Beta {{ appVersion }}</span>
-    <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi"/></span>
+    <div class="app__version-wrapper">
+      <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi"/></span>
+      <span class="app__version">{{ appVersion }}</span>
+    </div>
     <DialogWrapper />
     <ToastWrapper />
     <transition name="fade">
@@ -94,7 +96,7 @@ export default class App extends Vue {
       catchPromise(
         this.showDialog({
           key: 'app/update-notice',
-          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1>`,
+          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><br><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Update 1.9.0 🎉<br>• Strats can now have multiple economy types<br>• Your filters are persisted across sessions <br>• The window size and position of the desktop app is also remembered <br>• Button to invert sort direction of strats</p>&mdash; Stratbook (@csgostratbook) <a href="https://twitter.com/csgostratbook/status/1416079598702448640?ref_src=twsrc%5Etfw">July 16, 2021</a></blockquote>`,
           resolveBtn: 'OK',
           confirmOnly: true,
           htmlMode: true,
@@ -159,27 +161,22 @@ export default class App extends Vue {
   height: 100%;
   overflow: hidden;
 
-  &__version {
-    position: absolute;
-    font-size: 0.8rem;
-    top: 0;
-    right: 10px;
-    background-color: $color--smoke;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    padding: 0 4px;
-    opacity: 0.1;
-  }
-
-  &__latency {
+  &__version-wrapper {
     position: absolute;
     font-size: 0.8rem;
     top: 1px;
-    right: 90px;
+    right: 13px;
     color: $color--smoke;
     display: flex;
     align-items: center;
+  }
 
+  &__version {
+    opacity: 0.3;
+    margin-left: 6px;
+  }
+
+  &__latency {
     & > * {
       width: 14px;
       height: 14px;

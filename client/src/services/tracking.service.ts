@@ -38,7 +38,7 @@ export default class TrackingService {
     this.initialized = true;
   }
 
-  track(event: string, data?: Record<string, string | number | boolean>) {
+  track(event: string, data?: Record<string, any>) {
     if (!this.initialized) return;
 
     Log.info('tracking:track', event, data);

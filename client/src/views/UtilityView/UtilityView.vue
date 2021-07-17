@@ -23,8 +23,17 @@
           class="utility-view__filter-button"
           @click="filterMenuOpen = true"
           :activeFilterCount="activeUtilityFilterCount"
+          v-tippy
+          content="CTRL+Shift+F"
         />
-        <FloatingButton class="utility-view__floating-add" label="Add utility" icon="plus" @click="showUtilityForm" />
+        <FloatingButton
+          class="utility-view__floating-add"
+          label="Add utility"
+          icon="plus"
+          @click="showUtilityForm"
+          v-tippy
+          content="CTRL+Shift+A"
+        />
       </div>
     </transition>
     <transition name="fade">

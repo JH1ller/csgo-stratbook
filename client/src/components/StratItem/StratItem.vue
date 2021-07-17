@@ -11,8 +11,24 @@
           {{ strat.note }}
         </p>
       </div>
-      <TypeBadge class="strat-item__type" :type="strat.type" :content="typeTooltip" @click.native.stop="filterType" v-tippy />
-      <SideBadge class="strat-item__side" :side="strat.side" :content="sideTooltip" @click.native.stop="filterSide" v-tippy />
+      <div class="strat-item__types-wrapper">
+        <TypeBadge
+          v-for="type in sortedTypes"
+          :key="type"
+          class="strat-item__type"
+          :type="type"
+          :content="typeTooltip(type)"
+          @click.native.stop="filterType(type)"
+          v-tippy
+        />
+      </div>
+      <SideBadge
+        class="strat-item__side"
+        :side="strat.side"
+        :content="sideTooltip"
+        @click.native.stop="filterSide"
+        v-tippy
+      />
     </div>
     <StratEditor
       :key="editorKey"
