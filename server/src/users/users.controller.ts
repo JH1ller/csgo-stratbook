@@ -16,8 +16,11 @@ import {
   Logger,
   OnModuleInit,
 } from '@nestjs/common';
+
 import { ModuleRef } from '@nestjs/core';
+
 import { FileInterceptor } from '@nestjs/platform-express';
+
 import {
   ApiOkResponse,
   ApiCreatedResponse,
@@ -26,6 +29,7 @@ import {
   ApiTags,
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
+
 import { ConfigService } from '@nestjs/config';
 
 import { Types } from 'mongoose';
@@ -42,6 +46,7 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 
 import { GetUserResponse } from './responses/get-user.response';
 import { RegisterUserResponse } from './responses/register-user.response';
+import { ForgotPasswordResponse } from './responses/forgot-password.response';
 import { GetTeamResponse } from 'src/teams/responses/get-team.response';
 
 import { User } from 'src/schemas/user.schema';
@@ -60,6 +65,8 @@ import { MinioService } from 'src/services/minio/minio-service.service';
 export class UsersController implements OnModuleInit {
   private readonly logger = new Logger(UsersController.name);
 
+  private readonly mailTransportDisabled: boolean;
+
   private teamsService: TeamsService;
 
   private strategiesService: StrategiesService;
@@ -71,7 +78,9 @@ export class UsersController implements OnModuleInit {
     private readonly captchaService: CaptchaService,
     private readonly minioService: MinioService,
     private moduleRef: ModuleRef
-  ) {}
+  ) {
+    this.mailTransportDisabled = this.configService.get<boolean>('debug.mailTransportDisabled');
+  }
 
   public onModuleInit() {
     // get teams service after construction to prevent a circular dependency between
@@ -80,7 +89,7 @@ export class UsersController implements OnModuleInit {
     this.strategiesService = this.moduleRef.get(StrategiesService, { strict: false });
   }
 
-  @Post('register')
+  @Post('/register')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('avatar'))
   @ApiBody({ description: 'Register new user', type: RegisterUserDto })
@@ -174,7 +183,7 @@ export class UsersController implements OnModuleInit {
     }
 
     if (model.password !== null) {
-      userDiff.password = await this.usersService.createPasswordHash(model.password);
+      userDiff.password = await this.usersService.hashPassword(model.password);
     }
 
     if (model.userName !== null) {
@@ -238,36 +247,49 @@ export class UsersController implements OnModuleInit {
   }
 
   @Post('/forgot-password')
-  @ApiOkResponse()
+  @ApiCreatedResponse({ type: ForgotPasswordResponse })
   @ApiBadRequestResponse()
   public async forgotPassword(@Body() model: ForgotPasswordDto) {
-    const result = await this.captchaService.verify(model.captchaResponse);
+    const { email, captchaResponse } = model;
+
+    const result = await this.captchaService.verify(captchaResponse);
     if (!result) {
       throw new BadRequestException('Failed to verify captcha token');
     }
 
-    const user = await this.usersService.findByEmail(model.email);
+    const user = await this.usersService.findByEmail(email);
     if (user === null) {
       throw new BadRequestException('user was not found by this email');
     }
 
-    await this.usersService.sendForgotPasswordRequest(user);
+    const token = await this.usersService.sendForgotPasswordRequest(user);
+
+    if (this.mailTransportDisabled) {
+      // return payload when mail transport is disabled
+      return new ForgotPasswordResponse(token);
+    }
+
+    return new ForgotPasswordResponse();
   }
 
   @Patch('/reset-password')
+  @ApiOkResponse()
+  @ApiBadRequestResponse()
   public async resetPassword(@Body() model: ResetPasswordDto) {
-    const result = await this.captchaService.verify(model.captchaResponse);
+    const { password, token, captchaResponse } = model;
+
+    const result = await this.captchaService.verify(captchaResponse);
     if (!result) {
       return new BadRequestException('failed to verify captcha');
     }
 
-    const { id } = this.usersService.verifyForgotPasswordRequest(model.token);
+    const { id } = this.usersService.verifyForgotPasswordRequest(token);
 
     const user = await this.usersService.findById(id);
     if (!user) {
       throw new InternalServerErrorException('invalid user specified in token');
     }
 
-    await this.usersService.updatePassword(new Types.ObjectId(id), model.password);
+    await this.usersService.updatePassword(new Types.ObjectId(id), password);
   }
 }

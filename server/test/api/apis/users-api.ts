@@ -25,6 +25,8 @@ import { DeleteUserDto } from '../models';
 // @ts-ignore
 import { ForgotPasswordDto } from '../models';
 // @ts-ignore
+import { ForgotPasswordResponse } from '../models';
+// @ts-ignore
 import { GetUserResponse } from '../models';
 // @ts-ignore
 import { ProfileUpdateDto } from '../models';
@@ -358,7 +360,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async usersControllerForgotPassword(forgotPasswordDto: ForgotPasswordDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async usersControllerForgotPassword(forgotPasswordDto: ForgotPasswordDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ForgotPasswordResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.usersControllerForgotPassword(forgotPasswordDto, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -449,7 +451,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        usersControllerForgotPassword(forgotPasswordDto: ForgotPasswordDto, options?: any): AxiosPromise<void> {
+        usersControllerForgotPassword(forgotPasswordDto: ForgotPasswordDto, options?: any): AxiosPromise<ForgotPasswordResponse> {
             return localVarFp.usersControllerForgotPassword(forgotPasswordDto, options).then((request) => request(axios, basePath));
         },
         /**

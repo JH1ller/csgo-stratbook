@@ -17,10 +17,10 @@ export class CaptchaService {
     }
   }
 
-  public async verify(token: string): Promise<boolean> {
+  public async verify(token: string) {
     if (this.verifyDisabled) {
       this.logger.warn(`skipped hcaptcha verification for token: ${token}`);
-      return Promise.resolve(true);
+      return true;
     }
 
     const secret = this.configService.get<string>('hcaptcha.secret');

@@ -3,6 +3,7 @@ export * from './delete-team-dto';
 export * from './delete-user-dto';
 export * from './delete-utility-dto';
 export * from './forgot-password-dto';
+export * from './forgot-password-response';
 export * from './get-team-response';
 export * from './get-user-response';
 export * from './get-utility-crated-by-response';

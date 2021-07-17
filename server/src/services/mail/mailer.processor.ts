@@ -6,7 +6,7 @@ import { Job } from 'bull';
 import nodemailer, { Transporter } from 'nodemailer';
 import { htmlToText } from 'html-to-text';
 import Handlebars, { Exception } from 'handlebars';
-import mjml = require('mjml');
+import mjml from 'mjml';
 
 import { MailSendJob } from './job/mail-send-job';
 
@@ -92,22 +92,21 @@ export class MailerProcessor {
 
   @Process()
   public async handleSend(job: Job<MailSendJob>) {
-    const { email, subject, context, template } = job.data;
+    const { emailTo, subject, context, template } = job.data;
 
     const html = this.compileTemplate(template, context);
     if (this.transportDisabled) {
-      Logger.debug(`Skip mail: ${email} ${subject}`);
+      Logger.debug(`Skip mail: ${emailTo} - ${subject}`);
       return;
     }
 
-    // nodemailer-base64-to-s3
     const text = htmlToText(html);
 
     // see https://nodemailer.com/usage/
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const info = await this.transporter.sendMail({
       from: 'Stratbook <support@stratbook.live>',
-      to: email,
+      to: emailTo,
       subject,
       html,
       text,

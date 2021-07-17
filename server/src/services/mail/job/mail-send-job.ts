@@ -1,5 +1,5 @@
 export interface MailSendJob {
-  email: string;
+  emailTo: string;
 
   subject: string;
 

@@ -5,6 +5,7 @@
   "scripts": {
     "deploy": "webpack --config webpack.config.js --env prod standalone",
     "dev": "webpack --config webpack.config.js --watch",
+    "dev:debug": "npm run deploy && node --inspect-brk dist/server.js",
     "test:integration": "jest --config ./jest.integration.config.ts",
     "test:integration:coverage": "jest --coverage --config ./jest.integration.config.ts",
     "test:integration:watch": "jest --watch --config ./jest.integration.config.ts",

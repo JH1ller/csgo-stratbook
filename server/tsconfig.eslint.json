@@ -15,6 +15,7 @@
     "jest.integration.config.ts",
     "jest.integration.global-teardown.ts",
     "webpack-watch-sandbox.js",
-    "webpack.config.js"
+    "webpack.config.js",
+    ".eslintrc.js"
   ]
 }

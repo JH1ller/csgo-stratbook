@@ -17,21 +17,15 @@
 /**
  * 
  * @export
- * @interface ForgotPasswordDto
+ * @interface ForgotPasswordResponse
  */
-export interface ForgotPasswordDto {
+export interface ForgotPasswordResponse {
     /**
-     * user mail
+     * debug result, only emitted when mail transport is disabled
      * @type {string}
-     * @memberof ForgotPasswordDto
+     * @memberof ForgotPasswordResponse
      */
-    email: string;
-    /**
-     * hcaptcha response code
-     * @type {string}
-     * @memberof ForgotPasswordDto
-     */
-    captchaResponse: string;
+    token?: string;
 }
 
 

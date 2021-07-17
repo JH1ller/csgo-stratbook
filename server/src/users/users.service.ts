@@ -74,7 +74,7 @@ export class UsersService {
   }
 
   public async createUser(userName: string, email: string, password: string, avatar?: string) {
-    const hashedPassword = await this.createPasswordHash(password);
+    const hashedPassword = await this.hashPassword(password);
 
     const createdUser = new this.userModel({
       userName,
@@ -113,9 +113,9 @@ export class UsersService {
    * @returns query promise
    */
   public async updatePassword(id: Types.ObjectId, password: string) {
-    const hashedPassword = await this.createPasswordHash(password);
+    const hashedPassword = await this.hashPassword(password);
 
-    return await this.userModel.updateOne({ _id: id }, { hashedPassword }).exec();
+    return await this.userModel.updateOne({ _id: id }, { password: hashedPassword }).exec();
   }
 
   public updateEmailAddress(id: Types.ObjectId, email: string) {
@@ -134,6 +134,11 @@ export class UsersService {
     return this.userModel.updateOne({ _id: id }, userData);
   }
 
+  /**
+   * Sends password request email to the specified user
+   * @param user user document
+   * @returns generated jwt payload
+   */
   public async sendForgotPasswordRequest(user: UserDocument) {
     const data: PasswordResetData = {
       id: user._id.toString(),
@@ -143,6 +148,8 @@ export class UsersService {
 
     const { email, userName } = user;
     await this.mailerService.sendPasswordResetMail(email, userName, token);
+
+    return token;
   }
 
   public async sendEmailChangeRequest(user: UserDocument, email: string) {
@@ -209,7 +216,7 @@ export class UsersService {
     return this.userModel.updateMany({ team: teamId }, { team: null }).exec();
   }
 
-  public async createPasswordHash(password: string) {
+  public async hashPassword(password: string) {
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(password, salt);
   }

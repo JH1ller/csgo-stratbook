@@ -1,9 +1,5 @@
-import faker from 'faker';
-import each from 'jest-each';
-
 import { req, apiConfig } from './config';
 import { createLoginAccount, TestUser, generateTeamInfo } from './utils';
-import { generatePassword } from './helpers';
 
 import { UsersApiAxiosParamCreator, TeamsApiAxiosParamCreator, GetTeamResponse } from './api';
 
@@ -45,13 +41,13 @@ describe('Teams integration', () => {
       });
   });
 
-  each([
+  test.concurrent.each([
     './test/images/avatar-64x64.jpg',
     './test/images/test_01.gif',
     './test/images/test_01.jpg',
     './test/images/test_01.png',
     './test/images/test_01.webp',
-  ]).test('team create user - avatar %s', async (image: string) => {
+  ])('team create user - avatar %s', async (image: string) => {
     const { cookies } = activeUser;
     const { name, website, serverIp, serverPassword } = generateTeamInfo();
 
@@ -82,5 +78,11 @@ describe('Teams integration', () => {
         expect(data.server.password).toBe(serverPassword);
         expect(data.avatar).toBeDefined();
       });
+  });
+
+  it('team get team info - no team', async () => {
+    const { url } = await TeamsApiAxiosParamCreator(apiConfig).teamsControllerGetTeamInfo();
+
+    return req.get(url).set('Cookie', activeUser.cookies).set('Accept', 'application/json').expect(400);
   });
 });

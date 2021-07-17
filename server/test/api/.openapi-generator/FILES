@@ -17,6 +17,7 @@ models/delete-team-dto.ts
 models/delete-user-dto.ts
 models/delete-utility-dto.ts
 models/forgot-password-dto.ts
+models/forgot-password-response.ts
 models/get-team-response.ts
 models/get-user-response.ts
 models/get-utility-crated-by-response.ts

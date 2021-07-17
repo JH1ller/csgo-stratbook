@@ -71,8 +71,11 @@ async function isFileImage(source: string) {
   let buffer = new Uint8Array(minimumBytes);
 
   const file = await open(source, 'r');
+  console.log('open', source);
   try {
     const result = await file.read(buffer, 0, minimumBytes);
+    console.log('read', result.bytesRead);
+    console.log(result.buffer);
 
     if (result.bytesRead < minimumBytes) {
       buffer = buffer.slice(0, result.bytesRead);

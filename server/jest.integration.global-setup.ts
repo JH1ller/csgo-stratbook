@@ -5,6 +5,8 @@ import chalk from 'chalk';
 import dotenv from 'dotenv';
 import { Socket } from 'net';
 
+import type { Config } from '@jest/types';
+
 // import dotenv config
 dotenv.config();
 
@@ -17,7 +19,7 @@ const configFactory = require('./webpack.config.js') as (env: Record<string, unk
 /**
  * helper for launching the full backend process
  */
-module.exports = async function () {
+module.exports = async function (globalConfig: Config.GlobalConfig) {
   // test if we can reuse an already running dev server
   if (await testPort(Number.parseInt(process.env.PORT, 10))) {
     return;
@@ -27,7 +29,7 @@ module.exports = async function () {
 
   const config = configFactory({
     prod: true,
-    instrumentCode: true,
+    instrumentCode: globalConfig.collectCoverage,
   });
 
   const compiler = webpack(config);

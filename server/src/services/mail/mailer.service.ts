@@ -23,14 +23,14 @@ export class MailerService {
     this.baseUrl = this.configService.get<string>('baseUrl');
   }
 
-  public async sendPasswordResetMail(email: string, userName: string, token: string) {
+  public async sendPasswordResetMail(emailTo: string, userName: string, token: string) {
     const context = {
       userName,
       link: urljoin(this.baseUrl, `/#/reset?token=${token}`),
     };
 
     await this.addJob({
-      email,
+      emailTo,
       subject: 'Stratbook - Reset password',
       context,
       template: ResetPasswordTemplate,
@@ -39,25 +39,25 @@ export class MailerService {
 
   /**
    * Sends the confirm-email-mail to the specified @name email
-   * @param email destination email
+   * @param emailTo destination email
    * @param userName name of the user, used in email titles
    * @param token jwt encoded confirmation token
    */
-  public async sendVerifyEmail(email: string, userName: string, token: string) {
+  public async sendVerifyEmail(emailTo: string, userName: string, token: string) {
     const context = {
       userName,
       link: urljoin(this.baseUrl, `/auth/confirmation/${token}`),
     };
 
     await this.addJob({
-      email,
+      emailTo,
       subject: `Hi ${userName} - verify your Stratbook email`,
       context,
       template: VerifyEmail,
     });
   }
 
-  public async sendVerifyNewEmailRequest(email: string, userName: string, token: string) {
+  public async sendVerifyNewEmailRequest(emailTo: string, userName: string, token: string) {
     const context = {
       userName,
       // update link
@@ -65,7 +65,7 @@ export class MailerService {
     };
 
     await this.addJob({
-      email,
+      emailTo,
       subject: 'Stratbook - Verify new email',
       context,
       template: VerifyNewEmailTemplate,
@@ -73,7 +73,7 @@ export class MailerService {
   }
 
   private addJob(data: MailSendJob) {
-    return this.mailQueue.add('send', data, {
+    return this.mailQueue.add(data, {
       attempts: 3,
       backoff: {
         type: 'exponential',

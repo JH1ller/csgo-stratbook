@@ -35,5 +35,6 @@ export default async (): Promise<Config.InitialOptions> => {
 
     globalSetup: './jest.integration.global-setup.ts',
     globalTeardown: './jest.integration.global-teardown.ts',
+    injectGlobals: true,
   };
 };

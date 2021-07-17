@@ -35,7 +35,6 @@ module.exports = (env) => {
   return {
     mode: isDevBuild ? 'development' : 'production',
 
-    // is this even required for server apps?
     devtool: 'source-map',
 
     entry: {
@@ -48,8 +47,9 @@ module.exports = (env) => {
     output: {
       path: path.join(__dirname, 'dist'),
       filename: '[name].js',
-      libraryTarget: 'commonjs2',
+      libraryTarget: 'commonjs-module',
       clean: true,
+      pathinfo: true,
     },
 
     resolve: {
@@ -79,29 +79,27 @@ module.exports = (env) => {
         {
           test: /.tsx?$/,
           exclude: /node_modules/,
-          use: (instrumentCode
-            ? [
-                {
-                  loader: 'babel-loader',
-                  options: {
-                    presets: [
-                      [
-                        '@babel/preset-env',
-                        {
-                          // don't emit regenerator runtime code
-                          targets: {
-                            node: '16',
-                          },
-                          debug: true,
-                        },
-                      ],
-                    ],
-                    plugins: ['istanbul'],
-                  },
-                },
-              ]
-            : []
-          ).concat([
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: [
+                  [
+                    '@babel/preset-env',
+                    {
+                      // don't emit regenerator runtime code
+                      targets: {
+                        node: '16',
+                      },
+                      debug: true,
+                    },
+                  ],
+                ],
+
+                // use istanbul plugin for coverage when ran from jest with coverage enabled
+                plugins: instrumentCode ? ['istanbul'] : [],
+              },
+            },
             {
               loader: 'ts-loader',
               options: {
@@ -109,7 +107,7 @@ module.exports = (env) => {
                 transpileOnly: true,
               },
             },
-          ]),
+          ],
         },
         {
           test: /\.hbs$/i,
@@ -134,9 +132,25 @@ module.exports = (env) => {
       ],
     },
 
+    stats: {
+      warnings: true,
+      errors: true,
+      performance: true,
+      optimizationBailout: true,
+      providedExports: true,
+      modules: true,
+    },
+
     optimization: {
       // don't minimize in production deployments
       minimize: false,
+      emitOnErrors: false,
+
+      sideEffects: true,
+      concatenateModules: false,
+      providedExports: true,
+      usedExports: true,
+      innerGraph: true,
     },
 
     plugins: [
