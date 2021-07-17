@@ -1,3 +1,5 @@
+import path from 'path';
+
 import { req, apiConfig } from './config';
 import { createLoginAccount, TestUser, generateTeamInfo } from './utils';
 
@@ -42,11 +44,11 @@ describe('Teams integration', () => {
   });
 
   test.concurrent.each([
-    './test/images/avatar-64x64.jpg',
-    './test/images/test_01.gif',
-    './test/images/test_01.jpg',
-    './test/images/test_01.png',
-    './test/images/test_01.webp',
+    './images/avatar-64x64.jpg',
+    './images/test_01.gif',
+    './images/test_01.jpg',
+    './images/test_01.png',
+    './images/test_01.webp',
   ])('team create user - avatar %s', async (image: string) => {
     const { cookies } = activeUser;
     const { name, website, serverIp, serverPassword } = generateTeamInfo();
@@ -59,7 +61,7 @@ describe('Teams integration', () => {
       .field('website', website)
       .field('serverIp', serverIp)
       .field('serverPassword', serverPassword)
-      .attach('avatar', image)
+      .attach('avatar', path.join(__dirname, image))
       .set('Accept', 'application/json')
       .expect(201);
 

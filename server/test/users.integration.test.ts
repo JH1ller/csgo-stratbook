@@ -1,4 +1,5 @@
 import faker from 'faker';
+import path from 'path';
 
 import { req, apiConfig } from './config';
 import { createLoginAccount, performLocalAuthentication, generateEmail, generatePassword } from './utils';
@@ -20,11 +21,11 @@ describe('Users integration', () => {
   });
 
   test.concurrent.each([
-    './test/images/avatar-64x64.jpg',
-    './test/images/test_01.gif',
-    './test/images/test_01.jpg',
-    './test/images/test_01.png',
-    './test/images/test_01.webp',
+    './images/avatar-64x64.jpg',
+    './images/test_01.gif',
+    './images/test_01.jpg',
+    './images/test_01.png',
+    './images/test_01.webp',
   ])('register user - avatar %s', async (image: string) => {
     const userName = faker.internet.userName();
     const email = generateEmail();
@@ -36,7 +37,7 @@ describe('Users integration', () => {
       .field('userName', userName)
       .field('email', email)
       .field('password', password)
-      .attach('avatar', image)
+      .attach('avatar', path.join(__dirname, image))
       .set('Accept', 'application/json')
       .expect(201)
       .then((result) => {
@@ -62,9 +63,9 @@ describe('Users integration', () => {
   });
 
   test.concurrent.each([
-    './test/images/invalid-image-01.txt',
-    './test/images/invalid-image-02.zip',
-    './test/images/invalid-image-03.bin',
+    './images/invalid-image-01.txt',
+    './images/invalid-image-02.zip',
+    './images/invalid-image-03.bin',
   ])('register user - avatar invalid file type (%s)', async (image: string) => {
     const userName = faker.internet.userName();
     const email = generateEmail();
@@ -76,7 +77,7 @@ describe('Users integration', () => {
       .field('userName', userName)
       .field('email', email)
       .field('password', password)
-      .attach('avatar', image)
+      .attach('avatar', path.join(__dirname, image))
       .set('Accept', 'application/json')
       .expect(201)
       .then((result) => {
