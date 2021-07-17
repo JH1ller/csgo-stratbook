@@ -48,13 +48,17 @@ jobs:
       with:
         mongodb-version: ${{ matrix.mongodb-version }}
         mongodb-port: 27018
+    - name: npm install
+      working-directory: ./server
+      run: |
+        npm ci
+        cp ./.env.example ./.env
+      
     - name: run integration
       working-directory: ./server
-      run: | 
-        ls -l
-        cp ./.env.example ./.env
-        npm ci
-        npm run test:integration
-        npm run deploy
-
+      run: npm run test:integration
+        
+    - name: build articfacts
+      working-directory: ./server
+      run: npm run deploy
 
