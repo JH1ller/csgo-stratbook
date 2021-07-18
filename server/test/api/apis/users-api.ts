@@ -49,7 +49,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         usersControllerDeleteUser: async (deleteUserDto: DeleteUserDto, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'deleteUserDto' is not null or undefined
             assertParamExists('usersControllerDeleteUser', 'deleteUserDto', deleteUserDto)
-            const localVarPath = `/api/users`;
+            const localVarPath = `/api/users/delete`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -116,7 +116,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
          * @throws {RequiredError}
          */
         usersControllerGetUser: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/users`;
+            const localVarPath = `/api/users/get`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -242,7 +242,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         usersControllerUpdateUser: async (profileUpdateDto: ProfileUpdateDto, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'profileUpdateDto' is not null or undefined
             assertParamExists('usersControllerUpdateUser', 'profileUpdateDto', profileUpdateDto)
-            const localVarPath = `/api/users`;
+            const localVarPath = `/api/users/update`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;

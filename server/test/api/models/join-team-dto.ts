@@ -17,15 +17,15 @@
 /**
  * 
  * @export
- * @interface ForgotPasswordResponse
+ * @interface JoinTeamDto
  */
-export interface ForgotPasswordResponse {
+export interface JoinTeamDto {
     /**
-     * debug result: only emitted when mail transport is disabled
+     * 
      * @type {string}
-     * @memberof ForgotPasswordResponse
+     * @memberof JoinTeamDto
      */
-    token?: string;
+    joinCode: string;
 }
 
 

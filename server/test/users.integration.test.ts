@@ -1,10 +1,19 @@
-import faker from 'faker';
 import path from 'path';
+import dotenv from 'dotenv';
 
 import { req, apiConfig } from './config';
-import { createLoginAccount, performLocalAuthentication, generateEmail, generatePassword } from './utils';
+import {
+  createLoginAccount,
+  performLocalAuthentication,
+  generateEmail,
+  generatePassword,
+  generateUserName,
+} from './utils';
 
-import { UsersApiAxiosParamCreator, ForgotPasswordResponse, ResetPasswordDto } from './api';
+import { UsersApiAxiosParamCreator, ForgotPasswordResponse, ResetPasswordDto, AuthApiAxiosParamCreator } from './api';
+
+// import dotenv
+dotenv.config();
 
 describe('Users integration', () => {
   it('register user - invalid user name', async () => {
@@ -27,7 +36,7 @@ describe('Users integration', () => {
     './images/test_01.png',
     './images/test_01.webp',
   ])('register user - avatar %s', async (image: string) => {
-    const userName = faker.internet.userName();
+    const userName = generateUserName();
     const email = generateEmail();
     const password = generatePassword();
 
@@ -67,7 +76,7 @@ describe('Users integration', () => {
     './images/invalid-image-02.zip',
     './images/invalid-image-03.bin',
   ])('register user - avatar invalid file type (%s)', async (image: string) => {
-    const userName = faker.internet.userName();
+    const userName = generateUserName();
     const email = generateEmail();
     const password = generatePassword();
 
@@ -105,7 +114,7 @@ describe('Users integration', () => {
   });
 
   it('register user - weak password', async () => {
-    const userName = faker.internet.userName();
+    const userName = generateUserName();
     const email = generateEmail();
     const password = 'weak';
 
@@ -122,7 +131,7 @@ describe('Users integration', () => {
   });
 
   it('register user - email in use', async () => {
-    const userName = faker.internet.userName();
+    const userName = generateUserName();
     const password = generatePassword();
 
     const { email } = await createLoginAccount();
@@ -165,7 +174,7 @@ describe('Users integration', () => {
       });
   });
 
-  it('request forgot-password', async () => {
+  it('forgot reset password', async () => {
     const { email } = await createLoginAccount();
 
     const forgotPasswordArgs = {
@@ -211,5 +220,87 @@ describe('Users integration', () => {
         expect(result.body).toHaveProperty('email');
         expect(result.body.email).toBe(email);
       });
+  });
+
+  it('reset password - malformed token', async () => {
+    await createLoginAccount();
+
+    const resetPasswordArgs: ResetPasswordDto = {
+      password: generatePassword(),
+      token: 'HelloWorld :)',
+      captchaResponse: '12341234',
+    };
+
+    const resetPassword = await UsersApiAxiosParamCreator(apiConfig).usersControllerResetPassword(resetPasswordArgs);
+    await req
+      .patch(resetPassword.url) //
+      .set('Accept', 'application/json')
+      .send(resetPasswordArgs)
+      .expect(500);
+  });
+
+  it('delete user - no team', async () => {
+    const { userName, cookies } = await createLoginAccount();
+
+    const args = {
+      userName,
+    };
+
+    const deleteUser = await UsersApiAxiosParamCreator(apiConfig).usersControllerDeleteUser(args);
+    await req //
+      .delete(deleteUser.url)
+      .set('Cookie', cookies)
+      .send(args)
+      .expect(200);
+
+    // check if the session was actually destroyed
+    const getUser = await UsersApiAxiosParamCreator(apiConfig).usersControllerGetUser();
+    return req //
+      .get(getUser.url)
+      .set('Cookie', cookies)
+      .set('Accept', 'application/json')
+      .expect(401);
+  });
+
+  it('delete user - no team login attempt after delete', async () => {
+    const { userName, email, cookies, password } = await createLoginAccount();
+
+    const args = {
+      userName,
+    };
+
+    const deleteUser = await UsersApiAxiosParamCreator(apiConfig).usersControllerDeleteUser(args);
+    await req //
+      .delete(deleteUser.url)
+      .set('Cookie', cookies)
+      .send(args)
+      .expect(200);
+
+    const loginArgs = {
+      email,
+      password,
+    };
+
+    const loginUser = await AuthApiAxiosParamCreator(apiConfig).authControllerLogin(loginArgs);
+    await req //
+      .post(loginUser.url)
+      .send(loginArgs)
+      .set('Accept', 'application/json')
+      .expect(400);
+  });
+
+  it('delete user - invalid user name', async () => {
+    const { cookies } = await createLoginAccount();
+
+    const args = {
+      userName: '',
+    };
+
+    const deleteUser = await UsersApiAxiosParamCreator(apiConfig).usersControllerDeleteUser(args);
+    await req //
+      .delete(deleteUser.url)
+      .set('Cookie', cookies)
+      .send(args)
+      .expect(400);
   });
 });

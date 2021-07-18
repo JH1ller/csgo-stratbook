@@ -25,7 +25,7 @@ export class GetTeamResponse {
 
   @Expose()
   @ApiProperty()
-  public code: string;
+  public joinCode: string;
 
   @Expose()
   @ApiProperty()

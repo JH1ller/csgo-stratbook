@@ -45,7 +45,7 @@ export class Team {
     required: true,
     unique: true,
   })
-  public code: string;
+  public joinCode: string;
 
   @Prop()
   public avatar: string;
@@ -81,3 +81,12 @@ export class Team {
 export type TeamDocument = Team & Document<Types.ObjectId>;
 
 export const TeamSchema = SchemaFactory.createForClass(Team);
+
+TeamSchema.index(
+  {
+    joinCode: 1,
+  },
+  {
+    unique: true,
+  }
+);

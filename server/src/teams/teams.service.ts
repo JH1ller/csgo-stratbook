@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Types, Model } from 'mongoose';
 
@@ -23,6 +23,10 @@ export class TeamsService {
     return this.teamsModel.findById(id).exec();
   }
 
+  public findByJoinCode(joinCode: string) {
+    return this.teamsModel.findOne({ joinCode }).exec();
+  }
+
   public async createTeam(
     name: string,
     website: string,
@@ -31,7 +35,7 @@ export class TeamsService {
     createdBy: User,
     avatar: string
   ) {
-    const code = await this.generateTeamCode();
+    const joinCode = await this.generateTeamCode();
 
     const team = new this.teamsModel({
       name,
@@ -41,7 +45,7 @@ export class TeamsService {
         password: serverPassword,
       },
 
-      code,
+      joinCode,
       avatar,
       createdBy,
       manager: createdBy,
@@ -51,9 +55,9 @@ export class TeamsService {
   }
 
   public async updateJoinCode(id: Types.ObjectId) {
-    const code = await this.generateTeamCode();
+    const joinCode = await this.generateTeamCode();
 
-    return this.teamsModel.updateOne({ _id: id }, { code }).exec();
+    return this.teamsModel.updateOne({ _id: id }, { joinCode }).exec();
   }
 
   private updateTeam(id: Types.ObjectId, data: Partial<Team>) {
@@ -107,21 +111,25 @@ export class TeamsService {
         }
       }
 
-      teamDiff.code = await this.generateTeamCode();
+      teamDiff.joinCode = await this.generateTeamCode();
       await this.updateTeam(teamId, teamDiff);
     } else {
+      // delete the now empty team
       await this.deleteTeam(teamId);
     }
   }
 
   private async generateTeamCode() {
-    while (true) {
-      const code = crypto.randomBytes(3).toString('hex');
+    for (let i = 0; i < 5; i++) {
+      const joinCode = crypto.randomBytes(3).toString('hex');
 
-      const result = await this.teamsModel.exists({ code });
+      const result = await this.teamsModel.exists({ joinCode });
       if (!result) {
-        return code;
+        return joinCode;
       }
     }
+
+    // safety abort so we don't endlessly poll the database
+    throw new InternalServerErrorException('Too many attempts for generating a join code!');
   }
 }

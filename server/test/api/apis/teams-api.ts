@@ -24,6 +24,8 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 import { DeleteTeamDto } from '../models';
 // @ts-ignore
 import { GetTeamResponse } from '../models';
+// @ts-ignore
+import { JoinTeamDto } from '../models';
 /**
  * TeamsApi - axios parameter creator
  * @export
@@ -191,6 +193,41 @@ export const TeamsApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
+         * @param {JoinTeamDto} joinTeamDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        teamsControllerJoinTeam: async (joinTeamDto: JoinTeamDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'joinTeamDto' is not null or undefined
+            assertParamExists('teamsControllerJoinTeam', 'joinTeamDto', joinTeamDto)
+            const localVarPath = `/api/teams/join`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(joinTeamDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -272,6 +309,16 @@ export const TeamsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {JoinTeamDto} joinTeamDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async teamsControllerJoinTeam(joinTeamDto: JoinTeamDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.teamsControllerJoinTeam(joinTeamDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -326,6 +373,15 @@ export const TeamsApiFactory = function (configuration?: Configuration, basePath
          */
         teamsControllerGetTeamInfo(options?: any): AxiosPromise<GetTeamResponse> {
             return localVarFp.teamsControllerGetTeamInfo(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {JoinTeamDto} joinTeamDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        teamsControllerJoinTeam(joinTeamDto: JoinTeamDto, options?: any): AxiosPromise<void> {
+            return localVarFp.teamsControllerJoinTeam(joinTeamDto, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -395,6 +451,20 @@ export interface TeamsApiTeamsControllerDeleteTeamRequest {
 }
 
 /**
+ * Request parameters for teamsControllerJoinTeam operation in TeamsApi.
+ * @export
+ * @interface TeamsApiTeamsControllerJoinTeamRequest
+ */
+export interface TeamsApiTeamsControllerJoinTeamRequest {
+    /**
+     * 
+     * @type {JoinTeamDto}
+     * @memberof TeamsApiTeamsControllerJoinTeam
+     */
+    readonly joinTeamDto: JoinTeamDto
+}
+
+/**
  * TeamsApi - object-oriented interface
  * @export
  * @class TeamsApi
@@ -441,6 +511,17 @@ export class TeamsApi extends BaseAPI {
      */
     public teamsControllerGetTeamInfo(options?: any) {
         return TeamsApiFp(this.configuration).teamsControllerGetTeamInfo(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {TeamsApiTeamsControllerJoinTeamRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TeamsApi
+     */
+    public teamsControllerJoinTeam(requestParameters: TeamsApiTeamsControllerJoinTeamRequest, options?: any) {
+        return TeamsApiFp(this.configuration).teamsControllerJoinTeam(requestParameters.joinTeamDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -113,7 +113,7 @@ export class UsersController implements OnModuleInit {
     });
   }
 
-  @Delete()
+  @Delete('/delete')
   @UseGuards(AuthenticatedGuard)
   public async deleteUser(@Body() model: DeleteUserDto, @Req() req: Request) {
     if (req.user.userName !== model.userName) {
@@ -134,12 +134,15 @@ export class UsersController implements OnModuleInit {
       }
     });
 
-    // force team leave on deletion
-    await this.teamsService.leaveTeam(teamId, userId, true);
+    if (teamId) {
+      // force team leave on deletion
+      await this.teamsService.leaveTeam(teamId, userId, true);
+    }
+
     await this.usersService.deleteUser(userId);
   }
 
-  @Get()
+  @Get('/get')
   @UseGuards(AuthenticatedGuard)
   @ApiOkResponse({ type: GetUserResponse })
   public async getUser(@Req() req: Request) {
@@ -156,7 +159,7 @@ export class UsersController implements OnModuleInit {
     return new GetUserResponse(data);
   }
 
-  @Patch()
+  @Patch('/update')
   @UseGuards(AuthenticatedGuard)
   @UseInterceptors(FileInterceptor('avatar'))
   @ApiOkResponse()

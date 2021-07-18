@@ -55,6 +55,8 @@ __Live Version [here!](https://stratbook.live)__
 
 ### Server
 
+- Install ``git-lfs`` before cloning the repo.
+- Clone the repo
 - Navigate to the /server directory
 - Run `npm i` to install all dependencies
 - Create an `.env` file and add the required environment variables documented [here](https://github.com/JH1ller/csgo-stratbook/blob/master/server/README.md)

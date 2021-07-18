@@ -5,7 +5,7 @@ import { AxiosInstance } from 'axios';
 import { PasswordPattern } from 'src/common/validation-helpers';
 
 import { req, createAxiosCookieInstance, apiConfig, basePath } from './config';
-import { AuthApiFp } from './api';
+import { AuthApiFp, UsersApiAxiosParamCreator } from './api';
 
 export function generatePassword() {
   return 'HelloWorld' + new RandExp(PasswordPattern).gen() + '12345678!';
@@ -28,12 +28,14 @@ export interface TestUser {
  * @returns account data
  */
 export async function createLoginAccount(): Promise<TestUser> {
-  const userName = faker.internet.userName();
+  const userName = generateUserName();
   const email = generateEmail();
   const password = generatePassword();
 
+  const { url } = await UsersApiAxiosParamCreator(apiConfig).usersControllerRegisterUser(userName, email, password);
+
   await req
-    .post('/api/users/register')
+    .post(url)
     .type('form')
     .send({ userName, email, password })
     .set('Accept', 'application/json')
@@ -85,6 +87,17 @@ export async function performLocalAuthentication(email: string, password: string
 
 export function generateEmail() {
   return faker.datatype.number().toString(10) + faker.internet.email();
+}
+
+export function generateUserName() {
+  const userName = faker.internet.userName();
+
+  // check if we exceed more than 20 characters
+  if (userName.length > 20) {
+    return userName.slice(0, 20);
+  }
+
+  return userName;
 }
 
 export function generateTeamInfo() {

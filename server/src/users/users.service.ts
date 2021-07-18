@@ -184,7 +184,7 @@ export class UsersService {
    * @param id userId
    * @param teamId teamId
    */
-  public joinTeam(userId: Types.ObjectId, teamId: Types.ObjectId | null) {
+  public assignTeam(userId: Types.ObjectId, teamId: Types.ObjectId | null) {
     return this.userModel.updateOne({ _id: userId }, { team: teamId }).exec();
   }
 
@@ -205,7 +205,7 @@ export class UsersService {
   }
 
   public unassignTeam(userId: Types.ObjectId) {
-    return this.joinTeam(userId, null);
+    return this.assignTeam(userId, null);
   }
 
   /**

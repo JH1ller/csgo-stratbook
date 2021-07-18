@@ -23,6 +23,7 @@ models/get-user-response.ts
 models/get-utility-crated-by-response.ts
 models/get-utility-response.ts
 models/index.ts
+models/join-team-dto.ts
 models/local-sign-in-dto.ts
 models/profile-update-dto.ts
 models/register-user-response.ts

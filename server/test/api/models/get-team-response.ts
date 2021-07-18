@@ -50,7 +50,7 @@ export interface GetTeamResponse {
      * @type {string}
      * @memberof GetTeamResponse
      */
-    code: string;
+    joinCode: string;
     /**
      * 
      * @type {string}

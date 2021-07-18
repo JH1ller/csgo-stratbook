@@ -8,6 +8,7 @@ export * from './get-team-response';
 export * from './get-user-response';
 export * from './get-utility-crated-by-response';
 export * from './get-utility-response';
+export * from './join-team-dto';
 export * from './local-sign-in-dto';
 export * from './profile-update-dto';
 export * from './register-user-response';

@@ -5,5 +5,5 @@ export class JoinTeamDto {
   @IsString()
   @MaxLength(6)
   @ApiProperty({ example: '550DDE' })
-  public readonly code: string;
+  public readonly joinCode: string;
 }

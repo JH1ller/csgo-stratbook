@@ -7,7 +7,7 @@ import { Expose } from 'class-transformer';
  */
 export class ForgotPasswordResponse {
   @Expose()
-  @ApiProperty({ required: false, description: 'debug result, only emitted when mail transport is disabled' })
+  @ApiProperty({ required: false, description: 'debug result: only emitted when mail transport is disabled' })
   public readonly token?: string;
 
   constructor(token?: string) {

@@ -34,6 +34,7 @@ import { UsersService } from 'src/users/users.service';
 
 import { CreateTeamDto } from './dto/create-team.dto';
 import { DeleteTeamDto } from './dto/delete-team.dto';
+import { JoinTeamDto } from './dto/join-team.dto';
 
 import { GetTeamResponse } from './responses/get-team.response';
 
@@ -61,7 +62,7 @@ export class TeamsController {
     return new GetTeamResponse(team.toObject());
   }
 
-  @Post('create')
+  @Post('/create')
   @ApiConsumes('multipart/form-data')
   @ApiBody({ description: 'Creates and joins a new Team', type: CreateTeamDto })
   @UseInterceptors(FileInterceptor('avatar'))
@@ -83,10 +84,10 @@ export class TeamsController {
     const { name, website, serverIp, serverPassword } = model;
 
     const team = await this.teamsService.createTeam(name, website, serverIp, serverPassword, req.user, avatar);
-    await this.usersService.joinTeam(req.user.id, team.id);
+    await this.usersService.assignTeam(req.user.id, team.id);
   }
 
-  @Delete('delete')
+  @Delete('/delete')
   @UseGuards(HasTeamGuard)
   public async deleteTeam(@Req() req: Request, @Body() model: DeleteTeamDto) {
     const team = await this.teamsService.findById(req.user.team);
@@ -99,7 +100,7 @@ export class TeamsController {
     await this.teamsService.deleteTeam(team.id);
   }
 
-  @Patch('leave')
+  @Patch('/leave')
   @UseGuards(HasTeamGuard)
   public async leaveTeam(@Req() req: Request) {
     const { _id, team } = req.user;
@@ -108,11 +109,36 @@ export class TeamsController {
     await this.usersService.unassignTeam(_id);
   }
 
-  @Get('players')
+  @Get('/players')
   public async getPlayers(@Req() req: Request) {
     const teamId = req.user.team;
 
     const users = await this.usersService.getTeamMembers(teamId);
     console.log(users);
+  }
+
+  @Patch('/join')
+  public async joinTeam(@Req() req: Request, @Body() model: JoinTeamDto) {
+    const joinedTeamId = req.user.team;
+
+    if (joinedTeamId) {
+      throw new BadRequestException('You have already joined a team');
+    }
+
+    const team = await this.teamsService.findByJoinCode(model.joinCode);
+    if (!team) {
+      throw new BadRequestException('Invalid join code');
+    }
+
+    if (team._id === joinedTeamId) {
+      throw new BadRequestException('You already joined this team');
+    }
+
+    const memberCount = await this.usersService.getTeamMemberCount(team._id);
+    if (memberCount >= 16) {
+      throw new BadRequestException('Too many members are in this team');
+    }
+
+    await this.usersService.assignTeam(req.user._id, team._id);
   }
 }
