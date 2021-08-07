@@ -73,6 +73,14 @@ export class UsersService {
     });
   }
 
+  /**
+   * Creates a new user
+   * @param userName userName
+   * @param email user email
+   * @param password non hashed password
+   * @param avatar url to minio storage
+   * @returns user document id
+   */
   public async createUser(userName: string, email: string, password: string, avatar?: string) {
     const hashedPassword = await this.hashPassword(password);
 
@@ -85,16 +93,10 @@ export class UsersService {
 
     if (this.createUserWithConfirmedMail) {
       createdUser.emailConfirmed = true;
-    } else {
-      const data: EmailConfirmationData = {
-        id: createdUser._id.toString(),
-      };
-
-      const token = this.signJsonWebToken(data);
-      await this.mailerService.sendVerifyEmail(email, userName, token);
     }
 
-    return await createdUser.save();
+    const { _id } = await createdUser.save();
+    return _id;
   }
 
   public async deleteUser(id: Types.ObjectId) {
@@ -134,6 +136,17 @@ export class UsersService {
     return this.userModel.updateOne({ _id: id }, userData);
   }
 
+  public async sendVerifyEmailRequest(id: Types.ObjectId, email: string, userName: string) {
+    const data: EmailConfirmationData = {
+      id: id.toString(),
+    };
+
+    const token = this.signJsonWebToken(data);
+    await this.mailerService.sendVerifyEmail(email, userName, token);
+
+    return token;
+  }
+
   /**
    * Sends password request email to the specified user
    * @param user user document
@@ -160,6 +173,8 @@ export class UsersService {
 
     const token = this.signJsonWebToken(data);
     await this.mailerService.sendVerifyNewEmailRequest(email, user.userName, token);
+
+    return token;
   }
 
   /**

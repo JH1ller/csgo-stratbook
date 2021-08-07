@@ -25,31 +25,31 @@ export interface ProfileUpdateDto {
      * @type {string}
      * @memberof ProfileUpdateDto
      */
-    userName: string;
+    userName?: string;
     /**
      * 
      * @type {string}
      * @memberof ProfileUpdateDto
      */
-    email: string;
+    email?: string;
     /**
      * 
      * @type {string}
      * @memberof ProfileUpdateDto
      */
-    password: string;
+    password?: string;
     /**
      * 
      * @type {boolean}
      * @memberof ProfileUpdateDto
      */
-    completedTutorial: boolean;
+    completedTutorial?: boolean;
     /**
      * true if user name should be replaced in strategies
      * @type {boolean}
      * @memberof ProfileUpdateDto
      */
-    updateStrategies: boolean;
+    updateStrategies?: boolean;
 }
 
 

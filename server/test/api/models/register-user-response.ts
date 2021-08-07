@@ -32,6 +32,12 @@ export interface RegisterUserResponse {
      * @memberof RegisterUserResponse
      */
     email: string;
+    /**
+     * Debug: Email confirmation token
+     * @type {string}
+     * @memberof RegisterUserResponse
+     */
+    emailToken?: string;
 }
 
 

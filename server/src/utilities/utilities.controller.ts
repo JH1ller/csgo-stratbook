@@ -101,7 +101,7 @@ export class UtilitiesController {
 
     const id = new Mongoose.Types.ObjectId(model.id);
     const utility = await this.utilitiesService.findByUtilityId(id);
-    if (utility === null) {
+    if (!utility) {
       throw new BadRequestException('Invalid utility id');
     }
 

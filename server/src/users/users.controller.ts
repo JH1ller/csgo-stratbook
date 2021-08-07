@@ -104,8 +104,19 @@ export class UsersController implements OnModuleInit {
       });
     }
 
-    const user = await this.usersService.createUser(model.userName, model.email, model.password, avatar);
-    const { _id, email } = user;
+    const { userName, email, password } = model;
+
+    const _id = await this.usersService.createUser(userName, email, password, avatar);
+    const emailToken = await this.usersService.sendVerifyEmailRequest(_id, email, userName);
+
+    if (this.mailTransportDisabled) {
+      // debug: return email token with the response when mail transport is disabled
+      return new RegisterUserResponse({
+        _id,
+        email,
+        emailToken,
+      });
+    }
 
     return new RegisterUserResponse({
       _id,
@@ -171,25 +182,27 @@ export class UsersController implements OnModuleInit {
     const { user } = req;
     const userDiff: Partial<User> = {};
 
-    if (file !== null) {
+    if (file) {
       userDiff.avatar = await this.imageProcessorService.uploadImage(file.path, {
         width: 256,
         height: 256,
       });
 
-      // delete old user avatar from minio bucket
-      await this.minioService.deleteImage(user.avatar);
+      if (user.avatar) {
+        // delete old user avatar from minio bucket
+        await this.minioService.deleteImage(user.avatar);
+      }
     }
 
-    if (model.email !== null) {
+    if (model.email) {
       await this.usersService.sendEmailChangeRequest(user, model.email);
     }
 
-    if (model.password !== null) {
+    if (model.password) {
       userDiff.password = await this.usersService.hashPassword(model.password);
     }
 
-    if (model.userName !== null) {
+    if (model.userName) {
       userDiff.userName = model.userName;
 
       // replace the user name inside strategies
@@ -198,7 +211,7 @@ export class UsersController implements OnModuleInit {
       }
     }
 
-    if (model.completedTutorial !== null) {
+    if (model.completedTutorial) {
       userDiff.completedTutorial = model.completedTutorial;
     }
 
@@ -261,7 +274,7 @@ export class UsersController implements OnModuleInit {
     }
 
     const user = await this.usersService.findByEmail(email);
-    if (user === null) {
+    if (!user) {
       throw new BadRequestException('user was not found by this email');
     }
 

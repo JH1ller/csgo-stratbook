@@ -8,13 +8,13 @@ export class ProfileUpdateDto {
   @MinLength(2)
   @MaxLength(20)
   @IsOptional()
-  @ApiProperty({ example: 'HelloWorld' })
+  @ApiProperty({ example: 'HelloWorld', required: false })
   public readonly userName?: string;
 
   @IsEmail()
   @MaxLength(128)
   @IsOptional()
-  @ApiProperty({ example: 'hello-world@stratbook.live' })
+  @ApiProperty({ example: 'hello-world@stratbook.live', required: false })
   public readonly email?: string;
 
   @IsString()
@@ -23,12 +23,12 @@ export class ProfileUpdateDto {
     message: 'password too weak',
   })
   @IsOptional()
-  @ApiProperty({ example: 'HelloWorld1' })
+  @ApiProperty({ example: 'HelloWorld1', required: false })
   public readonly password?: string;
 
   @IsBoolean()
   @IsOptional()
-  @ApiProperty({ example: false })
+  @ApiProperty({ example: false, required: false })
   public readonly completedTutorial?: boolean;
 
   @IsBoolean()
@@ -36,6 +36,7 @@ export class ProfileUpdateDto {
   @ApiProperty({
     example: true,
     description: 'true if user name should be replaced in strategies',
+    required: false,
   })
   public readonly updateStrategies?: boolean;
 }

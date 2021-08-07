@@ -12,6 +12,10 @@ export class RegisterUserResponse {
   @ApiProperty()
   public email: string;
 
+  @Expose()
+  @ApiProperty({ description: 'Debug: Email confirmation token', required: false })
+  public emailToken: string;
+
   constructor(partial: Partial<RegisterUserResponse>) {
     Object.assign(this, partial);
   }

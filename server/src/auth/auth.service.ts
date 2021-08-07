@@ -29,7 +29,7 @@ export class AuthService {
     }
 
     const user = await this.usersService.findByEmail(email);
-    if (user === null) {
+    if (!user) {
       throw new BadRequestException({
         error: 'Email or password is invalid.',
       });

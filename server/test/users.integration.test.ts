@@ -144,6 +144,31 @@ describe('Users integration', () => {
       .expect(400);
   });
 
+  it('register user - confirm email', async () => {
+    const userName = generateUserName();
+    const email = generateEmail();
+    const password = generatePassword();
+
+    let token = '';
+    await req
+      .post('/api/users/register')
+      .type('form')
+      .field('userName', userName)
+      .field('email', email)
+      .field('password', password)
+      .set('Accept', 'application/json')
+      .expect(201)
+      .then((result) => {
+        expect(result.body.email).toBe(email);
+        expect(result.body.emailToken).not.toBeUndefined();
+
+        token = result.body.emailToken;
+      });
+
+    const { url } = await UsersApiAxiosParamCreator(apiConfig).usersControllerUserConfirmEmail(token);
+    await req.get(url).expect(302);
+  });
+
   it('get user - unauthorized', async () => {
     const route = await UsersApiAxiosParamCreator(apiConfig).usersControllerGetUser();
     return req //
@@ -302,5 +327,53 @@ describe('Users integration', () => {
       .set('Cookie', cookies)
       .send(args)
       .expect(400);
+  });
+
+  test.each([
+    './images/avatar-64x64.jpg',
+    './images/test_01.gif',
+    './images/test_01.jpg',
+    './images/test_01.png',
+    './images/test_01.webp',
+  ])('update user - avatar', async (image: string) => {
+    const { cookies } = await createLoginAccount();
+
+    const { url } = await UsersApiAxiosParamCreator(apiConfig).usersControllerUpdateUser({});
+    await req
+      .patch(url)
+      .set('Cookie', cookies)
+      .attach('avatar', path.join(__dirname, image)) //
+      .expect(200);
+  });
+
+  it('update user - change password', async () => {
+    const { email, cookies } = await createLoginAccount();
+
+    const password = 'HelloWorld1234!@@';
+    const { url } = await UsersApiAxiosParamCreator(apiConfig).usersControllerUpdateUser({
+      password,
+    });
+
+    await req
+      .patch(url) //
+      .set('Cookie', cookies)
+      .field('password', password)
+      .expect(200);
+
+    const logout = await AuthApiAxiosParamCreator(apiConfig).authControllerLogout();
+    await req
+      .post(logout.url) //
+      .set('Cookie', cookies)
+      .expect(201);
+
+    // probe failure
+    const login = await AuthApiAxiosParamCreator(apiConfig).authControllerLogin({ email, password });
+    await req.post(login.url).send(login.options.data).expect(401);
+
+    // correct info
+    const instance = await performLocalAuthentication(email, password);
+    const userInfo = await UsersApiAxiosParamCreator(apiConfig).usersControllerGetUser();
+
+    await req.get(userInfo.url).set('Cookie', instance.cookies).expect(200);
   });
 });

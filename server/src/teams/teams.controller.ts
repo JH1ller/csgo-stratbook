@@ -93,7 +93,7 @@ export class TeamsController {
     const team = await this.teamsService.findById(req.user.team);
 
     if (team.name !== model.teamName) {
-      throw new BadRequestException('TeamName does not equal model name!');
+      throw new BadRequestException('teamName does not equal model name!');
     }
 
     await this.usersService.removeTeamMembers(team.id);

@@ -36,21 +36,17 @@ export const TeamsApiAxiosParamCreator = function (configuration?: Configuration
          * 
          * @param {string} name 
          * @param {string} website 
-         * @param {string} serverIp 
-         * @param {string} serverPassword 
+         * @param {string} [serverIp] 
+         * @param {string} [serverPassword] 
          * @param {any} [avatar] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        teamsControllerCreateTeam: async (name: string, website: string, serverIp: string, serverPassword: string, avatar?: any, options: any = {}): Promise<RequestArgs> => {
+        teamsControllerCreateTeam: async (name: string, website: string, serverIp?: string, serverPassword?: string, avatar?: any, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('teamsControllerCreateTeam', 'name', name)
             // verify required parameter 'website' is not null or undefined
             assertParamExists('teamsControllerCreateTeam', 'website', website)
-            // verify required parameter 'serverIp' is not null or undefined
-            assertParamExists('teamsControllerCreateTeam', 'serverIp', serverIp)
-            // verify required parameter 'serverPassword' is not null or undefined
-            assertParamExists('teamsControllerCreateTeam', 'serverPassword', serverPassword)
             const localVarPath = `/api/teams/create`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -269,13 +265,13 @@ export const TeamsApiFp = function(configuration?: Configuration) {
          * 
          * @param {string} name 
          * @param {string} website 
-         * @param {string} serverIp 
-         * @param {string} serverPassword 
+         * @param {string} [serverIp] 
+         * @param {string} [serverPassword] 
          * @param {any} [avatar] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async teamsControllerCreateTeam(name: string, website: string, serverIp: string, serverPassword: string, avatar?: any, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async teamsControllerCreateTeam(name: string, website: string, serverIp?: string, serverPassword?: string, avatar?: any, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.teamsControllerCreateTeam(name, website, serverIp, serverPassword, avatar, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -340,13 +336,13 @@ export const TeamsApiFactory = function (configuration?: Configuration, basePath
          * 
          * @param {string} name 
          * @param {string} website 
-         * @param {string} serverIp 
-         * @param {string} serverPassword 
+         * @param {string} [serverIp] 
+         * @param {string} [serverPassword] 
          * @param {any} [avatar] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        teamsControllerCreateTeam(name: string, website: string, serverIp: string, serverPassword: string, avatar?: any, options?: any): AxiosPromise<void> {
+        teamsControllerCreateTeam(name: string, website: string, serverIp?: string, serverPassword?: string, avatar?: any, options?: any): AxiosPromise<void> {
             return localVarFp.teamsControllerCreateTeam(name, website, serverIp, serverPassword, avatar, options).then((request) => request(axios, basePath));
         },
         /**
@@ -419,14 +415,14 @@ export interface TeamsApiTeamsControllerCreateTeamRequest {
      * @type {string}
      * @memberof TeamsApiTeamsControllerCreateTeam
      */
-    readonly serverIp: string
+    readonly serverIp?: string
 
     /**
      * 
      * @type {string}
      * @memberof TeamsApiTeamsControllerCreateTeam
      */
-    readonly serverPassword: string
+    readonly serverPassword?: string
 
     /**
      * 
