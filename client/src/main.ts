@@ -4,12 +4,63 @@ import router from './router';
 import store from './store';
 import '@/styles/core.scss';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
+import {
+  faEdit,
+  faTrashAlt,
+  faBan,
+  faFilm,
+  faCheck,
+  faFilter,
+  faPlus,
+  faTools,
+  faUtensils,
+  faBoxes,
+  faUsers,
+  faChess,
+  faCopy,
+  faCrown,
+  faGamepad,
+  faBomb,
+  faSave,
+  faShareAlt,
+  faDownload,
+  faQuestionCircle,
+  faInfoCircle,
+  faTimes,
+  faComment,
+  faWifi,
+  faChevronLeft,
+  faChevronRight,
+  faMinusCircle,
+  faCheckCircle,
+  faEllipsisV,
+  faBalanceScale,
+  faMap,
+  faEraser,
+  faFont,
+  faPencilAlt,
+  faArrowsAlt,
+  faLongArrowAltRight,
+  faExclamationTriangle,
+  faSignOutAlt,
+  faCoffee,
+  faHeadset,
+  faThList,
+  faCompressAlt,
+  faExpandAlt,
+  faCrosshairs,
+  faExpand,
+  faMapMarkerAlt,
+  faPhotoVideo,
+  faSortAmountUp,
+  faSortAmountDown,
+} from '@fortawesome/free-solid-svg-icons';
+import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueTippy, { TippyComponent } from 'vue-tippy';
 import { isDesktop } from './utils/isDesktop';
 import StorageService from './services/storage.service';
-import IconPack from './icons';
-import axios from 'axios';
+import { BreakpointService } from './services/breakpoint.service';
 
 // TODO: move somewhere else
 Vue.use(VueTippy, {
@@ -23,7 +74,61 @@ Vue.use(VueTippy, {
 Vue.component('tippy', TippyComponent);
 
 config.autoAddCss = false;
-library.add(...IconPack);
+library.add(
+  faEdit,
+  faTrashAlt,
+  faBan,
+  faFilm,
+  faCheck,
+  faFilter,
+  faPlus,
+  faTools,
+  faUtensils,
+  faBoxes,
+  faUsers,
+  faChess,
+  faCopy,
+  faCrown,
+  faGamepad,
+  faBomb,
+  faSave,
+  faShareAlt,
+  faTwitter,
+  faDownload,
+  faQuestionCircle,
+  faInfoCircle,
+  faTimes,
+  faComment,
+  faWifi,
+  faChevronLeft,
+  faChevronRight,
+  faMinusCircle,
+  faCheckCircle,
+  faEllipsisV,
+  faBalanceScale,
+  faMap,
+  faEraser,
+  faFont,
+  faPencilAlt,
+  faArrowsAlt,
+  faLongArrowAltRight,
+  faCircle,
+  faExclamationTriangle,
+  faSignOutAlt,
+  faCoffee,
+  faDiscord,
+  faHeadset,
+  faThList,
+  faCompressAlt,
+  faExpandAlt,
+  faCrosshairs,
+  faExpand,
+  faMapMarkerAlt,
+  faPhotoVideo,
+  faSortAmountUp,
+  faSortAmountDown
+);
+
 Vue.component('fa-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
@@ -34,6 +139,10 @@ window.debugMode = process.env.NODE_ENV === 'development' || !!localStorage.getI
 window.desktopMode = isDesktop();
 
 const storageService = StorageService.getInstance();
+
+new BreakpointService(MQ => store.dispatch('app/updateBreakpoint', MQ));
+
+const hasSession = !!storageService.get('has-session');
 
 (async () => {
   await Promise.allSettled([store.dispatch('auth/fetchProfile'), store.dispatch('loadDataFromStorage')]);

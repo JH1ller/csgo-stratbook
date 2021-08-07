@@ -39,6 +39,7 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
     name: new FormField('Name', true, [Validators.notEmpty(), Validators.maxLength(50)]),
     description: new FormField('Description', false, [Validators.maxLength(200)]),
     videoLink: new FormField('Video Link', false, [Validators.isYoutubeLink()]),
+    setpos: new FormField('Setpos Command', false, [Validators.maxLength(200)]),
   };
 
   private type: UtilityTypes = UtilityTypes.SMOKE;
@@ -57,12 +58,12 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
 
   private handleSubmit() {
     if (validateForm(this.formFields)) {
-      if (this.files.length || this.formFields.videoLink.value) {
+      if (this.files.length || this.formFields.videoLink.value || this.formFields.setpos.value) {
         this.submitUtility();
       } else {
         this.showToast({
           id: 'utilityForm/noMedia',
-          text: 'You need to add at least 1 image or a video link.',
+          text: 'You need to add either an image, a videolink or a setpos command.',
         });
       }
     }
@@ -110,6 +111,7 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
     this.formFields.name.value = this.utility.name;
     this.formFields.description.value = this.utility.description ?? '';
     this.formFields.videoLink.value = this.utility.videoLink ?? '';
+    this.formFields.setpos.value = this.utility.setpos ?? '';
     this.type = this.utility.type;
     this.side = this.utility.side;
     this.mouseButton = this.utility.mouseButton;

@@ -8,18 +8,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  animation: 0.3s ease-in-out fade;
 
   &__content {
     padding: 16px;
     background-color: $color--smoke;
     min-width: 100%;
     height: 100%;
+    overflow-y: auto;
 
     @include viewport_mq3 {
       padding: 20px;
       height: auto;
       min-width: 320px;
       border-radius: 10px;
+      animation: 0.3s ease-in-out expand;
     }
 
     @include viewport_mq7 {

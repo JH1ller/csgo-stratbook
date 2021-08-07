@@ -11,13 +11,7 @@
         <span class="main-menu__label main-menu__logo-label">{{ appName }}</span>
       </router-link>
 
-      <router-link
-        v-for="(item, index) in menuItems"
-        :to="item.link"
-        @click.native="closeMenu"
-        class="main-menu__list-item"
-        :key="item.label"
-      >
+      <router-link v-for="(item, index) in menuItems" :to="item.link" class="main-menu__list-item" :key="item.label">
         <fa-icon :icon="item.icon" class="main-menu__icon" />
         <span class="main-menu__label" :style="{ transitionDelay: '0.' + index + 's' }">{{ item.label }}</span>
       </router-link>
@@ -30,13 +24,14 @@
       <a v-if="!isDesktop" class="main-menu__list-item main-menu__link --download" @click="downloadDesktopClient"
         ><fa-icon icon="download" />Get desktop app</a
       >
-      <a
+      <!-- Removed for now because it's not working anymore -->
+      <!-- <a
         class="main-menu__list-item main-menu__link --feedback"
         data-feedback-fish
         :data-feedback-fish-userid="profile.email"
       >
         <fa-icon icon="comment" />Feedback
-      </a>
+      </a> -->
       <a class="main-menu__list-item main-menu__link --kofi" @click="openDonationLink()">
         <fa-icon icon="coffee" />Buy me a coffee
       </a>
@@ -52,7 +47,7 @@
         <span></span>
       </div>
     </div>
-    <FeedbackFish projectId="092eb5ee119a8c" />
+    <!-- <FeedbackFish projectId="092eb5ee119a8c" /> -->
   </div>
 </template>
 

@@ -13,3 +13,15 @@
     display: none;
   }
 }
+
+@mixin flex-gap($gap) {
+  // https://coryrylan.com/blog/css-gap-space-with-flexbox
+  display: inline-flex;
+  flex-wrap: wrap;
+  margin: calc(-1 * #{$gap}) 0 0 calc(-1 * #{$gap});
+  width: calc(100% + #{$gap});
+
+  & > * {
+    margin: $gap 0 0 $gap;
+  }
+}

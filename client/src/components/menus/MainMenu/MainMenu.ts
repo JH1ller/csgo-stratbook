@@ -2,19 +2,13 @@ import { Component, Emit, Inject, Prop, Vue } from 'vue-property-decorator';
 import { appModule, authModule } from '@/store/namespaces';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import { Player } from '@/api/models/Player';
-import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
-import { FeedbackFish } from '@feedback-fish/vue';
 import { Routes } from '@/router/router.models';
 import TrackingService from '@/services/tracking.service';
 import { catchPromise } from '@/utils/catchPromise';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { openLink } from '@/utils/openLink';
 
-@Component({
-  components: {
-    FeedbackFish,
-  },
-})
+@Component({})
 export default class MainMenu extends Vue {
   private appName = 'stratbook'; // TODO: dynamic
   @Inject() private trackingService!: TrackingService;
@@ -58,29 +52,34 @@ export default class MainMenu extends Vue {
       this.showDialog({
         key: 'main-menu/download-desktop',
         text:
-          'Click "Download now" to get the Stratbook desktop application. \
-          It offers higher performance and might soon get features that wouldn\'nt be possible in the web version.\
-          If Windows prevents running the app, you should be able to click "More Info" and "Run anyway".',
+          'Click <b>Download now</b> to get the Stratbook desktop application.<br/> \
+          It offers better performance and might later get features that are not possible in the web version.<br/>\
+          If Windows prevents running the app, you should be able to click <b>More Info</b> and <b>Run anyway</b>.<br/> \
+          The app automatically checks for updates on startup.',
         resolveBtn: 'Download now',
         htmlMode: true,
       }),
       () => {
+        this.trackingService.track('Action: Download Desktop Client');
         // TODO: consider if we should just insert current version here
-        window.open('https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+1.6.1.exe');
+        window.open('https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+1.9.0.exe');
       }
     );
-    this.trackingService.track('click:get-desktop-client');
+    this.trackingService.track('Click: Get Desktop Client');
   }
 
   private openTwitter() {
+    this.trackingService.track('Click: Open Twitter');
     openLink('https://twitter.com/csgostratbook');
   }
 
   private openDiscord() {
+    this.trackingService.track('Click: Open Discord');
     openLink('https://discord.com/invite/mkxzQJGRgq');
   }
 
   private openDonationLink() {
+    this.trackingService.track('Click: Open Ko-Fi');
     openLink('https://ko-fi.com/Q5Q02X2XQ');
   }
 

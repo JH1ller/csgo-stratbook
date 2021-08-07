@@ -1,12 +1,14 @@
 .strat-item {
   background-color: $color--smoke;
   box-shadow: $shadow-subtle;
-  padding: 12px 12px 6px 12px;
+  padding: 0 12px 6px 12px;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   position: relative;
   border: 2px solid rgba($color--navyblue, 0.5);
+  transition: height 0.3s ease-out;
+  overflow: hidden;
 
   &.-inactive {
     border: 2px dashed rgba($color--navyblue, 0.5);
@@ -14,13 +16,17 @@
   }
 
   @include viewport_mq3 {
-    padding: 12px 20px 6px 20px;
+    padding: 0px 20px 6px 20px;
   }
 
   &__title {
     font-size: 1.2em;
     font-weight: bold;
     display: inline;
+  }
+
+  &__title-wrapper {
+    margin-top: 6px;
   }
 
   &__inactive-label {
@@ -39,6 +45,12 @@
     color: $color--abbey;
     opacity: 0.6;
     margin-left: 2px;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+
+    .-collapsed & {
+      opacity: 0;
+    }
 
     & > svg {
       width: 14px;
@@ -48,48 +60,47 @@
   }
 
   &__editor {
-    margin: 8px 0;
     width: 100%;
-    @include viewport_mq3 {
-      width: calc(100% - 48px);
-    }
+    opacity: 1;
+    transition: opacity 0.3s ease;
 
     &.-blinking {
       outline: 2px solid $color--red;
       animation: pulse-outline 2s infinite;
     }
+
+    .-collapsed & {
+      opacity: 0;
+    }
+  }
+
+  &__header {
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    padding: 8px 0;
   }
 
   &__type {
-    position: absolute;
-    right: 12px;
-    top: 5px;
-
-    @include viewport_mq3 {
-      right: 16px;
-      top: 56px;
+    &:not(:first-child) {
+      margin-left: 12px;
     }
   }
 
-  &__side {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    width: 28px;
-    height: 64px;
-    opacity: 0.3;
-    object-position: left;
-    object-fit: cover;
-    transform: translateY(-50%);
+  &__types-wrapper {
+    display: flex;
+    margin-left: auto;
+  }
 
-    @include viewport_mq3 {
-      opacity: 0.6;
-      right: 16px;
-      top: 12px;
-      width: 36px;
-      height: 36px;
-      transform: none;
-    }
+  &__side {
+    margin-left: 12px;
+  }
+
+  &__type,
+  &__side {
+    opacity: 0.6;
+    width: 36px;
+    height: 36px;
   }
 
   &__deletion {
@@ -100,6 +111,7 @@
   }
 
   &__btn-wrapper {
+    margin-top: 8px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -110,6 +122,14 @@
 
     @include viewport_mq3 {
       right: 16px;
+    }
+  }
+
+  &__edit-buttons {
+    display: flex;
+
+    & > :not(:first-child) {
+      margin-left: 8px;
     }
   }
 
@@ -148,6 +168,10 @@
     & > svg {
       width: 18px;
       height: 18px;
+    }
+
+    &.--insert {
+      margin-right: auto;
     }
 
     &.--save {

@@ -1,6 +1,8 @@
 <template>
   <div class="strats-view">
-    <MapPicker @map-clicked="updateCurrentMap" :currentMap="currentMap" />
+    <transition name="fade">
+      <MapPicker v-show="!gameMode" @map-clicked="updateCurrentMap" :currentMap="currentMap" />
+    </transition>
     <FilterMenu :open="filterMenuOpen" @close="filterMenuOpen = false" @clear-filters="clearStratFilters">
       <StratFilterForm
         @content-filter-change="updateStratContentFilter"
@@ -11,6 +13,15 @@
       />
     </FilterMenu>
     <StratList
+      class="strats-view__strat-list"
+      ref="stratList"
+      :class="{ '-game-mode': gameMode }"
+      :completedTutorial="profile.completedTutorial"
+      :tutorialStrat="tutorialStrat"
+      :strats="sortedFilteredStratsOfCurrentMap"
+      :collapsedStrats="collapsedStrats"
+      :editedStrats="editedStrats"
+      :gameMode="gameMode"
       @delete-strat="requestDeleteStrat"
       @edit-strat="showStratForm"
       @toggle-active="toggleStratActive"
@@ -18,18 +29,65 @@
       @share-strat="requestShareStrat"
       @unshare-strat="unshareStrat"
       @show-map="showDrawTool"
-      :completedTutorial="profile.completedTutorial"
-      :tutorialStrat="tutorialStrat"
-      :strats="sortedFilteredStratsOfCurrentMap"
+      @toggle-collapse="toggleStratCollapse"
+      @edit-changed="updateEdited"
+      @editor-focussed="hasEditorFocus = true"
+      @editor-blurred="hasEditorFocus = false"
+      @filter-type="applyStratTypeFilter"
+      @filter-side="updateStratSideFilter"
     />
     <transition name="fade">
       <div class="strats-view__fab-group" v-if="!filterMenuOpen && !stratFormOpen">
+        <FloatingButton
+          class="strats-view__floating-game-mode"
+          label="Focus Mode"
+          icon="crosshairs"
+          @click="toggleGameMode"
+          v-tippy
+          content="CTRL+G"
+        />
+        <FloatingButton
+          class="strats-view__floating-sort"
+          :icon="sort === Sort.DateAddedASC ? 'sort-amount-down' : 'sort-amount-up'"
+          label="Sort"
+          @click="toggleSort"
+          v-tippy
+          content="CTRL+S"
+        />
+        <FloatingButton
+          class="strats-view__floating-collapse"
+          icon="compress-alt"
+          label="Collapse All"
+          @click="collapseAll"
+          v-tippy
+          content="CTRL+E"
+        />
+        <FloatingButton
+          class="strats-view__floating-collapse"
+          icon="expand-alt"
+          label="Expand All"
+          @click="expandAll"
+          v-tippy
+          content="CTRL+Shift+E"
+        />
         <FilterButton
           class="strats-view__filter-button"
           @click="filterMenuOpen = true"
           :activeFilterCount="activeStratFilterCount"
+          v-tippy
+          content="CTRL+Shift+F"
         />
-        <FloatingAdd class="strats-view__floating-add" label="Add strat" @click="showStratForm" />
+        <transition name="fade">
+          <FloatingButton
+            v-if="!gameMode"
+            class="strats-view__floating-add"
+            label="Add Strat"
+            icon="plus"
+            @click="showStratForm"
+            v-tippy
+            content="CTRL+Shift+A"
+          />
+        </transition>
       </div>
     </transition>
 

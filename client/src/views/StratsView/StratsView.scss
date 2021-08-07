@@ -10,8 +10,50 @@
       margin-left: 8px;
     }
 
+    // TODO: improve mobile layout of this
+    @include viewport_only(mq1) {
+      @include flex-gap(4px);
+      flex-wrap: wrap;
+      max-width: calc(100% - 100px);
+      justify-content: flex-start;
+      flex-direction: row-reverse;
+    }
+
     @include viewport_mq3 {
       right: 34px;
+    }
+  }
+
+  &__floating-add {
+    background-color: $color--green;
+
+    &:hover {
+      background-color: darken($color--green, 15%);
+    }
+  }
+
+  &__floating-game-mode {
+    background-color: $color--orange;
+
+    &:hover {
+      background-color: darken($color--orange, 15%);
+    }
+  }
+
+  &__floating-collapse,
+  &__floating-sort {
+    background-color: $color--grey;
+
+    &:hover {
+      background-color: darken($color--grey, 15%);
+    }
+  }
+
+  &__strat-list {
+    margin-top: 24px;
+
+    &.-game-mode {
+      margin-top: 0;
     }
   }
 }

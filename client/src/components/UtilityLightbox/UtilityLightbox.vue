@@ -9,8 +9,15 @@
         :src="getEmbedURL(extractVideoId(currentMedia.src) || '', extractTimestamp(currentMedia.src))"
         frameborder="0"
       />
-      <SmartImage v-else :src="resolveImage(currentMedia.src)" class="utility-lightbox__media" alt="Utility image" />
-
+      <SmartImage
+        v-else-if="currentMedia"
+        :src="resolveImage(currentMedia.src)"
+        class="utility-lightbox__media"
+        alt="Utility image"
+      />
+      <div v-else class="utility-lightbox__fallback">
+        <fa-icon icon="photo-video" class="utility-lightbox__icon-fallback"></fa-icon>
+      </div>
       <transition name="fade">
         <div class="utility-lightbox__crosshair-wrapper" v-if="showCrosshair">
           <div class="utility-lightbox__crosshair-horizontal"></div>
@@ -36,15 +43,35 @@
     <fa-icon icon="times" class="utility-lightbox__close" @click="close" />
     <div class="utility-lightbox__badge-wrapper">
       <div class="utility-lightbox__side-wrapper">
-        <img v-if="utility.side === Sides.T" src="@/assets/icons/t_badge.png" class="utility-lightbox__side" />
-        <img v-else src="@/assets/icons/ct_badge.png" class="utility-lightbox__side" />
+        <img
+          v-if="utility.side === Sides.T"
+          src="@/assets/icons/t_badge.png"
+          class="utility-lightbox__side"
+          v-tippy
+          content="T Side"
+        />
+        <img v-else src="@/assets/icons/ct_badge.png" class="utility-lightbox__side" v-tippy content="CT Side" />
       </div>
-      <UtilityTypeDisplay :type="utility.type" class="utility-lightbox__type" />
-      <div class="utility-lightbox__crosshair-btn" @click="showCrosshair = !showCrosshair">
-        <img src="@/assets/icons/crosshair.svg" class="utility-lightbox__crosshair-img" />
+      <UtilityTypeDisplay :type="utility.type" class="utility-lightbox__type" v-tippy content="Type" />
+      <div
+        class="utility-lightbox__badge"
+        @click="showCrosshair = !showCrosshair"
+        v-tippy
+        content="Toggle Extended Crosshair"
+      >
+        <img src="@/assets/icons/crosshair.svg" class="utility-lightbox__badge-icon" />
+      </div>
+      <div
+        class="utility-lightbox__badge"
+        v-if="utility.setpos"
+        @click="copySetpos"
+        v-tippy
+        content="Copy Setpos Command"
+      >
+        <fa-icon icon="map-marker-alt" class="utility-lightbox__badge-icon" />
       </div>
     </div>
-    <span class="utility-lightbox__description">{{ utility.description }}</span>
+    <span class="utility-lightbox__description" v-if="utility.description">{{ utility.description }}</span>
     <span class="utility-lightbox__info">
       <span class="utility-lightbox__name">{{ utility.name }}</span>
       <div class="utility-lightbox__icon-wrapper">

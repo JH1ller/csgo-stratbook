@@ -1,4 +1,4 @@
-.floating-add {
+.floating-button {
   background-color: $color--green;
   border-radius: 999px; // * some high value to ensure pill shape when long, and circle when short
   width: 48px;
@@ -11,7 +11,7 @@
   transition: transform 0.2s ease, background-color 0.2s ease, width 0.2s ease;
   border: 2px solid white;
 
-  @include viewport_mq3 {
+  @include viewport_mq4 {
     width: auto;
     padding: 0 10px;
   }
@@ -22,8 +22,8 @@
   }
 
   &__icon {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     color: white;
   }
 
@@ -32,7 +32,7 @@
     color: white;
     margin-left: 6px;
 
-    @include viewport_mq3 {
+    @include viewport_mq4 {
       display: block;
     }
   }

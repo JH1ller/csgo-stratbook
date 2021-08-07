@@ -1,4 +1,4 @@
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop, Emit } from 'vue-property-decorator';
 import SidePicker from '@/components/SidePicker/SidePicker.vue';
 import TypePicker from '@/components/TypePicker/TypePicker.vue';
 import { StratFilters } from '@/store/modules/filter';
@@ -30,16 +30,17 @@ export default class StratFilterForm extends Vue {
     this.$emit('content-filter-change', value);
   }
 
-  private get typeFilter() {
-    return this.filters.type;
+  private get typeFilters() {
+    return this.filters.types;
   }
 
-  private set typeFilter(type: StratTypes | null) {
-    if (this.filters.type === type) {
-      this.$emit('type-filter-change', null);
-    } else {
-      this.$emit('type-filter-change', type);
-    }
+  private set typeFilters(value: StratTypes[]) {
+    this.$emit('type-filter-change', value);
+  }
+
+  @Emit()
+  private typeFilterChange(type: StratTypes) {
+    return type;
   }
 
   private get sideFilter() {
