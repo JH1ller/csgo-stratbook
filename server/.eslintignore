@@ -1,0 +1,7 @@
+/dist
+/dist_landingpage
+/node_modules
+/public
+
+# .eslintrc.js
+# *.js

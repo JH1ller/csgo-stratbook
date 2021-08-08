@@ -1,0 +1,29 @@
+<mjml>
+  <mj-head>
+    <mj-preview>Hi, {{userName}} verify your email.</mj-preview>
+  </mj-head>
+  <mj-body background-color="#202020">
+    <mj-section>
+      <mj-column>
+        <mj-text color="white">
+          <h2>Hi {{userName}},</h2>
+        </mj-text>
+        <mj-text color="white">Welcome to Stratbook!</mj-text>
+        <mj-text color="white">Click the link below to verify your email address:</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column>
+        <mj-button font-family="Helvetica" background-color="#41b883" color="white" href="{{link}}">Verify email</mj-button>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column>
+        <mj-text color="white">If the above button doesn't work, click on the link below instead:</mj-text>
+        <mj-text align="center">
+          <a style="color: #15c;" href="{{link}}">{{link}}</a>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

@@ -1,7 +1,47 @@
-version: '3'
+version: '3.8'
 services:
   mongodb:
-    image: mongo:3.6.22-xenial
+    image: mongo:3.6.23-xenial
     ports:
-      - 27017:27017
-      - 27018:27018
+      - 27018:27017
+    networks:
+      node_net:
+        ipv4_address: 172.28.1.1
+
+  redis:
+    image: "redis:6.2.1-alpine"
+    command: redis-server
+
+    ports:
+      - 6379:6379
+
+    networks:
+      node_net:
+        ipv4_address: 172.28.1.2
+    volumes:
+      - redis-data:/data
+
+  minio:
+    # default login: minioadmin:minioadmin
+    image: "minio/minio:latest"
+    command: server /data
+
+    ports:
+      - 9000:9000
+    networks:
+      node_net:
+        ipv4_address: 172.28.1.3
+    volumes:
+      - minio-data:/data
+
+
+networks:
+  node_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
+
+volumes:
+  redis-data:
+  minio-data:

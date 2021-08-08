@@ -1,0 +1,34 @@
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { MulterModule } from '@nestjs/platform-express';
+
+import { TeamsController } from './teams.controller';
+import { TeamsService } from './teams.service';
+
+import { Team, TeamSchema } from 'src/schemas/team.schema';
+
+import { UsersModule } from 'src/users/users.module';
+import { StrategiesModule } from 'src/strategies/strategies.module';
+import { UtilitiesModule } from 'src/utilities/utilities.module';
+
+import { MulterConfigService } from 'src/services/multer-config.service';
+import { ImageProcessorModule } from 'src/services/image-processor/image-processor.module';
+
+@Module({
+  imports: [
+    MulterModule.registerAsync({
+      useClass: MulterConfigService,
+    }),
+    MongooseModule.forFeature([{ name: Team.name, schema: TeamSchema }]),
+
+    UsersModule,
+    StrategiesModule,
+    UtilitiesModule,
+
+    ImageProcessorModule,
+  ],
+  controllers: [TeamsController],
+  providers: [TeamsService],
+  exports: [TeamsService],
+})
+export class TeamsModule {}
