@@ -214,6 +214,15 @@ export const stratModule: Module<StratState, RootState> = {
     [SET_SORT](state, sort: Sort) {
       state.sort = sort;
     },
+    [SET_COLLAPSED](state, stratIDs: string[]) {
+      state.collapsedStrats = stratIDs;
+    },
+    [SET_EDITED](state, stratIDs: string[]) {
+      state.editedStrats = stratIDs;
+    },
+    [SET_SORT](state, sort: Sort) {
+      state.sort = sort;
+    },
     [RESET_STATE](state) {
       Object.assign(state, stratInitialState());
     },
