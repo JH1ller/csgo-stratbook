@@ -1,34 +1,45 @@
 {
   "compilerOptions": {
+    "strict": true,
+    
     "target": "es2018",
     "module": "esnext",
-    "strict": true,
+    "moduleResolution": "node",
+    
     "jsx": "preserve",
     "importHelpers": true,
-    "moduleResolution": "node",
     "experimentalDecorators": true,
-    "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "types": [
-      "webpack-env"
-    ],
+    
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true,
+    
+    "baseUrl": ".",
     "paths": {
+      "src/*": ["src/*"],
       "@/*": [
         "src/*"
       ]
     },
+    
     "lib": [
-      "esnext",
       "dom",
       "dom.iterable",
-      "scripthost"
+      "es2015",
+      "es2016",
+      "es2017",
+      "es2018",
+      "esnext"
     ],
+    
+    "types": [
+      "node",
+      "webpack-env"
+    ]
   },
+  
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
@@ -36,6 +47,7 @@
     "tests/**/*.ts",
     "tests/**/*.tsx"
   ],
+  
   "exclude": [
     "node_modules"
   ]

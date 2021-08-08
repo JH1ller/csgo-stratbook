@@ -20,19 +20,22 @@ function getPublishConfig() {
 module.exports = {
   publicPath: '/',
   outputDir: path.resolve(__dirname, '../server/dist_app'),
+  
   pages: {
     index: 'src/main.ts',
     loader: 'src/loader.ts',
   },
+
   css: {
     loaderOptions: {
-      sass: {
-        prependData: `@import "@/styles/index.scss";`,
+      scss: {
+        additionalData: `@import "@/styles/index.scss";`,
       },
     },
   },
-  parallel: 4,
+
   configureWebpack: process.env.BUILD_TARGET === 'ELECTRON' ? electronConfig : {},
+
   pluginOptions: {
     electronBuilder: {
       nodeIntegration: true,

@@ -1,4 +1,3 @@
-'use strict';
 import { app, protocol, BrowserWindow, ipcMain, session, dialog } from 'electron';
 import os from 'os';
 import path from 'path';
