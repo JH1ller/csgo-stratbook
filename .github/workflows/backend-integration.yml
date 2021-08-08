@@ -3,10 +3,10 @@ name: Server Integration CI
 on:
   push:
     branches:
-    - 'nest_backend'
+    - vnext
   pull_request:
     branches:
-    - 'nest_backend'
+    - vnext
 
 jobs:
   build:
@@ -31,9 +31,15 @@ jobs:
         ports:
           # Maps port 6379 on service container to the host
           - 6379:6379
+      minio:
+        image: fclairamb/minio-github-actions
+        ports:
+          - 9000:9000
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        lfs: true
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
@@ -44,7 +50,17 @@ jobs:
       with:
         mongodb-version: ${{ matrix.mongodb-version }}
         mongodb-port: 27018
+    - name: npm install
+      working-directory: ./server
+      run: |
+        npm ci
+        cp ./.env.example ./.env
+      
+    - name: run integration
+      working-directory: ./server
+      run: npm run test:integration
         
-    - run: npm ci
-    - run: npm run test:integration
-    - run: npm run deploy
+    - name: build articfacts
+      working-directory: ./server
+      run: npm run deploy
+
