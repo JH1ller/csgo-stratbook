@@ -1,6 +1,7 @@
 <template>
-  <div class="filter-button">
-    <FloatingButton class="filter-button__button" label="Filter" icon="filter" @click="click" />
+  <div class="filter-button" @click="click">
+    <fa-icon icon="filter" class="filter-button__icon" />
+    <span class="filter-button__label">Filter</span>
     <span class="filter-button__indicator" v-if="activeFilterCount">{{ activeFilterCount }}</span>
   </div>
 </template>

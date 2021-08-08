@@ -1,16 +1,12 @@
 <template>
   <div class="app">
-    <div class="app__version-wrapper">
-      <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi"/></span>
-      <span class="app__version">{{ appVersion }}</span>
-    </div>
+    <span class="app__version">Beta {{ appVersion }}</span>
+    <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi"/></span>
     <DialogWrapper />
     <ToastWrapper />
-    <transition name="fade">
-      <MainMenu v-show="!gameMode" :menuOpen="menuOpen" @toggle-menu="toggleMenu" @close-menu="closeMenu" />
-    </transition>
+    <MainMenu :menuOpen="menuOpen" @toggle-menu="toggleMenu" @close-menu="closeMenu" />
     <transition name="fade" mode="out-in">
-      <router-view @click.native="closeMenu" class="router-view" :class="{ '-game-mode': gameMode }"></router-view>
+      <router-view @click.native="closeMenu" class="router-view"></router-view>
     </transition>
     <transition name="fade">
       <CookieBanner v-if="showCookieBanner && isDesktop === false" @close="closeCookieBanner" />
@@ -27,14 +23,12 @@ import MainMenu from '@/components/menus/MainMenu/MainMenu.vue';
 import DialogWrapper from './components/DialogWrapper/DialogWrapper.vue';
 import CookieBanner from './components/CookieBanner/CookieBanner.vue';
 import pkg from '../package.json';
-import { appModule, teamModule } from './store/namespaces';
+import { appModule } from './store/namespaces';
 import TrackingService from '@/services/tracking.service';
 import { Dialog } from './components/DialogWrapper/DialogWrapper.models';
 import { catchPromise } from './utils/catchPromise';
 import StorageService from './services/storage.service';
-import { gt, major, minor } from 'semver';
-import { Breakpoints } from './services/breakpoint.service';
-import { Team } from './api/models/Team';
+import { satisfies, gt, major, minor } from 'semver';
 
 @Component({
   components: {
@@ -51,9 +45,6 @@ export default class App extends Vue {
   @Provide() storageService: StorageService = StorageService.getInstance();
 
   @appModule.State latency!: number;
-  @appModule.State gameMode!: boolean;
-  @appModule.State breakpoint!: Breakpoints;
-  @teamModule.State teamInfo!: Team;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
 
   private menuOpen: boolean = false;
@@ -96,7 +87,8 @@ export default class App extends Vue {
       catchPromise(
         this.showDialog({
           key: 'app/update-notice',
-          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><br><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Update 1.9.0 🎉<br>• Strats can now have multiple economy types<br>• Your filters are persisted across sessions <br>• The window size and position of the desktop app is also remembered <br>• Button to invert sort direction of strats</p>&mdash; Stratbook (@csgostratbook) <a href="https://twitter.com/csgostratbook/status/1416079598702448640?ref_src=twsrc%5Etfw">July 16, 2021</a></blockquote>`,
+          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><br>
+          <blockquote class="twitter-tweet"><p lang="en" dir="ltr">1.7.0 📈<br>I heard you guys like to use -&gt; arrows in your strats?<br>Arrows and timestamps are now magically visually highlighted! <a href="https://t.co/Z8NOEy0Rgb">pic.twitter.com/Z8NOEy0Rgb</a></p>&mdash; Stratbook (@csgostratbook) <a href="https://twitter.com/csgostratbook/status/1365608034936979457?ref_src=twsrc%5Etfw">February 27, 2021</a></blockquote>`,
           resolveBtn: 'OK',
           confirmOnly: true,
           htmlMode: true,
@@ -123,7 +115,6 @@ export default class App extends Vue {
     });
 
     ipcRenderer.send('app-ready');
-    ipcRenderer.send('start-game-mode');
   }
 
   private checkCookies() {
@@ -136,7 +127,7 @@ export default class App extends Vue {
   }
 
   private initTracking(disableCookie = false) {
-    this.trackingService.init(disableCookie, { breakpoint: this.breakpoint, team: this.teamInfo.name });
+    this.trackingService.init(disableCookie);
   }
 
   private closeMenu() {
@@ -161,22 +152,27 @@ export default class App extends Vue {
   height: 100%;
   overflow: hidden;
 
-  &__version-wrapper {
+  &__version {
     position: absolute;
     font-size: 0.8rem;
-    top: 1px;
-    right: 13px;
-    color: $color--smoke;
-    display: flex;
-    align-items: center;
-  }
-
-  &__version {
-    opacity: 0.3;
-    margin-left: 6px;
+    top: 0;
+    right: 10px;
+    background-color: $color--smoke;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    padding: 0 4px;
+    opacity: 0.1;
   }
 
   &__latency {
+    position: absolute;
+    font-size: 0.8rem;
+    top: 1px;
+    right: 90px;
+    color: $color--smoke;
+    display: flex;
+    align-items: center;
+
     & > * {
       width: 14px;
       height: 14px;
@@ -186,6 +182,7 @@ export default class App extends Vue {
 
 .router-view {
   height: 100%;
+  //padding: 12px;
   overflow-y: scroll;
   overflow-x: hidden;
 
@@ -193,22 +190,12 @@ export default class App extends Vue {
     margin-left: 70px;
     width: calc(100% - 70px);
     padding: 24px;
-    transition: margin-left 0.3s ease, width 0.3s ease;
-
-    &.-game-mode {
-      margin-left: 0;
-      width: 100%;
-    }
   }
 }
 
 .v-context {
   & > li {
     cursor: pointer;
-
-    &.hidden {
-      display: none;
-    }
 
     & > a {
       height: 36px;

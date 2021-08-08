@@ -6,7 +6,7 @@
       </FormFieldSet>
       <FormFieldSet>
         <label class="strat-form__label" for="type">Type</label>
-        <TypePicker v-model="types" />
+        <TypePicker v-model="type" />
       </FormFieldSet>
       <FormFieldSet>
         <label class="strat-form__label">Side</label>

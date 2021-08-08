@@ -4,26 +4,9 @@ const electronConfig = {
   target: 'electron-renderer',
 };
 
-function getPublishConfig() {
-  return process.env.PUBLISHTO === 'prod'
-    ? {
-        provider: 's3',
-        bucket: process.env.S3_BUCKET_NAME,
-      }
-    : {
-        provider: 's3',
-        endpoint: 'http://127.0.0.1:9000',
-        bucket: 'test-update',
-      };
-}
-
 module.exports = {
   publicPath: '/',
   outputDir: path.resolve(__dirname, '../server/dist_app'),
-  pages: {
-    index: 'src/main.ts',
-    loader: 'src/loader.ts',
-  },
   css: {
     loaderOptions: {
       sass: {
@@ -31,7 +14,6 @@ module.exports = {
       },
     },
   },
-  parallel: 4,
   configureWebpack: process.env.BUILD_TARGET === 'ELECTRON' ? electronConfig : {},
   pluginOptions: {
     electronBuilder: {
@@ -47,7 +29,10 @@ module.exports = {
           //   provider: 'github',
           //   token: process.env.GH_TOKEN,
           // },
-          publish: getPublishConfig(),
+          publish: {
+            provider: 's3',
+            bucket: process.env.S3_BUCKET_NAME,
+          },
         },
         portable: {
           artifactName: 'Stratbook.exe',
@@ -59,7 +44,6 @@ module.exports = {
           name: 'csgostratbook-protocol',
           schemes: ['csgostratbook'],
         },
-        extraResources: ['build/*'],
       },
     },
   },

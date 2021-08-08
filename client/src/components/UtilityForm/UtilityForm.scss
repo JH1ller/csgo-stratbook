@@ -13,14 +13,12 @@
 
   &__btn-wrapper {
     margin-top: auto;
-    padding-top: 6px;
     display: flex;
     justify-content: flex-end;
 
     @include viewport_mq3 {
       transform: translateY(10px);
       margin-top: 6px;
-      padding-top: 0;
     }
   }
 
@@ -65,7 +63,6 @@
   &__config-wrapper {
     display: flex;
     justify-content: space-evenly;
-    align-items: center;
   }
 
   &__vertical-wrapper {
@@ -79,19 +76,5 @@
 
   &__mouse-button-picker {
     margin-right: 12px;
-  }
-
-  &__input-wrapper {
-    display: flex;
-    width: 100%;
-    justify-content: stretch;
-
-    & > :not(:first-child) {
-      margin-left: 8px;
-    }
-
-    & > .text-input {
-      width: 100%;
-    }
   }
 }

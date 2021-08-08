@@ -1,7 +1,7 @@
-import { Component, Provide, Ref, Vue } from 'vue-property-decorator';
+import { Component, Provide, Vue } from 'vue-property-decorator';
 import MapPicker from '@/components/MapPicker/MapPicker.vue';
 import StratList from '@/components/StratList/StratList.vue';
-import FloatingButton from '@/components/FloatingButton/FloatingButton.vue';
+import FloatingAdd from '@/components/FloatingAdd/FloatingAdd.vue';
 import StratForm from '@/components/StratForm/StratForm.vue';
 import StratFilterForm from '@/components/StratFilterForm/StratFilterForm.vue';
 import FilterMenu from '@/components/FilterMenu/FilterMenu.vue';
@@ -18,15 +18,12 @@ import { MapID } from '@/components/MapPicker/MapPicker';
 import UtilityLightbox from '@/components/UtilityLightbox/UtilityLightbox.vue';
 import { Utility } from '@/api/models/Utility';
 import { catchPromise } from '@/utils/catchPromise';
-import ShortcutService from '@/services/shortcut.service';
-import { Sort } from '@/store/modules/strat';
-import TrackingService from '@/services/tracking.service';
 
 @Component({
   components: {
     MapPicker,
     StratList,
-    FloatingButton,
+    FloatingAdd,
     StratForm,
     StratFilterForm,
     FilterButton,
@@ -39,18 +36,14 @@ export default class StratsView extends Vue {
   @Provide('lightbox') showLightboxFunc = this.showLightbox;
 
   @mapModule.State currentMap!: MapID;
-  @stratModule.State collapsedStrats!: string[];
-  @stratModule.State editedStrats!: string[];
-  @stratModule.State sort!: Sort;
   @stratModule.Getter sortedFilteredStratsOfCurrentMap!: Strat[];
   @filterModule.State stratFilters!: StratFilters;
   @filterModule.Getter activeStratFilterCount!: number;
   @teamModule.State teamMembers!: Player[];
   @authModule.State profile!: Player;
-  @appModule.State gameMode!: boolean;
 
   @filterModule.Action updateStratContentFilter!: (value: string) => Promise<void>;
-  @filterModule.Action updateStratTypeFilter!: (types: StratTypes[]) => Promise<void>;
+  @filterModule.Action updateStratTypeFilter!: (type: StratTypes | null) => Promise<void>;
   @filterModule.Action updateStratNameFilter!: (name: string) => Promise<void>;
   @filterModule.Action updateStratSideFilter!: (side: Sides | null) => Promise<void>;
   @filterModule.Action clearStratFilters!: () => Promise<void>;
@@ -62,17 +55,7 @@ export default class StratsView extends Vue {
   @stratModule.Action deleteStrat!: (stratID: string) => Promise<void>;
   @stratModule.Action shareStrat!: (stratID: string) => Promise<void>;
   @stratModule.Action unshareStrat!: (stratID: string) => Promise<void>;
-  @stratModule.Action collapseAll!: () => Promise<void>;
-  @stratModule.Action expandAll!: () => Promise<void>;
-  @stratModule.Action toggleStratCollapse!: (stratID: string) => Promise<void>;
-  @stratModule.Action updateEdited!: (payload: { stratID: string; value: boolean }) => Promise<void>;
-  @stratModule.Action updateSort!: (sort: Sort) => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
-  @appModule.Action startGameMode!: () => Promise<void>;
-  @appModule.Action exitGameMode!: () => Promise<void>;
-
-  @Ref() stratList!: Vue;
-  private shortcutService = ShortcutService.getInstance();
 
   private stratFormOpen = false;
   private stratFormEditMode = false;
@@ -82,53 +65,8 @@ export default class StratsView extends Vue {
   private filterMenuOpen = false;
   private drawToolOpen = false;
   private currentDrawToolStrat: Strat | null = null;
-  private hasEditorFocus = false;
+
   private tutorialStrat: Strat | null = null;
-
-  private Sort: typeof Sort = Sort;
-
-  private trackingService = TrackingService.getInstance();
-
-  private created() {
-    this.shortcutService.add([
-      {
-        shortcut: 'Ctrl+Shift+E',
-        handler: () => this.execShortcut(this.expandAll),
-      },
-      {
-        shortcut: 'Ctrl+E',
-        handler: () => this.execShortcut(this.collapseAll),
-      },
-      {
-        shortcut: 'Ctrl+Shift+A',
-        handler: () => this.execShortcut(this.showStratForm),
-      },
-      {
-        shortcut: 'Ctrl+Shift+F',
-        handler: () => this.execShortcut(this.toggleFilterMenu),
-      },
-      {
-        shortcut: 'Ctrl+G',
-        handler: () => this.execShortcut(this.toggleGameMode),
-      },
-      {
-        shortcut: 'Ctrl+S',
-        handler: () => this.execShortcut(this.toggleSort),
-      },
-    ]);
-    // TODO: add map change shortcut
-  }
-
-  private beforeDestroy() {
-    this.shortcutService.reset();
-  }
-
-  private execShortcut(action: () => unknown): boolean | void {
-    if (!this.editedStrats.length && !this.stratFormOpen && !this.hasEditorFocus) {
-      action();
-      return true;
-    }
-  }
 
   private async stratFormSubmitted(data: Partial<Strat>) {
     if (data.id) {
@@ -142,8 +80,8 @@ export default class StratsView extends Vue {
           this.showDialog({
             key: 'strats-view/confirm-tutorial',
             text: `Hey there! Looks like you just created your first strat.<br>You can now edit the content of the strat by clicking the blinking box.<br>
-              You can mention teammates with "<b>@</b>".<br>You can link utility from the nadebook with "<b>#</b>"<br>You can
-              link weapons or equipment with "<b>/</b>".`,
+              You can mention teammates with "<bold>@</bold>".<br>You can link utility from the nadebook with "<bold>#</bold>"<br>You can
+              link weapons or equipment with "<bold>/</bold>".`,
             resolveBtn: 'OK',
             confirmOnly: true,
             htmlMode: true,
@@ -152,7 +90,6 @@ export default class StratsView extends Vue {
             const formData = new FormData();
             formData.append('completedTutorial', 'true');
             this.updateProfile(formData);
-            this.trackingService.track('Action: Completed Tutorial');
           }
         );
       }
@@ -160,11 +97,10 @@ export default class StratsView extends Vue {
     this.hideStratForm();
   }
 
-  private showStratForm(strat?: Strat) {
+  private showStratForm(strat: Strat) {
     this.stratFormOpen = true;
-    this.filterMenuOpen = false;
-    this.editStrat = strat?._id ? strat : null;
-    this.stratFormEditMode = !!strat?._id;
+    this.editStrat = strat.id ? strat : null;
+    this.stratFormEditMode = strat.id ? true : false;
   }
 
   private hideStratForm() {
@@ -212,28 +148,12 @@ export default class StratsView extends Vue {
   private showDrawTool(strat: Strat) {
     this.currentDrawToolStrat = strat;
     this.drawToolOpen = true;
-    this.trackingService.track('Click: Show DrawTool', { strat: strat.name });
   }
 
-  private toggleFilterMenu() {
-    this.filterMenuOpen = !this.filterMenuOpen;
-  }
-
-  private toggleGameMode() {
-    this.gameMode ? this.exitGameMode() : this.startGameMode();
-    this.trackingService.track('Action: Toggle GameMode', { value: this.gameMode });
-  }
-
-  private async toggleSort() {
-    await this.updateSort(this.sort === Sort.DateAddedASC ? Sort.DateAddedDESC : Sort.DateAddedASC);
-    // TODO: find better way
-    this.stratList.$forceUpdate();
-    this.trackingService.track('Action: Change Sort Direction', {
-      direction: this.sort === Sort.DateAddedASC ? 'Date Added ASC' : 'Date Added DESC',
-    });
-  }
-
-  private applyStratTypeFilter(value: StratTypes) {
-    this.updateStratTypeFilter([value]);
+  // * unused
+  private submitDrawing(data: Partial<Strat>) {
+    this.updateStrat(data);
+    this.currentDrawToolStrat = null;
+    this.drawToolOpen = false;
   }
 }

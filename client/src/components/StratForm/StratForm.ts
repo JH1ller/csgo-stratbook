@@ -30,7 +30,7 @@ export default class StratForm extends Mixins(CloseOnEscape) {
     videoLink: new FormField('Video Link', false, [Validators.isURL()]),
   };
 
-  private types: StratTypes[] = [StratTypes.BUYROUND];
+  private type: StratTypes = StratTypes.BUYROUND;
   private side: Sides = Sides.T;
 
   private mounted() {
@@ -50,7 +50,7 @@ export default class StratForm extends Mixins(CloseOnEscape) {
     return {
       id: this.isEdit ? this.strat.id : undefined,
       name: this.formFields.name.value,
-      types: this.types,
+      type: this.type,
       side: this.side,
       note: this.formFields.note.value,
       videoLink: this.formFields.videoLink.value,
@@ -61,7 +61,7 @@ export default class StratForm extends Mixins(CloseOnEscape) {
     this.formFields.name.value = this.strat.name;
     this.formFields.note.value = this.strat.note ?? '';
     this.formFields.videoLink.value = this.strat.videoLink ?? '';
-    this.types = this.strat.types;
+    this.type = this.strat.type;
     this.side = this.strat.side;
   }
 }

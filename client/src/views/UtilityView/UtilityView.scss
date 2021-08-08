@@ -14,12 +14,4 @@
       right: 34px;
     }
   }
-
-  &__floating-add {
-    background-color: $color--green;
-
-    &:hover {
-      background-color: darken($color--green, 15%);
-    }
-  }
 }

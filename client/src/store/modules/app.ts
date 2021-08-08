@@ -2,8 +2,6 @@ import { Module } from 'vuex';
 import { RootState } from '..';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
-import { Breakpoints } from '@/services/breakpoint.service';
-import { nanoid } from 'nanoid';
 
 const SET_LOADING = 'SET_LOADING';
 const SHOW_TOAST = 'SHOW_TOAST';
@@ -11,8 +9,6 @@ const HIDE_TOAST = 'HIDE_TOAST';
 const OPEN_DIALOG = 'OPEN_DIALOG';
 const CLOSE_DIALOG = 'CLOSE_DIALOG';
 const SET_LATENCY = 'SET_LATENCY';
-const SET_GAME_MODE = 'SET_GAME_MODE';
-const SET_BREAKPOINT = 'SET_BREAKPOINT';
 const RESET_STATE = 'RESET_STATE';
 
 export interface AppState {
@@ -20,8 +16,6 @@ export interface AppState {
   toasts: Toast[];
   openDialogs: Dialog[];
   latency: number;
-  gameMode: boolean;
-  breakpoint: Breakpoints;
 }
 
 const appInitialState = (): AppState => ({
@@ -29,28 +23,18 @@ const appInitialState = (): AppState => ({
   toasts: [],
   openDialogs: [],
   latency: 0,
-  gameMode: false,
-  breakpoint: Breakpoints.MQ1,
 });
 
 export const appModule: Module<AppState, RootState> = {
   namespaced: true,
   state: appInitialState(),
-  getters: {
-    isMobile(state): boolean {
-      return state.breakpoint === Breakpoints.MQ1 || state.breakpoint === Breakpoints.MQ2;
-    },
-  },
+  getters: {},
   actions: {
     showToast({ commit, state }, toast: Toast) {
-      const toastCopy = {
-        ...toast,
-        id: toast.allowMultiple ? nanoid() : toast.id,
-      };
-      if (!state.toasts.find(item => item.id === toastCopy.id)) {
-        commit(SHOW_TOAST, toastCopy);
+      if (!state.toasts.find(item => item.id === toast.id)) {
+        commit(SHOW_TOAST, toast);
         setTimeout(() => {
-          commit(HIDE_TOAST, toastCopy.id);
+          commit(HIDE_TOAST, toast.id);
         }, 5000);
       }
     },
@@ -79,16 +63,14 @@ export const appModule: Module<AppState, RootState> = {
     updateLatency({ commit }, latency: number) {
       commit(SET_LATENCY, latency);
     },
-    startGameMode({ commit }) {
-      commit(SET_GAME_MODE, true);
-      document.title = document.title += ' | Focus Mode';
-    },
-    exitGameMode({ commit }) {
-      commit(SET_GAME_MODE, false);
-      document.title = document.title.replace(' | Focus Mode', '');
-    },
-    updateBreakpoint({ commit }, bp: Breakpoints) {
-      commit(SET_BREAKPOINT, bp);
+    async showErrorDialog({ dispatch }) {
+      await dispatch('showDialog', {
+        key: 'error/ApiError',
+        text: 'An error occurred while loading the page.',
+        confirmOnly: true,
+        resolveBtn: 'Retry',
+      });
+      window.location.reload();
     },
     resetState({ commit }) {
       commit(RESET_STATE);
@@ -112,12 +94,6 @@ export const appModule: Module<AppState, RootState> = {
     },
     [SET_LATENCY](state, latency: number) {
       state.latency = latency;
-    },
-    [SET_GAME_MODE](state, gameMode: boolean) {
-      state.gameMode = gameMode;
-    },
-    [SET_BREAKPOINT](state, bp: Breakpoints) {
-      state.breakpoint = bp;
     },
     [RESET_STATE](state) {
       Object.assign(state, appInitialState());

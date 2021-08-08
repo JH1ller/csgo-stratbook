@@ -1,5 +1,5 @@
 'use strict';
-import { app, protocol, BrowserWindow, ipcMain, session, dialog } from 'electron';
+import { app, protocol, BrowserWindow, ipcMain, session } from 'electron';
 import os from 'os';
 import path from 'path';
 import {
@@ -8,9 +8,8 @@ import {
 } from 'vue-cli-plugin-electron-builder/lib';
 import { autoUpdater, UpdateInfo } from 'electron-updater';
 import ElectronLog from 'electron-log';
-//import debug from 'electron-debug';
+import debug from 'electron-debug';
 import ElectronStore from 'electron-store';
-// import GSIServer from './main_process/gsi-server';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -21,67 +20,14 @@ const isDebug = !!store.get('debug') || false;
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null;
 
-// let gsiServer: GSIServer;
-
-//debug({ isEnabled: isDebug || isDevelopment });
+debug({ isEnabled: isDebug || isDevelopment });
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
 
-const getWindowBounds = () => {
-  const storedBounds = store.get('window-config') as Electron.Rectangle;
-
-  return {
-    width: storedBounds?.width ?? 1280,
-    height: storedBounds?.height ?? 720,
-    minWidth: 360,
-    minHeight: 590,
-    x: storedBounds?.x,
-    y: storedBounds?.y,
-  };
-};
-
-const init = async () => {
-  createProtocol('app');
-
-  autoUpdater.logger = ElectronLog;
-
-  autoUpdater.autoDownload = true;
-
-  autoUpdater.checkForUpdatesAndNotify().catch(err => showMainWindow());
-
-  if (isDevelopment) {
-    showMainWindow();
-  }
-
-  autoUpdater.on('update-available', () => {
-    showLoader();
-  });
-
-  autoUpdater.on('download-progress', ({ percent }: { percent: number }) => {
-    win?.webContents.send('progress', percent);
-  });
-
-  autoUpdater.on('update-not-available', () => {
-    showMainWindow();
-  });
-
-  autoUpdater.on('update-downloaded', () => {
-    autoUpdater.quitAndInstall();
-  });
-};
-
-const createWindow = (options: Electron.BrowserWindowConstructorOptions, devPath: string, prodPath: string) => {
-  const window = new BrowserWindow({
-    title: 'Stratbook',
-    useContentSize: true,
-    webPreferences: {
-      nodeIntegration: true,
-    },
-    ...options,
-  });
-
-  if (process.env.WEBPACK_DEV_SERVER_URL) {
+function createWindow() {
+  if (isDevelopment && !process.env.IS_TEST) {
+    console.log('installing Vue dev tools extension');
     try {
       // * Attempt to load locally installed Vue Dev Tools extension
       session.defaultSession.loadExtension(
@@ -93,34 +39,51 @@ const createWindow = (options: Electron.BrowserWindowConstructorOptions, devPath
     } catch (error) {
       console.log(error.message);
     }
-
-    // Load the url of the dev server if in development mode
-    window.loadURL(process.env.WEBPACK_DEV_SERVER_URL + devPath);
-    if (!process.env.IS_TEST) window.webContents.openDevTools();
-  } else {
-    window.setMenu(null);
-    // Load the index.html when not in development
-    window.loadURL(`app://./${prodPath}`);
   }
+  // Create the browser window.
+  win = new BrowserWindow({
+    width: 1280,
+    height: 720,
+    minHeight: 670,
+    minWidth: 941,
+    title: 'Stratbook',
+    useContentSize: true,
+    webPreferences: {
+      nodeIntegration: true,
+    },
+  });
 
-  return window;
-};
-
-const showMainWindow = () => {
-  win = createWindow(getWindowBounds(), '', 'index.html');
+  if (process.env.WEBPACK_DEV_SERVER_URL) {
+    //win.maximize();
+    // Load the url of the dev server if in development mode
+    win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string);
+    if (!process.env.IS_TEST) {
+      win.webContents.openDevTools();
+    }
+  } else {
+    //win.setFullScreen(true);
+    win.setMenu(null);
+    createProtocol('app');
+    // Load the index.html when not in development
+    win.loadURL('app://./index.html');
+  }
 
   win.on('closed', () => {
     win = null;
   });
 
-  win.on('close', () => {
-    store.set('window-config', win?.getBounds());
-  });
-};
+  autoUpdater.logger = ElectronLog;
 
-const showLoader = () => {
-  win = createWindow({ width: 300, height: 150, frame: false }, 'loader', 'loader.html');
-};
+  autoUpdater.autoDownload = true;
+
+  autoUpdater.on('update-downloaded', (info: UpdateInfo) => {
+    win!.webContents.send('update-downloaded', info.version);
+  });
+}
+
+ipcMain.on('app-ready', () => {
+  autoUpdater.checkForUpdatesAndNotify();
+});
 
 app.allowRendererProcessReuse = true;
 // Quit when all windows are closed.
@@ -136,7 +99,7 @@ app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (win === null) {
-    init();
+    createWindow();
   }
 });
 
@@ -144,31 +107,18 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  init();
+  createWindow();
 });
-
-// ipcMain.on('start-game-mode', () => {
-//   gsiServer = new GSIServer();
-//   gsiServer.init();
-// });
-
-// ipcMain.on('exit-game-mode', () => {
-//   gsiServer?.stopServer();
-// });
 
 ipcMain.on('restart-app', () => {
   autoUpdater.quitAndInstall();
 });
-
-// process.on('unhandledRejection', (reason, promise) => {
-//   console.log('Unhandled Rejection at:', promise, 'reason:', reason);
-//   if (isDevelopment) {
-//     dialog.showMessageBoxSync(win!, {
-//       message: `Unhandled Rejection at: ${promise} reason: ${reason}`,
-//       type: 'error',
-//     });
-//   }
+// app.on('open-url', function(event, data) {
+//   event.preventDefault();
+//   logEverywhere(data);
 // });
+
+// app.setAsDefaultProtocolClient('csgostratbook');
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {

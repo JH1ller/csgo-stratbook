@@ -165,7 +165,7 @@
     opacity: 0.9;
   }
 
-  &__badge {
+  &__crosshair-btn {
     width: 60px;
     height: 60px;
     background-color: rgba(black, 0.5);
@@ -186,7 +186,7 @@
     }
   }
 
-  &__badge-icon {
+  &__crosshair-img {
     width: 60%;
     height: 60%;
     color: white;
@@ -284,19 +284,5 @@
     border-top-left-radius: 6px;
     padding: 12px;
     width: 200px;
-  }
-
-  &__fallback {
-    @include typo_hl2;
-
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  &__icon-fallback {
-    height: 48px;
-    color: $color--emperor;
   }
 }

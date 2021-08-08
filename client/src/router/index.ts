@@ -9,15 +9,14 @@ import { utilityResolver } from '@/views/UtilityView/UtilityView.resolver';
 // * not using lazy loading for these two views, as they are both entrypoints to the app
 import LoginView from '@/views/LoginView/LoginView.vue';
 import StratsView from '@/views/StratsView/StratsView.vue';
-import StorageService from '@/services/storage.service';
-import TrackingService from '@/services/tracking.service';
+import { noAuthGuard } from '@/guards/no-auth.guard';
+import { authGuard } from '@/guards/auth.guard';
+import { teamGuard } from '@/guards/team.guard';
+import { noTeamGuard } from '@/guards/no-team.guard';
 
 Vue.use(VueRouter);
 
-const storageService = StorageService.getInstance();
-const trackingService = TrackingService.getInstance();
-
-const routes = [
+const routes: RouteConfig[] = [
   {
     path: '/',
     name: RouteNames.Home,

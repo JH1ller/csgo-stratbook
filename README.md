@@ -20,10 +20,9 @@ __Live Version [here!](https://stratbook.live)__
   - [Server/Backend](#serverbackend)
   - [Landingpage](#landingpage)
 - [Get started (local setup)](#get-started-local-setup)
-  - [Server + Client (Docker)](#server--client-docker)
-  - [Server (Local)](#server-local)
-  - [Client (Local)](#client-local)
-  - [Windows Desktop Client (Local)](#windows-desktop-client-local)
+  - [Server](#server)
+  - [Client](#client)
+    - [Troubleshooting](#troubleshooting)
 
 ## Technologies
 
@@ -54,13 +53,7 @@ __Live Version [here!](https://stratbook.live)__
 
 ## Get started (local setup)
 
-### Server + Client (Docker)
-
-- install [docker-compose](https://docs.docker.com/compose/install/)
-- Run `docker-compose up`
-- Navigate to http://localhost:8080 and voilá
-
-### Server (Local)
+### Server
 
 - Install ``git-lfs`` before cloning the repo.
 - Clone the repo
@@ -68,18 +61,17 @@ __Live Version [here!](https://stratbook.live)__
 - Run `npm i` to install all dependencies
 - Create an `.env` file and add the required environment variables documented [here](https://github.com/JH1ller/csgo-stratbook/blob/master/server/README.md)
 - Run `npm run dev` to start the server in development mode
-### Client (Local)
+### Client
 
 - Navigate to the /client directory.
 - Run `npm i` to install all dependencies
-- Run `npm run serve` to serve the web client in development mode with HMR
+- Run `npm run serve` to serve the web client in development mode, or `npm run electron:serve` for the desktop app
 
-### Windows Desktop Client (Local)
+#### Troubleshooting
 
-- Navigate to the /client directory.
-- Download [GTK](https://download.gnome.org/binaries/win64/gtk+/2.22/gtk%2B-bundle_2.22.1-20101229_win64.zip) and extract to "C:\GTK\"
-- Run `npm i` to install all dependencies
-- Run `npm run electron:serve` to start the app in development mode with HMR
-- Run `npm run electron:build` to build a windows installer
+If installing dependencies fails at the post-install script, try the following:
+- remove `vue-cli-plugin-electron-builder` from client/package.json
+- run `npm i`
+- run `vue add electron-builder`
 
 

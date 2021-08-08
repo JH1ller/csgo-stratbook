@@ -14,7 +14,7 @@ const DELETE_TEAM_MEMBER = 'DELETE_TEAM_MEMBER';
 const RESET_STATE = 'RESET_STATE';
 
 export interface TeamState {
-  teamInfo: Team | Record<string, any>;
+  teamInfo: Team | Record<string, unknown>;
   teamMembers: Player[];
 }
 
@@ -42,13 +42,10 @@ export const teamModule: Module<TeamState, RootState> = {
     },
   },
   actions: {
-    async fetchTeamInfo({ commit, dispatch, state, rootState }) {
+    async fetchTeamInfo({ commit, dispatch }) {
       const res = await api.team.getTeam();
       if (res.success) {
         commit(SET_TEAM_INFO, res.success);
-        trackingService.identify(rootState.auth.profile._id, rootState.auth.profile.name, {
-          team: state.teamInfo.name,
-        });
         await dispatch('auth/updateStatus', Status.LOGGED_IN_WITH_TEAM, { root: true });
         await dispatch('fetchTeamMembers');
         return { success: res.success };
@@ -74,7 +71,7 @@ export const teamModule: Module<TeamState, RootState> = {
           },
           { root: true }
         );
-        trackingService.track('Action: Team Created', { name: formData.get('name') as string });
+        trackingService.track('team:created', { name: formData.get('name') as string });
         return { success: true }; // TODO: probably obsolete. remove
       } else {
         return { error: res.error };
@@ -108,7 +105,7 @@ export const teamModule: Module<TeamState, RootState> = {
           },
           { root: true }
         );
-        trackingService.track('Action: Team Joined', { name: (rootState.team?.teamInfo as Team)?.name ?? '' });
+        trackingService.track('team:joined', { name: (rootState.team?.teamInfo as Team)?.name ?? '' });
         return { success: 'Successfully joined team.' };
       } else {
         return { error: res.error };

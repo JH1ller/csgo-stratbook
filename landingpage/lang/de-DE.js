@@ -21,6 +21,12 @@ export default {
     headline: 'Frequently asked Questions.',
     questions: [
       {
+        id: 'confirm-email',
+        questionText: "I didn't receive my confirmation email?",
+        answerText:
+          "Sadly, Microsoft mail servers seem to filter out stratbook confirmation mails before they can reach your inbox.<br>If you're using a Microsoft email (hotmail.com, live.com, hotmail.de etc.), please send me a message via twitter or email (support@stratbook.live) and I will manually confirm your account.",
+      },
+      {
         id: 'long-term',
         questionText:
           "I'm thinking about maintaining all my strats in stratbook, but I'm worried that the service won't be up for long?",
@@ -31,7 +37,7 @@ export default {
         id: 'feature-requests',
         questionText: 'Where can I report bugs or request new features?',
         answerText:
-          "First of all, we're very thankful for everyone who is taking their time to report bugs and provides valuable feedback.<br>The best way is to report the issue on our Discord server linked at the top. If you have a Github account, you can open an issue on the projects repository. You can also always send me a DM on twitter.",
+          'First of all, I\'m very thankful for everyone who is taking their time to report bugs and provides valuable feedback.<br>The best way is to use the "Feedback" button in the navigation drawer of the app. If you have a Github account, you can open an issue on the projects repository. You can also always send me a DM on twitter.',
       },
       {
         id: 'who-can-see',
@@ -55,13 +61,13 @@ export default {
         id: 'self-host',
         questionText: 'Can I host Stratbook myself?',
         answerText:
-          'You can absolutely host Stratbook yourself. There is a guide on setting it up and installing prerequesites on the Github page of the project, which will be continuously improved.',
+          'You can absolutely host Stratbook yourself. There is currently no guide on setting it up and installing prerequesites but I will write one in the future.',
       },
       {
         id: 'whos-behind',
         questionText: 'Who is behind this project?',
         answerText:
-          "Hi there! I'm Justin, a 25 year old web engineer & esports enthusiast based in Stuttgart, Germany. I played CSGO in the german amateur scene for a few years and started developing Stratbook in my freetime during Covid-19.<br>Since the start of 2021, my friend and fellow developer Clemens has also joined the project and has already made great efforts with rethinking our architecture.<br>But you, too, could be behind this project! Drop me a message if you're interested in collaborating or helping out.",
+          "Hi there! I'm Justin, a 24 year old web engineer & esports enthusiast based in Stuttgart, Germany. I played CSGO in the german amateur scene for a few years and started developing Stratbook in my freetime during Covid-19.<br>But you, too, could be behind this project! Drop me a message if you're interested in collaborating or helping out.",
       },
     ],
   },
@@ -71,54 +77,6 @@ export default {
   changelog: {
     headline: 'Changelog',
     changes: [
-      {
-        version: '1.9.0',
-        date: '2021-07-16',
-        changes: [
-          'New "Setpos" Option for utilities',
-          'Multiple economy types now allowed for strats',
-          'Filter state is now persisted',
-          'Window size and location state is now persisted (Desktop Client)',
-          'Button to invert sort direction for strats',
-          'Desktop Client updates are now installed automatically',
-        ],
-      },
-      {
-        version: '1.8.6',
-        date: '2021-06-09',
-        changes: ['Fix DrawTool drawable area not matching map size'],
-      },
-      {
-        version: '1.8.1',
-        date: '2021-05-09',
-        changes: ['Add Ancient to the mappool'],
-      },
-      {
-        version: '1.8.0',
-        date: '2021-05-08',
-        changes: [
-          'Add "Focus Mode", which currently hides the map picker and menu but more features are planned for the future!',
-          'Make strats collapsable to improve maintainability of larger strat amounts',
-          'Add shortcuts to strats view and utility view. (Documentation will follow!)',
-          'Various small fixes and improvements',
-        ],
-      },
-      {
-        version: '1.7.7',
-        date: '2021-04-21',
-        changes: ['Auto-generate row for each player', 'Allow empty lines'],
-      },
-      {
-        version: '1.7.6',
-        date: '2021-02-26',
-        changes: [
-          'Add "Jumpthrow" pose option to utilities',
-          'Improve utility lightbox and display utility description',
-          'Add discord link to menu',
-          'Improve version check on app start: Only display notice for new feature version, not patches',
-          'Desktop App: Update electron to v9.4',
-        ],
-      },
       {
         version: '1.7.0',
         date: '2021-02-26',

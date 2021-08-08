@@ -1,9 +1,6 @@
 <template>
   <div class="utility-item" @click="openInLightbox">
-    <SmartImage v-if="utilityImage" :src="utilityImage" class="utility-item__image" alt="Utility thumbnail" />
-    <div v-else class="utility-item__image utility-item__copy-wrapper">
-      <fa-icon icon="expand" class="utility-item__icon-copy" />
-    </div>
+    <SmartImage :src="utilityImage" class="utility-item__image" alt="Utility thumbnail" />
     <div class="utility-item__side-wrapper">
       <img v-if="utility.side === Sides.T" src="@/assets/icons/t_badge.png" class="utility-item__side" />
       <img v-else src="@/assets/icons/ct_badge.png" class="utility-item__side" />

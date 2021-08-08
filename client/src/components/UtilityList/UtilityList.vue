@@ -13,9 +13,6 @@
       <li>
         <a @click.prevent="editUtility(data.utility)"><fa-icon icon="edit" />Edit</a>
       </li>
-      <li data-context-setpos>
-        <a @click.prevent="copySetpos(data.utility)"><fa-icon icon="map-marker-alt" />Copy Setpos</a>
-      </li>
       <li>
         <a @click.prevent="shareUtility(data.utility)"
           ><fa-icon icon="share-alt" />{{ data && data.utility.shared ? 'Unshare' : 'Share' }}</a

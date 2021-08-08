@@ -1,18 +1,8 @@
 import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
 import SmartImage from '@/components/SmartImage/SmartImage.vue';
-
-export enum MapID {
-  Dust2 = 'DUST_2',
-  Mirage = 'MIRAGE',
-  Overpass = 'OVERPASS',
-  Nuke = 'NUKE',
-  Vertigo = 'VERTIGO',
-  Inferno = 'INFERNO',
-  Train = 'TRAIN',
-  Ancient = 'ANCIENT',
-}
-export interface Map {
-  _id: MapID;
+import { GameMap } from '@/api';
+export interface MapDisplay {
+  id: GameMap;
   name: string;
 }
 
@@ -51,11 +41,6 @@ export default class MapPicker extends Vue {
     {
       id: GameMap.Train,
       name: 'Train',
-    },
-    {
-      _id: MapID.Ancient,
-      name: 'Ancient',
-      active: true,
     },
   ];
 
