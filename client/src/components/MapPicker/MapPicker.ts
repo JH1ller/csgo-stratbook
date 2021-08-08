@@ -57,11 +57,6 @@ export default class MapPicker extends Vue {
       name: 'Ancient',
       active: true,
     },
-    {
-      _id: MapID.Ancient,
-      name: 'Ancient',
-      active: true,
-    },
   ];
 
   @Emit()

@@ -22,7 +22,6 @@ __Live Version [here!](https://stratbook.live)__
 - [Get started (local setup)](#get-started-local-setup)
   - [Server + Client (Docker)](#server--client-docker)
   - [Server (Local)](#server-local)
-  - [Server (Local)](#server-local-1)
   - [Client (Local)](#client-local)
   - [Windows Desktop Client (Local)](#windows-desktop-client-local)
 
@@ -56,12 +55,6 @@ __Live Version [here!](https://stratbook.live)__
 ## Get started (local setup)
 
 ### Server + Client (Docker)
-
-- install [docker-compose](https://docs.docker.com/compose/install/)
-- Run `docker-compose up`
-- Navigate to http://localhost:8080 and voilá
-
-### Server (Local)
 
 - install [docker-compose](https://docs.docker.com/compose/install/)
 - Run `docker-compose up`

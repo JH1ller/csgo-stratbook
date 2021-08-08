@@ -115,11 +115,6 @@ export default class StratItem extends Vue {
   }
 
   @Emit()
-  private toggleCollapse() {
-    return this.strat._id;
-  }
-
-  @Emit()
   private editChanged(value: boolean) {
     return { stratID: this.strat._id, value };
   }
