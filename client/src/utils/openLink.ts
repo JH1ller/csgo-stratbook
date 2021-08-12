@@ -1,7 +1,6 @@
-export const openLink = (url: string): void => {
+export function openLink(url: string) {
   if (window.desktopMode) {
-    const { shell } = require('electron').remote;
-    shell.openExternal(url);
+    window.ipcService.openExternalLink(url);
   } else {
     window.open(url, '_blank');
   }

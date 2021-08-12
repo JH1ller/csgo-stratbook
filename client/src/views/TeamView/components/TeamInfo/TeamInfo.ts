@@ -38,9 +38,7 @@ export default class TeamInfo extends Vue {
     if (!this.teamInfo.server?.ip) return;
 
     if (window.desktopMode) {
-      const { remote } = require('electron');
-      const currentWindow = remote.getCurrentWindow();
-      currentWindow.loadURL(`steam://connect/${this.teamInfo.server?.ip}/${this.teamInfo.server?.password}`);
+      window.ipcService.openExternalServerLink(this.teamInfo.server?.ip, this.teamInfo.server?.password || '')
     } else {
       window.open(`steam://connect/${this.teamInfo.server?.ip}/${this.teamInfo.server?.password}`, '_blank');
     }

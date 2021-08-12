@@ -1,0 +1,37 @@
+*.doc  diff=astextplain
+*.DOC	diff=astextplain
+*.docx	diff=astextplain
+*.DOCX	diff=astextplain
+*.dot	diff=astextplain
+*.DOT	diff=astextplain
+*.pdf	diff=astextplain
+*.PDF	diff=astextplain
+*.rtf	diff=astextplain
+*.RTF	diff=astextplain
+
+*.jpg  	binary
+*.png 	binary
+*.gif 	binary
+
+# Explicitly declare text files you want to always be normalized and converted
+# to native line endings on checkout.
+*.ts    text eol=lf
+*.tsx   text eol=lf
+*.vue   text eol=lf
+*.json  text eol=lf
+*.md    text eol=lf
+*.css   text eol=lf
+*.js    text eol=lf
+
+*.cs text eol=crlf diff=csharp 
+*.aspx text eol=crlf 
+*.asax text eol=crlf 
+*.config text=auto 
+*.html text eol=crlf
+*.htm text eol=crlf
+
+*.csproj text=auto merge=union 
+*.vbproj text=auto merge=union 
+*.fsproj text=auto merge=union 
+*.dbproj text=auto merge=union 
+*.sln text=auto eol=crlf merge=union 

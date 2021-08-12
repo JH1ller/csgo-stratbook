@@ -9,16 +9,15 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { ipcRenderer } from 'electron';
 
 @Component({})
 export default class LoaderView extends Vue {
   progress = 0;
 
   created() {
-    ipcRenderer.on('progress', (_event, data) => {
-      this.progress = data;
-    });
+    window.ipcService.registerUpdateProgressHandler((progress) => {
+      this.progress = progress;
+    })
   }
 }
 </script>

@@ -83,11 +83,11 @@ export default class App extends Vue {
     } else {
       this.checkCookies();
     }
-    this.checkVersion();
+    void this.checkVersion();
     window.twttr.widgets.load();
   }
 
-  private checkVersion() {
+  private async checkVersion() {
     const currentVersion = this.storageService.get<string>('version');
     if (
       currentVersion &&
@@ -107,10 +107,7 @@ export default class App extends Vue {
   }
 
   private async initAutoUpdate() {
-    const { ipcRenderer } = await import('electron');
-
-    ipcRenderer.on('update-downloaded', (_event, version: string) => {
-      ipcRenderer.removeAllListeners('update-downloaded');
+    window.ipcService.registerUpdateDownloadedHandler((version) => {
       catchPromise(
         this.showDialog({
           key: 'app/update-downloaded',
@@ -118,12 +115,12 @@ export default class App extends Vue {
           resolveBtn: 'Restart',
           htmlMode: true,
         }),
-        () => ipcRenderer.send('restart-app')
+        () => window.ipcService.installRestartApp(),
       );
-    });
+    })
 
-    ipcRenderer.send('app-ready');
-    ipcRenderer.send('start-game-mode');
+    // no refs!
+    // ipcRenderer.send('start-game-mode');
   }
 
   private checkCookies() {
