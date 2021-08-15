@@ -64,11 +64,9 @@ export default class App extends Vue {
   private getCookie(name: string) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2)
-      return parts
-        ?.pop()
-        ?.split(';')
-        ?.shift();
+    if (parts.length === 2) {
+      return parts?.pop()?.split(';')?.shift();
+    }
   }
 
   private closeCookieBanner() {
@@ -117,7 +115,7 @@ export default class App extends Vue {
         }),
         () => window.ipcService.installRestartApp(),
       );
-    })
+    });
 
     // no refs!
     // ipcRenderer.send('start-game-mode');

@@ -14,18 +14,6 @@ function getPublishConfig() {
 }
 
 /**
- *
- * @param {import('webpack-chain')} config
- */
-function clientChain(config) {
-  config.resolve.alias.set('src', path.resolve(__dirname, './src'));
-
-  config.target(process.env.BUILD_TARGET === 'ELECTRON' ? 'electron-renderer' : 'web');
-  config.stats('verbose');
-  config.devtool(process.env.NODE_ENV === 'production' ? 'source-map' : 'eval');
-}
-
-/**
  * @type {import('@vue/cli-service').ProjectOptions}
  */
 module.exports = {
@@ -45,7 +33,14 @@ module.exports = {
     },
   },
 
-  chainWebpack: clientChain,
+  chainWebpack: (config) => {
+    config.resolve.alias.set('src', path.resolve(__dirname, './src'));
+
+    config.target('web');
+
+    config.stats('verbose');
+    config.devtool(process.env.NODE_ENV === 'production' ? 'source-map' : 'eval');
+  },
 
   pluginOptions: {
     electronBuilder: {
@@ -58,7 +53,8 @@ module.exports = {
           ? 'src-electron/main-process/electron-main.dev.ts'
           : 'src-electron/main-process/electron-main.ts',
 
-      rendererProcessFile: 'src/main.ts',
+      rendererProcessFile: './src/main.ts',
+      // customFileProtocol: './',
 
       /**
        *
@@ -69,15 +65,28 @@ module.exports = {
           .set('src', path.resolve(__dirname, './src'))
           .set('src-electron', path.resolve(__dirname, './src-electron'));
 
-        // config.plugin('ts-checker').use(ForkTsCheckerWebpackPlugin, [
-        //   {
-        //     eslint: true,
-        //     reportFiles: './src-electron/**/*.{ts,tsx,js}',
-        //   },
-        // ]);
+        config.module
+          .rule(`typescript`)
+          .test(/\.ts?$/)
+          .rule('compile')
+          .use('babel')
+          .loader('babel-loader')
+          .options({ presets: ['@babel/preset-env'] })
+          .end()
+          .use(`ts-loader`)
+          .loader(`ts-loader`)
+          .options({
+            onlyCompileBundledFiles: true,
+            transpileOnly: true,
+          });
+
+        config.devtool(process.env.NODE_ENV === 'production' ? 'source-map' : 'eval');
       },
 
-      chainWebpackRendererProcess: clientChain,
+      chainWebpackRendererProcess: (config) => {
+        config.target('electron-renderer');
+        config.stats('verbose');
+      },
 
       builderOptions: {
         productName: 'Stratbook',

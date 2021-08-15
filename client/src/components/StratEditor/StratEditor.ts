@@ -12,10 +12,10 @@ import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import { transformMap } from './utils/transformHtml';
 import ReplaceKeywords from 'replace-keywords';
 export interface LinkOption {
-  id?: string
-  icon?: string
-  label: string
-  query: string
+  id?: string;
+  icon?: string;
+  label: string;
+  query: string;
 }
 
 @Component({
@@ -232,7 +232,10 @@ export default class StratEditor extends Vue {
   private mounted() {
     this.tribute = new Tribute(this.tributeOptions);
     this.tribute.attach(this.textarea);
-    const rk = new ReplaceKeywords(this.textarea, { transformations: transformMap });
+
+    // !warning check me!!
+    // eslint-disable-next-line no-new
+    /* const rk = */ new ReplaceKeywords(this.textarea, { transformations: transformMap });
     this.addClickListeners();
   }
 

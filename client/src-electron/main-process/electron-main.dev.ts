@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import electronDebug from 'electron-debug';
 import log from 'electron-log';
+import process from 'process';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 
 app
@@ -38,5 +39,9 @@ app
   .catch((error) => {
     log.error(`failed to start app. ${error as string}`);
   });
+
+process.on('unhandledRejection', (error) => {
+  console.error(error);
+});
 
 import './electron-main.ts';

@@ -19,3 +19,18 @@ declare module '*.json' {
   const value: { [key: string]: any };
   export default value;
 }
+
+declare module '*.module.css' {
+  const classes: { readonly [key: string]: string };
+  export default classes;
+}
+
+declare module '*.module.scss' {
+  const classes: { readonly [key: string]: string };
+  export default classes;
+}
+
+declare module '*.scss' {
+  const styles: { [className: string]: string };
+  export default styles;
+}

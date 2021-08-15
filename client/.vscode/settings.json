@@ -2,8 +2,13 @@
   "eslint.format.enable": true,
   "eslint.validate": [
     "javascript",
-    "typescript"
+    "typescript",
+    "typescriptreact"
   ],
+
+  "html.autoClosingTags": true,
+  "javascript.autoClosingTags": true,
+  "typescript.autoClosingTags": true,
 
   "typescript.tsdk": "node_modules/typescript/lib",
   "[typescript]": {

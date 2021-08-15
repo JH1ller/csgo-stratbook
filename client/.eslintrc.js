@@ -15,7 +15,7 @@ module.exports = {
 
     parser: '@typescript-eslint/parser',
 
-    project: resolve(__dirname, './tsconfig.json'),
+    project: resolve(__dirname, `./tsconfig.json`),
     tsconfigRootDir: __dirname,
 
     sourceType: 'module',
@@ -33,8 +33,8 @@ module.exports = {
     // consider disabling this class of rules if linting takes too long
     // 'plugin:@typescript-eslint/recommended-requiring-type-checking',
 
-    'plugin:vue/essential',
-    'plugin:vue/strongly-recommended', // Priority B: Strongly Recommended (Improving Readability)
+    // 'plugin:vue/essential',
+    // 'plugin:vue/strongly-recommended', // Priority B: Strongly Recommended (Improving Readability)
     'plugin:vue/recommended', // Priority C: Recommended (Minimizing Arbitrary Choices and Cognitive Overhead)
 
     // still required?
@@ -48,6 +48,8 @@ module.exports = {
   ],
 
   plugins: [
+    // 'eslint:recommended',
+
     // required to apply rules which need type information
     '@typescript-eslint',
 

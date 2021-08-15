@@ -49,7 +49,9 @@ export default class EditTeamForm extends Vue {
   }
 
   @Emit()
-  private cancel() {}
+  private cancel() {
+    //
+  }
 
   private submit() {
     const requestFormData = new FormData();

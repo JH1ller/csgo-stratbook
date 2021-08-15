@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Module } from 'vuex';
 import { RootState } from '..';
 import WebSocketService from '@/services/websocket.service';
@@ -83,7 +84,7 @@ export const authModule: Module<AuthState, RootState> = {
     updateStatus({ commit }, status: Status) {
       commit(SET_STATUS, status);
     },
-    setProfile({ commit, rootState }, profile: Player) {
+    setProfile({ commit }, profile: Player) {
       commit(SET_PROFILE, profile);
       commit(SET_STATUS, profile.team ? Status.LOGGED_IN_WITH_TEAM : Status.LOGGED_IN_NO_TEAM);
       trackingService.identify(profile._id, profile.name);

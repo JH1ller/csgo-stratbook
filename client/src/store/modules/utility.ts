@@ -72,7 +72,7 @@ export const utilityModule: Module<UtilityState, RootState> = {
           { root: true }
         );
     },
-    async shareUtility({ dispatch }, utilityID: string) {
+    async shareUtility({ dispatch } /* , utilityID: string */) {
       dispatch(
         'app/showToast',
         { id: 'utility/shareUtility', text: 'Sharing utilities not yet implemented.' },

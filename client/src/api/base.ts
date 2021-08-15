@@ -19,6 +19,7 @@ export default class ApiService {
     // private to prevent instantiation
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static async makeRequest<T = any>(request: Promise<AxiosResponse<T>>): Promise<APIResponse<T>> {
     try {
       const { data } = await request;

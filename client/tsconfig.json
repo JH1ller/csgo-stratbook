@@ -2,11 +2,14 @@
   "compileOnSave": false,
 
   "compilerOptions": {
+    "allowJs": true,
     "strict": true,
 
-    "target": "es2018",
+    "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
+
+    "noEmit": true,
 
     "jsx": "preserve",
     "importHelpers": true,
@@ -49,6 +52,7 @@
   },
 
   "exclude": [
+    "dist_electron",
     "node_modules"
-  ],
+  ]
 }

@@ -1,0 +1,35 @@
+.loaderView {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: $color--navyblue;
+  width: 100%;
+  height: 100%;
+
+  &__label {
+    @include typo_hl2;
+
+    color: white;
+  }
+
+  &__progressBar {
+    margin-top: 12px;
+    height: 6px;
+    width: 200px;
+    border-radius: 999px;
+    background-color: lighten($color--navyblue, 10%);
+    position: relative;
+  }
+
+  &__progress_barProgress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%;
+    background-color: white;
+    height: 6px;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+  }
+}

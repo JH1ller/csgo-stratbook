@@ -1,7 +1,7 @@
 import { Sides } from '@/api/models/Sides';
 import { Strat } from '@/api/models/Strat';
 import { StratTypes } from '@/api/models/StratTypes';
-import { Component, Prop, Vue, Emit, Mixins } from 'vue-property-decorator';
+import { Component, Prop, Emit, Mixins } from 'vue-property-decorator';
 import SidePicker from '@/components/SidePicker/SidePicker.vue';
 import TypePicker from '@/components/TypePicker/TypePicker.vue';
 import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
