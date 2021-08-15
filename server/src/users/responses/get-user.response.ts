@@ -16,6 +16,10 @@ export class GetUserResponse {
 
   @Expose()
   @ApiProperty()
+  public userName: string;
+
+  @Expose()
+  @ApiProperty()
   public avatar: string;
 
   @Expose()

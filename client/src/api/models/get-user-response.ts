@@ -38,6 +38,12 @@ export interface GetUserResponse {
      * @type {string}
      * @memberof GetUserResponse
      */
+    userName: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetUserResponse
+     */
     avatar: string;
     /**
      * 

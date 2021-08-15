@@ -2,12 +2,18 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
 import WebSocketService from '@/services/websocket.service';
-import router from '@/router';
-import { RouteNames, Routes } from '@/router/router.models';
-import { API_URL, TOKEN_TTL } from '@/config';
+import { API_URL } from '@/config';
 import TrackingService from '@/services/tracking.service';
-import StorageService from '@/services/storage.service';
-import { AuthApi, Configuration, ProfileUpdateDto, UsersApi, UsersApiFp } from 'src/api';
+import {
+  AuthApi,
+  Configuration,
+  GetUserResponse,
+  ProfileUpdateDto,
+  ResetPasswordDto,
+  UsersApi,
+  UsersApiUsersControllerRegisterUserRequest,
+} from 'src/api';
+import { Log } from 'src/utils/logger';
 
 const SET_TOKEN = 'SET_TOKEN';
 const SET_USER = 'SET_USER';
@@ -23,7 +29,7 @@ export enum Status {
 export interface AuthState {
   status: Status;
   token: string;
-  user: Player | Record<string, any>;
+  user: GetUserResponse | Record<string, any>;
 }
 
 const authInitialState = (): AuthState => ({
@@ -33,7 +39,6 @@ const authInitialState = (): AuthState => ({
 });
 
 const trackingService = TrackingService.getInstance();
-const storageService = StorageService.getInstance();
 const apiConfig = new Configuration({
   basePath: API_URL,
 });
@@ -45,23 +50,24 @@ export const authModule: Module<AuthState, RootState> = {
   state: authInitialState(),
   getters: {},
   actions: {
-    async fetchUser({ dispatch, state }) {
+    async fetchUser({ dispatch }) {
       try {
         const { data } = await usersApi.usersControllerGetUser();
         dispatch('setUser', data);
-        return { success: data };
       } catch (error) {
-        return { error };
+        Log.error('auth store', error);
       }
     },
-    async updateUser({ dispatch, commit }, formData: FormData) {
+    async updateUser({ dispatch }, formData: FormData) {
       if (
         formData.has('name') &&
         (await dispatch(
           'app/showDialog',
           {
             key: 'auth/updateUser',
-            text: 'Would you like to replace your name in all strat mentions? This will do a simple find/replace and may lead to errors in the strat.',
+            text:
+              // eslint-disable-next-line max-len
+              'Would you like to replace your name in all strat mentions? This will do a simple find/replace and may lead to errors in the strat.',
             resolveBtn: 'Yes',
             rejectBtn: 'No',
           },
@@ -71,7 +77,7 @@ export const authModule: Module<AuthState, RootState> = {
         formData.set('updateStrategies', 'true');
       }
       try {
-        const response = await usersApi.usersControllerUpdateUser({
+        await usersApi.usersControllerUpdateUser({
           profileUpdateDto: formData as ProfileUpdateDto,
         });
         dispatch('fetchUser');
@@ -80,109 +86,83 @@ export const authModule: Module<AuthState, RootState> = {
             'Successfully updated your user. A confirmation mail has been sent to confirm the new email address.';
           dispatch('app/showToast', { id: 'auth/updateUser', text: message }, { root: true });
         }
-      } catch (error) {}
+      } catch (error) {
+        Log.error('auth store', error);
+      }
     },
     updateStatus({ commit }, status: Status) {
       commit(SET_STATUS, status);
     },
-    setUser({ commit, rootState }, user: Player) {
+    setUser({ commit }, user: GetUserResponse) {
       commit(SET_USER, user);
       commit(SET_STATUS, user.team ? Status.LOGGED_IN_WITH_TEAM : Status.LOGGED_IN_NO_TEAM);
-      trackingService.identify(user._id, user.name);
-      storageService.set('username', user.name);
-      storageService.set('userId', user._id);
+      trackingService.identify(user.id, user.userName);
       if (user.team) {
         WebSocketService.getInstance().connect();
       } else {
-        WebSocketService.getInstance().disconnect(); // TODO: maybe find a way to call this earlier, because socket update will cause console error
+        // TODO: maybe find a way to call this earlier, because socket update will cause console error
+        WebSocketService.getInstance().disconnect();
       }
     },
-    async login({ commit, dispatch, state }, { email, password }) {
-      const res = await api.auth.login(email, password);
-      if (res.success) {
-        commit(SET_TOKEN, res.success.token);
-
-        if (window.desktopMode) {
-          storageService.set('refreshToken', res.success.refreshToken);
-        }
-
+    async login({ dispatch, state }, { email, password }) {
+      try {
+        await authApi.authControllerLogin({ localSignInDto: { email, password } });
         await dispatch('fetchUser');
-        storageService.set('has-session', '1');
         dispatch('app/showToast', { id: 'auth/login', text: 'Logged in successfully.' }, { root: true });
-        trackingService.track('Action: Login', { email, name: state.user.name });
-        setTimeout(() => dispatch('refresh'), TOKEN_TTL - 10000);
-        return { success: true };
-      } else {
-        return { error: res.error };
+        trackingService.track('Action: Login', { email, name: state.user.userName });
+      } catch (error) {
+        Log.error('auth store', error);
       }
     },
     async logout({ dispatch, state }) {
-      trackingService.track('Action: Logout', { email: state.user.email, name: state.user.name });
-      await api.auth.logout();
-      dispatch('resetState', null, { root: true });
-      WebSocketService.getInstance().disconnect();
-      dispatch('app/showToast', { id: 'auth/logout', text: 'Logged out successfully.' }, { root: true });
+      try {
+        await authApi.authControllerLogout();
+        dispatch('resetState', null, { root: true });
+        WebSocketService.getInstance().disconnect();
+        dispatch('app/showToast', { id: 'auth/logout', text: 'Logged out successfully.' }, { root: true });
+        trackingService.track('Action: Logout', { email: state.user.email, name: state.user.userName });
+      } catch (error) {
+        Log.error('auth store', error);
+      }
     },
     async deleteAccount({ dispatch, state }) {
-      trackingService.track('Action: Delete Account', { email: state.user.email, name: state.user.name });
-      await api.auth.deleteAccount();
-      dispatch('resetState', null, { root: true });
-      WebSocketService.getInstance().disconnect();
-      dispatch('app/showToast', { id: 'auth/delete', text: 'Successfully deleted account.' }, { root: true });
-    },
-    async refresh({ dispatch, commit }) {
-      let res;
-
-      if (window.desktopMode) {
-        const refreshToken = storageService.get('refreshToken');
-        res = await api.auth.refresh(refreshToken);
-      } else {
-        res = await api.auth.refresh();
-      }
-
-      if (res.success) {
-        commit(SET_TOKEN, res.success.token);
-
-        if (window.desktopMode) {
-          storageService.set('refreshToken', res.success.refreshToken);
-        }
-
-        storageService.set('has-session', '1');
-        setTimeout(() => dispatch('refresh'), TOKEN_TTL - 10000);
-      }
-      if (res.error) {
-        storageService.remove('has-session');
-        if (router.currentRoute.name !== RouteNames.Login) router.push(Routes.Login);
+      try {
+        await usersApi.usersControllerDeleteUser({ deleteUserDto: { userName: state.user.userName } });
+        trackingService.track('Action: Delete Account', { email: state.user.email, name: state.user.userName });
+        dispatch('resetState', null, { root: true });
+        WebSocketService.getInstance().disconnect();
+        dispatch('app/showToast', { id: 'auth/delete', text: 'Successfully deleted account.' }, { root: true });
+      } catch (error) {
+        Log.error('auth store', error);
       }
     },
-    async forgotPassword({ dispatch }, email: string) {
-      const res = await api.auth.forgotPassword(email);
-      if (res.success) {
+    async forgotPassword({ dispatch }, { email, captchaToken }) {
+      try {
+        await usersApi.usersControllerForgotPassword({ forgotPasswordDto: { email, captchaResponse: captchaToken } });
         dispatch(
           'app/showToast',
           { id: 'auth/forgotPassword', text: 'A mail has been sent to your email with a link to reset your password.' },
           { root: true }
         );
-      } else {
-        return { error: res.error };
+      } catch (error) {
+        Log.error('auth store', error);
       }
     },
-    async resetPassword({ dispatch }, payload: { token: string; password: string }) {
-      const res = await api.auth.resetPassword(payload);
-      if (res.success) {
+    async resetPassword({ dispatch }, payload: ResetPasswordDto) {
+      try {
+        await usersApi.usersControllerResetPassword({ resetPasswordDto: payload });
         dispatch(
           'app/showToast',
           { id: 'auth/resetPassword', text: 'Your password has been changed successfully.' },
           { root: true }
         );
-        return { success: true };
-      } else {
-        return { error: res.error };
+      } catch (error) {
+        Log.error('auth store', error);
       }
     },
     async register({ dispatch }, formData: FormData) {
-      const res = await api.auth.register(formData);
-      if (res.success) {
+      try {
+        await usersApi.usersControllerRegisterUser((formData as unknown) as UsersApiUsersControllerRegisterUserRequest);
         dispatch(
           'app/showToast',
           { id: 'auth/register', text: 'Registered successfully. A confirmation email has been sent.' },
@@ -192,9 +172,8 @@ export const authModule: Module<AuthState, RootState> = {
           email: formData.get('email') as string,
           name: formData.get('name') as string,
         });
-        return { success: 'Registered successfully. A confirmation email has been sent.' }; // TODO: probably remove all these
-      } else {
-        return { error: res.error };
+      } catch (error) {
+        Log.error('auth store', error);
       }
     },
     resetState({ commit }) {
@@ -205,7 +184,7 @@ export const authModule: Module<AuthState, RootState> = {
     [SET_TOKEN](state, token: string) {
       state.token = token;
     },
-    [SET_USER](state, user: Player) {
+    [SET_USER](state, user: GetUserResponse) {
       state.user = user;
     },
     [SET_STATUS](state, status: Status) {
