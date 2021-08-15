@@ -47,7 +47,7 @@ export default class UtilityLightbox extends Mixins(CloseOnEscape) {
   }
 
   private get mediaList(): LightboxMedia[] {
-    const media: LightboxMedia[] = this.utility.images.map(utility => ({ type: 'image', src: utility }));
+    const media: LightboxMedia[] = this.utility.images.map((utility) => ({ type: 'image', src: utility }));
     if (this.utility.videoLink) media.push({ type: 'video', src: this.utility.videoLink });
 
     return media;

@@ -11,16 +11,16 @@ export default class PosePicker extends Vue {
 
   @Emit()
   private toggleCrouch() {
-    return;
+    //
   }
 
   @Emit()
   private toggleJump() {
-    return;
+    //
   }
 
   @Emit()
   private toggleMovement() {
-    return;
+    //
   }
 }

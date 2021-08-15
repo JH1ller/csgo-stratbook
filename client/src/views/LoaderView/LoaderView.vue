@@ -17,7 +17,7 @@ export default class LoaderView extends Vue {
   created() {
     window.ipcService.registerUpdateProgressHandler((progress) => {
       this.progress = progress;
-    })
+    });
   }
 }
 </script>

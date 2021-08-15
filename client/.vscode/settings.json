@@ -16,8 +16,15 @@
       "source.fixAll.eslint": true
     },
   },
+  "[typescriptreact]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+  },
   "cSpell.words": [
     "BUYROUND",
+    "Pinia",
+    "Strat",
     "Stratbook",
     "csrf",
     "hcaptcha",

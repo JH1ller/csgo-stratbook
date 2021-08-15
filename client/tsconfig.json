@@ -1,21 +1,25 @@
 {
+  "compileOnSave": false,
+
   "compilerOptions": {
     "strict": true,
-    
+
     "target": "es2018",
     "module": "esnext",
     "moduleResolution": "node",
-    
+
     "jsx": "preserve",
     "importHelpers": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
-    
+
     "baseUrl": ".",
     "paths": {
       "src/*": ["src/*"],
@@ -27,7 +31,7 @@
         "src/*"
       ]
     },
-    
+
     "lib": [
       "dom",
       "dom.iterable",
@@ -37,14 +41,14 @@
       "es2018",
       "esnext"
     ],
-    
+
     "types": [
       "node",
       "webpack-env"
     ]
   },
-  
+
   "exclude": [
     "node_modules"
-  ]
+  ],
 }

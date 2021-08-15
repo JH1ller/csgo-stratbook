@@ -126,17 +126,17 @@ export default class StratItem extends Vue {
 
   @Emit()
   private showMap() {
-    return;
+    //
   }
 
   @Emit()
   private editorFocussed() {
-    return;
+    //
   }
 
   @Emit()
   private editorBlurred() {
-    return;
+    //
   }
 
   @Emit()

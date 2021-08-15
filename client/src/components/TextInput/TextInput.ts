@@ -14,7 +14,7 @@ export default class TextInput extends Vue {
 
   @Emit()
   private focus() {
-    return;
+    //
   }
 
   private get formattedLabel() {

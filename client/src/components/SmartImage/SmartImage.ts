@@ -17,14 +17,12 @@ export default class SmartImage extends Vue {
   private load() {
     this.loading = false;
     this.loaded = true;
-    return;
   }
 
   @Emit()
   private error() {
     this.loading = false;
     this.crashed = true;
-    return;
   }
 
   private mounted() {

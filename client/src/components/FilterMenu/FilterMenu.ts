@@ -7,6 +7,6 @@ export default class FilterMenu extends Mixins(CloseOnEscape) {
 
   @Emit()
   private clearFilters() {
-    return;
+    //
   }
 }

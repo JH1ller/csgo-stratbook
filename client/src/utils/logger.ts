@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export class Log {
   private static log(color: string, ns: string, ...data: any[]): void {
     if (window.debugMode)

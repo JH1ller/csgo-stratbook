@@ -2,7 +2,6 @@ import { Module } from 'vuex';
 import { RootState } from '..';
 import { Strat } from '@/api/models/Strat';
 import api from '@/api/base';
-import { Team } from '@/api/models/Team';
 import TrackingService from '@/services/tracking.service';
 import { extractTextFromHTML } from '@/utils/extractTextFromHTML';
 import StorageService from '@/services/storage.service';
@@ -46,14 +45,14 @@ export const stratModule: Module<StratState, RootState> = {
   state: stratInitialState(),
   getters: {
     stratsOfCurrentMap(state, _getters, rootState): Strat[] {
-      return state.strats.filter(strat => strat.map === rootState.map.currentMap);
+      return state.strats.filter((strat) => strat.map === rootState.map.currentMap);
     },
     filteredStratsOfCurrentMap(_state, getters, rootState): Strat[] {
       return (getters.stratsOfCurrentMap as Strat[]).filter(
-        strat =>
+        (strat) =>
           (!rootState.filter.stratFilters.side || rootState.filter.stratFilters.side === strat.side) &&
           (!rootState.filter.stratFilters.types.length ||
-            rootState.filter.stratFilters.types.some(typeFilter => strat.types.includes(typeFilter))) &&
+            rootState.filter.stratFilters.types.some((typeFilter) => strat.types.includes(typeFilter))) &&
           (rootState.filter.stratFilters.name
             ? strat.name.toLowerCase().includes(rootState.filter.stratFilters.name.toLowerCase())
             : true) &&
@@ -80,12 +79,12 @@ export const stratModule: Module<StratState, RootState> = {
         return { error: res.error };
       }
     },
-    async deleteStrat({ dispatch, state, rootState }, stratID: string) {
+    async deleteStrat({ dispatch, state }, stratID: string) {
       const res = await api.strat.deleteStrat(stratID);
       if (res.success) {
         dispatch('app/showToast', { id: 'strat/deleteStrat', text: 'Deleted strat.' }, { root: true });
         trackingService.track('Action: Delete Strat', {
-          name: state.strats.find(strat => strat._id === stratID)?.name as string,
+          name: state.strats.find((strat) => strat._id === stratID)?.name as string,
         });
       }
     },
@@ -113,7 +112,7 @@ export const stratModule: Module<StratState, RootState> = {
         navigator.clipboard.writeText(shareLink);
         dispatch('app/showToast', { id: 'strat/shareStrat', text: 'Copied share link to clipboard.' }, { root: true });
         trackingService.track('Action: Share Strat', {
-          name: state.strats.find(strat => strat._id === stratID)?.name as string,
+          name: state.strats.find((strat) => strat._id === stratID)?.name as string,
         });
       }
     },
@@ -132,7 +131,7 @@ export const stratModule: Module<StratState, RootState> = {
           { root: true }
         );
         trackingService.track('Action: Add Shared Strat', {
-          name: state.strats.find(strat => strat._id === stratID)?.name as string,
+          name: state.strats.find((strat) => strat._id === stratID)?.name as string,
         });
       }
     },
@@ -146,7 +145,9 @@ export const stratModule: Module<StratState, RootState> = {
       commit(DELETE_STRAT, payload.stratID);
     },
     collapseAll({ commit, state }) {
-      const collapsed = state.strats.filter(strat => !state.editedStrats.includes(strat._id)).map(strat => strat._id);
+      const collapsed = state.strats
+        .filter((strat) => !state.editedStrats.includes(strat._id))
+        .map((strat) => strat._id);
       commit(SET_COLLAPSED, collapsed);
       storageService.set('collapsed', state.collapsedStrats);
     },
@@ -155,10 +156,10 @@ export const stratModule: Module<StratState, RootState> = {
       storageService.set('collapsed', state.collapsedStrats);
     },
     toggleStratCollapse({ commit, state }, stratID: string) {
-      if (state.collapsedStrats.some(id => id === stratID)) {
+      if (state.collapsedStrats.some((id) => id === stratID)) {
         commit(
           SET_COLLAPSED,
-          state.collapsedStrats.filter(id => id !== stratID)
+          state.collapsedStrats.filter((id) => id !== stratID)
         );
       } else {
         commit(SET_COLLAPSED, [...state.collapsedStrats, stratID]);
@@ -166,7 +167,7 @@ export const stratModule: Module<StratState, RootState> = {
       storageService.set('collapsed', state.collapsedStrats);
     },
     updateEdited({ commit, state }, { stratID, value }: { stratID: string; value: boolean }) {
-      const edited = value ? [...state.editedStrats, stratID] : state.editedStrats.filter(id => id !== stratID);
+      const edited = value ? [...state.editedStrats, stratID] : state.editedStrats.filter((id) => id !== stratID);
       commit(SET_EDITED, edited);
     },
     loadCollapsedStratsFromStorage({ commit }) {
@@ -199,11 +200,11 @@ export const stratModule: Module<StratState, RootState> = {
       state.strats.push(strat);
     },
     [UPDATE_STRAT](state, payload: { strat: Strat }) {
-      const strat = state.strats.find(strat => strat._id === payload.strat._id);
+      const strat = state.strats.find((strat) => strat._id === payload.strat._id);
       if (strat) Object.assign(strat, payload.strat);
     },
     [DELETE_STRAT](state, stratID: string) {
-      state.strats = state.strats.filter(strat => strat._id !== stratID);
+      state.strats = state.strats.filter((strat) => strat._id !== stratID);
     },
     [SET_COLLAPSED](state, stratIDs: string[]) {
       state.collapsedStrats = stratIDs;

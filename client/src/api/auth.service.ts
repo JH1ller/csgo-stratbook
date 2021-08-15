@@ -52,9 +52,9 @@ export default class AuthService {
     );
   }
 
-  async register(formData: FormData): Promise<APIResponse<{ _id: string; email: string }>> {
+  async register(formData: FormData): Promise<APIResponse<{ _id: string, email: string }>> {
     const target = urljoin(API_URL, this.endpoint, Actions.Register);
-    return ApiService.makeRequest<{ _id: string; email: string }>(axios.post(target, formData));
+    return ApiService.makeRequest<{ _id: string, email: string }>(axios.post(target, formData));
   }
 
   async forgotPassword(email: string): Promise<APIResponse<boolean>> {
@@ -62,7 +62,7 @@ export default class AuthService {
     return ApiService.makeRequest<boolean>(axios.post(target, { email }));
   }
 
-  async resetPassword(payload: { token: string; password: string }): Promise<APIResponse<boolean>> {
+  async resetPassword(payload: { token: string, password: string }): Promise<APIResponse<boolean>> {
     const target = urljoin(API_URL, this.endpoint, Actions.Reset);
     return ApiService.makeRequest<boolean>(axios.patch(target, payload));
   }

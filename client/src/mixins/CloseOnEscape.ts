@@ -18,6 +18,6 @@ export default class CloseOnEscape extends Vue {
 
   @Emit()
   public close() {
-    return;
+    //
   }
 }

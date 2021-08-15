@@ -4,4 +4,4 @@ export function openLink(url: string) {
   } else {
     window.open(url, '_blank');
   }
-};
+}

@@ -21,7 +21,7 @@ export default class UploadPreview extends Vue {
 
   private removeImage(image: ImageFile) {
     this.input(
-      this.value.filter(file => {
+      this.value.filter((file) => {
         if (image.file) {
           return file !== image.file;
         } else {
@@ -50,7 +50,7 @@ export default class UploadPreview extends Vue {
   private filesChanged(currentFiles: (File | string)[]) {
     this.images = [];
 
-    currentFiles.forEach(file => {
+    currentFiles.forEach((file) => {
       if (typeof file === 'string') {
         this.images.push({
           uri: resolveStaticImageUrl(file),

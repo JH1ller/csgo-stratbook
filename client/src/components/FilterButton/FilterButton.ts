@@ -9,6 +9,6 @@ export default class FilterButton extends Vue {
   @Prop() private activeFilterCount!: number;
   @Emit()
   private click() {
-    return;
+    //
   }
 }

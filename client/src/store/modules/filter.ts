@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Sides } from '@/api/models/Sides';
 import { StratTypes } from '@/api/models/StratTypes';
 import { UtilityTypes } from '@/api/models/UtilityTypes';
 import StorageService from '@/services/storage.service';
 import TrackingService from '@/services/tracking.service';
-import { toggleArray } from '@/utils/toggleArray';
 import { Module } from 'vuex';
 import { RootState } from '..';
 
@@ -57,10 +57,10 @@ export const filterModule: Module<FilterState, RootState> = {
   state: filterInitialState(),
   getters: {
     activeUtilityFilterCount(state): number {
-      return Object.values(state.utilityFilters).filter(v => v).length;
+      return Object.values(state.utilityFilters).filter((v) => v).length;
     },
     activeStratFilterCount(state): number {
-      return Object.values(state.stratFilters).filter(v => (Array.isArray(v) ? v.length : v)).length;
+      return Object.values(state.stratFilters).filter((v) => (Array.isArray(v) ? v.length : v)).length;
     },
   },
   actions: {

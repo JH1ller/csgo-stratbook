@@ -75,8 +75,8 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
 
     const filesToDelete: string[] = [];
 
-    this.utility?.images.forEach(image => {
-      if (!this.files.find(file => file === image)) {
+    this.utility?.images.forEach((image) => {
+      if (!this.files.find((file) => file === image)) {
         filesToDelete.push(image);
       }
     });
@@ -85,7 +85,7 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
       requestFormData.append('delete', JSON.stringify(filesToDelete));
     }
 
-    this.files.forEach(file => {
+    this.files.forEach((file) => {
       if (typeof file !== 'string') {
         requestFormData.append('images', file, file.name);
       }

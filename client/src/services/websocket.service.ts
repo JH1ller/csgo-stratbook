@@ -104,6 +104,7 @@ class WebSocketService {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   emit(event: string, ...args: any[]) {
     if (this.socket?.connected) {
       this.socket.emit(event, ...args);

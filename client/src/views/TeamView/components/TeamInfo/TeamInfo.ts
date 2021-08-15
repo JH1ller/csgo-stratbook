@@ -38,7 +38,7 @@ export default class TeamInfo extends Vue {
     if (!this.teamInfo.server?.ip) return;
 
     if (window.desktopMode) {
-      window.ipcService.openExternalServerLink(this.teamInfo.server?.ip, this.teamInfo.server?.password || '')
+      window.ipcService.openExternalServerLink(this.teamInfo.server?.ip, this.teamInfo.server?.password || '');
     } else {
       window.open(`steam://connect/${this.teamInfo.server?.ip}/${this.teamInfo.server?.password}`, '_blank');
     }
@@ -49,11 +49,11 @@ export default class TeamInfo extends Vue {
 
   @Emit()
   private showEdit(): void {
-    return;
+    //
   }
 
   @Emit()
   private deleteTeam(): void {
-    return;
+    //
   }
 }

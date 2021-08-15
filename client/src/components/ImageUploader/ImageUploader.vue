@@ -2,12 +2,12 @@
   <div class="image-uploader">
     <label class="image-uploader__input">
       <input
-        type="file"
         id="file"
-        :multiple="limit > 1"
-        @change="filesSelected"
+        type="file"
         accept="image/*"
+        :multiple="limit > 1"
         :disabled="value.length >= limit"
+        @change="filesSelected"
       />
       <span :file-input-value="fileString"></span>
     </label>

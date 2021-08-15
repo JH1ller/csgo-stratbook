@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Module } from 'vuex';
 import { RootState } from '..';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
@@ -185,11 +186,11 @@ export const teamModule: Module<TeamState, RootState> = {
       state.teamMembers = members;
     },
     [UPDATE_TEAM_MEMBER](state, player: Player) {
-      const member = state.teamMembers.find(member => member._id === player._id);
+      const member = state.teamMembers.find((member) => member._id === player._id);
       if (member) Object.assign(member, player);
     },
     [DELETE_TEAM_MEMBER](state, playerID: string) {
-      state.teamMembers = state.teamMembers.filter(member => member._id !== playerID);
+      state.teamMembers = state.teamMembers.filter((member) => member._id !== playerID);
     },
     [RESET_STATE](state) {
       Object.assign(state, teamInitialState());

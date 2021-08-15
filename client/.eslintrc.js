@@ -4,11 +4,15 @@ module.exports = {
   root: true,
 
   env: {
-    node: true,
-    jest: true,
+    browser: true,
   },
 
   parserOptions: {
+    // https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/parser#configuration
+    // https://github.com/TypeStrong/fork-ts-checker-webpack-plugin#eslint
+    // Needed to make the parser take into account 'vue' files
+    extraFileExtensions: ['.vue'],
+
     parser: '@typescript-eslint/parser',
 
     project: resolve(__dirname, './tsconfig.json'),
@@ -16,17 +20,10 @@ module.exports = {
 
     sourceType: 'module',
     ecmaVersion: 2020,
+    ecmaFeatures: {
+      jsx: true, // Allows for the parsing of JSX
+    },
   },
-
-  plugins: [
-    // required to apply rules which need type information
-    '@typescript-eslint',
-
-    // https://github.com/typescript-eslint/typescript-eslint/issues/389#issuecomment-509292674
-    // Prettier has not been included as plugin to avoid performance impact
-    // add it as an extension for your IDE
-    'prettier',
-  ],
 
   extends: [
     // https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#usage
@@ -37,13 +34,33 @@ module.exports = {
     // 'plugin:@typescript-eslint/recommended-requiring-type-checking',
 
     'plugin:vue/essential',
-    '@vue/typescript/recommended',
+    'plugin:vue/strongly-recommended', // Priority B: Strongly Recommended (Improving Readability)
+    'plugin:vue/recommended', // Priority C: Recommended (Minimizing Arbitrary Choices and Cognitive Overhead)
+
+    // still required?
+    // '@vue/typescript/recommended',
 
     'standard',
 
     // https://github.com/prettier/eslint-config-prettier#installation
     // usage with Prettier, provided by 'eslint-config-prettier'.
     'prettier',
+  ],
+
+  plugins: [
+    // required to apply rules which need type information
+    '@typescript-eslint',
+
+    // https://eslint.vuejs.org/user-guide/#why-doesn-t-it-work-on-vue-file
+    // required to lint *.vue files
+    'vue',
+
+    // https://github.com/typescript-eslint/typescript-eslint/issues/389#issuecomment-509292674
+    // Prettier has not been included as plugin to avoid performance impact
+    // add it as an extension for your IDE
+    'prettier',
+
+    'react',
   ],
 
   rules: {
@@ -66,7 +83,7 @@ module.exports = {
     'one-var': 'off',
     'no-extra-semi': 'error',
     'import/first': 'off',
-    'import/named': 'error',
+    'import/named': 'warn',
     'import/namespace': 'error',
     'import/default': 'error',
     'import/export': 'error',
@@ -81,6 +98,8 @@ module.exports = {
     '@typescript-eslint/no-inferrable-types': 0,
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': ['error'],
+
+    'vue/component-definition-name-casing': ['error', 'kebab-case'],
 
     'no-undefined': ['error'],
     'no-eq-null': ['error'],
@@ -100,6 +119,15 @@ module.exports = {
       },
     ],
 
+    '@typescript-eslint/space-before-function-paren': [
+      'error',
+      {
+        anonymous: 'always',
+        named: 'never',
+        asyncArrow: 'always',
+      },
+    ],
+
     '@typescript-eslint/member-delimiter-style': [
       'error',
       {
@@ -108,7 +136,7 @@ module.exports = {
           requireLast: true,
         },
         singleline: {
-          delimiter: 'comma',
+          delimiter: 'semi',
           requireLast: false,
         },
       },
@@ -127,7 +155,7 @@ module.exports = {
 
     // TypeScript
     quotes: 'off',
-    '@typescript-eslint/quotes': ['error', 'single'],
+    '@typescript-eslint/quotes': 'off',
 
     // Turn it off because already in @typescript-eslint
     'no-unsafe-assignment': 'off',
@@ -135,10 +163,8 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
 
-    '@typescript-eslint/interface-name-prefix': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/require-await': 'off',
-
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+
+    'react/jsx-sort-props': 'warn',
   },
 };

@@ -25,7 +25,7 @@ export default class LoginForm extends Vue {
 
   @Emit()
   private resetPassword() {
-    return;
+    //
   }
 
   @Emit()

@@ -22,6 +22,6 @@ export default class ConfirmDialog extends Vue {
 
   @Emit()
   private close() {
-    return;
+    //
   }
 }

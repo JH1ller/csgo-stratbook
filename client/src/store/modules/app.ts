@@ -47,7 +47,7 @@ export const appModule: Module<AppState, RootState> = {
         ...toast,
         id: toast.allowMultiple ? nanoid() : toast.id,
       };
-      if (!state.toasts.find(item => item.id === toastCopy.id)) {
+      if (!state.toasts.find((item) => item.id === toastCopy.id)) {
         commit(SHOW_TOAST, toastCopy);
         setTimeout(() => {
           commit(HIDE_TOAST, toastCopy.id);
@@ -62,7 +62,7 @@ export const appModule: Module<AppState, RootState> = {
     },
     showDialog({ commit, state }, dialogData: Partial<Dialog>) {
       return new Promise<void>((resolve, reject) => {
-        if (!state.openDialogs.some(dialog => dialog.key === dialogData.key)) {
+        if (!state.openDialogs.some((dialog) => dialog.key === dialogData.key)) {
           commit(OPEN_DIALOG, {
             ...dialogData,
             resolve,
@@ -102,13 +102,13 @@ export const appModule: Module<AppState, RootState> = {
       state.toasts.push(toast);
     },
     [HIDE_TOAST](state, toastID: string) {
-      state.toasts = state.toasts.filter(toast => toast.id !== toastID);
+      state.toasts = state.toasts.filter((toast) => toast.id !== toastID);
     },
     [OPEN_DIALOG](state, dialog: Dialog) {
       state.openDialogs.push(dialog);
     },
     [CLOSE_DIALOG](state, key: string) {
-      state.openDialogs = [...state.openDialogs.filter(dialog => dialog.key !== key)];
+      state.openDialogs = [...state.openDialogs.filter((dialog) => dialog.key !== key)];
     },
     [SET_LATENCY](state, latency: number) {
       state.latency = latency;

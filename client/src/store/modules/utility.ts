@@ -24,11 +24,11 @@ export const utilityModule: Module<UtilityState, RootState> = {
   state: utilityInitialState(),
   getters: {
     utilitiesOfCurrentMap(state, _getters, rootState) {
-      return state.utilities.filter(utility => utility.map === rootState.map.currentMap);
+      return state.utilities.filter((utility) => utility.map === rootState.map.currentMap);
     },
     filteredUtilitiesOfCurrentMap(_state, getters, rootState) {
       return (getters.utilitiesOfCurrentMap as Utility[]).filter(
-        utility =>
+        (utility) =>
           (rootState.filter.utilityFilters.side ? rootState.filter.utilityFilters.side === utility.side : true) &&
           (rootState.filter.utilityFilters.type ? rootState.filter.utilityFilters.type === utility.type : true) &&
           (rootState.filter.utilityFilters.name
@@ -78,20 +78,22 @@ export const utilityModule: Module<UtilityState, RootState> = {
         { id: 'utility/shareUtility', text: 'Sharing utilities not yet implemented.' },
         { root: true }
       );
-      return;
-      const formData = new FormData();
-      formData.append('_id', utilityID);
-      formData.append('shared', 'true');
-      const res = await api.utility.updateUtility(formData);
-      if (res.success) {
-        const shareLink = `${window.location.origin}/#/share/${utilityID}`;
-        navigator.clipboard.writeText(shareLink);
-        dispatch(
-          'app/showToast',
-          { id: 'utility/shareUtility', text: 'Copied share link to clipboard.' },
-          { root: true }
-        );
-      }
+
+      // !warning fixme!
+
+      // const formData = new FormData();
+      // formData.append('_id', utilityID);
+      // formData.append('shared', 'true');
+      // const res = await api.utility.updateUtility(formData);
+      // if (res.success) {
+      //   const shareLink = `${window.location.origin}/#/share/${utilityID}`;
+      //   navigator.clipboard.writeText(shareLink);
+      //   dispatch(
+      //     'app/showToast',
+      //     { id: 'utility/shareUtility', text: 'Copied share link to clipboard.' },
+      //     { root: true }
+      //   );
+      // }
     },
     async unshareUtility({ dispatch }, utilityID: string) {
       const formData = new FormData();
@@ -116,13 +118,13 @@ export const utilityModule: Module<UtilityState, RootState> = {
         );
       }
     },
-    addUtilityLocally({ commit, dispatch }, payload: { utility: Utility }) {
+    addUtilityLocally({ commit }, payload: { utility: Utility }) {
       commit(ADD_UTILITY, payload.utility);
     },
-    updateUtilityLocally({ commit, dispatch }, payload: { utility: Utility }) {
+    updateUtilityLocally({ commit }, payload: { utility: Utility }) {
       commit(UPDATE_UTILITY, payload);
     },
-    deleteUtilityLocally({ commit, dispatch }, payload: { utilityID: string }) {
+    deleteUtilityLocally({ commit }, payload: { utilityID: string }) {
       commit(DELETE_UTILITY, payload.utilityID);
     },
     resetState({ commit }) {
@@ -137,11 +139,11 @@ export const utilityModule: Module<UtilityState, RootState> = {
       state.utilities.push(utility);
     },
     [UPDATE_UTILITY](state, payload: { utility: Utility }) {
-      const utility = state.utilities.find(utility => utility._id === payload.utility._id);
+      const utility = state.utilities.find((utility) => utility._id === payload.utility._id);
       if (utility) Object.assign(utility, payload.utility);
     },
     [DELETE_UTILITY](state, utilityID: string) {
-      state.utilities = state.utilities.filter(utility => utility._id !== utilityID);
+      state.utilities = state.utilities.filter((utility) => utility._id !== utilityID);
     },
     [RESET_STATE](state) {
       Object.assign(state, utilityInitialState());

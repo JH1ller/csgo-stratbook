@@ -1,6 +1,6 @@
 <template>
   <div class="floating-button" @click="click">
-    <fa-icon :icon="icon" class="floating-button__icon" /><span class="floating-button__label" v-if="label">{{
+    <fa-icon :icon="icon" class="floating-button__icon" /><span v-if="label" class="floating-button__label">{{
       label
     }}</span>
   </div>

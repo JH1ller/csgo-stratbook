@@ -15,11 +15,12 @@ export default class MemberList extends Vue {
   @teamModule.State private teamInfo!: Team;
   @teamModule.State private teamMembers!: Player[];
   @authModule.State private profile!: Player;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Ref() menu!: any;
 
   @Emit()
   private leaveTeam(): void {
-    return;
+    //
   }
 
   @Emit()

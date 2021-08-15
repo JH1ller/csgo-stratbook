@@ -40,7 +40,7 @@ export default class MainMenu extends Vue {
         link: this.profile.team ? '/team' : '/team/join', // TODO: check if this works!
         show: !!this.profile._id,
       },
-    ].filter(item => item.show);
+    ].filter((item) => item.show);
   }
 
   get avatarUrl() {
@@ -52,10 +52,10 @@ export default class MainMenu extends Vue {
       this.showDialog({
         key: 'main-menu/download-desktop',
         text:
-          'Click <b>Download now</b> to get the Stratbook desktop application.<br/> \
-          It offers better performance and might later get features that are not possible in the web version.<br/>\
-          If Windows prevents running the app, you should be able to click <b>More Info</b> and <b>Run anyway</b>.<br/> \
-          The app automatically checks for updates on startup.',
+          'Click <b>Download now</b> to get the Stratbook desktop application.<br/> ' +
+          'It offers better performance and might later get features that are not possible in the web version.<br/>' +
+          'If Windows prevents running the app, you should be able to click <b>More Info</b> and <b>Run anyway</b>.<br/> ' +
+          'The app automatically checks for updates on startup.',
         resolveBtn: 'Download now',
         htmlMode: true,
       }),
@@ -85,11 +85,11 @@ export default class MainMenu extends Vue {
 
   @Emit()
   private toggleMenu() {
-    return;
+    //
   }
 
   @Emit()
   private closeMenu() {
-    return;
+    //
   }
 }

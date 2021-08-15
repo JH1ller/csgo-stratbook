@@ -7,7 +7,6 @@ import router from '@/router';
 import { RouteNames, Routes } from '@/router/router.models';
 import { TOKEN_TTL } from '@/config';
 import TrackingService from '@/services/tracking.service';
-import { Team } from '@/api/models/Team';
 import StorageService from '@/services/storage.service';
 
 const SET_TOKEN = 'SET_TOKEN';
@@ -59,8 +58,7 @@ export const authModule: Module<AuthState, RootState> = {
             'app/showDialog',
             {
               key: 'auth/updateProfile',
-              text:
-                'Would you like to replace your name in all strat mentions? This will do a simple find/replace and may lead to errors in the strat.',
+              text: 'Would you like to replace your name in all strat mentions? This will do a simple find/replace and may lead to errors in the strat.',
               resolveBtn: 'Yes',
               rejectBtn: 'No',
             },

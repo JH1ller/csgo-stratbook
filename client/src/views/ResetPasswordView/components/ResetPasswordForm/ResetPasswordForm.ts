@@ -17,6 +17,7 @@ export default class ResetPasswordForm extends Vue {
     Validators.notEmpty(),
     Validators.matches(this.password),
   ]);
+
   private token!: string;
 
   private submitClicked() {

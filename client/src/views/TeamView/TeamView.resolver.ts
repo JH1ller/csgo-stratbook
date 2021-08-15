@@ -1,6 +1,6 @@
 import { NavigationGuard } from 'vue-router';
-import store from '@/store';
-import { Response } from '@/store';
+import store, { Response } from '@/store';
+
 import { authGuard } from '@/guards/auth.guard';
 import { teamGuard } from '@/guards/team.guard';
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
 
 export interface FABOption {
@@ -18,6 +19,6 @@ export default class FloatingButton extends Vue {
 
   @Emit()
   private click() {
-    return;
+    //
   }
 }

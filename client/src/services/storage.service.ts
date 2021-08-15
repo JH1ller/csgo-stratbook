@@ -1,12 +1,11 @@
 import { isDesktop } from '@/utils/isDesktop';
 import { Log } from '@/utils/logger';
 
-
 export default class StorageService {
   private static instance: StorageService;
 
-
   private constructor() {
+    //
   }
 
   static getInstance(): StorageService {
@@ -27,22 +26,21 @@ export default class StorageService {
     //   return value
     // }
     // else{
-      const localValue = localStorage.getItem(key);
-      if(!localValue) {
-        Log.warn(`StorageService ('browser')`, `No value found for '${key}'.`);
-      }else{
-        return JSON.parse(localValue as string) as T | undefined | null;
-      }
+    const localValue = localStorage.getItem(key);
+    if (!localValue) {
+      Log.warn('StorageService (`browser`)', `No value found for '${key}'.`);
+    } else {
+      return JSON.parse(localValue as string) as T | undefined | null;
+    }
     // }
 
     return null;
   }
 
   set(key: string, value: unknown): void {
-    if(isDesktop()){
+    if (isDesktop()) {
       window.ipcService.configSetValue(key, value);
-    }
-    else{
+    } else {
       localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
     }
 

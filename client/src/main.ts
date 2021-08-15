@@ -58,6 +58,8 @@ import {
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueTippy, { TippyComponent } from 'vue-tippy';
+import VueCompositionApi from '@vue/composition-api';
+import { PiniaPlugin } from 'pinia';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 import { isDesktop } from './utils/isDesktop';
 import StorageService from './services/storage.service';
@@ -71,7 +73,11 @@ Vue.use(VueTippy, {
   delay: [300, 0],
   animation: 'scale',
 });
+
 Vue.component('tippy', TippyComponent);
+
+Vue.use(VueCompositionApi);
+Vue.use(PiniaPlugin);
 
 config.autoAddCss = false;
 library.add(
@@ -138,7 +144,8 @@ window.desktopMode = isDesktop();
 
 const storageService = StorageService.getInstance();
 
-new BreakpointService(MQ => store.dispatch('app/updateBreakpoint', MQ));
+// eslint-disable-next-line no-new
+new BreakpointService((MQ) => store.dispatch('app/updateBreakpoint', MQ));
 
 const hasSession = !!storageService.get('has-session');
 
@@ -152,6 +159,6 @@ const hasSession = !!storageService.get('has-session');
   new Vue({
     router,
     store,
-    render: h => h(App),
+    render: (h) => h(App),
   }).$mount('#app');
 })();

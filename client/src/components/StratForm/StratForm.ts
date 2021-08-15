@@ -48,6 +48,7 @@ export default class StratForm extends Mixins(CloseOnEscape) {
   @Emit()
   private submitStrat(): Partial<Strat> {
     return {
+      // eslint-disable-next-line no-undefined
       _id: this.isEdit ? this.strat._id : undefined,
       name: this.formFields.name.value,
       types: this.types,

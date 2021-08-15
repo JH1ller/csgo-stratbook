@@ -35,7 +35,7 @@ export default class RegisterView extends Vue {
       // TODO: remove once hotmail issue is resolved.
       // * checks if registered email is microsoft email
       const email = formData.get('email') as string;
-      if (['@hotmail', '@live', '@outlook'].some(suffix => email.includes(suffix))) {
+      if (['@hotmail', '@live', '@outlook'].some((suffix) => email.includes(suffix))) {
         catchPromise(
           this.showDialog({
             key: 'register-view/hotmail-warning',

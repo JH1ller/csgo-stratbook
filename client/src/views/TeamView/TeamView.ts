@@ -44,6 +44,7 @@ export default class TeamView extends Vue {
       }
     );
   }
+
   private requestTeamDelete() {
     if (!this.isManager) return;
 

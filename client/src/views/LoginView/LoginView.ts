@@ -13,6 +13,7 @@ export default class LoginView extends Vue {
   @authModule.Action login!: (credentials: { email: string; password: string }) => Promise<Response>;
   private formError: string = '';
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async loginRequest(payload: any) {
     const res = await this.login({
       email: payload.email,

@@ -1,26 +1,26 @@
 <template>
   <BackdropDialog>
     <div class="draw-tool" :class="{ '-loaded': backgroundLoaded }">
-      <div class="draw-tool__wrapper" ref="wrapper">
+      <div ref="wrapper" class="draw-tool__wrapper">
         <ImageEditor
+          ref="editor"
           class="draw-tool__editor"
           :color="currentColor"
           :canvasWidth="canvasWidth"
           :canvasHeight="canvasHeight"
-          ref="editor"
         />
         <SmartImage
           alt="Draw tool minimap background"
-          @load="imgLoadedHandler"
-          class="draw-tool__background"
           :src="mapURL"
+          class="draw-tool__background"
+          @load="imgLoadedHandler"
         />
         <span class="draw-tool__legend"><span>Undo: CTRL + Z</span><span>Redo: CTRL + SHIFT + Z</span></span>
       </div>
       <div class="draw-tool__actions">
         <v-swatches
-          class="draw-tool__color-picker"
           v-model="currentColor"
+          class="draw-tool__color-picker"
           shapes="circles"
           swatch-size="30"
           popover-y="top"

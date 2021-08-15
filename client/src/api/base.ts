@@ -62,9 +62,9 @@ export default class ApiService {
     });
 
     axiosInstance.interceptors.request.use(
-      config => {
+      (config) => {
         if (store.state.auth.token) {
-          config.headers['Authorization'] = store.state.auth.token;
+          config.headers.Authorization = store.state.auth.token;
           store.dispatch('app/updateLoading', true);
           return config;
         } else {
@@ -72,17 +72,17 @@ export default class ApiService {
           throw new axios.Cancel('User not authenticated. Request cancelled.');
         }
       },
-      error => {
+      (error) => {
         Log.error('axios::interceptor', 'User not authenticated. Request cancelled.');
         return Promise.reject(error);
       }
     );
     axiosInstance.interceptors.response.use(
-      response => {
+      (response) => {
         store.dispatch('app/updateLoading', false);
         return response;
       },
-      error => {
+      (error) => {
         store.dispatch('app/updateLoading', false);
         Log.error('axios::interceptor', error.response.data.error);
         if (error.response.status === 401) {

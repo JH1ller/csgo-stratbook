@@ -51,7 +51,7 @@ export class BreakpointService {
     for (const mediaQuery of this.mediaQueries) {
       const matcher: MediaQueryList = window.matchMedia(mediaQuery.query);
 
-      matcher.addEventListener('change', event => {
+      matcher.addEventListener('change', (event) => {
         if (event.matches) {
           this.callback(mediaQuery.MQ);
         }

@@ -41,11 +41,12 @@ export default new Vuex.Store({
     team: teamModule,
     utility: utilityModule,
   },
+  // eslint-disable-next-line no-undefined
   state: undefined,
   mutations: {},
   actions: {
     resetState({ dispatch, state }) {
-      Object.keys(state).forEach(module => dispatch(`${module}/resetState`));
+      Object.keys(state).forEach((module) => dispatch(`${module}/resetState`));
       storageService.clear(); // TODO: only clear user related stuff, not 'version' for example
     },
     loadDataFromStorage({ dispatch }) {

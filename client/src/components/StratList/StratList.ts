@@ -17,11 +17,11 @@ export default class StratList extends Vue {
   @Prop() gameMode!: boolean;
 
   private isCollapsed(strat: Strat) {
-    return this.collapsedStrats.some(id => id === strat._id);
+    return this.collapsedStrats.some((id) => id === strat._id);
   }
 
   private isEdited(strat: Strat) {
-    return this.editedStrats.some(id => id === strat._id);
+    return this.editedStrats.some((id) => id === strat._id);
   }
 
   // TODO: solve this drilling with provide/inject
@@ -73,12 +73,12 @@ export default class StratList extends Vue {
 
   @Emit()
   private editorFocussed() {
-    return;
+    //
   }
 
   @Emit()
   private editorBlurred() {
-    return;
+    //
   }
 
   @Emit()

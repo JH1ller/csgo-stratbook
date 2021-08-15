@@ -23,13 +23,12 @@ class WindowManager {
 
     if (!win) {
       await this.showMainWindow();
-      return;
-    }
-
-    if (win.isVisible() && !win.isMinimized()) {
-      win.hide();
     } else {
-      win.show();
+      if (win.isVisible() && !win.isMinimized()) {
+        win.hide();
+      } else {
+        win.show();
+      }
     }
   }
 

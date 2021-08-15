@@ -36,7 +36,7 @@ export default class FormField implements FormFieldData {
   }
 
   public validate(): boolean {
-    return this.validators.every(validator => validator(this));
+    return this.validators.every((validator) => validator(this));
   }
 
   public clearErrors(): void {

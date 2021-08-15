@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, Emit, Mixins, Prop, Ref, Watch } from 'vue-property-decorator';
 import ImageEditor from 'vue-image-markup';
 import { appModule, mapModule } from '@/store/namespaces';
@@ -84,13 +85,13 @@ export default class DrawTool extends Mixins(CloseOnEscape) {
   }
 
   private setupEventlisteners() {
-    document.addEventListener('keypress', e => this.keypressHandler(e));
-    document.addEventListener('keydown', e => this.keydownHandler(e));
+    document.addEventListener('keypress', (e) => this.keypressHandler(e));
+    document.addEventListener('keydown', (e) => this.keydownHandler(e));
   }
 
   private removeEventListeners() {
-    document.removeEventListener('keypress', e => this.keypressHandler(e));
-    document.removeEventListener('keydown', e => this.keydownHandler(e));
+    document.removeEventListener('keypress', (e) => this.keypressHandler(e));
+    document.removeEventListener('keydown', (e) => this.keydownHandler(e));
   }
 
   private keypressHandler(e: KeyboardEvent) {
