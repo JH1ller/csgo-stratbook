@@ -1,9 +1,9 @@
 // generate swagger docs for integration testing
 
-const cwd = require("process").cwd;
-const execSync = require('child_process').execSync;
-
-require('dotenv').config();
+import { cwd } from 'process';
+import { execSync } from 'child_process';
+import dotEnv from 'dotenv';
+dotEnv.config();
 
 const generatorOptions = {
   enumNameSuffix: '',
@@ -15,11 +15,14 @@ const generatorOptions = {
   modelPackage: 'models',
 };
 
-const command = `docker run --rm -v ${cwd()}:/local openapitools/openapi-generator-cli generate -i` +
+const command =
+  `docker run --rm -v ${cwd()}:/local openapitools/openapi-generator-cli generate -i` +
   ` http://host.docker.internal:${process.env.PORT}/swagger-json -g typescript-axios` +
-  ` -o /local/test/api/ ` +
+  ' -o /local/src/api/ ' +
   Object.entries(generatorOptions).reduce(
-    (acc, [key, value]) => ((acc += ` --additional-properties=${key}=${value.toString()}`), acc), '');
+    (acc, [key, value]) => ((acc += ` --additional-properties=${key}=${value.toString()}`), acc),
+    ''
+  );
 
 console.log(`Executing: ${command}`);
 

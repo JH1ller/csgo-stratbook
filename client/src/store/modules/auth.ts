@@ -2,16 +2,15 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
 import WebSocketService from '@/services/websocket.service';
-import { Player } from '@/api/models/Player';
-import api from '@/api/base';
 import router from '@/router';
 import { RouteNames, Routes } from '@/router/router.models';
-import { TOKEN_TTL } from '@/config';
+import { API_URL, TOKEN_TTL } from '@/config';
 import TrackingService from '@/services/tracking.service';
 import StorageService from '@/services/storage.service';
+import { AuthApi, Configuration, ProfileUpdateDto, UsersApi, UsersApiFp } from 'src/api';
 
 const SET_TOKEN = 'SET_TOKEN';
-const SET_PROFILE = 'SET_PROFILE';
+const SET_USER = 'SET_USER';
 const SET_STATUS = 'SET_STATUS';
 const RESET_STATE = 'RESET_STATE';
 
@@ -24,73 +23,75 @@ export enum Status {
 export interface AuthState {
   status: Status;
   token: string;
-  profile: Player | Record<string, any>;
+  user: Player | Record<string, any>;
 }
 
 const authInitialState = (): AuthState => ({
   status: Status.NO_AUTH,
   token: '',
-  profile: {},
+  user: {},
 });
 
 const trackingService = TrackingService.getInstance();
 const storageService = StorageService.getInstance();
+const apiConfig = new Configuration({
+  basePath: API_URL,
+});
+const authApi = new AuthApi(apiConfig);
+const usersApi = new UsersApi(apiConfig);
 
 export const authModule: Module<AuthState, RootState> = {
   namespaced: true,
   state: authInitialState(),
   getters: {},
   actions: {
-    async fetchProfile({ dispatch }) {
-      const res = await api.player.getPlayer();
-      if (res.success) {
-        const profile = res.success;
-        await dispatch('setProfile', profile);
-        return { success: profile };
-      } else {
-        return { error: res.error };
+    async fetchUser({ dispatch, state }) {
+      try {
+        const { data } = await usersApi.usersControllerGetUser();
+        dispatch('setUser', data);
+        return { success: data };
+      } catch (error) {
+        return { error };
       }
     },
-    async updateProfile({ dispatch, commit }, data: FormData) {
-      let updateStrats = false;
-      if (data.has('name')) {
-        try {
-          await dispatch(
-            'app/showDialog',
-            {
-              key: 'auth/updateProfile',
-              text: 'Would you like to replace your name in all strat mentions? This will do a simple find/replace and may lead to errors in the strat.',
-              resolveBtn: 'Yes',
-              rejectBtn: 'No',
-            },
-            { root: true }
-          );
-          updateStrats = true;
-        } catch (error) {
-          updateStrats = false; // * not needed, but to prevent empty block statement
-        }
+    async updateUser({ dispatch, commit }, formData: FormData) {
+      if (
+        formData.has('name') &&
+        (await dispatch(
+          'app/showDialog',
+          {
+            key: 'auth/updateUser',
+            text: 'Would you like to replace your name in all strat mentions? This will do a simple find/replace and may lead to errors in the strat.',
+            resolveBtn: 'Yes',
+            rejectBtn: 'No',
+          },
+          { root: true }
+        ))
+      ) {
+        formData.set('updateStrategies', 'true');
       }
-
-      const res = await api.player.updatePlayer(data, updateStrats);
-      if (res.success) {
-        commit(SET_PROFILE, res.success);
-        if (data.has('email')) {
+      try {
+        const response = await usersApi.usersControllerUpdateUser({
+          profileUpdateDto: formData as ProfileUpdateDto,
+        });
+        dispatch('fetchUser');
+        if (formData.has('email')) {
           const message =
-            'Successfully updated your profile. A confirmation mail has been sent to confirm the new email address.';
-          dispatch('app/showToast', { id: 'auth/updateProfile', text: message }, { root: true });
+            'Successfully updated your user. A confirmation mail has been sent to confirm the new email address.';
+          dispatch('app/showToast', { id: 'auth/updateUser', text: message }, { root: true });
         }
-      }
+      } catch (error) {}
     },
     updateStatus({ commit }, status: Status) {
       commit(SET_STATUS, status);
     },
-    setProfile({ commit }, profile: Player) {
-      commit(SET_PROFILE, profile);
-      commit(SET_STATUS, profile.team ? Status.LOGGED_IN_WITH_TEAM : Status.LOGGED_IN_NO_TEAM);
-      trackingService.identify(profile._id, profile.name);
-      storageService.set('username', profile.name);
-      storageService.set('userId', profile._id);
-      if (profile.team) {
+    setUser({ commit, rootState }, user: Player) {
+      commit(SET_USER, user);
+      commit(SET_STATUS, user.team ? Status.LOGGED_IN_WITH_TEAM : Status.LOGGED_IN_NO_TEAM);
+      trackingService.identify(user._id, user.name);
+      storageService.set('username', user.name);
+      storageService.set('userId', user._id);
+      if (user.team) {
         WebSocketService.getInstance().connect();
       } else {
         WebSocketService.getInstance().disconnect(); // TODO: maybe find a way to call this earlier, because socket update will cause console error
@@ -105,10 +106,10 @@ export const authModule: Module<AuthState, RootState> = {
           storageService.set('refreshToken', res.success.refreshToken);
         }
 
-        await dispatch('fetchProfile');
+        await dispatch('fetchUser');
         storageService.set('has-session', '1');
         dispatch('app/showToast', { id: 'auth/login', text: 'Logged in successfully.' }, { root: true });
-        trackingService.track('Action: Login', { email, name: state.profile.name });
+        trackingService.track('Action: Login', { email, name: state.user.name });
         setTimeout(() => dispatch('refresh'), TOKEN_TTL - 10000);
         return { success: true };
       } else {
@@ -116,14 +117,14 @@ export const authModule: Module<AuthState, RootState> = {
       }
     },
     async logout({ dispatch, state }) {
-      trackingService.track('Action: Logout', { email: state.profile.email, name: state.profile.name });
+      trackingService.track('Action: Logout', { email: state.user.email, name: state.user.name });
       await api.auth.logout();
       dispatch('resetState', null, { root: true });
       WebSocketService.getInstance().disconnect();
       dispatch('app/showToast', { id: 'auth/logout', text: 'Logged out successfully.' }, { root: true });
     },
     async deleteAccount({ dispatch, state }) {
-      trackingService.track('Action: Delete Account', { email: state.profile.email, name: state.profile.name });
+      trackingService.track('Action: Delete Account', { email: state.user.email, name: state.user.name });
       await api.auth.deleteAccount();
       dispatch('resetState', null, { root: true });
       WebSocketService.getInstance().disconnect();
@@ -204,8 +205,8 @@ export const authModule: Module<AuthState, RootState> = {
     [SET_TOKEN](state, token: string) {
       state.token = token;
     },
-    [SET_PROFILE](state, profile: Player) {
-      state.profile = profile;
+    [SET_USER](state, user: Player) {
+      state.user = user;
     },
     [SET_STATUS](state, status: Status) {
       state.status = status;

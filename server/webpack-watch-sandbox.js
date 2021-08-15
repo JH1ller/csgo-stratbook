@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const schemaUtils = require('schema-utils');
+const validate = require('schema-utils');
 
-const webpack = require('webpack');
 const vm = require('vm');
 const NativeModule = require('module');
 const fs = require('fs');
@@ -84,7 +83,7 @@ class WebpackWatchSandboxPlugin {
   context = {};
 
   constructor(options = {}) {
-    schemaUtils.validate(schema, options, {
+    validate(schema, options, {
       name: 'server.js',
     });
 

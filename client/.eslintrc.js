@@ -158,6 +158,7 @@ module.exports = {
     // TypeScript
     quotes: 'off',
     '@typescript-eslint/quotes': 'off',
+    'no-sequences': 'off',
 
     // Turn it off because already in @typescript-eslint
     'no-unsafe-assignment': 'off',
