@@ -21,11 +21,11 @@
 <script lang="ts">
 import { Component, Provide, Vue } from 'vue-property-decorator';
 import ViewTitle from '@/components/ViewTitle/ViewTitle.vue';
-import Loader from '@/components/Loader/Loader.vue';
+import Loader from '@/components/Loader/Loader';
 import ToastWrapper from '@/components/ToastWrapper/ToastWrapper.vue';
 import MainMenu from '@/components/menus/MainMenu/MainMenu.vue';
 import DialogWrapper from './components/DialogWrapper/DialogWrapper.vue';
-import CookieBanner from './components/CookieBanner/CookieBanner.vue';
+import CookieBanner from './components/CookieBanner/CookieBanner';
 import pkg from '../package.json';
 import { appModule, teamModule } from './store/namespaces';
 import TrackingService from '@/services/tracking.service';

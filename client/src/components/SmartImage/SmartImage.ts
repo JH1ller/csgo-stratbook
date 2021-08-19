@@ -1,5 +1,5 @@
 import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator';
-import Loader from '@/components/Loader/Loader.vue';
+import Loader from '@/components/Loader/Loader';
 
 @Component({
   components: {

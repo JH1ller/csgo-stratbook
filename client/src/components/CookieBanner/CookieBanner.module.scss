@@ -1,4 +1,4 @@
-.cookie-banner {
+.cookieBanner {
   @include blurry-backdrop;
   @include spacing('padding', xs);
 
@@ -33,7 +33,7 @@
     align-items: center;
   }
 
-  &__checkbox-label {
+  &__checkboxLabel {
     @include spacing('margin-left', '3xs');
   }
 
@@ -47,7 +47,7 @@
     }
   }
 
-  &__btn-wrapper {
+  &__btnWrapper {
     @include spacing('margin-top', 'xs');
 
     display: flex;

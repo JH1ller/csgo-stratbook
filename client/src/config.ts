@@ -1,5 +1,7 @@
 export const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://stratbook.live/' : 'http://localhost:3554/';
 
+export const COOKIE_BASE_DOMAIN = process.env.NODE_ENV === 'development' ? 'localhost' : 'stratbook.live';
+
 export const API_URL =
   process.env.NODE_ENV === 'production' ? 'https://api.stratbook.live/' : 'http://localhost:3554/api/';
 

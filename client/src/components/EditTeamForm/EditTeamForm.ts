@@ -1,7 +1,7 @@
 import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator';
-import TextInput from '@/components/TextInput/TextInput.vue';
-import ImageUploader from '@/components/ImageUploader/ImageUploader.vue';
-import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
+import TextInput from '@/components/TextInput/TextInput';
+import ImageUploader from '@/components/ImageUploader/ImageUploader';
+import BackdropDialog from '@/components/BackdropDialog/BackdropDialog';
 import { isEmptyIterable } from '@/utils/isEmptyIterable';
 import FormField from '@/utils/FormField';
 import { validateForm, Validators } from '@/utils/validation';

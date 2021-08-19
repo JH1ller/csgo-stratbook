@@ -4,7 +4,7 @@ import FloatingButton from '@/components/FloatingButton/FloatingButton.vue';
 import UtilityForm from '@/components/UtilityForm/UtilityForm.vue';
 import UtilityList from '@/components/UtilityList/UtilityList.vue';
 import UtilityLightbox from '@/components/UtilityLightbox/UtilityLightbox.vue';
-import FilterButton from '@/components/FilterButton/FilterButton.vue';
+import FilterButton from '@/components/FilterButton/FilterButton';
 import UtilityFilterForm from '@/components/UtilityFilterForm/UtilityFilterForm.vue';
 import FilterMenu from '@/components/FilterMenu/FilterMenu.vue';
 import { appModule, filterModule, mapModule, utilityModule } from '@/store/namespaces';

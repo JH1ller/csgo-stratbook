@@ -1,7 +1,7 @@
 import { appModule } from '@/store/namespaces';
 import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
-import TextInput from '@/components/TextInput/TextInput.vue';
+import TextInput from '@/components/TextInput/TextInput';
 import { Validators } from '@/utils/validation';
 import FormField from '@/utils/FormField';
 @Component({
