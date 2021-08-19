@@ -26,6 +26,7 @@
     "@fortawesome/free-regular-svg-icons": "5.15.4",
     "@fortawesome/free-solid-svg-icons": "5.15.4",
     "@fortawesome/vue-fontawesome": "2.0.2",
+    "@hcaptcha/vue-hcaptcha": "^0.3.0",
     "@popperjs/core": "2.9.3",
     "@splitbee/web": "0.2.4",
     "@vue/composition-api": "1.1.1",

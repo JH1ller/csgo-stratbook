@@ -12,43 +12,43 @@ export class UpdateStrategyDto {
   @IsString()
   @MaxLength(50)
   @IsOptional()
-  @ApiProperty({ example: 'The best smoke on A' })
+  @ApiProperty({ example: 'The best smoke on A', required: false })
   public readonly name?: string;
 
   @IsString()
   @MaxLength(100)
   @IsOptional()
-  @ApiProperty({ example: 'Some text is here!' })
+  @ApiProperty({ example: 'Some text is here!', required: false })
   public readonly note?: string;
 
   @IsEnum(PlayerSide)
   @IsOptional()
-  @ApiProperty({ example: PlayerSide.Terrorists, enum: PlayerSide })
+  @ApiProperty({ example: PlayerSide.Terrorists, enum: PlayerSide, required: false })
   public readonly side?: PlayerSide;
 
   @IsEnum(StrategyType)
   @IsOptional()
-  @ApiProperty({ example: StrategyType.BuyRound, enum: StrategyType })
+  @ApiProperty({ example: StrategyType.BuyRound, enum: StrategyType, required: false })
   public readonly type?: StrategyType;
 
   @IsBoolean()
   @IsOptional()
-  @ApiProperty({ example: false })
+  @ApiProperty({ example: false, required: false })
   public readonly active?: boolean;
 
   @IsUrl()
   @MaxLength(256)
   @IsOptional()
-  @ApiProperty({ example: 'https://www.youtube.com/' })
+  @ApiProperty({ example: 'https://www.youtube.com/', required: false })
   public readonly videoLink?: string;
 
   @IsString()
   @IsOptional()
-  @ApiProperty({ example: 'this shall be a very long text, hello world :)!' })
+  @ApiProperty({ example: 'this shall be a very long text, hello world :)!', required: false })
   public readonly content?: string;
 
   @IsBoolean()
   @IsOptional()
-  @ApiProperty({ example: true })
+  @ApiProperty({ example: true, required: false })
   public readonly shared?: boolean;
 }

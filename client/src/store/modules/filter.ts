@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Sides } from '@/api/models/Sides';
-import { StratTypes } from '@/api/models/StratTypes';
-import { UtilityTypes } from '@/api/models/UtilityTypes';
 import StorageService from '@/services/storage.service';
 import TrackingService from '@/services/tracking.service';
+import { PlayerSide, StrategyType } from 'src/api/type-mapping';
 import { Module } from 'vuex';
 import { RootState } from '..';
 
@@ -21,12 +19,12 @@ const RESET_STATE = 'RESET_STATE';
 export interface StratFilters {
   name: string;
   content: string;
-  side: Sides | null;
-  types: StratTypes[];
+  side: PlayerSide | null;
+  types: StrategyType[];
 }
 export interface UtilityFilters {
   name: string;
-  side: Sides | null;
+  side: PlayerSide | null;
   type: UtilityTypes | null;
 }
 
@@ -57,10 +55,10 @@ export const filterModule: Module<FilterState, RootState> = {
   state: filterInitialState(),
   getters: {
     activeUtilityFilterCount(state): number {
-      return Object.values(state.utilityFilters).filter((v) => v).length;
+      return Object.values(state.utilityFilters).filter(v => v).length;
     },
     activeStratFilterCount(state): number {
-      return Object.values(state.stratFilters).filter((v) => (Array.isArray(v) ? v.length : v)).length;
+      return Object.values(state.stratFilters).filter(v => (Array.isArray(v) ? v.length : v)).length;
     },
   },
   actions: {
@@ -68,12 +66,12 @@ export const filterModule: Module<FilterState, RootState> = {
       commit(SET_STRAT_CONTENT_FILTER, value);
       storageService.set('filters', state);
     },
-    updateStratTypeFilter({ commit, state }, value: StratTypes[]) {
+    updateStratTypeFilter({ commit, state }, value: StrategyType[]) {
       commit(SET_STRAT_TYPE_FILTER, value);
       storageService.set('filters', state);
       trackingService.track('Filter: Strat Types', { value: value });
     },
-    updateStratSideFilter({ commit, state }, value: Sides | null) {
+    updateStratSideFilter({ commit, state }, value: PlayerSide | null) {
       commit(SET_STRAT_SIDE_FILTER, value);
       storageService.set('filters', state);
       trackingService.track('Filter: Strat Side', { value: value as string });
@@ -94,7 +92,7 @@ export const filterModule: Module<FilterState, RootState> = {
       storageService.set('filters', state);
       trackingService.track('Filter: Utility Type', { value: value as string });
     },
-    updateUtilitySideFilter({ commit, state }, value: Sides | null) {
+    updateUtilitySideFilter({ commit, state }, value: PlayerSide | null) {
       commit(SET_UTILITY_SIDE_FILTER, value);
       storageService.set('filters', state);
       trackingService.track('Filter: Utility Side', { value: value as string });
@@ -131,10 +129,10 @@ export const filterModule: Module<FilterState, RootState> = {
     [SET_STRAT_CONTENT_FILTER](state, value: string) {
       state.stratFilters.content = value;
     },
-    [SET_STRAT_TYPE_FILTER](state, value: StratTypes[]) {
+    [SET_STRAT_TYPE_FILTER](state, value: StrategyType[]) {
       state.stratFilters.types = value;
     },
-    [SET_STRAT_SIDE_FILTER](state, value: Sides | null) {
+    [SET_STRAT_SIDE_FILTER](state, value: PlayerSide | null) {
       state.stratFilters.side = value;
     },
     [SET_STRAT_NAME_FILTER](state, value: string) {
@@ -143,7 +141,7 @@ export const filterModule: Module<FilterState, RootState> = {
     [SET_UTILITY_TYPE_FILTER](state, value: UtilityTypes | null) {
       state.utilityFilters.type = value;
     },
-    [SET_UTILITY_SIDE_FILTER](state, value: Sides | null) {
+    [SET_UTILITY_SIDE_FILTER](state, value: PlayerSide | null) {
       state.utilityFilters.side = value;
     },
     [SET_UTILITY_NAME_FILTER](state, value: string) {

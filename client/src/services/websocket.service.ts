@@ -2,10 +2,6 @@ import { io, Socket } from 'socket.io-client';
 import { BASE_URL } from '@/config';
 import store from '@/store';
 import { Log } from '@/utils/logger';
-import { Player } from '../api/models/Player';
-import { Strat } from '../api/models/Strat';
-import { Team } from '../api/models/Team';
-import { Utility } from '../api/models/Utility';
 
 class WebSocketService {
   private static instance: WebSocketService;
@@ -38,8 +34,8 @@ class WebSocketService {
     this.socket.on('connect', () => {
       Log.info('ws::connected', 'Websocket connection established.');
       this.socket.emit('join-room', {
-        teamID: (store.state.auth.profile as Player).team,
-        playerID: (store.state.auth.profile as Player)._id,
+        teamID: (store.state.auth.user as Player).team,
+        playerID: (store.state.auth.user as Player)._id,
       });
     });
 
@@ -55,17 +51,17 @@ class WebSocketService {
 
     this.socket.on('created-strat', (data: { strat: Strat }) => {
       Log.info('ws::created', data);
-      store.dispatch('strat/addStratLocally', data);
+      store.dispatch('strat/addStratLocally', data.strat);
     });
 
     this.socket.on('updated-strat', (data: { strat: Strat }) => {
       Log.info('ws::updated', data);
-      store.dispatch('strat/updateStratLocally', data);
+      store.dispatch('strat/updateStratLocally', data.strat);
     });
 
     this.socket.on('deleted-strat', (data: { stratID: string }) => {
       Log.info('ws::deleted', data);
-      store.dispatch('strat/deleteStratLocally', data);
+      store.dispatch('strat/deleteStratLocally', data.stratID);
     });
 
     this.socket.on('created-utility', (data: { utility: Utility }) => {
