@@ -1,5 +1,5 @@
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator';
-import TextInput from '@/components/TextInput/TextInput.vue';
+import TextInput from '@/components/TextInput/TextInput';
 import FormField from '@/utils/FormField';
 import { Validators } from '@/utils/validation';
 @Component({

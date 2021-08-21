@@ -5,7 +5,7 @@ import FloatingButton from '@/components/FloatingButton/FloatingButton.vue';
 import StratForm from '@/components/StratForm/StratForm.vue';
 import StratFilterForm from '@/components/StratFilterForm/StratFilterForm.vue';
 import FilterMenu from '@/components/FilterMenu/FilterMenu.vue';
-import FilterButton from '@/components/FilterButton/FilterButton.vue';
+import FilterButton from '@/components/FilterButton/FilterButton';
 import DrawTool from '@/components/DrawTool/DrawTool.vue';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { appModule, mapModule, stratModule, filterModule, teamModule, authModule } from '@/store/namespaces';

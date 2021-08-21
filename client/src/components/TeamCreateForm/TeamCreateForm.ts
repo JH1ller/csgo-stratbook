@@ -1,6 +1,6 @@
 import FormField from '@/utils/FormField';
-import TextInput from '@/components/TextInput/TextInput.vue';
-import ImageUploader from '@/components/ImageUploader/ImageUploader.vue';
+import TextInput from '@/components/TextInput/TextInput';
+import ImageUploader from '@/components/ImageUploader/ImageUploader';
 import { validateForm, Validators } from '@/utils/validation';
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator';
 

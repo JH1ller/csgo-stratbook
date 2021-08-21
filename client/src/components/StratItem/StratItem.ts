@@ -1,7 +1,7 @@
 import { Component, Prop, Vue, Emit, Ref, Watch } from 'vue-property-decorator';
 import StratEditor from '@/components/StratEditor/StratEditor.vue';
 import IStratEditor from '@/components/StratEditor/StratEditor';
-import TypeBadge from '@/components/TypeBadge/TypeBadge.vue';
+import TypeBadge from '@/components/TypeBadge/TypeBadge';
 import SideBadge from '@/components/SideBadge/SideBadge.vue';
 import { appModule } from '@/store/namespaces';
 import { Strat } from '@/api/models/Strat';

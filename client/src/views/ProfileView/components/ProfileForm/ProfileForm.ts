@@ -1,6 +1,6 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import TextInput from '@/components/TextInput/TextInput.vue';
-import ImageUploader from '@/components/ImageUploader/ImageUploader.vue';
+import TextInput from '@/components/TextInput/TextInput';
+import ImageUploader from '@/components/ImageUploader/ImageUploader';
 import { Player } from '@/api/models/Player';
 import { isEmptyIterable } from '@/utils/isEmptyIterable';
 import FormField from '@/utils/FormField';

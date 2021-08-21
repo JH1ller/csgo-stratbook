@@ -3,7 +3,7 @@ import { Component, Emit, Mixins, Prop, Ref, Watch } from 'vue-property-decorato
 import ImageEditor from 'vue-image-markup';
 import { appModule, mapModule } from '@/store/namespaces';
 import { MapID } from '../MapPicker/MapPicker';
-import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
+import BackdropDialog from '@/components/BackdropDialog/BackdropDialog';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
 import { Strat } from '@/api/models/Strat';
 import VSwatches from 'vue-swatches';

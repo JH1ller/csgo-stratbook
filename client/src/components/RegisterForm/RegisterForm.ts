@@ -1,8 +1,8 @@
 import FormField from '@/utils/FormField';
 import { validateForm, Validators } from '@/utils/validation';
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
-import ImageUploader from '@/components/ImageUploader/ImageUploader.vue';
-import TextInput from '@/components/TextInput/TextInput.vue';
+import ImageUploader from '@/components/ImageUploader/ImageUploader';
+import TextInput from '@/components/TextInput/TextInput';
 
 @Component({
   components: {
