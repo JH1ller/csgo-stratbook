@@ -5,6 +5,6 @@ import { GameMap } from 'src/schemas/enums';
 
 export class GetStrategiesDto {
   @IsEnum(GameMap)
-  @ApiProperty({ example: GameMap.Dust2, enum: GameMap })
+  @ApiProperty({ example: GameMap.Dust2, enum: GameMap, enumName: 'GameMap' })
   public readonly gameMap: GameMap;
 }

@@ -1,14 +1,30 @@
 export enum PlayerSide {
-  CounterTerrorists = 'CT',
-  Terrorists = 'T',
+  CT = 'CT',
+  T = 'T',
 }
 
 export enum GameMap {
-  Dust2 = 'DUST_2',
-  Mirage = 'MIRAGE',
-  Overpass = 'OVERPASS',
-  Nuke = 'NUKE',
-  Vertigo = 'VERTIGO',
-  Inferno = 'INFERNO',
-  Train = 'TRAIN',
+  Dust2 = 'Dust2',
+  Mirage = 'Mirage',
+  Overpass = 'Overpass',
+  Nuke = 'Nuke',
+  Vertigo = 'Vertigo',
+  Inferno = 'Inferno',
+  Train = 'Train',
+  Ancient = 'Ancient',
+
+  Cache = 'Cache',
+  Grind = 'Grind',
+  Mocha = 'Mocha',
+  Militia = 'Militia',
+  Agency = 'Agency',
+  Office = 'Office',
+  Italy = 'Italy',
+  Assault = 'Assault',
+}
+
+export enum TeamUserRole {
+  Owner,
+  Manager,
+  Member,
 }

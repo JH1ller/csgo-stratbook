@@ -1,25 +1,13 @@
-import { Expose } from 'class-transformer';
 import { Types, Document } from 'mongoose';
-import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
-import { ApiProperty } from '@nestjs/swagger';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-export class TeamServerConnection {
-  @Expose()
-  @ApiProperty()
-  public ip?: string;
+import { Utility, UtilitySchema } from './utility.schema';
+import { Strategy, StrategySchema } from './strategy.schema';
+import { TeamUserRole, TeamUserRoleSchema } from './team-user-role.schema';
 
-  @Expose()
-  @ApiProperty()
-  public password?: string;
-}
+import { GameMap } from './enums';
 
-@Schema({
-  timestamps: {
-    // https://mongoosejs.com/docs/guide.html#timestamps
-    createdAt: 'createdAt',
-    updatedAt: 'modifiedAt',
-  },
-})
+@Schema({ timestamps: true })
 export class Team {
   @Prop({
     required: true,
@@ -28,18 +16,14 @@ export class Team {
   })
   public name: string;
 
-  @Prop({
-    maxlength: 300,
-  })
-  public website: string;
+  @Prop({ maxlength: 300 })
+  public website?: string;
 
-  @Prop(
-    raw({
-      ip: { type: String },
-      password: { type: String },
-    })
-  )
-  public server: TeamServerConnection;
+  @Prop({ maxlength: 128 })
+  public serverIp?: string;
+
+  @Prop({ maxlength: 128 })
+  public serverPassword?: string;
 
   @Prop({
     required: true,
@@ -47,35 +31,59 @@ export class Team {
   })
   public joinCode: string;
 
+  /**
+   * minio key
+   */
   @Prop()
-  public avatar: string;
+  public avatar?: string;
 
   /**
-   * renamed from createdBy to owner
+   * active maps which should be displayed in the app
    */
   @Prop({
-    type: Types.ObjectId,
-    ref: 'User',
+    enum: Object.values(GameMap),
+    default: [
+      // current active map pool
+      GameMap.Inferno,
+      GameMap.Mirage,
+      GameMap.Nuke,
+      GameMap.Overpass,
+      GameMap.Dust2,
+      GameMap.Vertigo,
+      GameMap.Ancient,
+    ],
   })
-  public owner: Types.ObjectId;
+  public activeMaps: string[];
+
+  /**
+   * user role descriptor
+   */
+  @Prop({ type: [TeamUserRoleSchema] })
+  public roles: TeamUserRole[];
+
+  /**
+   * Game utilities
+   */
+  @Prop({ type: [UtilitySchema] })
+  public utilities: Utility[];
+
+  /**
+   * Game strategies
+   */
+  @Prop({ type: [StrategySchema] })
+  public strategies: Strategy[];
 
   @Prop()
   public createdAt: Date;
+
+  @Prop()
+  public updatedAt: Date;
 
   @Prop({
     type: Types.ObjectId,
     ref: 'User',
   })
   public modifiedBy: Types.ObjectId;
-
-  @Prop()
-  public modifiedAt: Date;
-
-  @Prop({
-    type: Types.ObjectId,
-    ref: 'User',
-  })
-  public manager: Types.ObjectId;
 }
 
 export type TeamDocument = Team & Document<Types.ObjectId>;

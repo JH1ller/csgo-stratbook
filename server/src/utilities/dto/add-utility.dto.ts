@@ -6,7 +6,7 @@ import { UtilityType, UtilityMouseButton, UtilityMovement } from 'src/schemas/en
 
 export class AddUtilityDto {
   @IsEnum(GameMap)
-  @ApiProperty({ default: GameMap.Dust2, enum: GameMap })
+  @ApiProperty({ default: GameMap.Dust2, enum: GameMap, enumName: 'GameMap' })
   public readonly gameMap: GameMap;
 
   @IsString()
@@ -26,11 +26,11 @@ export class AddUtilityDto {
   public readonly videoLink?: string;
 
   @IsEnum(PlayerSide)
-  @ApiProperty({ default: PlayerSide.CounterTerrorists, enum: PlayerSide })
+  @ApiProperty({ default: PlayerSide.CT, enum: PlayerSide, enumName: 'PlayerSide' })
   public readonly side: PlayerSide;
 
   @IsEnum(UtilityMouseButton)
-  @ApiProperty({ default: UtilityMouseButton.LeftRight, enum: UtilityMouseButton })
+  @ApiProperty({ default: UtilityMouseButton.LeftRight, enum: UtilityMouseButton, enumName: 'UtilityMouseButton' })
   public readonly mouseButton: UtilityMouseButton;
 
   @IsBooleanString()
@@ -38,7 +38,7 @@ export class AddUtilityDto {
   public readonly crouch: boolean;
 
   @IsEnum(UtilityMovement)
-  @ApiProperty({ default: UtilityMovement.Walk, enum: UtilityMovement })
+  @ApiProperty({ default: UtilityMovement.Walk, enum: UtilityMovement, enumName: 'UtilityMovement' })
   public readonly movement: UtilityMovement;
 
   @IsBooleanString()
@@ -46,7 +46,7 @@ export class AddUtilityDto {
   public readonly jump: boolean;
 
   @IsEnum(UtilityType)
-  @ApiProperty({ default: UtilityType.Smoke, enum: UtilityType })
+  @ApiProperty({ default: UtilityType.Smoke, enum: UtilityType, enumName: 'UtilityType' })
   public readonly type: UtilityType;
 
   @IsOptional()

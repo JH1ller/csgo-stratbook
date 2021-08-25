@@ -12,13 +12,6 @@ export class Strategy {
   })
   public gameMap: string;
 
-  @Prop({
-    type: Types.ObjectId,
-    ref: 'Team',
-    required: true,
-  })
-  public team: Types.ObjectId;
-
   @Prop({ type: [StrategyDataSchema] })
   public strategies: StrategyData[];
 }
@@ -26,12 +19,3 @@ export class Strategy {
 export type StrategyDocument = Strategy & Document<Types.ObjectId>;
 
 export const StrategySchema = SchemaFactory.createForClass(Strategy);
-
-// create compound index (team, gameMap)
-StrategySchema.index(
-  {
-    team: 1,
-    gameMap: 1,
-  },
-  { unique: true }
-);

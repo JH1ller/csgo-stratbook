@@ -1,4 +1,4 @@
-import { UserDocument } from './user.schema';
+import { UserDocument } from './schemas/user.schema';
 
 declare global {
   namespace Express {

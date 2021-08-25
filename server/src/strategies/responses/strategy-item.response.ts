@@ -30,12 +30,12 @@ export class StrategyItemResponse {
   public readonly note: string;
 
   @Expose()
-  @ApiProperty({ enum: PlayerSide })
+  @ApiProperty({ enum: PlayerSide, enumName: 'PlayerSide' })
   public readonly side: PlayerSide;
 
   @Expose()
-  @ApiProperty({ enum: StrategyType })
-  public readonly type: StrategyType;
+  @ApiProperty({ enum: StrategyType, enumName: 'StrategyType' })
+  public readonly strategyType: StrategyType;
 
   @Expose()
   @ApiProperty()
@@ -69,7 +69,7 @@ export class StrategyItemResponse {
 
   @Expose()
   @ApiProperty()
-  public readonly modifiedAt: Date;
+  public readonly updatedAt: Date;
 
   public constructor(partial: Partial<StrategyItemResponse>) {
     Object.assign(this, partial);

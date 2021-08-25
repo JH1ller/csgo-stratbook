@@ -1,13 +1,9 @@
 import { Types, Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-@Schema({
-  timestamps: {
-    // https://mongoosejs.com/docs/guide.html#timestamps
-    createdAt: 'createdAt',
-    updatedAt: 'modifiedAt',
-  },
-})
+import { UserRole } from './enums/user-role';
+
+@Schema({ timestamps: true })
 export class User {
   @Prop({
     required: true,
@@ -30,9 +26,7 @@ export class User {
   })
   public password: string;
 
-  @Prop({
-    default: false,
-  })
+  @Prop({ default: false })
   public emailConfirmed: boolean;
 
   /**
@@ -41,32 +35,32 @@ export class User {
   @Prop()
   public avatar?: string;
 
+  /**
+   * user roles used for policy based authorization
+   */
+  @Prop({ type: [String] })
+  public roles: UserRole[];
+
+  /**
+   * optional ref to joined team
+   */
   @Prop({
     type: Types.ObjectId,
     ref: 'Team',
   })
   public team?: Types.ObjectId;
 
+  @Prop({ default: false })
+  public completedTutorial: boolean;
+
   @Prop()
   public createdAt: Date;
 
   @Prop()
-  public modifiedAt: Date;
+  public updatedAt: Date;
 
-  @Prop({
-    default: () => Date.now(),
-  })
+  @Prop({ default: () => Date.now() })
   public lastOnline: Date;
-
-  @Prop({
-    default: false,
-  })
-  public isAdmin: boolean;
-
-  @Prop({
-    default: false,
-  })
-  public completedTutorial: boolean;
 }
 
 export type UserDocument = User & Document<Types.ObjectId>;

@@ -1,18 +1,19 @@
 export enum UtilityType {
-  Flash = 'FLASH',
-  Grenade = 'GRENADE',
-  Smoke = 'SMOKE',
-  Molotov = 'MOLOTOV',
+  Flash = 'Flash',
+  Grenade = 'Grenade',
+  Smoke = 'Smoke',
+  Molotov = 'Molotov',
+  Decoy = 'Decoy',
 }
 
 export enum UtilityMouseButton {
-  Left = 'LEFT',
-  Right = 'RIGHT',
-  LeftRight = 'LEFTRIGHT',
+  Left = 'Left',
+  Right = 'Right',
+  LeftRight = 'LeftRight',
 }
 
 export enum UtilityMovement {
-  Still = 'STILL',
-  Walk = 'WALK',
-  Run = 'RUN',
+  Still = 'Still',
+  Walk = 'Walk',
+  Run = 'Run',
 }

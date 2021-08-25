@@ -90,23 +90,13 @@ export class UsersController implements OnModuleInit {
   }
 
   @Post('/register')
-  @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('avatar'))
-  @ApiBody({ description: 'Register new user', type: RegisterUserDto })
   @ApiCreatedResponse({ type: RegisterUserResponse })
   @ApiBadRequestResponse()
-  public async registerUser(@Body() model: RegisterUserDto, @UploadedFile() file: Express.Multer.File) {
-    let avatar: string;
-    if (file) {
-      avatar = await this.imageProcessorService.uploadImage(file.path, {
-        width: 256,
-        height: 256,
-      });
-    }
-
+  public async registerUser(@Body() model: RegisterUserDto) {
     const { userName, email, password } = model;
 
-    const _id = await this.usersService.createUser(userName, email, password, avatar);
+    const _id = await this.usersService.createUser(userName, email, password);
     const emailToken = await this.usersService.sendVerifyEmailRequest(_id, email, userName);
 
     if (this.mailTransportDisabled) {
@@ -217,6 +207,33 @@ export class UsersController implements OnModuleInit {
 
     // finally update user data by passing our diff object
     await this.usersService.updateUser(user._id, userDiff);
+  }
+
+  /**
+   *
+   * @param file
+   * @param req
+   */
+  @Patch('/update-avatar')
+  @UseGuards(AuthenticatedGuard)
+  @UseInterceptors(FileInterceptor('avatar'))
+  @ApiOkResponse()
+  public async updateAvatar(@UploadedFile() file: Express.Multer.File, @Req() req: Request) {
+    const { user } = req;
+
+    if (file) {
+      const avatar = await this.imageProcessorService.uploadImage(file.path, {
+        width: 256,
+        height: 256,
+      });
+
+      await this.usersService.updateAvatar(user.id, avatar);
+
+      if (user.avatar) {
+        // delete old user avatar from minio bucket
+        await this.minioService.deleteImage(user.avatar);
+      }
+    }
   }
 
   /**

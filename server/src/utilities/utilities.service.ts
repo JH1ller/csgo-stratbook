@@ -5,9 +5,9 @@ import { Types, Model } from 'mongoose';
 import { AddUtilityDto } from './dto/add-utility.dto';
 
 import { Utility, UtilityDocument } from 'src/schemas/utility.schema';
-import { UtilityData, UtilityDataDocument } from 'src/schemas/utility-data.schema';
+import { UtilityEntry, UtilityEntryDocument } from 'src/schemas/utility-entry.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
-import { sortArrayDisplayOrder } from 'src/schemas';
+import { sortArrayDisplayOrder } from 'src/common';
 
 import { GameMap } from 'src/schemas/enums';
 
@@ -40,7 +40,7 @@ export class UtilitiesService {
 
   public async findByTeamIdAndMap(teamId: Types.ObjectId, gameMap: GameMap) {
     const utilities = await this.utilityModel
-      .aggregate<UtilityData>()
+      .aggregate<UtilityEntry>()
       .match({ team: teamId, gameMap })
       .unwind({
         path: '$utilities',
@@ -91,7 +91,7 @@ export class UtilitiesService {
       createdBy: userId,
 
       createdAt: new Date(Date.now()),
-      modifiedAt: new Date(Date.now()),
+      updatedAt: new Date(Date.now()),
       shared: false,
     });
 
@@ -152,7 +152,7 @@ export class UtilitiesService {
    */
   public async updateDisplayPosition(id: Types.ObjectId, oldPosition: number, newPosition: number) {
     const utilities = await this.utilityModel
-      .aggregate<UtilityDataDocument>()
+      .aggregate<UtilityEntryDocument>()
       .match({ _id: id })
       .unwind({
         path: '$utilities',

@@ -23,12 +23,12 @@ export class UpdateStrategyDto {
 
   @IsEnum(PlayerSide)
   @IsOptional()
-  @ApiProperty({ example: PlayerSide.Terrorists, enum: PlayerSide, required: false })
+  @ApiProperty({ example: PlayerSide.T, enum: PlayerSide, enumName: 'PlayerSide', required: false })
   public readonly side?: PlayerSide;
 
   @IsEnum(StrategyType)
   @IsOptional()
-  @ApiProperty({ example: StrategyType.BuyRound, enum: StrategyType, required: false })
+  @ApiProperty({ example: StrategyType.BuyRound, enum: StrategyType, enumName: 'StrategyType', required: false })
   public readonly type?: StrategyType;
 
   @IsBoolean()

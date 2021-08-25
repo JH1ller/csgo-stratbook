@@ -6,7 +6,7 @@ import { StrategyType } from 'src/schemas/enums/strategy';
 
 export class AddStrategyDto {
   @IsEnum(GameMap)
-  @ApiProperty({ example: GameMap.Dust2, enum: GameMap })
+  @ApiProperty({ example: GameMap.Dust2, enum: GameMap, enumName: 'GameMap' })
   public readonly gameMap: GameMap;
 
   @IsString()
@@ -14,11 +14,11 @@ export class AddStrategyDto {
   public readonly name: string;
 
   @IsEnum(StrategyType)
-  @ApiProperty({ example: StrategyType.Pistol, enum: StrategyType })
+  @ApiProperty({ example: StrategyType.Pistol, enum: StrategyType, enumName: 'StrategyType' })
   public readonly type: StrategyType;
 
   @IsEnum(PlayerSide)
-  @ApiProperty({ example: PlayerSide.CounterTerrorists, enum: PlayerSide })
+  @ApiProperty({ example: PlayerSide.CT, enum: PlayerSide, enumName: 'PlayerSide' })
   public readonly side: PlayerSide;
 
   @IsString()

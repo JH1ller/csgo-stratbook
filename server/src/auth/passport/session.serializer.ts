@@ -23,7 +23,6 @@ export class SessionSerializer extends PassportSerializer {
    */
   public serializeUser(user: UserDocument, done: (err: any, id?: any) => void) {
     // only pass id field to passport
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     done(null, user._id.toString());
   }
 

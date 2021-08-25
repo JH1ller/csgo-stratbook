@@ -5,7 +5,7 @@ import { Types, Model } from 'mongoose';
 import SanitizeHtml from 'sanitize-html';
 import * as MinifyHtml from 'html-minifier';
 
-import { sortArrayDisplayOrder } from 'src/schemas';
+import { sortArrayDisplayOrder } from 'src/common';
 import { GameMap } from 'src/schemas/enums';
 import { Strategy, StrategyDocument } from 'src/schemas/strategy.schema';
 import { StrategyData, StrategyDataDocument } from 'src/schemas/strategy-data.schema';
@@ -81,7 +81,7 @@ export class StrategiesService {
 
       name: model.name,
       side: model.side,
-      type: model.type,
+      types: model.type,
       active: true,
       videoLink: model.videoLink,
       shared: false,
@@ -92,7 +92,7 @@ export class StrategiesService {
       createdBy: userId,
 
       createdAt: new Date(Date.now()),
-      modifiedAt: new Date(Date.now()),
+      updatedAt: new Date(Date.now()),
     });
 
     return await document.save();
@@ -160,7 +160,7 @@ export class StrategiesService {
     }
 
     if (model.type) {
-      diff.type = model.type;
+      diff.types = model.type;
     }
 
     if (model.active) {

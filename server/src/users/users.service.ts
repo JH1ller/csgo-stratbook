@@ -81,14 +81,13 @@ export class UsersService {
    * @param avatar url to minio storage
    * @returns user document id
    */
-  public async createUser(userName: string, email: string, password: string, avatar?: string) {
+  public async createUser(userName: string, email: string, password: string) {
     const hashedPassword = await this.hashPassword(password);
 
     const createdUser = new this.userModel({
       userName,
       email,
       password: hashedPassword,
-      avatar,
     });
 
     if (this.createUserWithConfirmedMail) {
@@ -133,7 +132,11 @@ export class UsersService {
   }
 
   public updateUser(id: Types.ObjectId, userData: Partial<User>) {
-    return this.userModel.updateOne({ _id: id }, userData);
+    return this.userModel.updateOne({ _id: id }, userData).exec();
+  }
+
+  public async updateAvatar(id: Types.ObjectId, avatar: string) {
+    await this.userModel.updateOne({ _id: id }, { avatar }).exec();
   }
 
   public async sendVerifyEmailRequest(id: Types.ObjectId, email: string, userName: string) {

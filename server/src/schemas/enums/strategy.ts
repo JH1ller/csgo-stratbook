@@ -1,5 +1,5 @@
 export enum StrategyType {
-  Pistol = 'PISTOL',
-  Force = 'FORCE',
-  BuyRound = 'BUYROUND',
+  Pistol = 'Pistol',
+  Force = 'Force',
+  BuyRound = 'BuyRound',
 }

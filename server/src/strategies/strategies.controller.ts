@@ -87,7 +87,7 @@ export class StrategiesController {
   @Patch('/position')
   @ApiOkResponse({ description: 'Moves the selected strategy from oldPosition to newPosition' })
   @ApiBadRequestResponse()
-  public async updateUtilityPosition(@Req() req: Request, @Body() model: UpdateStrategyPositionDto) {
+  public async updateStrategyPosition(@Req() req: Request, @Body() model: UpdateStrategyPositionDto) {
     const { oldPosition, newPosition } = model;
     const id = new Types.ObjectId(model.id);
     const teamId = req.user.team;

@@ -5,20 +5,17 @@ import { PlayerSide } from './enums';
 import { UtilityType, UtilityMouseButton, UtilityMovement } from './enums/utility';
 
 @Schema({
-  timestamps: {
-    createdAt: 'createdAt',
-    updatedAt: 'modifiedAt',
-  },
+  timestamps: true,
 })
-export class UtilityData {
-  /**
-   * display position for frontend
-   */
-  @Prop({ required: true })
-  public displayPosition: number;
-
+export class UtilityEntry {
   @Prop({ required: true })
   public name: string;
+
+  @Prop({ maxlength: 200 })
+  public description: string;
+
+  @Prop({ maxlength: 300 })
+  public videoLink: string;
 
   @Prop({
     required: true,
@@ -51,20 +48,20 @@ export class UtilityData {
   })
   public movement: string;
 
+  /**
+   * display position for frontend
+   */
+  @Prop({ required: true })
+  public displayPosition: number;
+
   @Prop({ type: [String] })
   public images: string[];
-
-  @Prop({ maxlength: 200 })
-  public description: string;
 
   @Prop({
     enum: Object.values(PlayerSide),
     required: true,
   })
   public side: string;
-
-  @Prop({ maxlength: 300 })
-  public videoLink: string;
 
   @Prop({
     type: Types.ObjectId,
@@ -73,16 +70,16 @@ export class UtilityData {
   })
   public createdBy: Types.ObjectId;
 
+  @Prop({ default: false })
+  public shared: boolean;
+
   @Prop()
   public createdAt: Date;
 
   @Prop()
-  public modifiedAt: Date;
-
-  @Prop({ default: false })
-  public shared: boolean;
+  public updatedAt: Date;
 }
 
-export type UtilityDataDocument = UtilityData & Document<Types.ObjectId>;
+export type UtilityEntryDocument = UtilityEntry & Document<Types.ObjectId>;
 
-export const UtilityDataSchema = SchemaFactory.createForClass(UtilityData);
+export const UtilityEntrySchema = SchemaFactory.createForClass(UtilityEntry);

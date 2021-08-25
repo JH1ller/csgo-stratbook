@@ -2,8 +2,6 @@ import { Expose, Type } from 'class-transformer';
 import { Types } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { TeamServerConnection } from 'src/schemas/team.schema';
-
 export class GetTeamResponse {
   @Expose({ name: 'id' })
   @Type(() => String)
@@ -15,20 +13,23 @@ export class GetTeamResponse {
   public name: string;
 
   @Expose()
-  @ApiProperty()
-  public website: string;
+  @ApiProperty({ required: false })
+  public website?: string;
 
   @Expose()
-  @Type(() => TeamServerConnection)
-  @ApiProperty()
-  public server: TeamServerConnection;
+  @ApiProperty({ required: false })
+  public serviceIp?: string;
+
+  @Expose()
+  @ApiProperty({ required: false })
+  public serverPassword?: string;
 
   @Expose()
   @ApiProperty()
   public joinCode: string;
 
   @Expose()
-  @ApiProperty()
+  @ApiProperty({ required: false })
   public avatar: string;
 
   @Expose()

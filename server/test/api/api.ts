@@ -13,11 +13,3271 @@
  */
 
 
+import { Configuration } from './configuration';
+import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
+// Some imports not used depending on template conditions
+// @ts-ignore
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+// @ts-ignore
+import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
 
-export * from './apis/administration-api';
-export * from './apis/auth-api';
-export * from './apis/strategies-api';
-export * from './apis/teams-api';
-export * from './apis/users-api';
-export * from './apis/utilities-api';
+/**
+ * 
+ * @export
+ * @interface AddStrategyDto
+ */
+export interface AddStrategyDto {
+    /**
+     * 
+     * @type {GameMap}
+     * @memberof AddStrategyDto
+     */
+    gameMap: GameMap;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddStrategyDto
+     */
+    name: string;
+    /**
+     * 
+     * @type {StrategyType}
+     * @memberof AddStrategyDto
+     */
+    type: StrategyType;
+    /**
+     * 
+     * @type {PlayerSide}
+     * @memberof AddStrategyDto
+     */
+    side: PlayerSide;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddStrategyDto
+     */
+    note?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddStrategyDto
+     */
+    videoLink?: string;
+}
+/**
+ * 
+ * @export
+ * @interface DeleteTeamDto
+ */
+export interface DeleteTeamDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof DeleteTeamDto
+     */
+    teamName: string;
+}
+/**
+ * 
+ * @export
+ * @interface DeleteUserDto
+ */
+export interface DeleteUserDto {
+    /**
+     * Safety measure to prevent accidental deletion.
+     * @type {string}
+     * @memberof DeleteUserDto
+     */
+    userName: string;
+}
+/**
+ * 
+ * @export
+ * @interface DeleteUtilityDto
+ */
+export interface DeleteUtilityDto {
+    /**
+     * utility sub-document Id
+     * @type {string}
+     * @memberof DeleteUtilityDto
+     */
+    id: string;
+}
+/**
+ * 
+ * @export
+ * @interface ForgotPasswordDto
+ */
+export interface ForgotPasswordDto {
+    /**
+     * user mail
+     * @type {string}
+     * @memberof ForgotPasswordDto
+     */
+    email: string;
+    /**
+     * hcaptcha response code
+     * @type {string}
+     * @memberof ForgotPasswordDto
+     */
+    captchaResponse: string;
+}
+/**
+ * 
+ * @export
+ * @interface ForgotPasswordResponse
+ */
+export interface ForgotPasswordResponse {
+    /**
+     * debug result: only emitted when mail transport is disabled
+     * @type {string}
+     * @memberof ForgotPasswordResponse
+     */
+    token?: string;
+}
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+export enum GameMap {
+    Dust2 = 'DUST_2',
+    Mirage = 'MIRAGE',
+    Overpass = 'OVERPASS',
+    Nuke = 'NUKE',
+    Vertigo = 'VERTIGO',
+    Inferno = 'INFERNO',
+    Train = 'TRAIN'
+}
+
+/**
+ * 
+ * @export
+ * @interface GetTeamResponse
+ */
+export interface GetTeamResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof GetTeamResponse
+     */
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetTeamResponse
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetTeamResponse
+     */
+    website: string;
+    /**
+     * 
+     * @type {TeamServerConnection}
+     * @memberof GetTeamResponse
+     */
+    server: TeamServerConnection;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetTeamResponse
+     */
+    joinCode: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetTeamResponse
+     */
+    avatar: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetTeamResponse
+     */
+    manager: string;
+}
+/**
+ * 
+ * @export
+ * @interface GetUserResponse
+ */
+export interface GetUserResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof GetUserResponse
+     */
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetUserResponse
+     */
+    email: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetUserResponse
+     */
+    userName: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetUserResponse
+     */
+    avatar: string;
+    /**
+     * 
+     * @type {GetTeamResponse}
+     * @memberof GetUserResponse
+     */
+    team: GetTeamResponse;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof GetUserResponse
+     */
+    completedTutorial: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface GetUtilityCratedByResponse
+ */
+export interface GetUtilityCratedByResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof GetUtilityCratedByResponse
+     */
+    userName: string;
+}
+/**
+ * 
+ * @export
+ * @interface GetUtilityResponse
+ */
+export interface GetUtilityResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof GetUtilityResponse
+     */
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetUtilityResponse
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetUtilityResponse
+     */
+    description: string;
+    /**
+     * 
+     * @type {PlayerSide}
+     * @memberof GetUtilityResponse
+     */
+    playerSide: PlayerSide;
+    /**
+     * 
+     * @type {UtilityType}
+     * @memberof GetUtilityResponse
+     */
+    type: UtilityType;
+    /**
+     * 
+     * @type {UtilityMouseButton}
+     * @memberof GetUtilityResponse
+     */
+    mouseButton: UtilityMouseButton;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof GetUtilityResponse
+     */
+    crouch: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof GetUtilityResponse
+     */
+    jump: boolean;
+    /**
+     * 
+     * @type {UtilityMovement}
+     * @memberof GetUtilityResponse
+     */
+    movement: UtilityMovement;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof GetUtilityResponse
+     */
+    images: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetUtilityResponse
+     */
+    videoLink: string;
+    /**
+     * 
+     * @type {GetUtilityCratedByResponse}
+     * @memberof GetUtilityResponse
+     */
+    createdBy: GetUtilityCratedByResponse;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetUtilityResponse
+     */
+    createdAt: string;
+}
+/**
+ * 
+ * @export
+ * @interface JoinTeamDto
+ */
+export interface JoinTeamDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof JoinTeamDto
+     */
+    joinCode: string;
+}
+/**
+ * 
+ * @export
+ * @interface LocalSignInDto
+ */
+export interface LocalSignInDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof LocalSignInDto
+     */
+    email: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof LocalSignInDto
+     */
+    password: string;
+}
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+export enum PlayerSide {
+    Ct = 'CT',
+    T = 'T'
+}
+
+/**
+ * 
+ * @export
+ * @interface ProfileUpdateDto
+ */
+export interface ProfileUpdateDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof ProfileUpdateDto
+     */
+    userName?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProfileUpdateDto
+     */
+    email?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProfileUpdateDto
+     */
+    password?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ProfileUpdateDto
+     */
+    completedTutorial?: boolean;
+    /**
+     * true if user name should be replaced in strategies
+     * @type {boolean}
+     * @memberof ProfileUpdateDto
+     */
+    updateStrategies?: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface RegisterUserResponse
+ */
+export interface RegisterUserResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof RegisterUserResponse
+     */
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RegisterUserResponse
+     */
+    email: string;
+}
+/**
+ * 
+ * @export
+ * @interface ResetPasswordDto
+ */
+export interface ResetPasswordDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof ResetPasswordDto
+     */
+    password: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResetPasswordDto
+     */
+    token: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResetPasswordDto
+     */
+    captchaResponse: string;
+}
+/**
+ * 
+ * @export
+ * @interface StrategyItemResponse
+ */
+export interface StrategyItemResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof StrategyItemResponse
+     */
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StrategyItemResponse
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StrategyItemResponse
+     */
+    note: string;
+    /**
+     * 
+     * @type {PlayerSide}
+     * @memberof StrategyItemResponse
+     */
+    side: PlayerSide;
+    /**
+     * 
+     * @type {StrategyType}
+     * @memberof StrategyItemResponse
+     */
+    strategyType: StrategyType;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof StrategyItemResponse
+     */
+    active: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof StrategyItemResponse
+     */
+    videoLink: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof StrategyItemResponse
+     */
+    shared: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof StrategyItemResponse
+     */
+    content: string;
+    /**
+     * 
+     * @type {StrategyItemUserResponse}
+     * @memberof StrategyItemResponse
+     */
+    modifiedBy: StrategyItemUserResponse;
+    /**
+     * 
+     * @type {StrategyItemUserResponse}
+     * @memberof StrategyItemResponse
+     */
+    createdBy: StrategyItemUserResponse;
+    /**
+     * 
+     * @type {string}
+     * @memberof StrategyItemResponse
+     */
+    createdAt: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StrategyItemResponse
+     */
+    modifiedAt: string;
+}
+/**
+ * 
+ * @export
+ * @interface StrategyItemUserResponse
+ */
+export interface StrategyItemUserResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof StrategyItemUserResponse
+     */
+    userName: string;
+}
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+export enum StrategyType {
+    Pistol = 'PISTOL',
+    Force = 'FORCE',
+    Buyround = 'BUYROUND'
+}
+
+/**
+ * 
+ * @export
+ * @interface TeamServerConnection
+ */
+export interface TeamServerConnection {
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamServerConnection
+     */
+    ip: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamServerConnection
+     */
+    password: string;
+}
+/**
+ * 
+ * @export
+ * @interface UpdateStrategyDto
+ */
+export interface UpdateStrategyDto {
+    /**
+     * strategy sub-document id
+     * @type {string}
+     * @memberof UpdateStrategyDto
+     */
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateStrategyDto
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateStrategyDto
+     */
+    note?: string;
+    /**
+     * 
+     * @type {PlayerSide}
+     * @memberof UpdateStrategyDto
+     */
+    side?: PlayerSide;
+    /**
+     * 
+     * @type {StrategyType}
+     * @memberof UpdateStrategyDto
+     */
+    type?: StrategyType;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UpdateStrategyDto
+     */
+    active?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateStrategyDto
+     */
+    videoLink?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateStrategyDto
+     */
+    content?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UpdateStrategyDto
+     */
+    shared?: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface UpdateStrategyPositionDto
+ */
+export interface UpdateStrategyPositionDto {
+    /**
+     * Utility id
+     * @type {string}
+     * @memberof UpdateStrategyPositionDto
+     */
+    id: string;
+    /**
+     * Old position where the utility was located
+     * @type {number}
+     * @memberof UpdateStrategyPositionDto
+     */
+    oldPosition: number;
+    /**
+     * New position where the utility should be placed at
+     * @type {number}
+     * @memberof UpdateStrategyPositionDto
+     */
+    newPosition: number;
+}
+/**
+ * 
+ * @export
+ * @interface UpdateUtilityPositionDto
+ */
+export interface UpdateUtilityPositionDto {
+    /**
+     * Utility id
+     * @type {string}
+     * @memberof UpdateUtilityPositionDto
+     */
+    id: string;
+    /**
+     * Old position where the utility was located
+     * @type {number}
+     * @memberof UpdateUtilityPositionDto
+     */
+    oldPosition: number;
+    /**
+     * New position where the utility should be placed at
+     * @type {number}
+     * @memberof UpdateUtilityPositionDto
+     */
+    newPosition: number;
+}
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+export enum UtilityMouseButton {
+    Left = 'LEFT',
+    Right = 'RIGHT',
+    Leftright = 'LEFTRIGHT'
+}
+
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+export enum UtilityMovement {
+    Still = 'STILL',
+    Walk = 'WALK',
+    Run = 'RUN'
+}
+
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+export enum UtilityType {
+    Flash = 'FLASH',
+    Grenade = 'GRENADE',
+    Smoke = 'SMOKE',
+    Molotov = 'MOLOTOV'
+}
+
+
+/**
+ * AdministrationApi - axios parameter creator
+ * @export
+ */
+export const AdministrationApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        administrationControllerGetNumber: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/administration`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * AdministrationApi - functional programming interface
+ * @export
+ */
+export const AdministrationApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = AdministrationApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async administrationControllerGetNumber(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.administrationControllerGetNumber(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * AdministrationApi - factory interface
+ * @export
+ */
+export const AdministrationApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = AdministrationApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        administrationControllerGetNumber(options?: any): AxiosPromise<void> {
+            return localVarFp.administrationControllerGetNumber(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * AdministrationApi - object-oriented interface
+ * @export
+ * @class AdministrationApi
+ * @extends {BaseAPI}
+ */
+export class AdministrationApi extends BaseAPI {
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdministrationApi
+     */
+    public administrationControllerGetNumber(options?: any) {
+        return AdministrationApiFp(this.configuration).administrationControllerGetNumber(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * AuthApi - axios parameter creator
+ * @export
+ */
+export const AuthApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {LocalSignInDto} localSignInDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authControllerLogin: async (localSignInDto: LocalSignInDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'localSignInDto' is not null or undefined
+            assertParamExists('authControllerLogin', 'localSignInDto', localSignInDto)
+            const localVarPath = `/api/auth/local/signin`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(localSignInDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authControllerLogout: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/auth/logout`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * AuthApi - functional programming interface
+ * @export
+ */
+export const AuthApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = AuthApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {LocalSignInDto} localSignInDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async authControllerLogin(localSignInDto: LocalSignInDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.authControllerLogin(localSignInDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async authControllerLogout(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.authControllerLogout(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * AuthApi - factory interface
+ * @export
+ */
+export const AuthApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = AuthApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {LocalSignInDto} localSignInDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authControllerLogin(localSignInDto: LocalSignInDto, options?: any): AxiosPromise<void> {
+            return localVarFp.authControllerLogin(localSignInDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authControllerLogout(options?: any): AxiosPromise<void> {
+            return localVarFp.authControllerLogout(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for authControllerLogin operation in AuthApi.
+ * @export
+ * @interface AuthApiAuthControllerLoginRequest
+ */
+export interface AuthApiAuthControllerLoginRequest {
+    /**
+     * 
+     * @type {LocalSignInDto}
+     * @memberof AuthApiAuthControllerLogin
+     */
+    readonly localSignInDto: LocalSignInDto
+}
+
+/**
+ * AuthApi - object-oriented interface
+ * @export
+ * @class AuthApi
+ * @extends {BaseAPI}
+ */
+export class AuthApi extends BaseAPI {
+    /**
+     * 
+     * @param {AuthApiAuthControllerLoginRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public authControllerLogin(requestParameters: AuthApiAuthControllerLoginRequest, options?: any) {
+        return AuthApiFp(this.configuration).authControllerLogin(requestParameters.localSignInDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public authControllerLogout(options?: any) {
+        return AuthApiFp(this.configuration).authControllerLogout(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * StrategiesApi - axios parameter creator
+ * @export
+ */
+export const StrategiesApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {string} id Strategy id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        strategiesControllerAddSharedStrategy: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('strategiesControllerAddSharedStrategy', 'id', id)
+            const localVarPath = `/api/strategies/share/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {AddStrategyDto} addStrategyDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        strategiesControllerAddStrategy: async (addStrategyDto: AddStrategyDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'addStrategyDto' is not null or undefined
+            assertParamExists('strategiesControllerAddStrategy', 'addStrategyDto', addStrategyDto)
+            const localVarPath = `/api/strategies`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(addStrategyDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id Strategy id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        strategiesControllerDeleteStrategy: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('strategiesControllerDeleteStrategy', 'id', id)
+            const localVarPath = `/api/strategies/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {GameMap} gameMap 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        strategiesControllerGetStrategy: async (gameMap: GameMap, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'gameMap' is not null or undefined
+            assertParamExists('strategiesControllerGetStrategy', 'gameMap', gameMap)
+            const localVarPath = `/api/strategies/{gameMap}`
+                .replace(`{${"gameMap"}}`, encodeURIComponent(String(gameMap)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {UpdateStrategyDto} updateStrategyDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        strategiesControllerUpdateStrategy: async (updateStrategyDto: UpdateStrategyDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'updateStrategyDto' is not null or undefined
+            assertParamExists('strategiesControllerUpdateStrategy', 'updateStrategyDto', updateStrategyDto)
+            const localVarPath = `/api/strategies`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateStrategyDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {UpdateStrategyPositionDto} updateStrategyPositionDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        strategiesControllerUpdateUtilityPosition: async (updateStrategyPositionDto: UpdateStrategyPositionDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'updateStrategyPositionDto' is not null or undefined
+            assertParamExists('strategiesControllerUpdateUtilityPosition', 'updateStrategyPositionDto', updateStrategyPositionDto)
+            const localVarPath = `/api/strategies/position`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateStrategyPositionDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * StrategiesApi - functional programming interface
+ * @export
+ */
+export const StrategiesApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = StrategiesApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {string} id Strategy id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async strategiesControllerAddSharedStrategy(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.strategiesControllerAddSharedStrategy(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {AddStrategyDto} addStrategyDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async strategiesControllerAddStrategy(addStrategyDto: AddStrategyDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StrategyItemResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.strategiesControllerAddStrategy(addStrategyDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id Strategy id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async strategiesControllerDeleteStrategy(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.strategiesControllerDeleteStrategy(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {GameMap} gameMap 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async strategiesControllerGetStrategy(gameMap: GameMap, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<StrategyItemResponse>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.strategiesControllerGetStrategy(gameMap, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {UpdateStrategyDto} updateStrategyDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async strategiesControllerUpdateStrategy(updateStrategyDto: UpdateStrategyDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.strategiesControllerUpdateStrategy(updateStrategyDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {UpdateStrategyPositionDto} updateStrategyPositionDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async strategiesControllerUpdateUtilityPosition(updateStrategyPositionDto: UpdateStrategyPositionDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.strategiesControllerUpdateUtilityPosition(updateStrategyPositionDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * StrategiesApi - factory interface
+ * @export
+ */
+export const StrategiesApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = StrategiesApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {string} id Strategy id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        strategiesControllerAddSharedStrategy(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.strategiesControllerAddSharedStrategy(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {AddStrategyDto} addStrategyDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        strategiesControllerAddStrategy(addStrategyDto: AddStrategyDto, options?: any): AxiosPromise<StrategyItemResponse> {
+            return localVarFp.strategiesControllerAddStrategy(addStrategyDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id Strategy id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        strategiesControllerDeleteStrategy(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.strategiesControllerDeleteStrategy(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {GameMap} gameMap 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        strategiesControllerGetStrategy(gameMap: GameMap, options?: any): AxiosPromise<Array<StrategyItemResponse>> {
+            return localVarFp.strategiesControllerGetStrategy(gameMap, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {UpdateStrategyDto} updateStrategyDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        strategiesControllerUpdateStrategy(updateStrategyDto: UpdateStrategyDto, options?: any): AxiosPromise<void> {
+            return localVarFp.strategiesControllerUpdateStrategy(updateStrategyDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {UpdateStrategyPositionDto} updateStrategyPositionDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        strategiesControllerUpdateUtilityPosition(updateStrategyPositionDto: UpdateStrategyPositionDto, options?: any): AxiosPromise<void> {
+            return localVarFp.strategiesControllerUpdateUtilityPosition(updateStrategyPositionDto, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for strategiesControllerAddSharedStrategy operation in StrategiesApi.
+ * @export
+ * @interface StrategiesApiStrategiesControllerAddSharedStrategyRequest
+ */
+export interface StrategiesApiStrategiesControllerAddSharedStrategyRequest {
+    /**
+     * Strategy id
+     * @type {string}
+     * @memberof StrategiesApiStrategiesControllerAddSharedStrategy
+     */
+    readonly id: string
+}
+
+/**
+ * Request parameters for strategiesControllerAddStrategy operation in StrategiesApi.
+ * @export
+ * @interface StrategiesApiStrategiesControllerAddStrategyRequest
+ */
+export interface StrategiesApiStrategiesControllerAddStrategyRequest {
+    /**
+     * 
+     * @type {AddStrategyDto}
+     * @memberof StrategiesApiStrategiesControllerAddStrategy
+     */
+    readonly addStrategyDto: AddStrategyDto
+}
+
+/**
+ * Request parameters for strategiesControllerDeleteStrategy operation in StrategiesApi.
+ * @export
+ * @interface StrategiesApiStrategiesControllerDeleteStrategyRequest
+ */
+export interface StrategiesApiStrategiesControllerDeleteStrategyRequest {
+    /**
+     * Strategy id
+     * @type {string}
+     * @memberof StrategiesApiStrategiesControllerDeleteStrategy
+     */
+    readonly id: string
+}
+
+/**
+ * Request parameters for strategiesControllerGetStrategy operation in StrategiesApi.
+ * @export
+ * @interface StrategiesApiStrategiesControllerGetStrategyRequest
+ */
+export interface StrategiesApiStrategiesControllerGetStrategyRequest {
+    /**
+     * 
+     * @type {GameMap}
+     * @memberof StrategiesApiStrategiesControllerGetStrategy
+     */
+    readonly gameMap: GameMap
+}
+
+/**
+ * Request parameters for strategiesControllerUpdateStrategy operation in StrategiesApi.
+ * @export
+ * @interface StrategiesApiStrategiesControllerUpdateStrategyRequest
+ */
+export interface StrategiesApiStrategiesControllerUpdateStrategyRequest {
+    /**
+     * 
+     * @type {UpdateStrategyDto}
+     * @memberof StrategiesApiStrategiesControllerUpdateStrategy
+     */
+    readonly updateStrategyDto: UpdateStrategyDto
+}
+
+/**
+ * Request parameters for strategiesControllerUpdateUtilityPosition operation in StrategiesApi.
+ * @export
+ * @interface StrategiesApiStrategiesControllerUpdateUtilityPositionRequest
+ */
+export interface StrategiesApiStrategiesControllerUpdateUtilityPositionRequest {
+    /**
+     * 
+     * @type {UpdateStrategyPositionDto}
+     * @memberof StrategiesApiStrategiesControllerUpdateUtilityPosition
+     */
+    readonly updateStrategyPositionDto: UpdateStrategyPositionDto
+}
+
+/**
+ * StrategiesApi - object-oriented interface
+ * @export
+ * @class StrategiesApi
+ * @extends {BaseAPI}
+ */
+export class StrategiesApi extends BaseAPI {
+    /**
+     * 
+     * @param {StrategiesApiStrategiesControllerAddSharedStrategyRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StrategiesApi
+     */
+    public strategiesControllerAddSharedStrategy(requestParameters: StrategiesApiStrategiesControllerAddSharedStrategyRequest, options?: any) {
+        return StrategiesApiFp(this.configuration).strategiesControllerAddSharedStrategy(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {StrategiesApiStrategiesControllerAddStrategyRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StrategiesApi
+     */
+    public strategiesControllerAddStrategy(requestParameters: StrategiesApiStrategiesControllerAddStrategyRequest, options?: any) {
+        return StrategiesApiFp(this.configuration).strategiesControllerAddStrategy(requestParameters.addStrategyDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {StrategiesApiStrategiesControllerDeleteStrategyRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StrategiesApi
+     */
+    public strategiesControllerDeleteStrategy(requestParameters: StrategiesApiStrategiesControllerDeleteStrategyRequest, options?: any) {
+        return StrategiesApiFp(this.configuration).strategiesControllerDeleteStrategy(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {StrategiesApiStrategiesControllerGetStrategyRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StrategiesApi
+     */
+    public strategiesControllerGetStrategy(requestParameters: StrategiesApiStrategiesControllerGetStrategyRequest, options?: any) {
+        return StrategiesApiFp(this.configuration).strategiesControllerGetStrategy(requestParameters.gameMap, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {StrategiesApiStrategiesControllerUpdateStrategyRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StrategiesApi
+     */
+    public strategiesControllerUpdateStrategy(requestParameters: StrategiesApiStrategiesControllerUpdateStrategyRequest, options?: any) {
+        return StrategiesApiFp(this.configuration).strategiesControllerUpdateStrategy(requestParameters.updateStrategyDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {StrategiesApiStrategiesControllerUpdateUtilityPositionRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StrategiesApi
+     */
+    public strategiesControllerUpdateUtilityPosition(requestParameters: StrategiesApiStrategiesControllerUpdateUtilityPositionRequest, options?: any) {
+        return StrategiesApiFp(this.configuration).strategiesControllerUpdateUtilityPosition(requestParameters.updateStrategyPositionDto, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * TeamsApi - axios parameter creator
+ * @export
+ */
+export const TeamsApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {string} name 
+         * @param {string} website 
+         * @param {string} [serverIp] 
+         * @param {string} [serverPassword] 
+         * @param {any} [avatar] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        teamsControllerCreateTeam: async (name: string, website: string, serverIp?: string, serverPassword?: string, avatar?: any, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('teamsControllerCreateTeam', 'name', name)
+            // verify required parameter 'website' is not null or undefined
+            assertParamExists('teamsControllerCreateTeam', 'website', website)
+            const localVarPath = `/api/teams/create`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
+
+
+            if (name !== undefined) { 
+                localVarFormParams.append('name', name as any);
+            }
+    
+            if (website !== undefined) { 
+                localVarFormParams.append('website', website as any);
+            }
+    
+            if (serverIp !== undefined) { 
+                localVarFormParams.append('serverIp', serverIp as any);
+            }
+    
+            if (serverPassword !== undefined) { 
+                localVarFormParams.append('serverPassword', serverPassword as any);
+            }
+    
+            if (avatar !== undefined) { 
+                localVarFormParams.append('avatar', avatar as any);
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {DeleteTeamDto} deleteTeamDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        teamsControllerDeleteTeam: async (deleteTeamDto: DeleteTeamDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'deleteTeamDto' is not null or undefined
+            assertParamExists('teamsControllerDeleteTeam', 'deleteTeamDto', deleteTeamDto)
+            const localVarPath = `/api/teams/delete`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(deleteTeamDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        teamsControllerGetPlayers: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/teams/players`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        teamsControllerGetTeamInfo: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/teams`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {JoinTeamDto} joinTeamDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        teamsControllerJoinTeam: async (joinTeamDto: JoinTeamDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'joinTeamDto' is not null or undefined
+            assertParamExists('teamsControllerJoinTeam', 'joinTeamDto', joinTeamDto)
+            const localVarPath = `/api/teams/join`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(joinTeamDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        teamsControllerLeaveTeam: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/teams/leave`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * TeamsApi - functional programming interface
+ * @export
+ */
+export const TeamsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = TeamsApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {string} name 
+         * @param {string} website 
+         * @param {string} [serverIp] 
+         * @param {string} [serverPassword] 
+         * @param {any} [avatar] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async teamsControllerCreateTeam(name: string, website: string, serverIp?: string, serverPassword?: string, avatar?: any, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.teamsControllerCreateTeam(name, website, serverIp, serverPassword, avatar, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {DeleteTeamDto} deleteTeamDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async teamsControllerDeleteTeam(deleteTeamDto: DeleteTeamDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.teamsControllerDeleteTeam(deleteTeamDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async teamsControllerGetPlayers(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.teamsControllerGetPlayers(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async teamsControllerGetTeamInfo(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetTeamResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.teamsControllerGetTeamInfo(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {JoinTeamDto} joinTeamDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async teamsControllerJoinTeam(joinTeamDto: JoinTeamDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.teamsControllerJoinTeam(joinTeamDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async teamsControllerLeaveTeam(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.teamsControllerLeaveTeam(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * TeamsApi - factory interface
+ * @export
+ */
+export const TeamsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = TeamsApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {string} name 
+         * @param {string} website 
+         * @param {string} [serverIp] 
+         * @param {string} [serverPassword] 
+         * @param {any} [avatar] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        teamsControllerCreateTeam(name: string, website: string, serverIp?: string, serverPassword?: string, avatar?: any, options?: any): AxiosPromise<void> {
+            return localVarFp.teamsControllerCreateTeam(name, website, serverIp, serverPassword, avatar, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {DeleteTeamDto} deleteTeamDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        teamsControllerDeleteTeam(deleteTeamDto: DeleteTeamDto, options?: any): AxiosPromise<void> {
+            return localVarFp.teamsControllerDeleteTeam(deleteTeamDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        teamsControllerGetPlayers(options?: any): AxiosPromise<void> {
+            return localVarFp.teamsControllerGetPlayers(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        teamsControllerGetTeamInfo(options?: any): AxiosPromise<GetTeamResponse> {
+            return localVarFp.teamsControllerGetTeamInfo(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {JoinTeamDto} joinTeamDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        teamsControllerJoinTeam(joinTeamDto: JoinTeamDto, options?: any): AxiosPromise<void> {
+            return localVarFp.teamsControllerJoinTeam(joinTeamDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        teamsControllerLeaveTeam(options?: any): AxiosPromise<void> {
+            return localVarFp.teamsControllerLeaveTeam(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for teamsControllerCreateTeam operation in TeamsApi.
+ * @export
+ * @interface TeamsApiTeamsControllerCreateTeamRequest
+ */
+export interface TeamsApiTeamsControllerCreateTeamRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamsApiTeamsControllerCreateTeam
+     */
+    readonly name: string
+
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamsApiTeamsControllerCreateTeam
+     */
+    readonly website: string
+
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamsApiTeamsControllerCreateTeam
+     */
+    readonly serverIp?: string
+
+    /**
+     * 
+     * @type {string}
+     * @memberof TeamsApiTeamsControllerCreateTeam
+     */
+    readonly serverPassword?: string
+
+    /**
+     * 
+     * @type {any}
+     * @memberof TeamsApiTeamsControllerCreateTeam
+     */
+    readonly avatar?: any
+}
+
+/**
+ * Request parameters for teamsControllerDeleteTeam operation in TeamsApi.
+ * @export
+ * @interface TeamsApiTeamsControllerDeleteTeamRequest
+ */
+export interface TeamsApiTeamsControllerDeleteTeamRequest {
+    /**
+     * 
+     * @type {DeleteTeamDto}
+     * @memberof TeamsApiTeamsControllerDeleteTeam
+     */
+    readonly deleteTeamDto: DeleteTeamDto
+}
+
+/**
+ * Request parameters for teamsControllerJoinTeam operation in TeamsApi.
+ * @export
+ * @interface TeamsApiTeamsControllerJoinTeamRequest
+ */
+export interface TeamsApiTeamsControllerJoinTeamRequest {
+    /**
+     * 
+     * @type {JoinTeamDto}
+     * @memberof TeamsApiTeamsControllerJoinTeam
+     */
+    readonly joinTeamDto: JoinTeamDto
+}
+
+/**
+ * TeamsApi - object-oriented interface
+ * @export
+ * @class TeamsApi
+ * @extends {BaseAPI}
+ */
+export class TeamsApi extends BaseAPI {
+    /**
+     * 
+     * @param {TeamsApiTeamsControllerCreateTeamRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TeamsApi
+     */
+    public teamsControllerCreateTeam(requestParameters: TeamsApiTeamsControllerCreateTeamRequest, options?: any) {
+        return TeamsApiFp(this.configuration).teamsControllerCreateTeam(requestParameters.name, requestParameters.website, requestParameters.serverIp, requestParameters.serverPassword, requestParameters.avatar, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {TeamsApiTeamsControllerDeleteTeamRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TeamsApi
+     */
+    public teamsControllerDeleteTeam(requestParameters: TeamsApiTeamsControllerDeleteTeamRequest, options?: any) {
+        return TeamsApiFp(this.configuration).teamsControllerDeleteTeam(requestParameters.deleteTeamDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TeamsApi
+     */
+    public teamsControllerGetPlayers(options?: any) {
+        return TeamsApiFp(this.configuration).teamsControllerGetPlayers(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TeamsApi
+     */
+    public teamsControllerGetTeamInfo(options?: any) {
+        return TeamsApiFp(this.configuration).teamsControllerGetTeamInfo(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {TeamsApiTeamsControllerJoinTeamRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TeamsApi
+     */
+    public teamsControllerJoinTeam(requestParameters: TeamsApiTeamsControllerJoinTeamRequest, options?: any) {
+        return TeamsApiFp(this.configuration).teamsControllerJoinTeam(requestParameters.joinTeamDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TeamsApi
+     */
+    public teamsControllerLeaveTeam(options?: any) {
+        return TeamsApiFp(this.configuration).teamsControllerLeaveTeam(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * UsersApi - axios parameter creator
+ * @export
+ */
+export const UsersApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {DeleteUserDto} deleteUserDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersControllerDeleteUser: async (deleteUserDto: DeleteUserDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'deleteUserDto' is not null or undefined
+            assertParamExists('usersControllerDeleteUser', 'deleteUserDto', deleteUserDto)
+            const localVarPath = `/api/users/delete`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(deleteUserDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {ForgotPasswordDto} forgotPasswordDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersControllerForgotPassword: async (forgotPasswordDto: ForgotPasswordDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'forgotPasswordDto' is not null or undefined
+            assertParamExists('usersControllerForgotPassword', 'forgotPasswordDto', forgotPasswordDto)
+            const localVarPath = `/api/users/forgot-password`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(forgotPasswordDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersControllerGetUser: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/users/get`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} userName 
+         * @param {string} email 
+         * @param {string} password 
+         * @param {any} [avatar] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersControllerRegisterUser: async (userName: string, email: string, password: string, avatar?: any, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userName' is not null or undefined
+            assertParamExists('usersControllerRegisterUser', 'userName', userName)
+            // verify required parameter 'email' is not null or undefined
+            assertParamExists('usersControllerRegisterUser', 'email', email)
+            // verify required parameter 'password' is not null or undefined
+            assertParamExists('usersControllerRegisterUser', 'password', password)
+            const localVarPath = `/api/users/register`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
+
+
+            if (userName !== undefined) { 
+                localVarFormParams.append('userName', userName as any);
+            }
+    
+            if (email !== undefined) { 
+                localVarFormParams.append('email', email as any);
+            }
+    
+            if (password !== undefined) { 
+                localVarFormParams.append('password', password as any);
+            }
+    
+            if (avatar !== undefined) { 
+                localVarFormParams.append('avatar', avatar as any);
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {ResetPasswordDto} resetPasswordDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersControllerResetPassword: async (resetPasswordDto: ResetPasswordDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'resetPasswordDto' is not null or undefined
+            assertParamExists('usersControllerResetPassword', 'resetPasswordDto', resetPasswordDto)
+            const localVarPath = `/api/users/reset-password`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(resetPasswordDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {ProfileUpdateDto} profileUpdateDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersControllerUpdateUser: async (profileUpdateDto: ProfileUpdateDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'profileUpdateDto' is not null or undefined
+            assertParamExists('usersControllerUpdateUser', 'profileUpdateDto', profileUpdateDto)
+            const localVarPath = `/api/users/update`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(profileUpdateDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} token 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersControllerUserConfirmEmail: async (token: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'token' is not null or undefined
+            assertParamExists('usersControllerUserConfirmEmail', 'token', token)
+            const localVarPath = `/api/users/confirm/email/{token}`
+                .replace(`{${"token"}}`, encodeURIComponent(String(token)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} token 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersControllerUserConfirmEmailUpdate: async (token: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'token' is not null or undefined
+            assertParamExists('usersControllerUserConfirmEmailUpdate', 'token', token)
+            const localVarPath = `/api/users/confirm/update-email/{token}`
+                .replace(`{${"token"}}`, encodeURIComponent(String(token)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * UsersApi - functional programming interface
+ * @export
+ */
+export const UsersApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = UsersApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {DeleteUserDto} deleteUserDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async usersControllerDeleteUser(deleteUserDto: DeleteUserDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.usersControllerDeleteUser(deleteUserDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {ForgotPasswordDto} forgotPasswordDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async usersControllerForgotPassword(forgotPasswordDto: ForgotPasswordDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ForgotPasswordResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.usersControllerForgotPassword(forgotPasswordDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async usersControllerGetUser(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetUserResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.usersControllerGetUser(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} userName 
+         * @param {string} email 
+         * @param {string} password 
+         * @param {any} [avatar] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async usersControllerRegisterUser(userName: string, email: string, password: string, avatar?: any, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RegisterUserResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.usersControllerRegisterUser(userName, email, password, avatar, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {ResetPasswordDto} resetPasswordDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async usersControllerResetPassword(resetPasswordDto: ResetPasswordDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.usersControllerResetPassword(resetPasswordDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {ProfileUpdateDto} profileUpdateDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async usersControllerUpdateUser(profileUpdateDto: ProfileUpdateDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.usersControllerUpdateUser(profileUpdateDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} token 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async usersControllerUserConfirmEmail(token: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.usersControllerUserConfirmEmail(token, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} token 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async usersControllerUserConfirmEmailUpdate(token: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.usersControllerUserConfirmEmailUpdate(token, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * UsersApi - factory interface
+ * @export
+ */
+export const UsersApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = UsersApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {DeleteUserDto} deleteUserDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersControllerDeleteUser(deleteUserDto: DeleteUserDto, options?: any): AxiosPromise<void> {
+            return localVarFp.usersControllerDeleteUser(deleteUserDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {ForgotPasswordDto} forgotPasswordDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersControllerForgotPassword(forgotPasswordDto: ForgotPasswordDto, options?: any): AxiosPromise<ForgotPasswordResponse> {
+            return localVarFp.usersControllerForgotPassword(forgotPasswordDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersControllerGetUser(options?: any): AxiosPromise<GetUserResponse> {
+            return localVarFp.usersControllerGetUser(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} userName 
+         * @param {string} email 
+         * @param {string} password 
+         * @param {any} [avatar] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersControllerRegisterUser(userName: string, email: string, password: string, avatar?: any, options?: any): AxiosPromise<RegisterUserResponse> {
+            return localVarFp.usersControllerRegisterUser(userName, email, password, avatar, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {ResetPasswordDto} resetPasswordDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersControllerResetPassword(resetPasswordDto: ResetPasswordDto, options?: any): AxiosPromise<void> {
+            return localVarFp.usersControllerResetPassword(resetPasswordDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {ProfileUpdateDto} profileUpdateDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersControllerUpdateUser(profileUpdateDto: ProfileUpdateDto, options?: any): AxiosPromise<void> {
+            return localVarFp.usersControllerUpdateUser(profileUpdateDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} token 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersControllerUserConfirmEmail(token: string, options?: any): AxiosPromise<void> {
+            return localVarFp.usersControllerUserConfirmEmail(token, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} token 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersControllerUserConfirmEmailUpdate(token: string, options?: any): AxiosPromise<void> {
+            return localVarFp.usersControllerUserConfirmEmailUpdate(token, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for usersControllerDeleteUser operation in UsersApi.
+ * @export
+ * @interface UsersApiUsersControllerDeleteUserRequest
+ */
+export interface UsersApiUsersControllerDeleteUserRequest {
+    /**
+     * 
+     * @type {DeleteUserDto}
+     * @memberof UsersApiUsersControllerDeleteUser
+     */
+    readonly deleteUserDto: DeleteUserDto
+}
+
+/**
+ * Request parameters for usersControllerForgotPassword operation in UsersApi.
+ * @export
+ * @interface UsersApiUsersControllerForgotPasswordRequest
+ */
+export interface UsersApiUsersControllerForgotPasswordRequest {
+    /**
+     * 
+     * @type {ForgotPasswordDto}
+     * @memberof UsersApiUsersControllerForgotPassword
+     */
+    readonly forgotPasswordDto: ForgotPasswordDto
+}
+
+/**
+ * Request parameters for usersControllerRegisterUser operation in UsersApi.
+ * @export
+ * @interface UsersApiUsersControllerRegisterUserRequest
+ */
+export interface UsersApiUsersControllerRegisterUserRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof UsersApiUsersControllerRegisterUser
+     */
+    readonly userName: string
+
+    /**
+     * 
+     * @type {string}
+     * @memberof UsersApiUsersControllerRegisterUser
+     */
+    readonly email: string
+
+    /**
+     * 
+     * @type {string}
+     * @memberof UsersApiUsersControllerRegisterUser
+     */
+    readonly password: string
+
+    /**
+     * 
+     * @type {any}
+     * @memberof UsersApiUsersControllerRegisterUser
+     */
+    readonly avatar?: any
+}
+
+/**
+ * Request parameters for usersControllerResetPassword operation in UsersApi.
+ * @export
+ * @interface UsersApiUsersControllerResetPasswordRequest
+ */
+export interface UsersApiUsersControllerResetPasswordRequest {
+    /**
+     * 
+     * @type {ResetPasswordDto}
+     * @memberof UsersApiUsersControllerResetPassword
+     */
+    readonly resetPasswordDto: ResetPasswordDto
+}
+
+/**
+ * Request parameters for usersControllerUpdateUser operation in UsersApi.
+ * @export
+ * @interface UsersApiUsersControllerUpdateUserRequest
+ */
+export interface UsersApiUsersControllerUpdateUserRequest {
+    /**
+     * 
+     * @type {ProfileUpdateDto}
+     * @memberof UsersApiUsersControllerUpdateUser
+     */
+    readonly profileUpdateDto: ProfileUpdateDto
+}
+
+/**
+ * Request parameters for usersControllerUserConfirmEmail operation in UsersApi.
+ * @export
+ * @interface UsersApiUsersControllerUserConfirmEmailRequest
+ */
+export interface UsersApiUsersControllerUserConfirmEmailRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof UsersApiUsersControllerUserConfirmEmail
+     */
+    readonly token: string
+}
+
+/**
+ * Request parameters for usersControllerUserConfirmEmailUpdate operation in UsersApi.
+ * @export
+ * @interface UsersApiUsersControllerUserConfirmEmailUpdateRequest
+ */
+export interface UsersApiUsersControllerUserConfirmEmailUpdateRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof UsersApiUsersControllerUserConfirmEmailUpdate
+     */
+    readonly token: string
+}
+
+/**
+ * UsersApi - object-oriented interface
+ * @export
+ * @class UsersApi
+ * @extends {BaseAPI}
+ */
+export class UsersApi extends BaseAPI {
+    /**
+     * 
+     * @param {UsersApiUsersControllerDeleteUserRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public usersControllerDeleteUser(requestParameters: UsersApiUsersControllerDeleteUserRequest, options?: any) {
+        return UsersApiFp(this.configuration).usersControllerDeleteUser(requestParameters.deleteUserDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {UsersApiUsersControllerForgotPasswordRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public usersControllerForgotPassword(requestParameters: UsersApiUsersControllerForgotPasswordRequest, options?: any) {
+        return UsersApiFp(this.configuration).usersControllerForgotPassword(requestParameters.forgotPasswordDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public usersControllerGetUser(options?: any) {
+        return UsersApiFp(this.configuration).usersControllerGetUser(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {UsersApiUsersControllerRegisterUserRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public usersControllerRegisterUser(requestParameters: UsersApiUsersControllerRegisterUserRequest, options?: any) {
+        return UsersApiFp(this.configuration).usersControllerRegisterUser(requestParameters.userName, requestParameters.email, requestParameters.password, requestParameters.avatar, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {UsersApiUsersControllerResetPasswordRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public usersControllerResetPassword(requestParameters: UsersApiUsersControllerResetPasswordRequest, options?: any) {
+        return UsersApiFp(this.configuration).usersControllerResetPassword(requestParameters.resetPasswordDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {UsersApiUsersControllerUpdateUserRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public usersControllerUpdateUser(requestParameters: UsersApiUsersControllerUpdateUserRequest, options?: any) {
+        return UsersApiFp(this.configuration).usersControllerUpdateUser(requestParameters.profileUpdateDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {UsersApiUsersControllerUserConfirmEmailRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public usersControllerUserConfirmEmail(requestParameters: UsersApiUsersControllerUserConfirmEmailRequest, options?: any) {
+        return UsersApiFp(this.configuration).usersControllerUserConfirmEmail(requestParameters.token, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {UsersApiUsersControllerUserConfirmEmailUpdateRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public usersControllerUserConfirmEmailUpdate(requestParameters: UsersApiUsersControllerUserConfirmEmailUpdateRequest, options?: any) {
+        return UsersApiFp(this.configuration).usersControllerUserConfirmEmailUpdate(requestParameters.token, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * UtilitiesApi - axios parameter creator
+ * @export
+ */
+export const UtilitiesApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {GameMap} gameMap 
+         * @param {string} name 
+         * @param {PlayerSide} side 
+         * @param {UtilityMouseButton} mouseButton 
+         * @param {boolean} crouch 
+         * @param {UtilityMovement} movement 
+         * @param {boolean} jump 
+         * @param {UtilityType} type 
+         * @param {Array<any>} images 
+         * @param {string} [description] 
+         * @param {string} [videoLink] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        utilitiesControllerAddUtility: async (gameMap: GameMap, name: string, side: PlayerSide, mouseButton: UtilityMouseButton, crouch: boolean, movement: UtilityMovement, jump: boolean, type: UtilityType, images: Array<any>, description?: string, videoLink?: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'gameMap' is not null or undefined
+            assertParamExists('utilitiesControllerAddUtility', 'gameMap', gameMap)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('utilitiesControllerAddUtility', 'name', name)
+            // verify required parameter 'side' is not null or undefined
+            assertParamExists('utilitiesControllerAddUtility', 'side', side)
+            // verify required parameter 'mouseButton' is not null or undefined
+            assertParamExists('utilitiesControllerAddUtility', 'mouseButton', mouseButton)
+            // verify required parameter 'crouch' is not null or undefined
+            assertParamExists('utilitiesControllerAddUtility', 'crouch', crouch)
+            // verify required parameter 'movement' is not null or undefined
+            assertParamExists('utilitiesControllerAddUtility', 'movement', movement)
+            // verify required parameter 'jump' is not null or undefined
+            assertParamExists('utilitiesControllerAddUtility', 'jump', jump)
+            // verify required parameter 'type' is not null or undefined
+            assertParamExists('utilitiesControllerAddUtility', 'type', type)
+            // verify required parameter 'images' is not null or undefined
+            assertParamExists('utilitiesControllerAddUtility', 'images', images)
+            const localVarPath = `/api/utilities`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
+
+
+            if (gameMap !== undefined) { 
+                localVarFormParams.append('gameMap', new Blob([JSON.stringify(gameMap)], { type: "application/json", }));
+            }
+    
+            if (name !== undefined) { 
+                localVarFormParams.append('name', name as any);
+            }
+    
+            if (description !== undefined) { 
+                localVarFormParams.append('description', description as any);
+            }
+    
+            if (videoLink !== undefined) { 
+                localVarFormParams.append('videoLink', videoLink as any);
+            }
+    
+            if (side !== undefined) { 
+                localVarFormParams.append('side', new Blob([JSON.stringify(side)], { type: "application/json", }));
+            }
+    
+            if (mouseButton !== undefined) { 
+                localVarFormParams.append('mouseButton', new Blob([JSON.stringify(mouseButton)], { type: "application/json", }));
+            }
+    
+            if (crouch !== undefined) { 
+                localVarFormParams.append('crouch', crouch as any);
+            }
+    
+            if (movement !== undefined) { 
+                localVarFormParams.append('movement', new Blob([JSON.stringify(movement)], { type: "application/json", }));
+            }
+    
+            if (jump !== undefined) { 
+                localVarFormParams.append('jump', jump as any);
+            }
+    
+            if (type !== undefined) { 
+                localVarFormParams.append('type', new Blob([JSON.stringify(type)], { type: "application/json", }));
+            }
+                if (images) {
+                images.forEach((element) => {
+                    localVarFormParams.append('images', element as any);
+                })
+            }
+
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {DeleteUtilityDto} deleteUtilityDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        utilitiesControllerDeleteUtility: async (deleteUtilityDto: DeleteUtilityDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'deleteUtilityDto' is not null or undefined
+            assertParamExists('utilitiesControllerDeleteUtility', 'deleteUtilityDto', deleteUtilityDto)
+            const localVarPath = `/api/utilities`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(deleteUtilityDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {GameMap} gameMap 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        utilitiesControllerGetUtility: async (gameMap: GameMap, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'gameMap' is not null or undefined
+            assertParamExists('utilitiesControllerGetUtility', 'gameMap', gameMap)
+            const localVarPath = `/api/utilities/{gameMap}`
+                .replace(`{${"gameMap"}}`, encodeURIComponent(String(gameMap)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        utilitiesControllerUpdateUtility: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/utilities`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {UpdateUtilityPositionDto} updateUtilityPositionDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        utilitiesControllerUpdateUtilityPosition: async (updateUtilityPositionDto: UpdateUtilityPositionDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'updateUtilityPositionDto' is not null or undefined
+            assertParamExists('utilitiesControllerUpdateUtilityPosition', 'updateUtilityPositionDto', updateUtilityPositionDto)
+            const localVarPath = `/api/utilities/position`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateUtilityPositionDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * UtilitiesApi - functional programming interface
+ * @export
+ */
+export const UtilitiesApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = UtilitiesApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {GameMap} gameMap 
+         * @param {string} name 
+         * @param {PlayerSide} side 
+         * @param {UtilityMouseButton} mouseButton 
+         * @param {boolean} crouch 
+         * @param {UtilityMovement} movement 
+         * @param {boolean} jump 
+         * @param {UtilityType} type 
+         * @param {Array<any>} images 
+         * @param {string} [description] 
+         * @param {string} [videoLink] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async utilitiesControllerAddUtility(gameMap: GameMap, name: string, side: PlayerSide, mouseButton: UtilityMouseButton, crouch: boolean, movement: UtilityMovement, jump: boolean, type: UtilityType, images: Array<any>, description?: string, videoLink?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.utilitiesControllerAddUtility(gameMap, name, side, mouseButton, crouch, movement, jump, type, images, description, videoLink, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {DeleteUtilityDto} deleteUtilityDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async utilitiesControllerDeleteUtility(deleteUtilityDto: DeleteUtilityDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.utilitiesControllerDeleteUtility(deleteUtilityDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {GameMap} gameMap 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async utilitiesControllerGetUtility(gameMap: GameMap, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<GetUtilityResponse>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.utilitiesControllerGetUtility(gameMap, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async utilitiesControllerUpdateUtility(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.utilitiesControllerUpdateUtility(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {UpdateUtilityPositionDto} updateUtilityPositionDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async utilitiesControllerUpdateUtilityPosition(updateUtilityPositionDto: UpdateUtilityPositionDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.utilitiesControllerUpdateUtilityPosition(updateUtilityPositionDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * UtilitiesApi - factory interface
+ * @export
+ */
+export const UtilitiesApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = UtilitiesApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {GameMap} gameMap 
+         * @param {string} name 
+         * @param {PlayerSide} side 
+         * @param {UtilityMouseButton} mouseButton 
+         * @param {boolean} crouch 
+         * @param {UtilityMovement} movement 
+         * @param {boolean} jump 
+         * @param {UtilityType} type 
+         * @param {Array<any>} images 
+         * @param {string} [description] 
+         * @param {string} [videoLink] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        utilitiesControllerAddUtility(gameMap: GameMap, name: string, side: PlayerSide, mouseButton: UtilityMouseButton, crouch: boolean, movement: UtilityMovement, jump: boolean, type: UtilityType, images: Array<any>, description?: string, videoLink?: string, options?: any): AxiosPromise<void> {
+            return localVarFp.utilitiesControllerAddUtility(gameMap, name, side, mouseButton, crouch, movement, jump, type, images, description, videoLink, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {DeleteUtilityDto} deleteUtilityDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        utilitiesControllerDeleteUtility(deleteUtilityDto: DeleteUtilityDto, options?: any): AxiosPromise<void> {
+            return localVarFp.utilitiesControllerDeleteUtility(deleteUtilityDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {GameMap} gameMap 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        utilitiesControllerGetUtility(gameMap: GameMap, options?: any): AxiosPromise<Array<GetUtilityResponse>> {
+            return localVarFp.utilitiesControllerGetUtility(gameMap, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        utilitiesControllerUpdateUtility(options?: any): AxiosPromise<void> {
+            return localVarFp.utilitiesControllerUpdateUtility(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {UpdateUtilityPositionDto} updateUtilityPositionDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        utilitiesControllerUpdateUtilityPosition(updateUtilityPositionDto: UpdateUtilityPositionDto, options?: any): AxiosPromise<void> {
+            return localVarFp.utilitiesControllerUpdateUtilityPosition(updateUtilityPositionDto, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for utilitiesControllerAddUtility operation in UtilitiesApi.
+ * @export
+ * @interface UtilitiesApiUtilitiesControllerAddUtilityRequest
+ */
+export interface UtilitiesApiUtilitiesControllerAddUtilityRequest {
+    /**
+     * 
+     * @type {GameMap}
+     * @memberof UtilitiesApiUtilitiesControllerAddUtility
+     */
+    readonly gameMap: GameMap
+
+    /**
+     * 
+     * @type {string}
+     * @memberof UtilitiesApiUtilitiesControllerAddUtility
+     */
+    readonly name: string
+
+    /**
+     * 
+     * @type {PlayerSide}
+     * @memberof UtilitiesApiUtilitiesControllerAddUtility
+     */
+    readonly side: PlayerSide
+
+    /**
+     * 
+     * @type {UtilityMouseButton}
+     * @memberof UtilitiesApiUtilitiesControllerAddUtility
+     */
+    readonly mouseButton: UtilityMouseButton
+
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UtilitiesApiUtilitiesControllerAddUtility
+     */
+    readonly crouch: boolean
+
+    /**
+     * 
+     * @type {UtilityMovement}
+     * @memberof UtilitiesApiUtilitiesControllerAddUtility
+     */
+    readonly movement: UtilityMovement
+
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UtilitiesApiUtilitiesControllerAddUtility
+     */
+    readonly jump: boolean
+
+    /**
+     * 
+     * @type {UtilityType}
+     * @memberof UtilitiesApiUtilitiesControllerAddUtility
+     */
+    readonly type: UtilityType
+
+    /**
+     * 
+     * @type {Array<any>}
+     * @memberof UtilitiesApiUtilitiesControllerAddUtility
+     */
+    readonly images: Array<any>
+
+    /**
+     * 
+     * @type {string}
+     * @memberof UtilitiesApiUtilitiesControllerAddUtility
+     */
+    readonly description?: string
+
+    /**
+     * 
+     * @type {string}
+     * @memberof UtilitiesApiUtilitiesControllerAddUtility
+     */
+    readonly videoLink?: string
+}
+
+/**
+ * Request parameters for utilitiesControllerDeleteUtility operation in UtilitiesApi.
+ * @export
+ * @interface UtilitiesApiUtilitiesControllerDeleteUtilityRequest
+ */
+export interface UtilitiesApiUtilitiesControllerDeleteUtilityRequest {
+    /**
+     * 
+     * @type {DeleteUtilityDto}
+     * @memberof UtilitiesApiUtilitiesControllerDeleteUtility
+     */
+    readonly deleteUtilityDto: DeleteUtilityDto
+}
+
+/**
+ * Request parameters for utilitiesControllerGetUtility operation in UtilitiesApi.
+ * @export
+ * @interface UtilitiesApiUtilitiesControllerGetUtilityRequest
+ */
+export interface UtilitiesApiUtilitiesControllerGetUtilityRequest {
+    /**
+     * 
+     * @type {GameMap}
+     * @memberof UtilitiesApiUtilitiesControllerGetUtility
+     */
+    readonly gameMap: GameMap
+}
+
+/**
+ * Request parameters for utilitiesControllerUpdateUtilityPosition operation in UtilitiesApi.
+ * @export
+ * @interface UtilitiesApiUtilitiesControllerUpdateUtilityPositionRequest
+ */
+export interface UtilitiesApiUtilitiesControllerUpdateUtilityPositionRequest {
+    /**
+     * 
+     * @type {UpdateUtilityPositionDto}
+     * @memberof UtilitiesApiUtilitiesControllerUpdateUtilityPosition
+     */
+    readonly updateUtilityPositionDto: UpdateUtilityPositionDto
+}
+
+/**
+ * UtilitiesApi - object-oriented interface
+ * @export
+ * @class UtilitiesApi
+ * @extends {BaseAPI}
+ */
+export class UtilitiesApi extends BaseAPI {
+    /**
+     * 
+     * @param {UtilitiesApiUtilitiesControllerAddUtilityRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UtilitiesApi
+     */
+    public utilitiesControllerAddUtility(requestParameters: UtilitiesApiUtilitiesControllerAddUtilityRequest, options?: any) {
+        return UtilitiesApiFp(this.configuration).utilitiesControllerAddUtility(requestParameters.gameMap, requestParameters.name, requestParameters.side, requestParameters.mouseButton, requestParameters.crouch, requestParameters.movement, requestParameters.jump, requestParameters.type, requestParameters.images, requestParameters.description, requestParameters.videoLink, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {UtilitiesApiUtilitiesControllerDeleteUtilityRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UtilitiesApi
+     */
+    public utilitiesControllerDeleteUtility(requestParameters: UtilitiesApiUtilitiesControllerDeleteUtilityRequest, options?: any) {
+        return UtilitiesApiFp(this.configuration).utilitiesControllerDeleteUtility(requestParameters.deleteUtilityDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {UtilitiesApiUtilitiesControllerGetUtilityRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UtilitiesApi
+     */
+    public utilitiesControllerGetUtility(requestParameters: UtilitiesApiUtilitiesControllerGetUtilityRequest, options?: any) {
+        return UtilitiesApiFp(this.configuration).utilitiesControllerGetUtility(requestParameters.gameMap, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UtilitiesApi
+     */
+    public utilitiesControllerUpdateUtility(options?: any) {
+        return UtilitiesApiFp(this.configuration).utilitiesControllerUpdateUtility(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {UtilitiesApiUtilitiesControllerUpdateUtilityPositionRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UtilitiesApi
+     */
+    public utilitiesControllerUpdateUtilityPosition(requestParameters: UtilitiesApiUtilitiesControllerUpdateUtilityPositionRequest, options?: any) {
+        return UtilitiesApiFp(this.configuration).utilitiesControllerUpdateUtilityPosition(requestParameters.updateUtilityPositionDto, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
 

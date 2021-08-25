@@ -26,15 +26,15 @@ export class GetUtilityResponse {
   public readonly description: string;
 
   @Expose()
-  @ApiProperty({ enum: PlayerSide })
+  @ApiProperty({ enum: PlayerSide, enumName: 'PlayerSide' })
   public readonly playerSide: PlayerSide;
 
   @Expose()
-  @ApiProperty({ enum: UtilityType })
+  @ApiProperty({ enum: UtilityType, enumName: 'UtilityType' })
   public readonly type: UtilityType;
 
   @Expose()
-  @ApiProperty({ enum: UtilityMouseButton })
+  @ApiProperty({ enum: UtilityMouseButton, enumName: 'UtilityMouseButton' })
   public readonly mouseButton: UtilityMouseButton;
 
   @Expose()
@@ -46,7 +46,7 @@ export class GetUtilityResponse {
   public readonly jump: boolean;
 
   @Expose()
-  @ApiProperty({ enum: UtilityMovement })
+  @ApiProperty({ enum: UtilityMovement, enumName: 'UtilityMovement' })
   public readonly movement: UtilityMovement;
 
   @Expose()

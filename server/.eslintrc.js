@@ -9,6 +9,8 @@ module.exports = {
   },
 
   parserOptions: {
+    extraFileExtensions: ['.mjs'],
+
     parser: '@typescript-eslint/parser',
 
     project: resolve(__dirname, './tsconfig.eslint.json'),
@@ -32,6 +34,9 @@ module.exports = {
     // https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#usage
     // ESLint typescript rules
     'plugin:@typescript-eslint/recommended',
+
+    'plugin:import/recommended',
+    'plugin:import/typescript',
 
     // consider disabling this class of rules if linting takes too long
     // 'plugin:@typescript-eslint/recommended-requiring-type-checking',
