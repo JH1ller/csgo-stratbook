@@ -42,7 +42,7 @@
     "is-mobile": "^2.2.2",
     "jwt-decode": "^2.2.0",
     "mixpanel-browser": "^2.41.0",
-    "nanoid": "^3.1.23",
+    "nanoid": "^3.1.31",
     "replace-keywords": "0.0.3",
     "s-ago": "^2.2.0",
     "sanitize-html": "^2.1.2",
