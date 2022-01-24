@@ -72,6 +72,11 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '1.9.2',
+        date: '2022-01-24',
+        changes: ['Fix de_ancient missing map in DrawTool'],
+      },
+      {
         version: '1.9.0',
         date: '2021-07-16',
         changes: [
