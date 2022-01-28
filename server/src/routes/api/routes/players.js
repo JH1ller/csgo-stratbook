@@ -6,7 +6,7 @@ const Strat = require('../../../models/strat');
 const Player = require('../../../models/player');
 const { uploadSingle, processImage, deleteFile } = require('../../utils/fileUpload');
 const { verifyAuth } = require('../../utils/verifyToken');
-const { sendMail } = require('../../utils/mailService');
+const { sendMail, Templates } = require('../../utils/mailService');
 const { profileUpdateValidation } = require('../../utils/validation');
 
 // * Get User Profile
@@ -82,7 +82,7 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
     if (emailExists) return res.status(400).json({ error: 'Email already exists.' });
 
     const token = jwt.sign({ _id: res.player._id, email: req.body.email }, process.env.EMAIL_SECRET);
-    await sendMail(req.body.email, token, res.player.name, true);
+    await sendMail(req.body.email, token, res.player.name, Templates.verifyChange);
   }
 
   if (req.body.completedTutorial) {
