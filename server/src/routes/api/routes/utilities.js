@@ -3,7 +3,7 @@ const router = express.Router();
 const Utility = require('../../../models/utility');
 const { getUtility } = require('../../utils/getters');
 const { verifyAuth } = require('../../utils/verifyToken');
-const { uploadMultiple, uploadFile, deleteFile } = require('../../utils/fileUpload');
+const { uploadMultiple, uploadFile, deleteFile, processImage } = require('../../utils/fileUpload');
 
 router.get('/', verifyAuth, async (req, res) => {
   if (!res.player.team) {
@@ -40,12 +40,12 @@ router.post('/', verifyAuth, uploadMultiple('images'), async (req, res) => {
   });
 
   if (req.files) {
-    utility.images.push(...req.files.map((img) => img.filename));
-    await Promise.all(
+    const fileNames = await Promise.all(
       req.files.map(async (file) => {
-        await uploadFile(file.path, file.filename);
+        return await processImage(file, 1920, 1080);
       })
     );
+    utility.images.push(...fileNames);
   }
   const newUtility = await utility.save();
   res.status(201).json(newUtility);
@@ -78,12 +78,12 @@ router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, 
   });
 
   if (req.files) {
-    res.utility.images.push(...req.files.map((img) => img.filename));
-    await Promise.all(
+    const fileNames = await Promise.all(
       req.files.map(async (file) => {
-        await uploadFile(file.path, file.filename);
+        return await processImage(file, 1920, 1080);
       })
     );
+    res.utility.images.push(...fileNames);
   }
 
   if (req.body.delete) {

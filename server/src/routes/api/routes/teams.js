@@ -68,8 +68,8 @@ router.post('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
   team.code = code;
 
   if (req.file) {
-    team.avatar = req.file.filename;
-    await processImage(req.file);
+    const fileName = await processImage(req.file, 200, 200);
+    team.avatar = fileName;
   }
 
   const newTeam = await team.save();
@@ -97,11 +97,11 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
     return res.status(401).json({ error: 'Only the team manager can edit team details.' });
 
   if (req.file) {
-    await processImage(req.file);
+    const fileName = await processImage(req.file, 200, 200);
     if (team.avatar) {
       await deleteFile(team.avatar);
     }
-    team.avatar = req.file.filename;
+    team.avatar = fileName;
   }
 
   if (req.body.name) team.name = req.body.name;
