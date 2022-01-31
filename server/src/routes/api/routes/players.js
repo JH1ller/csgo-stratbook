@@ -56,11 +56,11 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
   }
 
   if (req.file) {
-    await processImage(req.file);
+    const fileName = await processImage(req.file, 200, 200);
     if (res.player.avatar) {
       await deleteFile(res.player.avatar);
     }
-    res.player.avatar = req.file.filename;
+    res.player.avatar = fileName;
   }
 
   if (req.body.name && req.query.updateStrats === 'true') {

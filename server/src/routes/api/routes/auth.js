@@ -34,8 +34,8 @@ router.post('/register', uploadSingle('avatar'), async (req, res) => {
   });
 
   if (req.file) {
-    user.avatar = req.file.filename;
-    await processImage(req.file);
+    const fileName = await processImage(req.file, 200, 200);
+    user.avatar = fileName;
   }
 
   const token = jwt.sign({ _id: user._id }, process.env.EMAIL_SECRET);

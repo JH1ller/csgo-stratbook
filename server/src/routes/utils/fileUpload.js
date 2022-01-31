@@ -2,7 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const crypto = require('crypto');
 const sharp = require('sharp');
-const fs = require('fs');
+const { unlinkSync, renameSync, readFileSync, mkdirSync, existsSync } = require('fs');
 const AWS = require('aws-sdk');
 
 const s3 = new AWS.S3({
@@ -61,12 +61,33 @@ const uploadMultiple = (field) => (req, res, next) => {
   });
 };
 
-const processImage = async (file) => {
+const changeExtension = (fileName, extension) => {
+  const segments = fileName.split('.');
+  segments.splice(segments.length - 1, 1, extension);
+  return segments.join('.');
+};
+
+const calculateDimensions = async (filePath, targetWidth, targetHeight) => {
+  const { width, height } = await sharp(filePath).metadata();
+  return [targetWidth ? Math.min(targetWidth, width) : null, targetHeight ? Math.min(targetHeight, height) : null];
+};
+
+const processImage = async (file, targetWidth, targetHeight) => {
   try {
-    await sharp(file.path).resize(256, 256).toFile(path.resolve(file.destination, 'temp', file.filename));
-    fs.unlinkSync(file.path);
-    fs.renameSync(path.resolve(file.destination, 'temp', file.filename), file.path);
-    await uploadFile(file.path, file.filename);
+    const tempDir = path.resolve(file.destination, 'temp');
+    if (!existsSync(tempDir)) {
+      mkdirSync(tempDir);
+    }
+    const [width, height] = await calculateDimensions(file.path, targetWidth, targetHeight);
+    const targetFileName = changeExtension(file.filename, 'webp');
+    await sharp(file.path)
+      .resize(width, height)
+      .webp({ quality: 70 })
+      .toFile(path.resolve(file.destination, 'temp', targetFileName));
+    unlinkSync(file.path);
+    renameSync(path.resolve(file.destination, 'temp', targetFileName), path.resolve(file.destination, targetFileName));
+    await uploadFile(path.resolve(file.destination, targetFileName), targetFileName);
+    return targetFileName;
   } catch (error) {
     console.error(error);
     throw new Error(error);
@@ -76,7 +97,7 @@ const processImage = async (file) => {
 function uploadFile(filepath, filename) {
   return new Promise(async (resolve, reject) => {
     try {
-      const fileContent = fs.readFileSync(filepath);
+      const fileContent = readFileSync(filepath);
       const params = {
         Bucket: process.env.S3_BUCKET_NAME,
         Key: filename, // filename on S3
@@ -102,9 +123,10 @@ function deleteFile(filename) {
       };
 
       const data = await s3.deleteObject(params).promise();
+      console.log(data);
 
       // TODO: check if data.Location is correct, seems to return undefined
-      console.log(`File deleted successfully. ${data.Location}`);
+      console.log(`File deleted successfully. ${data.location}`);
       resolve(data.Location);
     } catch (error) {
       reject(error);
