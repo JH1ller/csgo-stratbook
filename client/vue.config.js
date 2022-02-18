@@ -32,7 +32,12 @@ module.exports = {
     },
   },
   parallel: 4,
-  configureWebpack: process.env.BUILD_TARGET === 'ELECTRON' ? electronConfig : {},
+  configureWebpack: config => {
+    if (process.env.BUILD_TARGET === 'ELECTRON') {
+      config.target = 'electron-renderer';
+    }
+    config.devtool = process.env.NODE_ENV === 'development' ? 'eval-source-map' : false;
+  },
   pluginOptions: {
     electronBuilder: {
       nodeIntegration: true,

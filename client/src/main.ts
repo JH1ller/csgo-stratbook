@@ -54,6 +54,9 @@ import {
   faPhotoVideo,
   faSortAmountUp,
   faSortAmountDown,
+  faAlignCenter,
+  faMousePointer,
+  faICursor,
 } from '@fortawesome/free-solid-svg-icons';
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -62,6 +65,7 @@ import { faCircle } from '@fortawesome/free-regular-svg-icons';
 import { isDesktop } from './utils/isDesktop';
 import StorageService from './services/storage.service';
 import { BreakpointService } from './services/breakpoint.service';
+import VueKonva from 'vue-konva';
 
 Vue.use(VueTippy, {
   directive: 'tippy',
@@ -72,6 +76,8 @@ Vue.use(VueTippy, {
   animation: 'scale',
 });
 Vue.component('tippy', TippyComponent);
+
+Vue.use(VueKonva);
 
 config.autoAddCss = false;
 library.add(
@@ -126,7 +132,10 @@ library.add(
   faMapMarkerAlt,
   faPhotoVideo,
   faSortAmountUp,
-  faSortAmountDown
+  faSortAmountDown,
+  faAlignCenter,
+  faMousePointer,
+  faICursor
 );
 
 Vue.component('fa-icon', FontAwesomeIcon);

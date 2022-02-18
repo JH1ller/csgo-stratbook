@@ -23,6 +23,16 @@
       min-width: 320px;
       border-radius: 10px;
       animation: 0.3s ease-in-out expand;
+
+      &.-fullscreen {
+        // 24px top-margin + 2 * 16px FAB margins + 48px FAB height
+        height: calc(100% - 104px);
+        // 70px sidebar + 24px outer-margin * 2 + 10px scrollbar
+        width: calc(100% - 128px);
+        position: absolute;
+        left: 94px;
+        top: 24px;
+      }
     }
 
     @include viewport_mq7 {

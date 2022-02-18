@@ -104,7 +104,7 @@
       />
     </transition>
     <transition name="fade">
-      <DrawTool v-if="drawToolOpen" @close="drawToolOpen = false" @save="updateStrat" :strat="currentDrawToolStrat" />
+      <SketchTool v-if="drawToolOpen" @close="drawToolOpen = false" @save="updateStrat" :strat="currentDrawToolStrat" />
     </transition>
   </div>
 </template>

@@ -7,6 +7,7 @@ import StratFilterForm from '@/components/StratFilterForm/StratFilterForm.vue';
 import FilterMenu from '@/components/FilterMenu/FilterMenu.vue';
 import FilterButton from '@/components/FilterButton/FilterButton.vue';
 import DrawTool from '@/components/DrawTool/DrawTool.vue';
+import SketchTool from '@/components/SketchTool/SketchTool.vue';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { appModule, mapModule, stratModule, filterModule, teamModule, authModule } from '@/store/namespaces';
 import { StratFilters } from '@/store/modules/filter';
@@ -33,6 +34,7 @@ import TrackingService from '@/services/tracking.service';
     UtilityLightbox,
     FilterMenu,
     DrawTool,
+    SketchTool,
   },
 })
 export default class StratsView extends Vue {

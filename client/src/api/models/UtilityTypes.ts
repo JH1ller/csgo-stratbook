@@ -3,6 +3,6 @@ export enum UtilityTypes {
   SMOKE = 'SMOKE',
   GRENADE = 'GRENADE',
   MOLOTOV = 'MOLOTOV',
-  BOMB = 'BOMB',
+  C4 = 'C4',
   DEFUSEKIT = 'DEFUSEKIT',
 }

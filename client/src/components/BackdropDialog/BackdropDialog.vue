@@ -1,6 +1,6 @@
-<template functional>
+<template>
   <div class="backdrop-dialog">
-    <div class="backdrop-dialog__content">
+    <div class="backdrop-dialog__content" :class="{ '-fullscreen': fullscreen }">
       <slot />
     </div>
   </div>

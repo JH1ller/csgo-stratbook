@@ -6,7 +6,7 @@ export default class CloseOnEscape extends Vue {
     document.addEventListener('keydown', this.__keydownHandler);
   }
 
-  private beforeDestroy() {
+  beforeDestroy() {
     document.removeEventListener('keydown', this.__keydownHandler);
   }
 

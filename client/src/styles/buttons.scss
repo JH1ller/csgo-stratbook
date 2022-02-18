@@ -12,7 +12,7 @@
   color: $color;
 
   &:hover {
-    border-color: rgba(black, 0.2);
+    border-color: rgba(black, 0.3);
     background-color: darken($bgcolor, 2%);
   }
 

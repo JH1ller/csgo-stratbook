@@ -50,6 +50,8 @@ export default class DrawTool extends Mixins(CloseOnEscape) {
     this.canvas.on('text:changed', () => this.save());
     this.canvas.on('object:modified', () => this.save());
     this.canvas.on('object:removed', () => this.save());
+    this.canvas.on('mouse:down', (e: any) => console.log(e));
+    this.canvas.on('mouse:up', (e: any) => console.log(e));
 
     this.setTool('freeDrawing');
 
@@ -67,7 +69,7 @@ export default class DrawTool extends Mixins(CloseOnEscape) {
     this.wrapper.style.height = this.wrapper.getBoundingClientRect().width + 'px';
   }
 
-  private beforeUnmount() {
+  beforeDestroy() {
     this.removeEventListeners();
     this.resizeObserver.disconnect();
   }
