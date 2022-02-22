@@ -14,6 +14,7 @@ export enum RouteNames {
   ResetPassword = 'ResetPassword',
   ForgotPassword = 'ForgotPassword',
   Imprint = 'Imprint',
+  Map = 'Map',
 }
 
 export const Routes: Record<RouteNames, Location> = {
@@ -30,4 +31,5 @@ export const Routes: Record<RouteNames, Location> = {
   ResetPassword: { name: RouteNames.ResetPassword },
   ForgotPassword: { name: RouteNames.ForgotPassword },
   Imprint: { name: RouteNames.Imprint },
+  Map: { name: RouteNames.Map },
 };

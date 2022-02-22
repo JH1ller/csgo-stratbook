@@ -22,6 +22,7 @@ import { catchPromise } from '@/utils/catchPromise';
 import ShortcutService from '@/services/shortcut.service';
 import { Sort } from '@/store/modules/strat';
 import TrackingService from '@/services/tracking.service';
+import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
 
 @Component({
   components: {
@@ -35,6 +36,7 @@ import TrackingService from '@/services/tracking.service';
     FilterMenu,
     DrawTool,
     SketchTool,
+    BackdropDialog,
   },
 })
 export default class StratsView extends Vue {

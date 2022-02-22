@@ -248,6 +248,7 @@
     background: $color--black;
     opacity: 0;
     transition: opacity 0.3s ease;
+    height: 70px;
 
     @include viewport_mq3 {
       opacity: 1;

@@ -53,6 +53,14 @@ const routes = [
     component: () => import('@/views/ResetPasswordView/ResetPasswordView.vue'),
   },
   {
+    path: '/map',
+    name: RouteNames.Map,
+    component: () => import('@/views/MapView/MapView.vue'),
+    meta: {
+      fullscreen: true,
+    },
+  },
+  {
     path: '/forgot-password',
     name: RouteNames.ForgotPassword,
     component: () => import('@/views/ForgotPasswordView/ForgotPasswordView.vue'),

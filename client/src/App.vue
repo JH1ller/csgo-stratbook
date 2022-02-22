@@ -10,7 +10,11 @@
       <MainMenu v-show="!gameMode" :menuOpen="menuOpen" @toggle-menu="toggleMenu" @close-menu="closeMenu" />
     </transition>
     <transition name="fade" mode="out-in">
-      <router-view @click.native="closeMenu" class="router-view" :class="{ '-game-mode': gameMode }"></router-view>
+      <router-view
+        @click.native="closeMenu"
+        class="router-view"
+        :class="{ '-game-mode': gameMode, '-fullscreen': $route.meta.fullscreen }"
+      ></router-view>
     </transition>
     <transition name="fade">
       <CookieBanner v-if="showCookieBanner && isDesktop === false" @close="closeCookieBanner" />
@@ -194,6 +198,10 @@ export default class App extends Vue {
     width: calc(100% - 70px);
     padding: 24px;
     transition: margin-left 0.3s ease, width 0.3s ease;
+
+    &.-fullscreen {
+      padding: 0;
+    }
 
     &.-game-mode {
       margin-left: 0;

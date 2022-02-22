@@ -1,6 +1,5 @@
 import { Component, Mixins, Prop, Ref } from 'vue-property-decorator';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
-import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
 import { mapModule } from '@/store/namespaces';
 import { MapID } from '../MapPicker/MapPicker';
 import { Stage, StageConfig } from 'konva/lib/Stage';
@@ -64,18 +63,17 @@ interface StageState {
 
 @Component({
   components: {
-    BackdropDialog,
     VSwatches,
   },
 })
 export default class SketchTool extends Mixins(CloseOnEscape) {
-  @mapModule.State currentMap!: MapID;
   @Ref() stageRef!: KonvaRef<Stage>;
   @Ref() stageContainer!: HTMLDivElement;
   @Ref() transformer!: KonvaRef<Transformer>;
   @Ref() selectionRect!: KonvaRef<Rect>;
   @Ref() textbox!: HTMLInputElement;
   @Prop() strat!: Strat;
+  @Prop() map!: MapID;
   backgroundImage = new Image();
   utilImages!: Record<UtilityTypes, HTMLImageElement>;
   imageItems: ImageItem[] = [];
@@ -96,7 +94,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   shortcutService = ShortcutService.getInstance();
   changeHistory: StageState[] = [];
   historyPointer = -1;
-  readonly backgroundSize = 800;
+  readonly backgroundSize = 1024;
   currentColor = '#ffffff'; //'#1fbc9c';
 
   undo(): void {
@@ -372,7 +370,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   created() {
-    this.backgroundImage.src = `minimaps/${this.currentMap.toLowerCase()}.svg`;
+    this.backgroundImage.src = `minimaps/${this.map.toLowerCase()}.svg`;
 
     // cache available utility icons
     this.utilImages = Object.values(UtilityTypes).reduce<any>((acc, type) => {
@@ -769,7 +767,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     const tempTextNode = new Text({
       x: 16,
       y: 16,
-      text: this.strat.name,
+      text: this.strat?.name ?? 'New strategy',
       fontSize: 32,
       fontFamily: 'Ubuntu-Bold',
       fill: 'white',
@@ -791,7 +789,10 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
     tempTextNode.remove();
 
-    downloadURI(dataUri, this.strat.name.replaceAll(/[^a-zA-Z ]/g, '').replaceAll(' ', '_') + '.png');
+    downloadURI(
+      dataUri,
+      this.strat?.name ? this.strat.name.replaceAll(/[^a-zA-Z ]/g, '').replaceAll(' ', '_') + '.png' : 'new_strat.png'
+    );
   }
 
   mounted() {

@@ -104,7 +104,9 @@
       />
     </transition>
     <transition name="fade">
-      <SketchTool v-if="drawToolOpen" @close="drawToolOpen = false" @save="updateStrat" :strat="currentDrawToolStrat" />
+      <BackdropDialog :fullscreen="true" v-if="drawToolOpen">
+        <SketchTool @close="drawToolOpen = false" @save="updateStrat" :strat="currentDrawToolStrat" :map="currentMap" />
+      </BackdropDialog>
     </transition>
   </div>
 </template>
