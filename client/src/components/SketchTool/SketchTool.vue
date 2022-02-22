@@ -24,18 +24,26 @@
           @mouseleave="handleMouseUp"
           @wheel="handleZoom"
         >
-          <v-layer>
+          <v-layer :config="{ listening: false }">
             <v-image :config="backgroundConfig" />
           </v-layer>
           <v-layer>
             <v-image v-for="item in imageItems" :key="item.id" :config="getImageItemConfig(item)" />
-            <v-line v-for="item in lines" :key="item.id" :config="getLineItemConfig(item)" />
+            <v-line v-for="item in lineItems" :key="item.id" :config="getLineItemConfig(item)" />
+            <v-text v-for="item in textItems" :key="item.id" :config="getTextItemConfig(item)" />
           </v-layer>
           <v-layer>
-            <v-transformer ref="transformer" />
+            <v-transformer ref="transformer" @transform="handleTransform" @transformend="handleTransformEnd" />
             <v-rect :config="selectionRectConfig" ref="selectionRect" />
           </v-layer>
         </v-stage>
+        <span
+          role="textbox"
+          contenteditable
+          ref="textbox"
+          class="sketch-tool__textbox"
+          @keypress="handleTextboxKeypress"
+        />
       </div>
       <div class="sketch-tool__toolbar">
         <v-swatches

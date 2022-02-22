@@ -16,6 +16,9 @@
   &__stage {
     width: 100%;
     height: 100%;
+    overflow: hidden;
+    position: relative;
+
     &.-brush {
       cursor: crosshair;
     }
@@ -25,8 +28,11 @@
     &.-pointer {
       cursor: default;
     }
+    &.-text {
+      cursor: text;
+    }
 
-    background-image: linear-gradient(60deg, #29323c 0%, #485563 100%);
+    background-image: linear-gradient(60deg, #29323c 0%, #20242a 100%);
   }
   &__btn {
     @include button-default(white, $color--navyblue, false);
@@ -95,17 +101,28 @@
   &__draggable {
     @include spacing('padding', 'xs 2xs');
 
-    filter: invert(1) drop-shadow(4px 4px 8px black);
-    transition: 0.3s transform ease;
+    filter: invert(1) drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.6));
+    transition: 0.3s transform ease, 0.3s filter ease;
     cursor: grab;
 
     &:hover {
       transform: scale(1.1) translateX(-8px) rotate(-10deg);
+      filter: invert(1) drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.6));
     }
 
     & > img {
       width: 52px;
       height: 52px;
     }
+  }
+
+  &__textbox {
+    @include spacing('padding', '3xs 2xs');
+    position: absolute;
+    display: none;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(white, 0.7);
+    font-family: 'Calibri';
+    white-space: nowrap;
   }
 }

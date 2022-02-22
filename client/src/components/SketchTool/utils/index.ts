@@ -57,3 +57,5 @@ export const optimizeLine = (line: Line) => {
   const mappedPoints = newPoints.flatMap(({ x, y }) => [x, y]);
   line.points(mappedPoints);
 };
+
+export const pxToNumber = (str: string): number => +str.split('px')[0];
