@@ -2,12 +2,28 @@ const Strat = require('../models/strat');
 const Utility = require('../models/utility');
 const Player = require('../models/player');
 const Team = require('../models/team');
+const { nanoid } = require('nanoid');
 
 const clients = new Map();
 
+/**
+ * boards object holding all boards in memory.
+ * {
+ *    [room_id]: {
+ *      [client_id]: {
+ *        position: {
+ *          x,
+ *          y
+ *        }
+ *      }
+ *    }
+ * }
+ */
+const boards = {};
+
 const initWS = (io) => {
   io.on('connection', (socket) => {
-    console.log('Websocket client connected with id: ', socket.conn.id);
+    //console.log('Websocket client connected with id: ', socket.conn.id);
 
     socket.on('join-room', async (data) => {
       socket.join(data.teamID);
@@ -24,23 +40,57 @@ const initWS = (io) => {
       io.to(data.teamID).emit('room-joined', { roomID: data.teamID });
     });
 
+    socket.on('join-draw-room', ({ targetRoomId }) => {
+      if (targetRoomId && typeof targetRoomId !== 'string') return;
+      const roomId = targetRoomId ?? nanoid(10);
+      socket.join(roomId);
+      console.log('Joined draw room, target id', roomId);
+
+      boards[roomId] = boards[roomId] ?? {};
+      boards[roomId][socket.id] = boards[roomId][socket.id] ?? { position: { x: 0, y: 0 } };
+
+      io.to(socket.id).emit('draw-room-joined', { roomId, clientId: socket.id });
+    });
+
+    socket.on('pointer-position', ({ x, y }) => {
+      //* First room is always the clientId, therefore we grab the second
+      const room = Object.values(socket.rooms)[1];
+
+      if (!boards[room]) return;
+      boards[room][socket.id].position.x = x;
+      boards[room][socket.id].position.y = y;
+
+      io.to(room).emit('pointer-data', { ...boards[room][socket.id].position, id: socket.id });
+    });
+
+    socket.on('update-data', ({ images, lines, texts }) => {
+      console.log('updatedata', images.length, lines.length, texts.length);
+      //* First room is always the clientId, therefore we grab the second
+      const room = Object.values(socket.rooms)[1];
+
+      if (!boards[room]) return;
+      boards[room].images = images;
+      boards[room].lines = lines;
+      boards[room].texts = texts;
+
+      io.to(room).emit('data-updated', { images, lines, texts, id: socket.id });
+    });
+
     socket.on('disconnecting', async () => {
-      try {
-        const playerID = clients.get(socket.id).playerID;
-        clients.delete(socket.id);
-
-        const playerInClientList = [...clients].find(([_key, value]) => value.playerID === playerID);
-
-        if (!playerInClientList) {
-          const player = await Player.findById(playerID);
-          player.isOnline = false;
-          player.lastOnline = Date.now();
-          player.save();
-          console.log(`Websocket client disconnected with id: ${socket.id}`);
-        }
-      } catch (error) {
-        console.log(error);
-      }
+      // try {
+      //   const playerID = clients.get(socket.id).playerID;
+      //   clients.delete(socket.id);
+      //   const playerInClientList = [...clients].find(([_key, value]) => value.playerID === playerID);
+      //   if (!playerInClientList) {
+      //     const player = await Player.findById(playerID);
+      //     player.isOnline = false;
+      //     player.lastOnline = Date.now();
+      //     player.save();
+      //     console.log(`Websocket client disconnected with id: ${socket.id}`);
+      //   }
+      // } catch (error) {
+      //   console.log(error);
+      // }
     });
   });
 

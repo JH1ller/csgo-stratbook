@@ -57,6 +57,7 @@ import {
   faAlignCenter,
   faMousePointer,
   faICursor,
+  faNetworkWired,
 } from '@fortawesome/free-solid-svg-icons';
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -135,7 +136,8 @@ library.add(
   faSortAmountDown,
   faAlignCenter,
   faMousePointer,
-  faICursor
+  faICursor,
+  faNetworkWired
 );
 
 Vue.component('fa-icon', FontAwesomeIcon);

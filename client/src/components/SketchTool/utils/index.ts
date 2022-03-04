@@ -1,6 +1,7 @@
+import { UtilityTypes } from '@/api/models/UtilityTypes';
 import { Line } from 'konva/lib/shapes/Line';
 import { Vector2d } from 'konva/lib/types';
-
+import CursorIcon from '!!raw-loader!../../../assets/icons/cursor.svg';
 /**
  * Map array of points '[x, y, x, y]' to array of {x, y} objects '[{x, y}, {x, y}]'
  */
@@ -33,7 +34,7 @@ export const getAngle = (a: Vector2d, b: Vector2d, c: Vector2d): number => {
  * Optimize lines by removing unnecessary points which fall under a certain angle
  * threshold which is barely noticable
  */
-export const optimizeLine = (line: Line) => {
+export const optimizeLine = (line: Line, threshold: number = 5) => {
   // convert array of x & y values to array of {x, y} objects
   const points = pointsToVectorArray(line.points());
 
@@ -43,7 +44,7 @@ export const optimizeLine = (line: Line) => {
       const angle = getAngle(arr[i - 1], arr[i], arr[i + 1]);
 
       // only add center point if angle is above threshold
-      if (Math.abs(angle - 180) > 5) {
+      if (Math.abs(angle - 180) > threshold) {
         acc.push(curr);
       }
     } else {
@@ -59,3 +60,77 @@ export const optimizeLine = (line: Line) => {
 };
 
 export const pxToNumber = (str: string): number => +str.split('px')[0];
+
+export const createUtilImage = (util: UtilityTypes): HTMLImageElement => {
+  const img = new Image();
+  try {
+    img.src = require(`@/assets/images/drawtool/${util.toLowerCase()}.png`);
+  } catch (error) {
+    console.log(error);
+  }
+  return img;
+};
+
+export const createPointerImage = (colorIndex: number): HTMLImageElement => {
+  const colors = ['#1EBC9C', '#3298DB', '#F2C512', '#A463BF', '#E84B3C', '#DDE6E8'];
+  const img = new Image();
+  const tempEl = document.createElement('div');
+  try {
+    tempEl.innerHTML = CursorIcon;
+    tempEl.querySelector('path')!.style.fill = colors[Math.min(colorIndex, colors.length - 1)];
+    const base64string = btoa(tempEl.innerHTML);
+    console.log(base64string);
+    img.src = 'data:image/svg+xml;base64,' + base64string;
+  } catch (error) {
+    console.log(error);
+  }
+  return img;
+};
+
+export const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max);
+
+export const toRad = (deg: number) => -deg * (Math.PI / 180);
+
+export const rotateVector = (vec: [x: number, y: number], angleInDeg: number): [x: number, y: number] => {
+  const angleInRad = toRad(angleInDeg);
+  const cos = Math.cos(angleInRad);
+  const sin = Math.sin(angleInRad);
+  return [Math.round(10000*(vec[0] * cos - vec[1] * sin))/10000, Math.round(10000*(vec[0] * sin + vec[1] * cos))/10000];
+};
+
+export const handleDragStart = (event: DragEvent, type: UtilityTypes) => {
+  if (!event.dataTransfer) return;
+
+  event.dataTransfer.setData('text/plain', type);
+
+  // create wrapper for image element, because otherwise we can't style it.
+  const wrapper = document.createElement('div');
+  const image = document.createElement('img');
+  image.src = require(`@/assets/icons/${type.toLowerCase()}.png`);
+  wrapper.id = 'drag-ghost';
+  wrapper.style.position = 'absolute';
+  wrapper.style.top = '-1000px';
+  image.style.filter = 'invert(1)';
+  image.style.width = '42px';
+  image.style.height = '42px';
+  wrapper.appendChild(image);
+  document.body.appendChild(wrapper);
+
+  event.dataTransfer.setDragImage(wrapper, 24, 24);
+  event.dataTransfer.dropEffect = 'copy';
+};
+
+export const handleDragOver = (event: DragEvent) => {
+  if (!event.dataTransfer) return;
+  event.preventDefault();
+
+  event.dataTransfer.dropEffect = 'copy';
+};
+
+export const handleDragEnd = () => {
+  // Drag was finished or cancelled, remove ghost element that follows cursor
+  const dragGhost = document.querySelector('#drag-ghost');
+  if (dragGhost?.parentNode) {
+    dragGhost.parentNode.removeChild(dragGhost);
+  }
+};

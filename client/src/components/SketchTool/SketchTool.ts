@@ -1,6 +1,6 @@
-import { Component, Mixins, Prop, Ref } from 'vue-property-decorator';
+import { Vue, Component, Mixins, Prop, Ref, Inject } from 'vue-property-decorator';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
-import { mapModule } from '@/store/namespaces';
+import { appModule } from '@/store/namespaces';
 import { MapID } from '../MapPicker/MapPicker';
 import { Stage, StageConfig } from 'konva/lib/Stage';
 import { UtilityTypes } from '@/api/models/UtilityTypes';
@@ -9,57 +9,33 @@ import { Image as KonvaImage, ImageConfig } from 'konva/lib/shapes/Image';
 import { Line, LineConfig } from 'konva/lib/shapes/Line';
 import { Text, TextConfig } from 'konva/lib/shapes/Text';
 import { Rect, RectConfig } from 'konva/lib/shapes/Rect';
-import { Transformer } from 'konva/lib/shapes/Transformer';
+import { Transformer, TransformerConfig } from 'konva/lib/shapes/Transformer';
 import { KonvaEventObject, Node as KonvaNode } from 'konva/lib/Node';
 import { Util } from 'konva/lib/Util';
 import { DebouncedFunc, throttle, cloneDeep } from 'lodash-es';
 import { downloadURI } from '@/utils/downloadUri';
 import ShortcutService from '@/services/shortcut.service';
 import { Listen } from '@/utils/decorators/listen.decorator';
-import { optimizeLine } from './utils';
+import {
+  clamp,
+  createPointerImage,
+  createUtilImage,
+  handleDragEnd,
+  handleDragOver,
+  handleDragStart,
+  optimizeLine,
+  rotateVector,
+} from './utils';
 import VSwatches from 'vue-swatches';
 import { Strat } from '@/api/models/Strat';
 import { timeout } from '@/utils/timeout';
 import { Vector2d } from 'konva/lib/types';
-
-type KonvaRef<T> = Vue & { getNode: () => T; getStage: () => Stage };
-
-interface ImageItem extends Partial<ImageConfig> {
-  id: string;
-  x: number;
-  y: number;
-  type: UtilityTypes;
-}
-
-interface LineItem extends Partial<LineConfig> {
-  id: string;
-  stroke: string;
-  points: number[];
-  color: string;
-}
-
-interface TextItem extends Partial<TextConfig> {
-  id: string;
-  text: string;
-  x: number;
-  y: number;
-  fontSize: number;
-  fill: string;
-  visible: boolean;
-}
-
-enum ToolTypes {
-  Brush = 'BRUSH',
-  Pan = 'PAN',
-  Pointer = 'POINTER',
-  Text = 'TEXT',
-}
-
-interface StageState {
-  images: ImageItem[];
-  lines: LineItem[];
-  texts: TextItem[];
-}
+import { Log } from '@/utils/logger';
+import SocketConnection from './utils/SocketConnection';
+import { Toast } from '../ToastWrapper/ToastWrapper.models';
+import { KonvaRef, ImageItem, LineItem, TextItem, ToolTypes, StageState, RemotePointer } from './types';
+import urljoin from 'url-join';
+import StorageService from '@/services/storage.service';
 
 @Component({
   components: {
@@ -67,35 +43,57 @@ interface StageState {
   },
 })
 export default class SketchTool extends Mixins(CloseOnEscape) {
+  @Inject() storageService!: StorageService;
+  @appModule.Action private showToast!: (toast: Toast) => void;
   @Ref() stageRef!: KonvaRef<Stage>;
   @Ref() stageContainer!: HTMLDivElement;
   @Ref() transformer!: KonvaRef<Transformer>;
   @Ref() selectionRect!: KonvaRef<Rect>;
   @Ref() textbox!: HTMLInputElement;
+
   @Prop() strat!: Strat;
   @Prop() map!: MapID;
+
+  //* Images
   backgroundImage = new Image();
   utilImages!: Record<UtilityTypes, HTMLImageElement>;
+
+  //* Item State
   imageItems: ImageItem[] = [];
   lineItems: LineItem[] = [];
   textItems: TextItem[] = [];
+
+  //* Tool State
   activeItem: KonvaNode | null = null;
+  activeTool: ToolTypes = ToolTypes.Pointer;
   // to save previous tool when switching active tool to PAN
   previousTool!: ToolTypes | null;
-  activeTool: ToolTypes = ToolTypes.Pointer;
   isDrawing = false;
   currentLine!: Line | null;
   currentText!: Text | null;
   scale = 1;
-  readonly linePrecision = 5;
-  readonly imageSize = 50;
-  UtilityTypes: typeof UtilityTypes = UtilityTypes;
-  ToolTypes: typeof ToolTypes = ToolTypes;
-  shortcutService = ShortcutService.getInstance();
   changeHistory: StageState[] = [];
   historyPointer = -1;
-  readonly backgroundSize = 1024;
   currentColor = '#ffffff'; //'#1fbc9c';
+
+  //* Online State
+  remotePointers: RemotePointer[] = [];
+  roomId: string = '';
+
+  //* Configuration
+  readonly linePrecision = 10; // lower = more precise, larger data size
+  readonly optimizeThreshold = 4; // lower = more precise, larger data size
+  readonly imageSize = 50;
+  readonly cursorSize = 25;
+  readonly backgroundSize = 1024;
+
+  //* Enum redeclaration for template exposure
+  UtilityTypes: typeof UtilityTypes = UtilityTypes;
+  ToolTypes: typeof ToolTypes = ToolTypes;
+
+  //* Services
+  shortcutService = ShortcutService.getInstance();
+  wsService = SocketConnection.getInstance();
 
   undo(): void {
     if (this.historyPointer > 0) {
@@ -146,18 +144,47 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     };
   }
 
+  getRemotePointerCursorConfig(item: RemotePointer): ImageConfig {
+    return {
+      id: item.id,
+      x: item.x,
+      y: item.y,
+      width: this.cursorSize,
+      height: this.cursorSize,
+      image: item.image,
+      class: 'static',
+    };
+  }
+
+  getRemotePointerTextConfig(item: RemotePointer): TextConfig {
+    return {
+      id: item.id,
+      class: 'static',
+      x: item.x + 16,
+      y: item.y + 22,
+      text: item.id,
+      fontSize: 14,
+      fontFamily: 'Calibri',
+      fill: 'white',
+      shadowColor: 'black',
+      shadowBlur: 6,
+      shadowOpacity: 0.8,
+      //shadowOffset: { x: 2, y: 2 },
+    };
+  }
+
   getLineItemConfig(item: LineItem): LineConfig {
     return {
       id: item.id,
       x: item.x,
       y: item.y,
       stroke: item.color,
-      strokeWidth: 6,
+      strokeWidth: 5,
       draggable: this.activeTool === ToolTypes.Pointer,
       lineCap: 'round',
       points: item.points,
-      //tension: 0.7,
-      bezier: true,
+      tension: 0.5,
+      //bezier: true,
       opacity: 0.8,
       shadowColor: 'black',
       shadowBlur: 16,
@@ -184,10 +211,10 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       fontSize: item.fontSize,
       fontFamily: 'Calibri',
       shadowColor: 'black',
-      shadowBlur: 16,
+      shadowBlur: 2,
       shadowOpacity: 0.5,
       shadowForStrokeEnabled: true,
-      shadowOffset: { x: 2, y: 2 },
+      shadowOffset: { x: 1, y: 1 },
       rotation: item.rotation,
       scaleX: item.scaleX,
       scaleY: item.scaleY,
@@ -196,13 +223,41 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     };
   }
 
-  backgroundConfig = {
+  backgroundConfig: ImageConfig = {
     id: 'background-image',
+    class: 'static',
     x: 0,
     y: 0,
     image: this.backgroundImage,
     width: this.backgroundSize,
     height: this.backgroundSize,
+  };
+
+  backgroundRectConfig: RectConfig = {
+    id: 'background-rect',
+    class: 'static',
+    x: 0,
+    y: 0,
+    fill: '#20242a',
+    width: this.backgroundSize,
+    height: this.backgroundSize,
+    visible: false,
+  };
+
+  transformerConfig: TransformerConfig = {
+    keepRatio: true,
+    centeredScaling: true,
+    //* shouldOverdrawWholeArea property has a bug in konva and doesn't fire dblclick events
+    //shouldOverdrawWholeArea: true,
+    enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+    flipEnabled: false,
+    rotateAnchorOffset: 30,
+    padding: 5,
+    anchorCornerRadius: 5,
+    anchorFill: 'rgba(65, 184, 131, 0.6)',
+    anchorStroke: 'rgb(65, 184, 131)',
+    borderDash: [6],
+    borderStroke: 'rgb(65, 184, 131)',
   };
 
   selectionRectState = {
@@ -225,16 +280,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   getAllNodes(): KonvaNode[] {
     return this.stage.getLayers()[1].children ?? [];
-  }
-
-  createUtilImage(util: UtilityTypes): HTMLImageElement {
-    const img = new Image();
-    try {
-      img.src = require(`@/assets/images/drawtool/${util.toLowerCase()}.png`);
-    } catch (error) {
-      console.log(error);
-    }
-    return img;
   }
 
   getScaledPointerPosition(): Vector2d {
@@ -275,12 +320,12 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       if (containerHeight < this.backgroundSize) {
         targetScale = containerHeight / this.backgroundSize;
         // limit to scale of 0.5
-        targetScale = targetScale < 0.5 ? 0.5 : targetScale;
+        targetScale = clamp(targetScale, 0.5, 2.5);
       }
       if (containerWidth < this.backgroundSize) {
         targetScale = containerWidth / this.backgroundSize;
         // limit to scale of 0.5
-        targetScale = targetScale < 0.5 ? 0.5 : targetScale;
+        targetScale = clamp(targetScale, 0.5, 2.5);
       }
 
       targetScale = +targetScale.toFixed(2);
@@ -309,42 +354,11 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     }, 200);
   }
 
-  handleDragStart(event: DragEvent, type: UtilityTypes) {
-    if (!event.dataTransfer) return;
+  handleDragStart = handleDragStart;
 
-    event.dataTransfer.setData('text/plain', type);
+  handleDragOver = handleDragOver;
 
-    // create wrapper for image element, because otherwise we can't style it.
-    const wrapper = document.createElement('div');
-    const image = document.createElement('img');
-    image.src = require(`@/assets/icons/${type.toLowerCase()}.png`);
-    wrapper.id = 'drag-ghost';
-    wrapper.style.position = 'absolute';
-    wrapper.style.top = '-1000px';
-    image.style.filter = 'invert(1)';
-    image.style.width = '42px';
-    image.style.height = '42px';
-    wrapper.appendChild(image);
-    document.body.appendChild(wrapper);
-
-    event.dataTransfer.setDragImage(wrapper, 24, 24);
-    event.dataTransfer.dropEffect = 'copy';
-  }
-
-  handleDragOver(event: DragEvent) {
-    if (!event.dataTransfer) return;
-    event.preventDefault();
-
-    event.dataTransfer.dropEffect = 'copy';
-  }
-
-  handleDragEnd() {
-    // Drag was finished or cancelled, remove ghost element that follows cursor
-    const dragGhost = document.querySelector('#drag-ghost');
-    if (dragGhost?.parentNode) {
-      dragGhost.parentNode.removeChild(dragGhost);
-    }
-  }
+  handleDragEnd = handleDragEnd;
 
   async handleDrop(event: DragEvent) {
     if (!event.dataTransfer) return;
@@ -370,11 +384,11 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   created() {
-    this.backgroundImage.src = `minimaps/${this.map.toLowerCase()}.svg`;
+    this.backgroundImage.src = `minimaps/${this.map.toLowerCase()}.png`;
 
     // cache available utility icons
     this.utilImages = Object.values(UtilityTypes).reduce<any>((acc, type) => {
-      acc[type] = this.createUtilImage(type);
+      acc[type] = createUtilImage(type);
       return acc;
     }, {});
 
@@ -468,7 +482,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
         this.serialize();
         break;
       case ToolTypes.Pointer:
-        if (target instanceof KonvaImage && target.attrs.id !== 'background-image') {
+        if (target instanceof KonvaImage && target.attrs.class !== 'static') {
           this.setActiveItem(target);
           return;
         }
@@ -480,7 +494,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
           // remove activeItem when clicking outside of a node.
           this.setActiveItem(null);
         }
-        if ((target instanceof KonvaImage && target.attrs.id === 'background-image') || target instanceof Stage) {
+        if ((target instanceof KonvaImage && target.attrs.class === 'static') || target instanceof Stage) {
           // start selection rectangle
           this.selectionRectState.x1 = pos.x;
           this.selectionRectState.x2 = pos.x;
@@ -498,7 +512,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
           y: pos.y - 8,
           fontSize: 24,
           fill: this.currentColor,
-          visible: false,
         });
         await this.$nextTick();
         this.currentText = this.stage.findOne<Text>('#' + id);
@@ -508,6 +521,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   async showTextbox() {
     if (!this.currentText) return;
+    this.currentText.visible(false);
+    this.setActiveItem(null);
     this.moveTextboxElement();
     this.textbox.style.display = 'block';
     const { r, g, b } = Util.getRGB(this.currentColor);
@@ -531,10 +546,11 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
     this.updateItem(this.currentText.attrs.id, {
       text: this.textbox.innerText,
-      visible: true,
     });
+    this.currentText.visible(true);
     this.currentText = null;
     this.activeTool = ToolTypes.Pointer;
+    this.serialize();
   }
 
   setActiveItem(item: KonvaNode | null): void {
@@ -553,13 +569,14 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   handleMouseMove({ evt }: KonvaEventObject<MouseEvent>) {
+    const pos = this.getScaledPointerPosition();
+    this.emitPointerPos(pos);
     switch (this.activeTool) {
       case ToolTypes.Brush:
         this.draw(evt);
         break;
       case ToolTypes.Pointer:
         if (this.selectionRectConfig.visible) {
-          const pos = this.getScaledPointerPosition();
           this.selectionRectState.x2 = pos.x;
           this.selectionRectState.y2 = pos.y;
           const { x1, x2, y1, y2 } = this.selectionRectState;
@@ -574,6 +591,14 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     }
   }
 
+  get emitPointerPos(): DebouncedFunc<(pos: Vector2d) => void> {
+    return throttle((pos: Vector2d) => {
+      if (this.wsService.connected) {
+        this.wsService.emit('pointer-position', pos);
+      }
+    }, 50);
+  }
+
   // draw line on mousemove
   draw(evt: MouseEvent) {
     evt.preventDefault();
@@ -586,7 +611,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     const prevX = points[points.length - 4];
     const prevY = points[points.length - 3];
 
-    // only add point if distance to previous point is over 20
+    // only add point if distance to previous point is over linePrecision value
     if (Math.hypot(pos.x - prevX, pos.y - prevY) > this.linePrecision) {
       points.push(pos.x, pos.y);
       this.serialize();
@@ -603,7 +628,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
         if (this.isDrawing) {
           this.isDrawing = false;
 
-          optimizeLine(this.currentLine!);
+          optimizeLine(this.currentLine!, this.optimizeThreshold);
           this.saveStateToHistory();
           this.serialize();
 
@@ -625,11 +650,9 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     }
   }
 
-  handleMoveStart({ target, evt }: KonvaEventObject<DragEvent>): void {
-    //
-  }
-
   handleMoveTick({ target }: KonvaEventObject<DragEvent>) {
+    const pos = this.getScaledPointerPosition();
+    this.emitPointerPos(pos);
     if (target instanceof KonvaImage || target instanceof Text || target instanceof Line) {
       const { id, x, y } = target.attrs;
       this.updateItem(id, { x, y });
@@ -641,14 +664,17 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     }
   }
 
+  //* move the textbox DOM element to the position of the active text node
   moveTextboxElement(): void {
     if (!this.currentText) return;
-    const textItem = this.textItems.find(item => item.id === this.currentText?.attrs.id);
-    if (!textItem) return;
-    const absPos = this.scaledToAbsolutePos({ x: textItem.x, y: textItem.y });
-    this.textbox.style.top = absPos.y - 12 + 'px';
-    this.textbox.style.left = absPos.x - 6 + 'px';
-    this.textbox.style.fontSize = textItem.fontSize * this.scale + 'px';
+    const absPos = this.scaledToAbsolutePos({ x: this.currentText.x(), y: this.currentText.y() });
+    //? Trying to rotate the offset vector with the textnode rotation
+    //? however this doesn't really work and rotated textnodes still jump when dbl clicked.
+    const [moveX, moveY] = rotateVector([-6, -12], this.currentText.rotation());
+    this.textbox.style.top = absPos.y + moveY + 'px';
+    this.textbox.style.left = absPos.x + moveX + 'px';
+    this.textbox.style.fontSize = this.currentText.fontSize() * this.scale * this.currentText.scaleX() + 'px';
+    this.textbox.style.transform = `rotate(${this.currentText.rotation()}deg)`;
   }
 
   handleZoom({ evt }: KonvaEventObject<WheelEvent>) {
@@ -730,11 +756,25 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.serialize();
   }
 
+  handleTextDblClick(event: KonvaEventObject<MouseEvent>) {
+    this.currentText = event.target as Text;
+    this.showTextbox();
+  }
+
   get serialize(): DebouncedFunc<() => void> {
     return throttle(() => {
-      const json = JSON.stringify({ images: this.imageItems, lines: this.lineItems, texts: this.textItems });
+      const json = JSON.stringify({
+        images: this.imageItems,
+        lines: this.lineItems,
+        texts: this.textItems,
+      });
       localStorage.setItem('konva', json);
-    }, 200);
+      this.wsService.emit('update-data', {
+        images: this.imageItems,
+        lines: this.lineItems,
+        texts: this.textItems,
+      });
+    }, 50);
   }
 
   // TODO: this is a bit buggy when undoing a change, then creating a new one
@@ -764,6 +804,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   saveToFile() {
     this.setResponsiveStageSize(true);
+
     const tempTextNode = new Text({
       x: 16,
       y: 16,
@@ -777,7 +818,13 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       shadowOffset: { x: 2, y: 2 },
     });
 
-    this.stage.getLayers()[this.stage.getLayers().length - 1].add(tempTextNode);
+    const bgRectNode = this.stage.findOne('#background-rect');
+
+    const [, contentLayer, utilityLayer] = this.stage.getLayers();
+
+    contentLayer.add(tempTextNode);
+    utilityLayer.visible(false);
+    bgRectNode.visible(true);
 
     const dataUri = this.stage.toDataURL({
       pixelRatio: 1.5,
@@ -788,11 +835,56 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     });
 
     tempTextNode.remove();
+    utilityLayer.visible(true);
+    bgRectNode.visible(false);
 
     downloadURI(
       dataUri,
-      this.strat?.name ? this.strat.name.replaceAll(/[^a-zA-Z ]/g, '').replaceAll(' ', '_') + '.png' : 'new_strat.png'
+      this.strat?.name ? this.strat.name.replaceAll(/[^a-zA-Z ]/g, '').replaceAll(' ', '_') + '.png' : 'new_strat.png',
     );
+  }
+
+  async connect(targetRoomId?: string) {
+    const { roomId } = await this.wsService.connect(targetRoomId);
+    Log.success('sketchtool::ws:joined', roomId);
+    this.roomId = roomId;
+    this.storageService.set('draw-room-id', roomId);
+    this.copyRoomLink();
+    this.setupListeners();
+  }
+
+  copyRoomLink() {
+    navigator.clipboard.writeText(urljoin(window.location.href, this.wsService.roomId));
+    this.showToast({ id: 'sketchTool/roomlinkCopied', text: 'Room link copied' });
+  }
+
+  setupListeners() {
+    this.wsService.socket.on('pointer-data', (pointerData: Vector2d & { id: string }) => {
+      // don't show icon for your own cursor
+      if (pointerData.id === this.wsService.clientId) return;
+
+      const remotePointer = this.remotePointers.find(pointer => pointer.id === pointerData.id);
+      if (!remotePointer) {
+        this.remotePointers = [
+          ...this.remotePointers,
+          {
+            ...pointerData,
+            image: createPointerImage(this.remotePointers.length),
+          },
+        ];
+        this.showToast({ id: 'sketchTool/clientJoined', text: `Client with id "${pointerData.id}" joined.` });
+      } else {
+        Object.assign(remotePointer, pointerData);
+      }
+    });
+
+    this.wsService.socket.on('data-updated', ({ images, lines, texts, id }: StageState & { id: string }) => {
+      console.log('data-updated', { images, lines, texts, id });
+      if (id === this.wsService.clientId) return;
+      this.imageItems = images;
+      this.lineItems = lines;
+      this.textItems = texts;
+    });
   }
 
   mounted() {
@@ -801,9 +893,17 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
     this.saveStateToHistory();
 
+    if (this.$route.params.roomId) {
+      this.connect(this.$route.params.roomId);
+    }
+
+    const storageRoomId = this.storageService.get<string>('draw-room-id');
+    if (storageRoomId) {
+      this.connect(storageRoomId);
+    }
+
     (window as any).loadjson = this.loadJson;
     (window as any).saveToFile = this.saveToFile;
     (window as any).stage = this.stage;
-    (window as any).toRGB = (value: any) => Util.getRGB(value);
   }
 }

@@ -53,7 +53,7 @@ const routes = [
     component: () => import('@/views/ResetPasswordView/ResetPasswordView.vue'),
   },
   {
-    path: '/map',
+    path: '/map/:roomId?',
     name: RouteNames.Map,
     component: () => import('@/views/MapView/MapView.vue'),
     meta: {

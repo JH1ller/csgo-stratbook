@@ -55,7 +55,7 @@
     margin-left: 6px;
     font-size: 0.9rem;
 
-    @include viewport_mq3 {
+    @include viewport_mq4 {
       display: inline;
     }
   }
@@ -125,5 +125,6 @@
     border: 1px solid rgba(white, 0.7);
     font-family: 'Calibri';
     white-space: nowrap;
+    transform-origin: left center;
   }
 }
