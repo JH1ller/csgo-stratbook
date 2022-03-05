@@ -20,6 +20,7 @@ const clients = new Map();
  * }
  */
 const boards = {};
+global.boards = boards;
 
 const initWS = (io) => {
   io.on('connection', (socket) => {

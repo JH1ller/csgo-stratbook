@@ -1,4 +1,4 @@
-import { Vue, Component, Mixins, Prop, Ref, Inject } from 'vue-property-decorator';
+import { Vue, Component, Mixins, Prop, Ref, Inject, Emit } from 'vue-property-decorator';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
 import { appModule } from '@/store/namespaces';
 import { MapID } from '../MapPicker/MapPicker';
@@ -53,6 +53,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   @Prop() strat!: Strat;
   @Prop() map!: MapID;
+  @Prop() name!: string;
 
   //* Images
   backgroundImage = new Image();
@@ -413,6 +414,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.imageItems = [];
     this.lineItems = [];
     this.textItems = [];
+    this.setActiveItem(null);
     this.saveStateToHistory();
     this.serialize();
   }
@@ -486,7 +488,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
           this.setActiveItem(target);
           return;
         }
-        if (target instanceof Line || target instanceof Text) {
+        if ((target instanceof Line || target instanceof Text) && target.attrs.class !== 'static') {
           this.setActiveItem(target);
           return;
         }
@@ -525,9 +527,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.setActiveItem(null);
     this.moveTextboxElement();
     this.textbox.style.display = 'block';
-    const { r, g, b } = Util.getRGB(this.currentColor);
-    this.textbox.style.borderColor = `rgba(${r}, ${g}, ${b}, 0.7)`;
-    this.textbox.style.color = this.currentColor;
+    this.setTextboxColor(this.currentColor);
     this.textbox.innerText = this.currentText.attrs.text;
 
     await timeout(10);
@@ -538,6 +538,12 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     range.setEnd(this.textbox.childNodes[0], this.textbox.innerText.length);
     sel?.removeAllRanges();
     sel?.addRange(range);
+  }
+
+  setTextboxColor(color: string) {
+    const { r, g, b } = Util.getRGB(color);
+    this.textbox.style.borderColor = `rgba(${r}, ${g}, ${b}, 0.7)`;
+    this.textbox.style.color = color;
   }
 
   handleTextboxKeypress({ code }: KeyboardEvent) {
@@ -761,6 +767,14 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.showTextbox();
   }
 
+  handleColorChange(color: string) {
+    if (!this.currentText) return;
+    this.updateItem(this.currentText.attrs.id, {
+      fill: color,
+    });
+    this.setTextboxColor(color);
+  }
+
   get serialize(): DebouncedFunc<() => void> {
     return throttle(() => {
       const json = JSON.stringify({
@@ -844,6 +858,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     );
   }
 
+  @Emit()
   async connect(targetRoomId?: string) {
     const { roomId } = await this.wsService.connect(targetRoomId);
     Log.success('sketchtool::ws:joined', roomId);
@@ -854,7 +869,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   copyRoomLink() {
-    navigator.clipboard.writeText(urljoin(window.location.href, this.wsService.roomId));
+    navigator.clipboard?.writeText(urljoin(window.location.origin, '#', 'map', this.wsService.roomId));
     this.showToast({ id: 'sketchTool/roomlinkCopied', text: 'Room link copied' });
   }
 
@@ -879,7 +894,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     });
 
     this.wsService.socket.on('data-updated', ({ images, lines, texts, id }: StageState & { id: string }) => {
-      console.log('data-updated', { images, lines, texts, id });
+      // console.log('data-updated', { images, lines, texts, id });
       if (id === this.wsService.clientId) return;
       this.imageItems = images;
       this.lineItems = lines;

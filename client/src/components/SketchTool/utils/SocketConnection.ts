@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { BASE_URL } from '@/config';
+import { WS_URL } from '@/config';
 import { Log } from '@/utils/logger';
 
 class SocketConnection {
@@ -24,7 +24,8 @@ class SocketConnection {
   connect(targetRoomId?: string): Promise<{ roomId: string; clientId: string }> {
     return new Promise((resolve, reject) => {
       if (!this.socket || !this.socket.connected) {
-        this.socket = io(BASE_URL);
+        console.log(WS_URL);
+        this.socket = io(WS_URL);
         this.socket.on('connect', () => {
           Log.info('ws::drawtool:connected', 'Websocket connection established.');
           this.socket.emit('join-draw-room', { targetRoomId });

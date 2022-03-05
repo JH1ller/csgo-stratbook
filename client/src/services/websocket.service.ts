@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { BASE_URL } from '@/config';
+import { WS_URL } from '@/config';
 import store from '@/store';
 import { Log } from '@/utils/logger';
 import { Player } from '../api/models/Player';
@@ -25,7 +25,7 @@ class WebSocketService {
 
   connect() {
     if (!this.socket || !this.socket.connected) {
-      this.socket = io(BASE_URL);
+      this.socket = io(WS_URL);
       this.setupListeners();
     }
   }

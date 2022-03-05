@@ -1,6 +1,7 @@
 <template>
   <div class="map-view">
-    <SketchTool :map="'DUST_2'" />
+    <SketchTool :map="'DUST_2'" :name="name" @connect="showConnectionDialog = true" />
+    <ConnectionDialog v-if="showConnectionDialog" />
   </div>
 </template>
 

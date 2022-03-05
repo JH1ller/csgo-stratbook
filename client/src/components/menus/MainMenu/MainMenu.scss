@@ -84,7 +84,7 @@
       }
     }
 
-    &.router-link-exact-active {
+    &.router-link-active {
       .main-menu__icon {
         transform: scale3d(1.2, 1.2, 1.2);
         & path {

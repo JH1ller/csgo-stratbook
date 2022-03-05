@@ -47,16 +47,8 @@
             @transformend="handleTransformEnd"
           />
           <v-rect :config="selectionRectConfig" ref="selectionRect" />
-          <v-image
-            v-for="item in remotePointers"
-            :key="'i' + item.id"
-            :config="getRemotePointerCursorConfig(item)"
-          />
-          <v-text
-            v-for="item in remotePointers"
-            :key="'t' + item.id"
-            :config="getRemotePointerTextConfig(item)"
-          />
+          <v-image v-for="item in remotePointers" :key="'i' + item.id" :config="getRemotePointerCursorConfig(item)" />
+          <v-text v-for="item in remotePointers" :key="'t' + item.id" :config="getRemotePointerTextConfig(item)" />
         </v-layer>
       </v-stage>
       <span
@@ -75,6 +67,7 @@
         swatch-size="30"
         popover-y="top"
         popover-x="right"
+        @input="handleColorChange"
       ></v-swatches>
       <button
         class="sketch-tool__btn"
@@ -126,9 +119,7 @@
           <fa-icon icon="network-wired" /><span class="sketch-tool__btn-label">Create room</span>
         </button>
         <button v-else class="sketch-tool__btn" @click="copyRoomLink">
-          <fa-icon icon="copy" /><span class="sketch-tool__btn-label"
-            >Room ID: {{ wsService.roomId }}</span
-          >
+          <fa-icon icon="copy" /><span class="sketch-tool__btn-label">Room ID: {{ wsService.roomId }}</span>
         </button>
       </template>
     </div>
