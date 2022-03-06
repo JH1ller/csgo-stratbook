@@ -1,4 +1,4 @@
-import { Vue, Component, Mixins, Prop, Ref, Inject, Emit } from 'vue-property-decorator';
+import { Vue, Component, Mixins, Prop, Ref, Inject, Emit, Watch } from 'vue-property-decorator';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
 import { appModule } from '@/store/namespaces';
 import { MapID } from '../MapPicker/MapPicker';
@@ -53,7 +53,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   @Prop() strat!: Strat;
   @Prop() map!: MapID;
-  @Prop() name!: string;
+  @Prop() userName!: string;
+  @Prop() stratName!: string;
 
   //* Images
   backgroundImage = new Image();
@@ -101,9 +102,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       this.historyPointer--;
       const historySnapshot = this.changeHistory[this.historyPointer];
       if (!historySnapshot) return;
-      this.imageItems = historySnapshot.images;
-      this.lineItems = historySnapshot.lines;
-      this.textItems = historySnapshot.texts;
+      this.applyStageData(historySnapshot);
       this.transformer.getNode().nodes([]);
       this.serialize();
     }
@@ -112,10 +111,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   redo(): void {
     if (this.historyPointer < this.changeHistory.length - 1) {
       this.historyPointer++;
-      const { images, lines, texts } = this.changeHistory[this.historyPointer];
-      this.imageItems = images;
-      this.lineItems = lines;
-      this.textItems = texts;
+      const historySnapshot = this.changeHistory[this.historyPointer];
+      this.applyStageData(historySnapshot);
       this.transformer.getNode().nodes([]);
       this.serialize();
     }
@@ -163,7 +160,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       class: 'static',
       x: item.x + 16,
       y: item.y + 22,
-      text: item.id,
+      text: item.userName,
       fontSize: 14,
       fontFamily: 'Calibri',
       fill: 'white',
@@ -782,7 +779,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
         lines: this.lineItems,
         texts: this.textItems,
       });
-      localStorage.setItem('konva', json);
+      this.storageService.set('draw-data', json);
       this.wsService.emit('update-data', {
         images: this.imageItems,
         lines: this.lineItems,
@@ -804,16 +801,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       texts: cloneDeep(this.textItems),
     });
     this.historyPointer++;
-  }
-
-  loadJson(): void {
-    const json = localStorage.getItem('konva');
-    if (json) {
-      const { images, lines, texts } = JSON.parse(json);
-      this.imageItems = images;
-      this.lineItems = lines;
-      this.textItems = texts;
-    }
   }
 
   saveToFile() {
@@ -858,14 +845,36 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     );
   }
 
-  @Emit()
   async connect(targetRoomId?: string) {
     const { roomId } = await this.wsService.connect(targetRoomId);
     Log.success('sketchtool::ws:joined', roomId);
     this.roomId = roomId;
     this.storageService.set('draw-room-id', roomId);
+    if (!this.$route.params.roomId) {
+      this.$router.replace({ path: `/map/${roomId}` });
+    }
     this.copyRoomLink();
     this.setupListeners();
+    if (!this.userName) {
+      this.showConnectionDialog();
+    }
+  }
+
+  @Emit()
+  showConnectionDialog() {
+    return;
+  }
+
+  @Watch('userName')
+  handleUserNameChange(to: string) {
+    console.log('watch username', to);
+    this.wsService.emit('update-username', to);
+  }
+
+  applyStageData({ images, lines, texts }: StageState) {
+    this.imageItems = images;
+    this.lineItems = lines;
+    this.textItems = texts;
   }
 
   copyRoomLink() {
@@ -893,18 +902,24 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       }
     });
 
-    this.wsService.socket.on('data-updated', ({ images, lines, texts, id }: StageState & { id: string }) => {
+    this.wsService.socket.on('data-updated', (data: StageState & { id: string }) => {
       // console.log('data-updated', { images, lines, texts, id });
+      if (data.id === this.wsService.clientId) return;
+      this.applyStageData(data);
+    });
+
+    this.wsService.socket.on('username-updated', ({ userName, id }: { userName: string; id: string }) => {
+      console.log('username-updated', { userName, id });
       if (id === this.wsService.clientId) return;
-      this.imageItems = images;
-      this.lineItems = lines;
-      this.textItems = texts;
+      const remotePointer = this.remotePointers.find(i => i.id === id);
+      if (remotePointer) {
+        remotePointer.userName = userName;
+      }
     });
   }
 
   mounted() {
     this.setResponsiveStageSize(true);
-    (window as any).konva = this.stage;
 
     this.saveStateToHistory();
 
@@ -913,12 +928,18 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     }
 
     const storageRoomId = this.storageService.get<string>('draw-room-id');
+    const previousData = this.storageService.get<StageState>('draw-data');
+
     if (storageRoomId) {
       this.connect(storageRoomId);
+    } else if (previousData) {
+      this.applyStageData(previousData);
     }
 
-    (window as any).loadjson = this.loadJson;
+    // for testing
+    (window as any).konva = this.stage;
     (window as any).saveToFile = this.saveToFile;
     (window as any).stage = this.stage;
+    (window as any).dialog = this.showConnectionDialog;
   }
 }

@@ -6,20 +6,9 @@ const { nanoid } = require('nanoid');
 
 const clients = new Map();
 
-/**
- * boards object holding all boards in memory.
- * {
- *    [room_id]: {
- *      [client_id]: {
- *        position: {
- *          x,
- *          y
- *        }
- *      }
- *    }
- * }
- */
 const boards = {};
+
+// for debugging
 global.boards = boards;
 
 const initWS = (io) => {
@@ -75,6 +64,17 @@ const initWS = (io) => {
       boards[room].texts = texts;
 
       io.to(room).emit('data-updated', { images, lines, texts, id: socket.id });
+    });
+
+    socket.on('update-username', (userName) => {
+      console.log('update username', userName);
+      //* First room is always the clientId, therefore we grab the second
+      const room = Object.values(socket.rooms)[1];
+
+      if (!boards[room]) return;
+      boards[room][socket.id].username = userName;
+
+      io.to(room).emit('username-updated', { userName, id: socket.id });
     });
 
     socket.on('disconnecting', async () => {

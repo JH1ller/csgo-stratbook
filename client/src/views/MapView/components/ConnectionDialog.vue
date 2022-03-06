@@ -1,7 +1,8 @@
 <template>
   <BackdropDialog>
-    <TextInput :field="nameField" v-model="name" />
-    <button class="connection-dialog__submit" @click="submit">Connect</button>
+    <TextInput class="connection-dialog__text-field" :field="userNameField" v-model="userNameValue" />
+    <TextInput class="connection-dialog__text-field" :field="stratNameField" v-model="stratNameValue" />
+    <button class="connection-dialog__submit" @click="submit">Submit</button>
   </BackdropDialog>
 </template>
 
@@ -19,18 +20,22 @@ import FormField from '@/utils/FormField';
   },
 })
 export default class ConnectionDialog extends Vue {
-  @Prop() inputName!: string;
+  @Prop() userName!: string;
+  @Prop() stratName!: string;
 
-  name = '';
-  nameField = new FormField('Name', true, [Validators.maxLength(30), Validators.notEmpty()]);
+  userNameValue = '';
+  stratNameValue = '';
+  userNameField = new FormField('Username', true, [Validators.maxLength(30), Validators.notEmpty()]);
+  stratNameField = new FormField('Strat name', false, [Validators.maxLength(30)]);
 
   @Emit()
   submit() {
-    return this.name;
+    return { userName: this.userNameValue, stratName: this.stratNameValue };
   }
 
   mounted() {
-    this.name = this.inputName ?? `User${Math.random() * 100}`;
+    this.userNameValue = this.userName ?? `User${Math.random() * 100}`;
+    this.stratNameValue = this.stratName;
   }
 }
 </script>
@@ -38,6 +43,12 @@ export default class ConnectionDialog extends Vue {
 <style lang="scss">
 .connection-dialog {
   &__submit {
+    @include button-default;
+    @include spacing('margin-top', sm);
+  }
+
+  &__text-field {
+    @include spacing('margin-top', xs);
   }
 }
 </style>

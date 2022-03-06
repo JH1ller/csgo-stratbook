@@ -30,6 +30,7 @@ export interface TextItem extends Partial<TextConfig> {
 }
 
 export interface RemotePointer {
+  userName?: string;
   id: string;
   x: number;
   y: number;
