@@ -122,6 +122,9 @@
           <fa-icon icon="copy" /><span class="sketch-tool__btn-label">Room ID: {{ wsService.roomId }}</span>
         </button>
       </template>
+      <button class="sketch-tool__btn" @click="showConnectionDialog">
+        <fa-icon icon="cog" /><span class="sketch-tool__btn-label">Config</span>
+      </button>
     </div>
     <div class="sketch-tool__draggables-bar">
       <div

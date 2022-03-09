@@ -30,7 +30,7 @@ const initWS = (io) => {
       io.to(data.teamID).emit('room-joined', { roomID: data.teamID });
     });
 
-    socket.on('join-draw-room', ({ targetRoomId }) => {
+    socket.on('join-draw-room', ({ targetRoomId, userName }) => {
       if (targetRoomId && typeof targetRoomId !== 'string') return;
       const roomId = targetRoomId ?? nanoid(10);
       socket.join(roomId);
@@ -38,6 +38,10 @@ const initWS = (io) => {
 
       boards[roomId] = boards[roomId] ?? {};
       boards[roomId][socket.id] = boards[roomId][socket.id] ?? { position: { x: 0, y: 0 } };
+
+      if (userName) {
+        boards[roomId][socket.id].userName = userName;
+      }
 
       io.to(socket.id).emit('draw-room-joined', { roomId, clientId: socket.id });
     });
@@ -50,7 +54,11 @@ const initWS = (io) => {
       boards[room][socket.id].position.x = x;
       boards[room][socket.id].position.y = y;
 
-      io.to(room).emit('pointer-data', { ...boards[room][socket.id].position, id: socket.id });
+      io.to(room).emit('pointer-data', {
+        ...boards[room][socket.id].position,
+        id: socket.id,
+        userName: boards[room][socket.id].userName,
+      });
     });
 
     socket.on('update-data', ({ images, lines, texts }) => {
@@ -72,7 +80,7 @@ const initWS = (io) => {
       const room = Object.values(socket.rooms)[1];
 
       if (!boards[room]) return;
-      boards[room][socket.id].username = userName;
+      boards[room][socket.id].userName = userName;
 
       io.to(room).emit('username-updated', { userName, id: socket.id });
     });

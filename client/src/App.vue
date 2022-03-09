@@ -88,7 +88,7 @@ export default class App extends Vue {
       this.checkCookies();
     }
     this.checkVersion();
-    window.twttr.widgets.load();
+    window.twttr?.widgets.load();
   }
 
   private checkVersion() {
@@ -104,7 +104,7 @@ export default class App extends Vue {
           resolveBtn: 'OK',
           confirmOnly: true,
           htmlMode: true,
-        })
+        }),
       );
     }
     this.storageService.set('version', this.appVersion);
@@ -122,7 +122,7 @@ export default class App extends Vue {
           resolveBtn: 'Restart',
           htmlMode: true,
         }),
-        () => ipcRenderer.send('restart-app')
+        () => ipcRenderer.send('restart-app'),
       );
     });
 

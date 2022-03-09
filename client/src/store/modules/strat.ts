@@ -7,6 +7,7 @@ import TrackingService from '@/services/tracking.service';
 import { extractTextFromHTML } from '@/utils/extractTextFromHTML';
 import StorageService from '@/services/storage.service';
 import { sortDateAddedASC, sortDateAddedDESC } from '@/utils/sortFunctions';
+import { writeToClipboard } from '@/utils/writeToClipboard';
 
 const SET_STRATS = 'SET_STRATS';
 
@@ -61,7 +62,7 @@ export const stratModule: Module<StratState, RootState> = {
             ? extractTextFromHTML(strat.content)
                 .toLowerCase()
                 .includes(rootState.filter.stratFilters.content.toLowerCase())
-            : true)
+            : true),
       );
     },
     sortedFilteredStratsOfCurrentMap(state, getters): Strat[] {
@@ -110,7 +111,7 @@ export const stratModule: Module<StratState, RootState> = {
       const res = await api.strat.updateStrat({ _id: stratID, shared: true });
       if (res.success) {
         const shareLink = `${window.location.origin}/#/share/${stratID}`;
-        navigator.clipboard.writeText(shareLink);
+        writeToClipboard(shareLink);
         dispatch('app/showToast', { id: 'strat/shareStrat', text: 'Copied share link to clipboard.' }, { root: true });
         trackingService.track('Action: Share Strat', {
           name: state.strats.find(strat => strat._id === stratID)?.name as string,
@@ -129,7 +130,7 @@ export const stratModule: Module<StratState, RootState> = {
         dispatch(
           'app/showToast',
           { id: 'strat/addedShared', text: 'Strat successfully added to your stratbook.' },
-          { root: true }
+          { root: true },
         );
         trackingService.track('Action: Add Shared Strat', {
           name: state.strats.find(strat => strat._id === stratID)?.name as string,
@@ -158,7 +159,7 @@ export const stratModule: Module<StratState, RootState> = {
       if (state.collapsedStrats.some(id => id === stratID)) {
         commit(
           SET_COLLAPSED,
-          state.collapsedStrats.filter(id => id !== stratID)
+          state.collapsedStrats.filter(id => id !== stratID),
         );
       } else {
         commit(SET_COLLAPSED, [...state.collapsedStrats, stratID]);
@@ -184,7 +185,7 @@ export const stratModule: Module<StratState, RootState> = {
           text: sort === Sort.DateAddedASC ? 'Sorting by: newest 🠖 oldest' : 'Sorting by: oldest 🠖 newest',
           allowMultiple: true,
         },
-        { root: true }
+        { root: true },
       );
     },
     resetState({ commit }) {

@@ -36,6 +36,7 @@ import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import { KonvaRef, ImageItem, LineItem, TextItem, ToolTypes, StageState, RemotePointer } from './types';
 import urljoin from 'url-join';
 import StorageService from '@/services/storage.service';
+import { writeToClipboard } from '@/utils/writeToClipboard';
 
 @Component({
   components: {
@@ -55,6 +56,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   @Prop() map!: MapID;
   @Prop() userName!: string;
   @Prop() stratName!: string;
+  @Prop() roomId!: string;
 
   //* Images
   backgroundImage = new Image();
@@ -80,7 +82,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   //* Online State
   remotePointers: RemotePointer[] = [];
-  roomId: string = '';
 
   //* Configuration
   readonly linePrecision = 10; // lower = more precise, larger data size
@@ -846,15 +847,15 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   async connect(targetRoomId?: string) {
-    const { roomId } = await this.wsService.connect(targetRoomId);
+    const { roomId } = await this.wsService.connect({ roomId: targetRoomId, userName: this.userName });
     Log.success('sketchtool::ws:joined', roomId);
-    this.roomId = roomId;
-    this.storageService.set('draw-room-id', roomId);
-    if (!this.$route.params.roomId) {
-      this.$router.replace({ path: `/map/${roomId}` });
-    }
+    this.updateRoomId(roomId);
+
+    // for testing
     this.copyRoomLink();
+
     this.setupListeners();
+
     if (!this.userName) {
       this.showConnectionDialog();
     }
@@ -865,10 +866,27 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     return;
   }
 
+  @Emit()
+  updateRoomId(roomId: string) {
+    return roomId;
+  }
+
   @Watch('userName')
   handleUserNameChange(to: string) {
     console.log('watch username', to);
     this.wsService.emit('update-username', to);
+  }
+
+  @Watch('stratName')
+  handleStratNameChange(to: string) {
+    console.log('watch stratName', to);
+    this.wsService.emit('update-stratname', to);
+  }
+
+  @Watch('roomId')
+  handleRoomChange(to: string) {
+    console.log('watch roomid', to);
+    this.connect(to);
   }
 
   applyStageData({ images, lines, texts }: StageState) {
@@ -878,15 +896,16 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   copyRoomLink() {
-    navigator.clipboard?.writeText(urljoin(window.location.origin, '#', 'map', this.wsService.roomId));
+    writeToClipboard(urljoin(window.location.origin, '#', 'map', this.wsService.roomId));
     this.showToast({ id: 'sketchTool/roomlinkCopied', text: 'Room link copied' });
   }
 
   setupListeners() {
-    this.wsService.socket.on('pointer-data', (pointerData: Vector2d & { id: string }) => {
+    this.wsService.socket.on('pointer-data', (pointerData: Vector2d & { id: string; userName: string }) => {
       // don't show icon for your own cursor
       if (pointerData.id === this.wsService.clientId) return;
 
+      console.log('pointerData.userName', pointerData.userName);
       const remotePointer = this.remotePointers.find(pointer => pointer.id === pointerData.id);
       if (!remotePointer) {
         this.remotePointers = [
@@ -914,6 +933,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       const remotePointer = this.remotePointers.find(i => i.id === id);
       if (remotePointer) {
         remotePointer.userName = userName;
+        console.log('remote pointer updated');
       }
     });
   }
@@ -923,23 +943,11 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
     this.saveStateToHistory();
 
-    if (this.$route.params.roomId) {
-      this.connect(this.$route.params.roomId);
-    }
-
-    const storageRoomId = this.storageService.get<string>('draw-room-id');
-    const previousData = this.storageService.get<StageState>('draw-data');
-
-    if (storageRoomId) {
-      this.connect(storageRoomId);
-    } else if (previousData) {
-      this.applyStageData(previousData);
-    }
-
     // for testing
     (window as any).konva = this.stage;
     (window as any).saveToFile = this.saveToFile;
     (window as any).stage = this.stage;
     (window as any).dialog = this.showConnectionDialog;
+    console.log((window as any).bla.runRandomFunc());
   }
 }

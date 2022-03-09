@@ -21,14 +21,14 @@ class SocketConnection {
     return SocketConnection.instance;
   }
 
-  connect(targetRoomId?: string): Promise<{ roomId: string; clientId: string }> {
+  connect({ roomId, userName }: { roomId?: string; userName?: string }): Promise<{ roomId: string; clientId: string }> {
     return new Promise((resolve, reject) => {
       if (!this.socket || !this.socket.connected) {
         console.log(WS_URL);
         this.socket = io(WS_URL);
         this.socket.on('connect', () => {
           Log.info('ws::drawtool:connected', 'Websocket connection established.');
-          this.socket.emit('join-draw-room', { targetRoomId });
+          this.socket.emit('join-draw-room', { targetRoomId: roomId, userName });
         });
         this.socket.on('draw-room-joined', ({ roomId, clientId }: { roomId: string; clientId: string }) => {
           Log.info('ws::drawtool:joined', `Joined room ${roomId} as client ${clientId}`);
@@ -54,7 +54,7 @@ class SocketConnection {
     if (this.socket?.connected && this.roomId) {
       this.socket.emit(event, ...args);
     } else {
-      Log.warn('ws::drawtool:emit', `Tried emitting ${args} without connection.`);
+      Log.warn('ws::drawtool:emit', `Tried emitting ${event} without connection.`);
     }
   }
 }

@@ -1,8 +1,12 @@
 <template>
   <BackdropDialog>
-    <TextInput class="connection-dialog__text-field" :field="userNameField" v-model="userNameValue" />
-    <TextInput class="connection-dialog__text-field" :field="stratNameField" v-model="stratNameValue" />
-    <button class="connection-dialog__submit" @click="submit">Submit</button>
+    <TextInput class="connection-dialog__text-field" :field="formFields.userName" v-model="formFields.userName.value" />
+    <TextInput
+      class="connection-dialog__text-field"
+      :field="formFields.stratName"
+      v-model="formFields.stratName.value"
+    />
+    <button class="connection-dialog__submit" @click="handleSubmitAttempt">Submit</button>
   </BackdropDialog>
 </template>
 
@@ -10,8 +14,9 @@
 import { Vue, Component, Emit, Prop } from 'vue-property-decorator';
 import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
 import TextInput from '@/components/TextInput/TextInput.vue';
-import { Validators } from '@/utils/validation';
+import { validateForm, Validators } from '@/utils/validation';
 import FormField from '@/utils/FormField';
+import { nanoid } from 'nanoid';
 
 @Component({
   components: {
@@ -23,19 +28,25 @@ export default class ConnectionDialog extends Vue {
   @Prop() userName!: string;
   @Prop() stratName!: string;
 
-  userNameValue = '';
-  stratNameValue = '';
-  userNameField = new FormField('Username', true, [Validators.maxLength(30), Validators.notEmpty()]);
-  stratNameField = new FormField('Strat name', false, [Validators.maxLength(30)]);
+  formFields = {
+    userName: new FormField('Username', true, [Validators.maxLength(30), Validators.notEmpty()]),
+    stratName: new FormField('Strat name', false, [Validators.maxLength(30)]),
+  };
+
+  handleSubmitAttempt() {
+    if (validateForm(this.formFields)) {
+      this.submit();
+    }
+  }
 
   @Emit()
   submit() {
-    return { userName: this.userNameValue, stratName: this.stratNameValue };
+    return { userName: this.formFields.userName.value, stratName: this.formFields.stratName.value };
   }
 
   mounted() {
-    this.userNameValue = this.userName ?? `User${Math.random() * 100}`;
-    this.stratNameValue = this.stratName;
+    this.formFields.userName.value = this.userName ?? `User_${nanoid(5)}`;
+    this.formFields.stratName.value = this.stratName;
   }
 }
 </script>

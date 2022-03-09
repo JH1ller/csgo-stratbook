@@ -12,6 +12,7 @@ import CloseOnEscape from '@/mixins/CloseOnEscape';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import { appModule } from '@/store/namespaces';
 import TrackingService from '@/services/tracking.service';
+import { writeToClipboard } from '@/utils/writeToClipboard';
 
 interface LightboxMedia {
   type: 'image' | 'video';
@@ -88,7 +89,7 @@ export default class UtilityLightbox extends Mixins(CloseOnEscape) {
   }
 
   private copySetpos() {
-    navigator.clipboard.writeText(this.utility.setpos!);
+    writeToClipboard(this.utility.setpos!);
     this.showToast({ id: 'utilityLightbox/copySetpos', text: 'Setpos Command copied!' });
     this.trackingService.track('Action: Copy Setpos', { from: 'lightbox' });
   }

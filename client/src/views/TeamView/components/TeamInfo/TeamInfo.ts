@@ -4,6 +4,7 @@ import { appModule } from '@/store/namespaces';
 import { Team } from '@/api/models/Team';
 import { openLink } from '@/utils/openLink';
 import TrackingService from '@/services/tracking.service';
+import { writeToClipboard } from '@/utils/writeToClipboard';
 
 @Component({})
 export default class TeamInfo extends Vue {
@@ -23,14 +24,14 @@ export default class TeamInfo extends Vue {
   }
 
   private copyCode() {
-    navigator.clipboard.writeText(this.teamInfo.code.toUpperCase());
+    writeToClipboard(this.teamInfo.code.toUpperCase());
     this.showToast({ id: 'teamInfo/copyCode', text: 'Join code copied' });
   }
 
   private copyServer() {
     if (!this.teamInfo.server?.ip) return;
 
-    navigator.clipboard.writeText(this.serverString);
+    writeToClipboard(this.serverString);
     this.showToast({ id: 'teamInfo/copyServer', text: 'Connection string copied' });
   }
 

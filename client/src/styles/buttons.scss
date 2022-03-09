@@ -11,7 +11,8 @@
   border: 2px solid rgba(black, 0.1);
   color: $color;
 
-  &:hover {
+  &:hover,
+  &:focus {
     border-color: rgba(black, 0.3);
     background-color: darken($bgcolor, 2%);
   }

@@ -58,6 +58,7 @@ import {
   faMousePointer,
   faICursor,
   faNetworkWired,
+  faCog,
 } from '@fortawesome/free-solid-svg-icons';
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -67,6 +68,8 @@ import { isDesktop } from './utils/isDesktop';
 import StorageService from './services/storage.service';
 import { BreakpointService } from './services/breakpoint.service';
 import VueKonva from 'vue-konva';
+import * as Sentry from '@sentry/vue';
+import { BrowserTracing } from '@sentry/tracing';
 
 Vue.use(VueTippy, {
   directive: 'tippy',
@@ -137,8 +140,24 @@ library.add(
   faAlignCenter,
   faMousePointer,
   faICursor,
-  faNetworkWired
+  faNetworkWired,
+  faCog,
 );
+
+Sentry.init({
+  Vue,
+  dsn: 'https://47606468801448cd909f02edde2defd7@o1161937.ingest.sentry.io/6248588',
+  integrations: [
+    new BrowserTracing({
+      routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+      tracingOrigins: ['localhost', 'stratbook.live', /^\//],
+    }),
+  ],
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
+});
 
 Vue.component('fa-icon', FontAwesomeIcon);
 

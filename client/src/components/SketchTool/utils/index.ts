@@ -2,6 +2,7 @@ import { UtilityTypes } from '@/api/models/UtilityTypes';
 import { Line } from 'konva/lib/shapes/Line';
 import { Vector2d } from 'konva/lib/types';
 import CursorIcon from '!!raw-loader!../../../assets/icons/cursor.svg';
+
 /**
  * Map array of points '[x, y, x, y]' to array of {x, y} objects '[{x, y}, {x, y}]'
  */
@@ -65,8 +66,8 @@ export const createUtilImage = (util: UtilityTypes): HTMLImageElement => {
   const img = new Image();
   try {
     img.src = require(`@/assets/images/drawtool/${util.toLowerCase()}.png`);
-  } catch (error) {
-    console.log(error);
+  } catch (e: any) {
+    console.warn(e.code, e.message);
   }
   return img;
 };

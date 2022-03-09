@@ -13,6 +13,7 @@ export default class MapView extends Vue {
   @Inject() storageService!: StorageService;
   userName = '';
   stratName = '';
+  roomId = '';
   showConnectionDialog = false;
 
   handleSubmit({ userName, stratName }: { userName: string; stratName: string }) {
@@ -22,10 +23,29 @@ export default class MapView extends Vue {
     this.showConnectionDialog = false;
   }
 
-  created() {
+  changeRoomId(roomId: string) {
+    this.roomId = roomId;
+
+    this.storageService.set('draw-room-id', roomId);
+    if (!this.$route.params.roomId) {
+      this.$router.replace({ path: `/map/${roomId}` });
+    }
+  }
+
+  mounted() {
     const userName = this.storageService.get('draw-username');
     if (userName) {
       this.userName = userName;
     }
+
+    const storageRoomId = this.storageService.get<string>('draw-room-id');
+
+    if (this.$route.params.roomId) {
+      this.changeRoomId(this.$route.params.roomId);
+    } else if (storageRoomId) {
+      this.changeRoomId(storageRoomId);
+    }
+
+    //const previousData = this.storageService.get<StageState>('draw-data');
   }
 }

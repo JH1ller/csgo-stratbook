@@ -1,24 +1,26 @@
 @mixin input-default($placeholder: false) {
   font-size: 1em;
   @if ($placeholder == true) {
-    padding: 18px 10px 8px 10px;
+    padding: 22px 10px 5px 12px;
   } @else {
     padding: 8px 10px;
   }
 
   background-color: white;
-  border: 1px solid rgba($color--navyblue, 0.35);
+  outline: 1px solid rgba($color--navyblue, 0.35);
+  border-bottom: 2px solid transparent;
   border-radius: 4px;
   box-shadow: $shadow-subtle;
-  transition: border 0.2s ease;
+  transition: border 0.2s ease, outline 0.2s ease;
 
   &:focus {
+    outline-color: rgba($color--navyblue, 0.65);
     border-color: rgba($color--navyblue, 0.65);
   }
 
   @include viewport_mq7 {
     @if ($placeholder == true) {
-      padding: 22px 12px 10px 12px;
+      padding: 24px 12px 7px 12px;
     } @else {
       padding: 10px 12px;
     }

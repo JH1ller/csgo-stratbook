@@ -25,6 +25,8 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/vue-fontawesome": "^2.0.0",
     "@popperjs/core": "^2.9.0",
+    "@sentry/tracing": "^6.18.1",
+    "@sentry/vue": "^6.18.1",
     "@splitbee/web": "^0.2.2",
     "axios": "^0.21.4",
     "canvas": "^2.9.0",
