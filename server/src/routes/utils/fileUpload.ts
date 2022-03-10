@@ -128,7 +128,6 @@ export const deleteFile = async (filename: string): Promise<void> => {
     };
 
     const data = await s3.deleteObject(params).promise();
-    console.log(data);
 
     // TODO: check if data.Location is correct, seems to return undefined
     console.log(`File deleted successfully. ${data.$response.data}`);

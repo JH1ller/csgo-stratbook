@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "tsc && node ./dist_server/index.js",
     "dev": "nodemon --inspect=0.0.0.0:9229 src/index.js",
-    "serve": "ts-node-dev src/index.ts",
+    "serve": "ts-node-dev --files src/index.ts",
     "genKeys": "node scripts/genKeys.js --amount 10"
   },
   "repository": {

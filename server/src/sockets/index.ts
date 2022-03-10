@@ -40,7 +40,7 @@ export const initialize = (io: Server) => {
       socket.join(roomId);
       console.log('Joined draw room, target id', roomId);
 
-      boards[roomId] = boards[roomId] ?? { clients: {} };
+      boards[roomId] = boards[roomId] ?? { clients: {}, data: {} };
       boards[roomId].clients[socket.id] = boards[roomId].clients[socket.id] ?? { position: { x: 0, y: 0 } };
 
       if (userName) {
@@ -52,8 +52,8 @@ export const initialize = (io: Server) => {
 
     socket.on('pointer-position', ({ x, y }) => {
       //* First room is always the clientId, therefore we grab the second
-      const room = Object.values(socket.rooms)[1];
-
+      const room = [...socket.rooms.values()][1];
+      console.log('on-pointer-position', socket.rooms);
       if (!boards[room]) return;
       boards[room].clients[socket.id].position.x = x;
       boards[room].clients[socket.id].position.y = y;
@@ -68,7 +68,7 @@ export const initialize = (io: Server) => {
     socket.on('update-data', ({ images, lines, texts }) => {
       console.log('updatedata', images.length, lines.length, texts.length);
       //* First room is always the clientId, therefore we grab the second
-      const room = Object.values(socket.rooms)[1];
+      const room = [...socket.rooms.values()][1];
 
       if (!boards[room]) return;
       boards[room].data.images = images;
@@ -81,7 +81,7 @@ export const initialize = (io: Server) => {
     socket.on('update-username', (userName) => {
       console.log('update username', userName);
       //* First room is always the clientId, therefore we grab the second
-      const room = Object.values(socket.rooms)[1];
+      const room = [...socket.rooms.values()][1];
 
       if (!boards[room]) return;
       boards[room].clients[socket.id].userName = userName;

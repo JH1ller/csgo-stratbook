@@ -21,6 +21,7 @@ const io = new Server(httpServer, {
   pingInterval: 10000,
   cors: {
     origin: ['https://stratbook.live', 'http://localhost:8080'],
+    methods: ['GET', 'POST'],
   },
 });
 const port = process.env.PORT || 3000;

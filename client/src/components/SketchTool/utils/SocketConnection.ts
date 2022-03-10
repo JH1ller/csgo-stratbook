@@ -1,4 +1,4 @@
-import io from 'socket.io-client';
+import { Socket, io } from 'socket.io-client';
 import { WS_URL } from '@/config';
 import { Log } from '@/utils/logger';
 
@@ -8,7 +8,7 @@ class SocketConnection {
   roomId!: string;
   clientId!: string;
 
-  socket!: SocketIOClient.Socket;
+  socket!: Socket;
 
   private constructor() {
     //

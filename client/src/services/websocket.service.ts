@@ -1,4 +1,4 @@
-import io from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import { WS_URL } from '@/config';
 import store from '@/store';
 import { Log } from '@/utils/logger';
@@ -10,7 +10,7 @@ import { Utility } from '../api/models/Utility';
 class WebSocketService {
   private static instance: WebSocketService;
 
-  private socket!: SocketIOClient.Socket;
+  private socket!: Socket;
 
   private constructor() {
     // private to prevent instantiation

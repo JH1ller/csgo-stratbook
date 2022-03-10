@@ -110,4 +110,4 @@ router.delete('/:utility_id', verifyAuth, getUtility, async (_req, res) => {
   res.json({ message: 'Deleted utility successfully' });
 });
 
-module.exports = router;
+export default router;
