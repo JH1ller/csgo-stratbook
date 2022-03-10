@@ -1,28 +1,29 @@
-const express = require('express');
-const router = express.Router();
-const Utility = require('../../../models/utility');
-const { getUtility } = require('../../utils/getters');
-const { verifyAuth } = require('../../utils/verifyToken');
-const { uploadMultiple, uploadFile, deleteFile, processImage } = require('../../utils/fileUpload');
+import { Router } from 'express';
+import { UtilityModel } from '../../../models/utility';
+import { getUtility } from '../../utils/getters';
+import { verifyAuth } from '../../utils/verifyToken';
+import { uploadMultiple, deleteFile, processImage } from '../../utils/fileUpload';
+
+const router = Router();
 
 router.get('/', verifyAuth, async (req, res) => {
-  if (!res.player.team) {
+  if (!res.locals.player.team) {
     return res.status(400).json({ error: "Authenticated user doesn't have a team" });
   }
   const utilities = req.query.map
-    ? await Utility.find({ map: req.query.map, team: res.player.team })
-    : await Utility.find({ team: res.player.team });
+    ? await UtilityModel.find({ map: req.query.map, team: res.locals.player.team })
+    : await UtilityModel.find({ team: res.locals.player.team });
 
   res.json(utilities);
 });
 
 // * Create One
 router.post('/', verifyAuth, uploadMultiple('images'), async (req, res) => {
-  if (!res.player.team) {
+  if (!res.locals.player.team) {
     return res.status(400).json({ error: "Authenticated user doesn't have a team" });
   }
 
-  const utility = new Utility({
+  const utility = new UtilityModel({
     name: req.body.name,
     type: req.body.type,
     map: req.body.map,
@@ -34,12 +35,12 @@ router.post('/', verifyAuth, uploadMultiple('images'), async (req, res) => {
     videoLink: req.body.videoLink,
     setpos: req.body.setpos,
     description: req.body.description,
-    team: res.player.team,
-    createdBy: res.player._id,
+    team: res.locals.player.team,
+    createdBy: res.locals.player._id,
     createdAt: Date.now(),
   });
 
-  if (req.files) {
+  if (req.files && Array.isArray(req.files)) {
     const fileNames = await Promise.all(
       req.files.map(async (file) => {
         return await processImage(file, 1920, 1080);
@@ -53,7 +54,7 @@ router.post('/', verifyAuth, uploadMultiple('images'), async (req, res) => {
 
 // * Update One
 router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, res) => {
-  if (!res.player.team.equals(res.utility.team)) {
+  if (!res.locals.player.team.equals(res.locals.utility.team)) {
     return res.status(400).json({ error: 'Cannot update a utility of another team.' });
   }
   const updatableFields = [
@@ -73,39 +74,39 @@ router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, 
   Object.entries(req.body).forEach(([key, value]) => {
     // check for undefined / null, but accept empty string ''
     if (value != null && updatableFields.includes(key)) {
-      res.utility[key.toString()] = value;
+      res.locals.utility[key.toString()] = value;
     }
   });
 
-  if (req.files) {
+  if (req.files && Array.isArray(req.files)) {
     const fileNames = await Promise.all(
       req.files.map(async (file) => {
         return await processImage(file, 1920, 1080);
       })
     );
-    res.utility.images.push(...fileNames);
+    res.locals.utility.images.push(...fileNames);
   }
 
   if (req.body.delete) {
     const imagesToDelete = JSON.parse(req.body.delete);
-    res.utility.images = res.utility.images.filter((image) => !imagesToDelete.includes(image));
+    res.locals.utility.images = res.locals.utility.images.filter((image: string) => !imagesToDelete.includes(image));
     await Promise.all(
-      imagesToDelete.map(async (image) => {
+      imagesToDelete.map(async (image: string) => {
         await deleteFile(image);
       })
     );
   }
 
-  const updatedUtility = await res.utility.save();
+  const updatedUtility = await res.locals.utility.save();
   res.json(updatedUtility);
 });
 
 // * Delete One
 router.delete('/:utility_id', verifyAuth, getUtility, async (_req, res) => {
-  if (!res.player.team.equals(res.utility.team)) {
+  if (!res.locals.player.team.equals(res.locals.utility.team)) {
     return res.status(400).json({ error: 'Cannot delete a utility of another team.' });
   }
-  await res.utility.delete();
+  await res.locals.utility.delete();
   res.json({ message: 'Deleted utility successfully' });
 });
 

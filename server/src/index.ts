@@ -1,30 +1,36 @@
 require('dotenv').config();
-const express = require('express');
-require('express-async-errors');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
-const compression = require('compression');
+import express, { Request, Response, NextFunction } from 'express';
+import 'express-async-errors';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import compression from 'compression';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+import mongoose from 'mongoose';
+import historyFallback from 'connect-history-api-fallback';
+import cors from 'cors';
+import subdomain from 'express-subdomain';
+import { initialize } from './sockets';
+import apiRouter from './routes/api';
+import { secureRedirect } from './middleware/secureRedirect';
+import { logger } from './middleware/logger';
+
 const app = express();
-const server = require('http').createServer(app);
-const io = require('socket.io')(server, { pingInterval: 10000 });
-const mongoose = require('mongoose');
-const history = require('connect-history-api-fallback');
-const cors = require('cors');
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  pingInterval: 10000,
+  cors: {
+    origin: ['https://stratbook.live', 'http://localhost:8080'],
+  },
+});
 const port = process.env.PORT || 3000;
-const { initWS } = require('./sockets');
-const subdomain = require('express-subdomain');
-const apiRouter = require('./routes/api');
-const secureRedirect = require('./middleware/secureRedirect');
-const logger = require('./middleware/logger');
 
 const isDev = process.env.NODE_ENV === 'development';
 
-mongoose.connect(isDev ? process.env.DATABASE_URL_DEV : process.env.DATABASE_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+mongoose.connect(isDev ? process.env.DATABASE_URL_DEV! : process.env.DATABASE_URL!, {
+  // useNewUrlParser: true,
+  // useUnifiedTopology: true,
 });
-
-mongoose.set('useCreateIndex', true);
 
 const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
@@ -70,23 +76,23 @@ if (isDev) {
 }
 
 app.use(
-  history({
+  historyFallback({
     index: '/dist_app/index.html',
   })
 );
 
-app.use((error, req, res, next) => {
+app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   console.error('Error handler >>> ', error.message);
   res.status(500).json({ error: 'An error occured on the server.' });
 });
 
 // * allow all origins again
-io.origins((_, callback) => {
-  callback(null, true);
-});
+// io.origins((_, callback) => {
+//   callback(null, true);
+// });
 
-initWS(io);
+initialize(io);
 
-app.set('io', io);
+//app.set('io', io);
 
-server.listen(port, null, () => console.log(`Server started on port ${port}`));
+httpServer.listen(port, undefined, () => console.log(`Server started on port ${port}`));

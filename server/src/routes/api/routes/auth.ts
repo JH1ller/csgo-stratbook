@@ -1,33 +1,35 @@
-const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const ms = require('ms');
-const { nanoid } = require('nanoid');
-const cookieParser = require('cookie-parser');
-const router = express.Router();
-const Player = require('../../../models/player');
-const Session = require('../../../models/session');
-const urljoin = require('url-join');
-const { registerValidation } = require('../../utils/validation');
-const { sendMail, Templates } = require('../../utils/mailService');
-const { uploadSingle, processImage, deleteFile } = require('../../utils/fileUpload');
-const { APP_URL } = require('../../../config');
-const { verifyAuth } = require('../../utils/verifyToken');
+import { Router, Request } from 'express';
+import bcrypt from 'bcryptjs';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import ms from 'ms';
+import { nanoid } from 'nanoid';
+import cookieParser from 'cookie-parser';
+import urljoin from 'url-join';
+import { PlayerModel } from '../../../models/player';
+import { SessionModel } from '../../../models/session';
+import { registerSchema } from '../../utils/validation';
+import { sendMail, MailTemplate } from '../../utils/mailService';
+import { uploadSingle, processImage, deleteFile } from '../../utils/fileUpload';
+import { APP_URL } from '../../../config';
+import { verifyAuth } from '../../utils/verifyToken';
+import UserNotFoundError from '../../utils/errors/UserNotFoundError';
+
+const router = Router();
 
 router.post('/register', uploadSingle('avatar'), async (req, res) => {
-  const { error } = registerValidation(req.body);
+  const { error } = registerSchema.validate(req.body);
   if (error) {
     return res.status(400).json({ error: error.details[0].message });
   }
 
-  const emailExists = await Player.findOne({ email: req.body.email });
+  const emailExists = await PlayerModel.findOne({ email: req.body.email });
 
   if (emailExists) return res.status(400).json({ error: 'Email already exists.' });
 
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-  const user = new Player({
+  const user = new PlayerModel({
     name: req.body.name,
     email: req.body.email,
     password: hashedPassword,
@@ -38,16 +40,16 @@ router.post('/register', uploadSingle('avatar'), async (req, res) => {
     user.avatar = fileName;
   }
 
-  const token = jwt.sign({ _id: user._id }, process.env.EMAIL_SECRET);
+  const token = jwt.sign({ _id: user._id }, process.env.EMAIL_SECRET!);
 
   await user.save();
-  await sendMail(user.email, token, user.name, Templates.verifyNew);
+  await sendMail(user.email, token, user.name, MailTemplate.VERIFY_NEW);
 
   res.json({ _id: user._id, email: user.email });
 });
 
 router.post('/login', async (req, res) => {
-  const targetUser = await Player.findOne({ email: req.body.email });
+  const targetUser = await PlayerModel.findOne({ email: req.body.email });
 
   if (!targetUser) return res.status(400).json({ error: 'Email or password is invalid.' });
 
@@ -62,7 +64,7 @@ router.post('/login', async (req, res) => {
 
   const jsonMode = !!req.body.jsonMode;
 
-  const session = new Session({
+  const session = new SessionModel({
     refreshToken,
     player: targetUser._id,
     expires: refreshTokenExpiration,
@@ -72,7 +74,7 @@ router.post('/login', async (req, res) => {
 
   await session.save();
 
-  const token = jwt.sign({ _id: targetUser._id }, process.env.TOKEN_SECRET, {
+  const token = jwt.sign({ _id: targetUser._id }, process.env.TOKEN_SECRET!, {
     expiresIn: process.env.JWT_TOKEN_TTL ?? '1h',
   });
 
@@ -94,7 +96,7 @@ router.post('/login', async (req, res) => {
 
 router.post('/refresh', cookieParser(), async (req, res) => {
   const currentRefreshToken = req.cookies.refreshToken ?? req.body.refreshToken;
-  const session = await Session.findOne({ refreshToken: currentRefreshToken });
+  const session = await SessionModel.findOne({ refreshToken: currentRefreshToken });
   if (!session) return res.status(400).json({ error: 'Invalid refresh token' });
 
   if (session.expires < new Date()) {
@@ -113,7 +115,7 @@ router.post('/refresh', cookieParser(), async (req, res) => {
 
   await session.save();
 
-  const token = jwt.sign({ _id: session.player }, process.env.TOKEN_SECRET, {
+  const token = jwt.sign({ _id: session.player }, process.env.TOKEN_SECRET!, {
     expiresIn: process.env.JWT_TOKEN_TTL ?? '1h',
   });
 
@@ -131,27 +133,31 @@ router.post('/refresh', cookieParser(), async (req, res) => {
 
 router.post('/logout', cookieParser(), async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
-  const session = await Session.findOne({ refreshToken });
+  const session = await SessionModel.findOne({ refreshToken });
   if (!session) return res.status(400).json({ error: 'Invalid refresh token' });
 
-  await Session.findByIdAndRemove(session._id);
+  await SessionModel.findByIdAndRemove(session._id);
 
   res.send('Successfully logged out.');
 });
 
 router.delete('/', verifyAuth, async (_req, res) => {
-  if (res.player.avatar) {
-    await deleteFile(res.player.avatar);
+  if (res.locals.player.avatar) {
+    await deleteFile(res.locals.player.avatar);
   }
 
-  await Player.findByIdAndRemove(res.player._id);
+  await PlayerModel.findByIdAndRemove(res.locals.player._id);
 
   res.send('Successfully deleted account.');
 });
 
 router.get('/confirmation/:token', async (req, res) => {
-  const { _id, email } = jwt.verify(req.params.token, process.env.EMAIL_SECRET);
-  const targetUser = await Player.findById(_id);
+  const { _id, email } = jwt.verify(req.params.token, process.env.EMAIL_SECRET!) as JwtPayload;
+  const targetUser = await PlayerModel.findById(_id);
+
+  if (!targetUser) {
+    throw new UserNotFoundError(`confirm-email -> User "${_id}" not found. Email: ${email}`);
+  }
 
   if (email) {
     targetUser.email = email;
@@ -169,23 +175,23 @@ router.get('/confirmation/:token', async (req, res) => {
 });
 
 router.post('/forgot-password', async (req, res) => {
-  const targetUser = await Player.findOne({ email: req.body.email });
+  const targetUser = await PlayerModel.findOne({ email: req.body.email });
 
   if (!targetUser) {
     return res.status(400).json({ error: 'Could not find user with that email address.' });
   }
 
-  const token = jwt.sign({ _id: targetUser._id }, process.env.EMAIL_SECRET, { expiresIn: '2 days' });
+  const token = jwt.sign({ _id: targetUser._id }, process.env.EMAIL_SECRET!, { expiresIn: '2 days' });
 
-  await sendMail(targetUser.email, token, targetUser.name, Templates.resetPassword);
+  await sendMail(targetUser.email, token, targetUser.name, MailTemplate.RESET_PASSWORD);
 
   return res.json(true);
 });
 
 router.patch('/reset', async (req, res) => {
-  const { _id } = jwt.verify(req.body.token, process.env.EMAIL_SECRET);
+  const { _id } = jwt.verify(req.body.token, process.env.EMAIL_SECRET!) as JwtPayload;
 
-  const targetUser = await Player.findById(_id);
+  const targetUser = await PlayerModel.findById(_id);
   if (!targetUser) {
     return res.status(401).json({ error: 'Player not found' });
   }
@@ -197,4 +203,4 @@ router.patch('/reset', async (req, res) => {
   return res.json(true);
 });
 
-module.exports = router;
+export default router;

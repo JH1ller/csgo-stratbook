@@ -9,6 +9,8 @@ export const writeToClipboard = async (value: string): Promise<void> => {
     await navigator.clipboard?.writeText(value);
     Log.info('writeToClipboard', `Wrote value to clipboard: ${value}`);
   } catch (error) {
-    Log.error('writeToClipboard', `Writing to clipboard failed -> ${error.message}`);
+    if (error instanceof Error) {
+      Log.error('writeToClipboard', `Writing to clipboard failed -> ${error.message}`);
+    }
   }
 };

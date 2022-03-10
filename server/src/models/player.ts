@@ -1,7 +1,24 @@
-const mongoose = require('mongoose');
-const mongooseDelete = require('mongoose-delete');
+import { Types, Schema, model, Document } from 'mongoose';
+import mongooseDelete from 'mongoose-delete';
 
-const playerSchema = new mongoose.Schema({
+export interface Player {
+  name: string;
+  email: string;
+  password: string;
+  confirmed: boolean;
+  avatar: string;
+  team?: Types.ObjectId;
+  createdAt: Date;
+  modifiedAt?: Date;
+  isOnline: boolean;
+  lastOnline?: Date;
+  isAdmin: boolean;
+  completedTutorial: boolean;
+}
+
+export type PlayerDocument = Document<unknown, any, Player>;
+
+const playerSchema = new Schema<Player>({
   name: {
     type: String,
     required: true,
@@ -33,7 +50,7 @@ const playerSchema = new mongoose.Schema({
   },
 
   team: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Team',
   },
 
@@ -75,4 +92,4 @@ playerSchema.pre('save', function (next) {
   next();
 });
 
-module.exports = mongoose.model('Player', playerSchema);
+export const PlayerModel = model<Player>('Player', playerSchema);

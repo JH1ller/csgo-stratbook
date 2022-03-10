@@ -1,19 +1,20 @@
-const express = require('express');
-const router = express.Router();
-const Team = require('../../../models/team');
-const Player = require('../../../models/player');
-const Strat = require('../../../models/strat');
-const crypto = require('crypto');
-const { getTeam } = require('../../utils/getters');
-const { verifyAuth } = require('../../utils/verifyToken');
-const { teamValidation } = require('../../utils/validation');
-const { uploadSingle, processImage, deleteFile } = require('../../utils/fileUpload');
+import { Router } from 'express';
+import { TeamModel } from '../../../models/team';
+import { PlayerModel } from '../../../models/player';
+import { StratModel } from '../../../models/strat';
+import crypto from 'crypto';
+import { getTeam } from '../../utils/getters';
+import { verifyAuth } from '../../utils/verifyToken';
+import { teamSchema } from '../../utils/validation';
+import { uploadSingle, processImage, deleteFile } from '../../utils/fileUpload';
 
-router.get('/', verifyAuth, async (req, res) => {
-  if (!res.player.team) {
+const router = Router();
+
+router.get('/', verifyAuth, async (_, res) => {
+  if (!res.locals.player.team) {
     return res.status(400).json({ message: "Player doesn't have a team" });
   }
-  const team = await Team.findById(res.player.team);
+  const team = await TeamModel.findById(res.locals.player.team);
   if (team) {
     return res.json(team);
   } else {
@@ -22,11 +23,10 @@ router.get('/', verifyAuth, async (req, res) => {
 });
 
 router.get('/players', verifyAuth, async (req, res) => {
-  const players = await Player.find({ team: res.player.team });
+  const players = await PlayerModel.find({ team: res.locals.player.team });
   const sanitizedPlayers = players.map((player) => ({
     _id: player._id,
     name: player.name,
-    role: player.role,
     createdAt: player.createdAt,
     avatar: player.avatar,
     team: player.team,
@@ -38,19 +38,19 @@ router.get('/players', verifyAuth, async (req, res) => {
 
 // * Create One
 router.post('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
-  const { error } = teamValidation(req.body);
+  const { error } = teamSchema.validate(req.body);
   if (error) {
     return res.status(400).send({ error: error.details[0].message });
   }
 
-  const teamExists = await Team.findOne({ name: req.body.name });
+  const teamExists = await TeamModel.findOne({ name: req.body.name });
 
   if (teamExists) return res.status(400).send({ error: 'Team name already exists' });
 
-  const team = new Team({
+  const team = new TeamModel({
     name: req.body.name,
-    createdBy: res.player._id,
-    manager: res.player._id,
+    createdBy: res.locals.player._id,
+    manager: res.locals.player._id,
     website: req.body.website,
     server: {
       ip: req.body.serverIp,
@@ -62,7 +62,7 @@ router.post('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
 
   while (true) {
     code = crypto.randomBytes(3).toString('hex');
-    if (!(await Team.findOne({ code }))) break;
+    if (!(await TeamModel.findOne({ code }))) break;
   }
 
   team.code = code;
@@ -73,8 +73,8 @@ router.post('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
   }
 
   const newTeam = await team.save();
-  res.player.team = newTeam._id;
-  const updatedPlayer = await res.player.save();
+  res.locals.player.team = newTeam._id;
+  const updatedPlayer = await res.locals.player.save();
 
   res.status(201).json({
     _id: updatedPlayer._id,
@@ -90,10 +90,10 @@ router.post('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
 
 // * Update One
 router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
-  const team = await Team.findById(res.player.team);
+  const team = await TeamModel.findById(res.locals.player.team);
 
   if (!team) return res.status(400).json({ error: 'Could not find team with the provided ID.' });
-  if (!res.player._id.equals(team.manager))
+  if (!res.locals.player._id.equals(team.manager))
     return res.status(401).json({ error: 'Only the team manager can edit team details.' });
 
   if (req.file) {
@@ -108,9 +108,10 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
 
   if (req.body.website) team.website = req.body.website;
 
-  if (req.body.serverIp) await Team.updateOne(team, { $set: { 'server.ip': req.body.serverIp } });
-
-  if (req.body.serverPw) await Team.updateOne(team, { $set: { 'server.password': req.body.serverPw } });
+  // TODO: test if this still works and if it's even needed this way
+  if (req.body.serverIp) await TeamModel.updateOne({ _id: team._id }, { $set: { 'server.ip': req.body.serverIp } });
+  if (req.body.serverPw)
+    await TeamModel.updateOne({ _id: team._id }, { $set: { 'server.password': req.body.serverPw } });
 
   const updatedTeam = await team.save();
 
@@ -119,38 +120,40 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
 
 // * Delete One
 router.delete('/', verifyAuth, async (req, res) => {
-  const team = await Team.findById(res.player.team);
-  if (!team.manager.equals(res.player._id))
+  const team = await TeamModel.findById(res.locals.player.team);
+  if (!team) return res.status(400).json({ error: 'Could not find team with the provided ID.' });
+
+  if (!team.manager.equals(res.locals.player._id))
     return res.status(403).json({ error: 'This action requires higher privileges.' });
 
   await team.delete();
 
-  const members = await Player.find({ team: team._id });
+  const members = await PlayerModel.find({ team: team._id });
   const memberPromises = members.map(async (member) => {
     member.team = undefined;
     return member.save();
   });
   await Promise.all(memberPromises);
 
-  const strats = await Strat.find({ team: team._id });
+  const strats = await StratModel.find({ team: team._id });
   const stratPromises = strats.map(async (strat) => {
     return strat.delete();
   });
   await Promise.all(stratPromises);
 
-  res.json(res.player);
+  res.json(res.locals.player);
 });
 
 // * Join team
 router.patch('/join', verifyAuth, async (req, res) => {
-  const team = await Team.findOne({ code: req.body.code });
+  const team = await TeamModel.findOne({ code: req.body.code });
 
   if (!team) {
     return res.status(400).json({ error: 'Wrong join code' });
   }
 
-  res.player.team = team._id;
-  const updatedPlayer = await res.player.save();
+  res.locals.player.team = team._id;
+  const updatedPlayer = await res.locals.player.save();
   return res.json({
     _id: updatedPlayer._id,
     name: updatedPlayer.name,
@@ -165,11 +168,14 @@ router.patch('/join', verifyAuth, async (req, res) => {
 
 // * Leave team
 router.patch('/leave', verifyAuth, async (req, res) => {
-  const team = await Team.findById(res.player.team);
-  const members = await Player.find({ team: team._id });
+  const team = await TeamModel.findById(res.locals.player.team);
+
+  if (!team) return res.status(400).json({ error: 'Could not find team with the provided ID.' });
+
+  const members = await PlayerModel.find({ team: team._id });
 
   if (members.length > 1) {
-    if (team.manager.equals(res.player._id)) {
+    if (team.manager.equals(res.locals.player._id)) {
       return res.status(400).json({ error: 'You need to transfer leadership first.' });
     }
 
@@ -177,7 +183,7 @@ router.patch('/leave', verifyAuth, async (req, res) => {
 
     while (true) {
       code = crypto.randomBytes(3).toString('hex');
-      if (!(await Team.findOne({ code }))) break;
+      if (!(await TeamModel.findOne({ code }))) break;
     }
 
     team.code = code;
@@ -187,9 +193,9 @@ router.patch('/leave', verifyAuth, async (req, res) => {
     await team.delete();
   }
 
-  res.player.team = undefined;
+  res.locals.player.team = undefined;
 
-  const updatedPlayer = await res.player.save();
+  const updatedPlayer = await res.locals.player.save();
   return res.json({
     _id: updatedPlayer._id,
     name: updatedPlayer.name,
@@ -204,9 +210,11 @@ router.patch('/leave', verifyAuth, async (req, res) => {
 
 // * Transfer leader
 router.patch('/transfer', verifyAuth, async (req, res) => {
-  const team = await Team.findById(res.player.team);
+  const team = await TeamModel.findById(res.locals.player.team);
 
-  if (!res.player._id.equals(team.manager)) {
+  if (!team) return res.status(400).json({ error: 'Could not find team with the provided ID.' });
+
+  if (!res.locals.player._id.equals(team.manager)) {
     return res.status(403).json({ error: 'Only a team manager can transfer leadership.' });
   }
 
@@ -222,14 +230,19 @@ router.patch('/transfer', verifyAuth, async (req, res) => {
 
 // * Kick member
 router.patch('/kick', verifyAuth, async (req, res) => {
-  const team = await Team.findById(res.player.team);
-  const target = await Player.findById(req.body._id);
+  const team = await TeamModel.findById(res.locals.player.team);
 
-  if (!res.player._id.equals(team.manager)) {
+  if (!team) return res.status(400).json({ error: 'Could not find team with the provided ID.' });
+
+  const target = await PlayerModel.findById(req.body._id);
+
+  if (!target) return res.status(400).json({ error: 'Could not find target with the provided ID.' });
+
+  if (!res.locals.player._id.equals(team.manager)) {
     return res.status(400).json({ error: 'Only a team manager can kick players.' });
   }
 
-  if (!target.team.equals(team._id)) {
+  if (!target.team?.equals(team._id)) {
     return res.status(400).json({ error: 'Cannot kick player from another team.' });
   }
 
@@ -242,7 +255,7 @@ router.patch('/kick', verifyAuth, async (req, res) => {
 
   while (true) {
     code = crypto.randomBytes(3).toString('hex');
-    if (!(await Team.findOne({ code }))) break;
+    if (!(await TeamModel.findOne({ code }))) break;
   }
 
   team.code = code;
@@ -254,4 +267,4 @@ router.patch('/kick', verifyAuth, async (req, res) => {
   return res.json({ success: `Player ${target.name} was kicked from the team.` });
 });
 
-module.exports = router;
+export default router;

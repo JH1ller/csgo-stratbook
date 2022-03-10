@@ -1,17 +1,19 @@
-const Strat = require('../models/strat');
-const Utility = require('../models/utility');
-const Player = require('../models/player');
-const Team = require('../models/team');
-const { nanoid } = require('nanoid');
+import { nanoid } from 'nanoid';
+import { Server } from 'socket.io';
+import { PlayerModel } from '../models/player';
+import { StratModel } from '../models/strat';
+import { TeamModel } from '../models/team';
+import { UtilityModel } from '../models/utility';
+import { Boards } from './types/index';
 
 const clients = new Map();
 
-const boards = {};
+const boards: Boards = {};
 
 // for debugging
-global.boards = boards;
+//global.boards = boards;
 
-const initWS = (io) => {
+export const initialize = (io: Server) => {
   io.on('connection', (socket) => {
     //console.log('Websocket client connected with id: ', socket.conn.id);
 
@@ -20,9 +22,11 @@ const initWS = (io) => {
       clients.set(socket.id, { playerID: data.playerID, teamID: data.teamID });
 
       try {
-        const player = await Player.findById(data.playerID);
-        player.isOnline = true;
-        player.save();
+        const player = await PlayerModel.findById(data.playerID);
+        if (player) {
+          player.isOnline = true;
+          player.save();
+        }
       } catch (error) {
         console.error(`Could not find player with ID: ${data.playerID}`);
       }
@@ -36,11 +40,11 @@ const initWS = (io) => {
       socket.join(roomId);
       console.log('Joined draw room, target id', roomId);
 
-      boards[roomId] = boards[roomId] ?? {};
-      boards[roomId][socket.id] = boards[roomId][socket.id] ?? { position: { x: 0, y: 0 } };
+      boards[roomId] = boards[roomId] ?? { clients: {} };
+      boards[roomId].clients[socket.id] = boards[roomId].clients[socket.id] ?? { position: { x: 0, y: 0 } };
 
       if (userName) {
-        boards[roomId][socket.id].userName = userName;
+        boards[roomId].clients[socket.id].userName = userName;
       }
 
       io.to(socket.id).emit('draw-room-joined', { roomId, clientId: socket.id });
@@ -51,13 +55,13 @@ const initWS = (io) => {
       const room = Object.values(socket.rooms)[1];
 
       if (!boards[room]) return;
-      boards[room][socket.id].position.x = x;
-      boards[room][socket.id].position.y = y;
+      boards[room].clients[socket.id].position.x = x;
+      boards[room].clients[socket.id].position.y = y;
 
       io.to(room).emit('pointer-data', {
-        ...boards[room][socket.id].position,
+        ...boards[room].clients[socket.id].position,
         id: socket.id,
-        userName: boards[room][socket.id].userName,
+        userName: boards[room].clients[socket.id].userName,
       });
     });
 
@@ -67,9 +71,9 @@ const initWS = (io) => {
       const room = Object.values(socket.rooms)[1];
 
       if (!boards[room]) return;
-      boards[room].images = images;
-      boards[room].lines = lines;
-      boards[room].texts = texts;
+      boards[room].data.images = images;
+      boards[room].data.lines = lines;
+      boards[room].data.texts = texts;
 
       io.to(room).emit('data-updated', { images, lines, texts, id: socket.id });
     });
@@ -80,7 +84,7 @@ const initWS = (io) => {
       const room = Object.values(socket.rooms)[1];
 
       if (!boards[room]) return;
-      boards[room][socket.id].userName = userName;
+      boards[room].clients[socket.id].userName = userName;
 
       io.to(room).emit('username-updated', { userName, id: socket.id });
     });
@@ -103,7 +107,7 @@ const initWS = (io) => {
     });
   });
 
-  Strat.watch(null, { fullDocument: 'updateLookup' }).on('change', async (data) => {
+  StratModel.watch(undefined, { fullDocument: 'updateLookup' }).on('change', async (data) => {
     if (data.operationType === 'delete') return;
 
     switch (data.operationType) {
@@ -111,14 +115,14 @@ const initWS = (io) => {
         io.to(data.fullDocument.team).emit('created-strat', { strat: data.fullDocument });
         break;
       case 'update':
-        data.updateDescription.updatedFields.deleted
+        data.updateDescription?.updatedFields.deleted
           ? io.to(data.fullDocument.team).emit('deleted-strat', { stratID: data.fullDocument._id })
           : io.to(data.fullDocument.team).emit('updated-strat', { strat: data.fullDocument });
         break;
     }
   });
 
-  Utility.watch(null, { fullDocument: 'updateLookup' }).on('change', async (data) => {
+  UtilityModel.watch(undefined, { fullDocument: 'updateLookup' }).on('change', async (data) => {
     if (data.operationType === 'delete') return;
 
     switch (data.operationType) {
@@ -126,35 +130,35 @@ const initWS = (io) => {
         io.to(data.fullDocument.team).emit('created-utility', { utility: data.fullDocument });
         break;
       case 'update':
-        data.updateDescription.updatedFields.deleted
+        data.updateDescription?.updatedFields.deleted
           ? io.to(data.fullDocument.team).emit('deleted-utility', { utilityID: data.fullDocument._id })
           : io.to(data.fullDocument.team).emit('updated-utility', { utility: data.fullDocument });
         break;
     }
   });
 
-  Team.watch(null, { fullDocument: 'updateLookup' }).on('change', async (data) => {
+  TeamModel.watch(undefined, { fullDocument: 'updateLookup' }).on('change', async (data) => {
     if (data.operationType === 'delete') return;
 
     switch (
       data.operationType // keep switch statement in case "insert" is handled here later
     ) {
       case 'update':
-        data.updateDescription.updatedFields.deleted
+        data.updateDescription?.updatedFields.deleted
           ? io.to(data.fullDocument._id).emit('deleted-team')
           : io.to(data.fullDocument._id).emit('updated-team', { team: data.fullDocument });
         break;
     }
   });
 
-  Player.watch(null, { fullDocument: 'updateLookup' }).on('change', async (data) => {
+  PlayerModel.watch(undefined, { fullDocument: 'updateLookup' }).on('change', async (data) => {
     if (data.operationType === 'delete') return;
 
     switch (
       data.operationType // keep switch statement in case "insert" is handled here later
     ) {
       case 'update':
-        data.updateDescription.updatedFields.deleted
+        data.updateDescription?.updatedFields.deleted
           ? io.to(data.fullDocument.team).emit('deleted-player', { playerID: data.fullDocument._id })
           : io.to(data.fullDocument.team).emit('updated-player', {
               player: {
@@ -172,5 +176,3 @@ const initWS = (io) => {
     }
   });
 };
-
-exports.initWS = initWS;

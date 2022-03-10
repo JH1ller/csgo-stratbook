@@ -4,11 +4,11 @@ const path = require('path');
 const urljoin = require('url-join');
 const { API_URL, APP_URL } = require('../../config');
 
-const Templates = Object.freeze({
-  verifyNew: 'verifyNew',
-  verifyChange: 'verifyChange',
-  resetPassword: 'resetPassword',
-});
+export enum MailTemplate {
+  'VERIFY_NEW' = 'verifyNew',
+  'VERIFY_CHANGE' = 'verifyChange',
+  'RESET_PASSWORD' = 'resetPassword',
+}
 
 const transporter = nodemailer.createTransport({
   host: process.env.MAIL_HOST,
@@ -37,9 +37,9 @@ const email = new Email({
   },
 });
 
-const sendMail = async (to, token, name, template) => {
+export const sendMail = async (to: string, token: string, name: string, template: MailTemplate) => {
   const link =
-    template === Templates.resetPassword
+    template === MailTemplate.RESET_PASSWORD
       ? urljoin(APP_URL, `/#/reset?token=${token}`)
       : urljoin(API_URL, `/auth/confirmation/${token}`);
   try {
@@ -59,6 +59,3 @@ const sendMail = async (to, token, name, template) => {
     throw new Error(error);
   }
 };
-
-module.exports.sendMail = sendMail;
-module.exports.Templates = Templates;

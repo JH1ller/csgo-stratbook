@@ -1,9 +1,30 @@
-const mongoose = require('mongoose');
-const mongooseDelete = require('mongoose-delete');
+import { Types, Schema, model, Document } from 'mongoose';
+import mongooseDelete from 'mongoose-delete';
+import { GameMap, StratSide, StratType } from '../types/enums';
 
-const arrNotEmpty = (value) => !!value.length;
+const arrNotEmpty = (value: unknown[]) => !!value.length;
 
-const stratSchema = new mongoose.Schema({
+export interface Strat {
+  name: string;
+  map: GameMap;
+  team: Types.ObjectId;
+  side: StratSide;
+  types: StratType[];
+  active: boolean;
+  videoLink?: string;
+  note?: string;
+  drawData?: string;
+  content?: string;
+  createdBy: Types.ObjectId;
+  createdAt: Date;
+  modifiedBy?: Types.ObjectId;
+  modifiedAt?: Date;
+  shared: boolean;
+}
+
+export type StratDocument = Document<unknown, any, Strat>;
+
+const stratSchema = new Schema<Strat>({
   name: {
     type: String,
     required: true,
@@ -17,7 +38,7 @@ const stratSchema = new mongoose.Schema({
   },
 
   team: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Team',
     required: true,
   },
@@ -26,12 +47,6 @@ const stratSchema = new mongoose.Schema({
     type: String,
     enum: ['CT', 'T'],
     required: true,
-  },
-
-  type: {
-    type: String,
-    enum: ['PISTOL', 'FORCE', 'BUYROUND'],
-    default: 'BUYROUND',
   },
 
   types: {
@@ -64,7 +79,7 @@ const stratSchema = new mongoose.Schema({
   },
 
   createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Player',
     required: true,
   },
@@ -76,7 +91,7 @@ const stratSchema = new mongoose.Schema({
   },
 
   modifiedBy: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Player',
   },
 
@@ -93,12 +108,12 @@ const stratSchema = new mongoose.Schema({
 
 stratSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
 
-stratSchema.pre('save', function (next, res) {
+stratSchema.pre('save', function (next, res: any) {
   if (this.isModified()) {
     this.modifiedAt = Date.now();
-    if (res && res.player) this.modifiedBy = res.player._id;
+    if (res && res.locals.player) this.modifiedBy = res.locals.player._id;
   }
   next();
 });
 
-module.exports = mongoose.model('Strat', stratSchema);
+export const StratModel = model<Strat>('Strat', stratSchema);

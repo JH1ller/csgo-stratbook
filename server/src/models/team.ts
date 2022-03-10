@@ -1,7 +1,27 @@
-const mongoose = require('mongoose');
-const mongooseDelete = require('mongoose-delete');
+import { Schema, Types, model, Document } from 'mongoose';
+import mongooseDelete from 'mongoose-delete';
 
-const teamSchema = new mongoose.Schema({
+export interface Team {
+  name: string;
+  website?: string;
+  server?: {
+    ip?: string;
+    password?: string;
+  };
+  code: string;
+  avatar?: string;
+  createdBy: Types.ObjectId;
+  createdAt: Date;
+  modifiedBy?: Types.ObjectId;
+  modifiedAt?: Date;
+  manager: Types.ObjectId;
+  deleted: boolean;
+  deletedAt?: Date;
+}
+
+export type TeamDocument = Document<unknown, any, Team>;
+
+const teamSchema = new Schema<Team>({
   name: {
     type: String,
     required: true,
@@ -31,7 +51,7 @@ const teamSchema = new mongoose.Schema({
   },
 
   createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Player',
     required: true,
   },
@@ -43,7 +63,7 @@ const teamSchema = new mongoose.Schema({
   },
 
   modifiedBy: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Player',
   },
 
@@ -53,7 +73,7 @@ const teamSchema = new mongoose.Schema({
   },
 
   manager: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Player',
   },
 });
@@ -67,4 +87,4 @@ teamSchema.pre('save', function (next) {
   next();
 });
 
-module.exports = mongoose.model('Team', teamSchema);
+export const TeamModel = model<Team>('Team', teamSchema);
