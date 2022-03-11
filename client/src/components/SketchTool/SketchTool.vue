@@ -51,13 +51,7 @@
           <v-text v-for="item in remotePointers" :key="'t' + item.id" :config="getRemotePointerTextConfig(item)" />
         </v-layer>
       </v-stage>
-      <span
-        role="textbox"
-        contenteditable
-        ref="textbox"
-        class="sketch-tool__textbox"
-        @keypress="handleTextboxKeypress"
-      />
+      <span role="textbox" contenteditable ref="textbox" class="sketch-tool__textbox" @keydown="handleTextboxKeydown" />
     </div>
     <div class="sketch-tool__toolbar">
       <v-swatches
@@ -119,7 +113,7 @@
           <fa-icon icon="network-wired" /><span class="sketch-tool__btn-label">Create room</span>
         </button>
         <button v-else class="sketch-tool__btn" @click="copyRoomLink">
-          <fa-icon icon="copy" /><span class="sketch-tool__btn-label">Room ID: {{ wsService.roomId }}</span>
+          <fa-icon icon="copy" /><span class="sketch-tool__btn-label">Room ID: {{ roomId }}</span>
         </button>
       </template>
       <button class="sketch-tool__btn" @click="showConnectionDialog">

@@ -1,2 +1,18 @@
 .map-view {
+  &__strat-name {
+    @include typo_hl1(white);
+    @include spacing('top', 'xs');
+    @include spacing('left', 'xs');
+
+    @include viewport_mq3 {
+      left: calc(70px + 18px);
+    }
+
+    @include viewport_mq4 {
+      @include spacing('top', 'sm');
+      left: calc(70px + 28px);
+    }
+
+    position: absolute;
+  }
 }

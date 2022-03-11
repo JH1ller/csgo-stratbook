@@ -2,6 +2,7 @@ import { Component, Inject, Vue } from 'vue-property-decorator';
 import SketchTool from '@/components/SketchTool/SketchTool.vue';
 import ConnectionDialog from './components/ConnectionDialog.vue';
 import StorageService from '@/services/storage.service';
+import { StageState } from '@/components/SketchTool/types';
 
 @Component({
   components: {
@@ -32,6 +33,10 @@ export default class MapView extends Vue {
     }
   }
 
+  changeStratName(stratName: string) {
+    this.stratName = stratName;
+  }
+
   mounted() {
     const userName = this.storageService.get('draw-username');
     if (userName) {
@@ -44,8 +49,9 @@ export default class MapView extends Vue {
       this.changeRoomId(this.$route.params.roomId);
     } else if (storageRoomId) {
       this.changeRoomId(storageRoomId);
+    } else {
+      const previousData = this.storageService.get<StageState>('draw-data');
+      // TODO: apply previousData
     }
-
-    //const previousData = this.storageService.get<StageState>('draw-data');
   }
 }

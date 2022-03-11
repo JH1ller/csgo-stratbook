@@ -105,7 +105,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       if (!historySnapshot) return;
       this.applyStageData(historySnapshot);
       this.transformer.getNode().nodes([]);
-      this.serialize();
+      this.handleDataChange();
     }
   }
 
@@ -115,7 +115,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       const historySnapshot = this.changeHistory[this.historyPointer];
       this.applyStageData(historySnapshot);
       this.transformer.getNode().nodes([]);
-      this.serialize();
+      this.handleDataChange();
     }
   }
 
@@ -145,7 +145,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   getRemotePointerCursorConfig(item: RemotePointer): ImageConfig {
     return {
-      id: item.id,
+      id: 'cursor_' + item.id,
       x: item.x,
       y: item.y,
       width: this.cursorSize,
@@ -157,7 +157,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   getRemotePointerTextConfig(item: RemotePointer): TextConfig {
     return {
-      id: item.id,
+      id: 'text_' + item.id,
       class: 'static',
       x: item.x + 16,
       y: item.y + 22,
@@ -376,7 +376,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       type: type as UtilityTypes,
     });
     this.saveStateToHistory();
-    this.serialize();
+    this.handleDataChange();
     this.activeTool = ToolTypes.Pointer;
     await this.$nextTick();
     this.setActiveItem(this.stage.findOne('#' + newId));
@@ -414,7 +414,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.textItems = [];
     this.setActiveItem(null);
     this.saveStateToHistory();
-    this.serialize();
+    this.handleDataChange();
   }
 
   beforeDestroy() {
@@ -458,7 +458,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.textItems = this.textItems.filter(item => item.id !== this.activeItem?.attrs.id);
     this.setActiveItem(null);
     this.saveStateToHistory();
-    this.serialize();
+    this.handleDataChange();
   }
 
   get stage(): Stage {
@@ -479,7 +479,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
         await this.$nextTick();
         this.currentLine = this.stage.findOne<Line>('#' + id);
         this.isDrawing = true;
-        this.serialize();
+        this.handleDataChange();
         break;
       case ToolTypes.Pointer:
         if (target instanceof KonvaImage && target.attrs.class !== 'static') {
@@ -544,17 +544,23 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.textbox.style.color = color;
   }
 
-  handleTextboxKeypress({ code }: KeyboardEvent) {
-    if (!this.currentText || code !== 'Enter') return;
-    this.textbox.style.display = 'none';
+  handleTextboxKeydown(e: KeyboardEvent) {
+    if (!this.currentText) return;
+    switch (e.code) {
+      case 'Enter':
+      case 'Escape':
+        e.preventDefault();
+        this.textbox.style.display = 'none';
 
-    this.updateItem(this.currentText.attrs.id, {
-      text: this.textbox.innerText,
-    });
-    this.currentText.visible(true);
-    this.currentText = null;
-    this.activeTool = ToolTypes.Pointer;
-    this.serialize();
+        this.updateItem(this.currentText.attrs.id, {
+          text: this.textbox.innerText,
+        });
+        this.currentText.visible(true);
+        this.currentText = null;
+        this.activeTool = ToolTypes.Pointer;
+        this.handleDataChange();
+        break;
+    }
   }
 
   setActiveItem(item: KonvaNode | null): void {
@@ -618,7 +624,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     // only add point if distance to previous point is over linePrecision value
     if (Math.hypot(pos.x - prevX, pos.y - prevY) > this.linePrecision) {
       points.push(pos.x, pos.y);
-      this.serialize();
+      this.handleDataChange();
     }
     points[points.length - 2] = pos.x;
     points[points.length - 1] = pos.y;
@@ -634,7 +640,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
           optimizeLine(this.currentLine!, this.optimizeThreshold);
           this.saveStateToHistory();
-          this.serialize();
+          this.handleDataChange();
 
           this.currentLine = null;
         }
@@ -660,7 +666,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     if (target instanceof KonvaImage || target instanceof Text || target instanceof Line) {
       const { id, x, y } = target.attrs;
       this.updateItem(id, { x, y });
-      this.serialize();
+      this.handleDataChange();
       return;
     }
     if (target instanceof Stage) {
@@ -743,21 +749,21 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     // don't save when target is transformer to prevent duplicate history entry
     if (target instanceof Transformer) return;
     this.saveStateToHistory();
-    this.serialize();
+    this.handleDataChange();
   }
 
   handleTransform({ target }: KonvaEventObject<MouseEvent>) {
     if (target instanceof KonvaImage || target instanceof Text || target instanceof Line) {
       const { id, rotation, scaleX, scaleY, skewX, skewY, x, y } = target.attrs;
       this.updateItem(id, { rotation, scaleX, scaleY, skewX, skewY, x, y });
-      this.serialize();
+      this.handleDataChange();
       return;
     }
   }
 
   handleTransformEnd(): void {
     this.saveStateToHistory();
-    this.serialize();
+    this.handleDataChange();
   }
 
   handleTextDblClick(event: KonvaEventObject<MouseEvent>) {
@@ -773,20 +779,27 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.setTextboxColor(color);
   }
 
-  get serialize(): DebouncedFunc<() => void> {
+  get handleDataChange(): DebouncedFunc<() => void> {
     return throttle(() => {
-      const json = JSON.stringify({
-        images: this.imageItems,
-        lines: this.lineItems,
-        texts: this.textItems,
-      });
-      this.storageService.set('draw-data', json);
-      this.wsService.emit('update-data', {
-        images: this.imageItems,
-        lines: this.lineItems,
-        texts: this.textItems,
-      });
+      if (this.wsService.connected) {
+        this.wsService.emit('update-data', {
+          images: this.imageItems,
+          lines: this.lineItems,
+          texts: this.textItems,
+        });
+      } else {
+        this.serializeAndStore();
+      }
     }, 50);
+  }
+
+  serializeAndStore(): void {
+    const json = JSON.stringify({
+      images: this.imageItems,
+      lines: this.lineItems,
+      texts: this.textItems,
+    });
+    this.storageService.set('draw-data', json);
   }
 
   // TODO: this is a bit buggy when undoing a change, then creating a new one
@@ -810,7 +823,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     const tempTextNode = new Text({
       x: 16,
       y: 16,
-      text: this.strat?.name ?? 'New strategy',
+      text: this.stratName ?? 'Unnamed strategy',
       fontSize: 32,
       fontFamily: 'Ubuntu-Bold',
       fill: 'white',
@@ -842,14 +855,17 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
     downloadURI(
       dataUri,
-      this.strat?.name ? this.strat.name.replaceAll(/[^a-zA-Z ]/g, '').replaceAll(' ', '_') + '.png' : 'new_strat.png',
+      this.stratName
+        ? this.stratName.replaceAll(/[^a-zA-Z ]/g, '').replaceAll(' ', '_') + '.png'
+        : `new_strat-${new Date().toISOString()}.png`,
     );
   }
 
   async connect(targetRoomId?: string) {
-    const { roomId } = await this.wsService.connect({ roomId: targetRoomId, userName: this.userName });
+    const { roomId, stratName } = await this.wsService.connect({ roomId: targetRoomId, userName: this.userName });
     Log.success('sketchtool::ws:joined', roomId);
     this.updateRoomId(roomId);
+    this.updateStratName(stratName);
 
     // for testing
     this.copyRoomLink();
@@ -869,6 +885,11 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   @Emit()
   updateRoomId(roomId: string) {
     return roomId;
+  }
+
+  @Emit()
+  updateStratName(stratName: string) {
+    return stratName;
   }
 
   @Watch('userName')
@@ -905,7 +926,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       // don't show icon for your own cursor
       if (pointerData.id === this.wsService.clientId) return;
 
-      console.log('pointerData.userName', pointerData.userName);
       const remotePointer = this.remotePointers.find(pointer => pointer.id === pointerData.id);
       if (!remotePointer) {
         this.remotePointers = [
@@ -917,7 +937,29 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
         ];
         this.showToast({ id: 'sketchTool/clientJoined', text: `Client with id "${pointerData.id}" joined.` });
       } else {
-        Object.assign(remotePointer, pointerData);
+        const remotePointerCursorNode = this.stage.findOne('#cursor_' + remotePointer.id);
+        const remotePointerTextNode = this.stage.findOne('#text_' + remotePointer.id);
+
+        if (remotePointer.timeout) {
+          clearTimeout(remotePointer.timeout);
+          remotePointer.timeout = undefined;
+        }
+        remotePointer.timeout = setTimeout(() => {
+          remotePointerCursorNode.visible(false);
+          remotePointerTextNode.visible(false);
+        }, 3000);
+        remotePointerCursorNode.visible(true);
+        remotePointerTextNode.visible(true);
+        remotePointerCursorNode.to({
+          x: pointerData.x,
+          y: pointerData.y,
+          duration: 0.05,
+        });
+        remotePointerTextNode.to({
+          x: pointerData.x + 16,
+          y: pointerData.y + 22,
+          duration: 0.05,
+        });
       }
     });
 
@@ -936,6 +978,12 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
         console.log('remote pointer updated');
       }
     });
+
+    this.wsService.socket.on('stratname-updated', ({ stratName, id }: { stratName: string; id: string }) => {
+      console.log('stratname-updated', { stratName, id });
+      if (id === this.wsService.clientId) return;
+      this.updateStratName(stratName);
+    });
   }
 
   mounted() {
@@ -948,6 +996,5 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     (window as any).saveToFile = this.saveToFile;
     (window as any).stage = this.stage;
     (window as any).dialog = this.showConnectionDialog;
-    console.log((window as any).bla.runRandomFunc());
   }
 }

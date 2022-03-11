@@ -47,13 +47,13 @@ export const initialize = (io: Server) => {
         boards[roomId].clients[socket.id].userName = userName;
       }
 
-      io.to(socket.id).emit('draw-room-joined', { roomId, clientId: socket.id });
+      io.to(socket.id).emit('draw-room-joined', { roomId, clientId: socket.id, stratName: boards[roomId].stratName });
     });
 
     socket.on('pointer-position', ({ x, y }) => {
       //* First room is always the clientId, therefore we grab the second
       const room = [...socket.rooms.values()][1];
-      console.log('on-pointer-position', socket.rooms);
+
       if (!boards[room]) return;
       boards[room].clients[socket.id].position.x = x;
       boards[room].clients[socket.id].position.y = y;
@@ -87,6 +87,19 @@ export const initialize = (io: Server) => {
       boards[room].clients[socket.id].userName = userName;
 
       io.to(room).emit('username-updated', { userName, id: socket.id });
+    });
+
+    socket.on('update-stratname', (stratName) => {
+      console.log('update stratname', stratName);
+
+      if (!stratName) return;
+      //* First room is always the clientId, therefore we grab the second
+      const room = [...socket.rooms.values()][1];
+
+      if (!boards[room]) return;
+      boards[room].stratName = stratName;
+
+      io.to(room).emit('stratname-updated', { stratName, id: socket.id });
     });
 
     socket.on('disconnecting', async () => {

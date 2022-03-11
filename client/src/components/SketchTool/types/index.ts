@@ -35,6 +35,7 @@ export interface RemotePointer {
   x: number;
   y: number;
   image: CanvasImageSource;
+  timeout?: NodeJS.Timeout;
 }
 
 export enum ToolTypes {
