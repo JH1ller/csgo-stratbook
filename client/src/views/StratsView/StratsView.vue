@@ -110,7 +110,8 @@
           @save="updateStrat"
           :stratName="currentDrawToolStrat.name"
           :userName="profile.name"
-          :roomId="currentDrawToolStrat._id"
+          :roomId="currentDrawToolStrat._id.slice(0, 10)"
+          :stratId="currentDrawToolStrat._id"
           :map="currentMap"
           :showConfigBtn="false"
         />

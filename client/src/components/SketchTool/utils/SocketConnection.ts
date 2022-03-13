@@ -24,30 +24,31 @@ class SocketConnection {
   connect({
     roomId,
     userName,
+    stratId,
   }: {
     roomId?: string;
     userName?: string;
+    stratId?: string;
   }): Promise<{ roomId: string; clientId: string; stratName: string }> {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       if (!this.socket || !this.socket.connected) {
-        console.log(WS_URL);
         this.socket = io(WS_URL);
         this.socket.on('connect', () => {
           Log.info('ws::drawtool:connected', 'Websocket connection established.');
-          this.socket.emit('join-draw-room', { targetRoomId: roomId, userName });
+          this.socket.emit('join-draw-room', { targetRoomId: roomId, userName, stratId });
         });
-        this.socket.on(
-          'draw-room-joined',
-          ({ roomId, clientId, stratName }: { roomId: string; clientId: string; stratName: string }) => {
-            Log.info('ws::drawtool:joined', `Joined room ${roomId} as client ${clientId}`);
-            this.roomId = roomId;
-            this.clientId = clientId;
-            resolve({ roomId, clientId, stratName });
-          },
-        );
       } else {
-        reject('Socket already connected');
+        this.socket.emit('join-draw-room', { targetRoomId: roomId, userName, stratId });
       }
+      this.socket.on(
+        'draw-room-joined',
+        ({ roomId, clientId, stratName }: { roomId: string; clientId: string; stratName: string }) => {
+          Log.info('ws::drawtool:joined', `Joined room ${roomId} as client ${clientId}`);
+          this.roomId = roomId;
+          this.clientId = clientId;
+          resolve({ roomId, clientId, stratName });
+        },
+      );
     });
   }
 

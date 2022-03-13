@@ -58,6 +58,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   @Prop() userName!: string;
   @Prop() stratName!: string;
   @Prop() roomId!: string;
+  @Prop() stratId!: string;
   @Prop() showConfigBtn!: boolean;
 
   //* Images
@@ -424,6 +425,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   beforeDestroy() {
+    this.wsService.emit('leave-draw-room', { roomId: this.roomId });
     this.shortcutService.reset();
   }
 
@@ -870,7 +872,11 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   async connect(targetRoomId?: string) {
-    const { roomId, stratName } = await this.wsService.connect({ roomId: targetRoomId, userName: this.userName });
+    const { roomId, stratName } = await this.wsService.connect({
+      roomId: targetRoomId,
+      userName: this.userName,
+      stratId: this.stratId,
+    });
     Log.success('sketchtool::ws:joined', roomId);
     this.updateRoomId(roomId);
     this.updateStratName(stratName);
@@ -996,6 +1002,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   mounted() {
     this.setResponsiveStageSize(true);
+
+    if (this.roomId) this.connect(this.roomId);
 
     this.saveStateToHistory();
 
