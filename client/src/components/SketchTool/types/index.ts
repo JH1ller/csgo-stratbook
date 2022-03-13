@@ -15,7 +15,6 @@ export interface ImageItem extends Partial<ImageConfig> {
 
 export interface LineItem extends Partial<LineConfig> {
   id: string;
-  stroke: string;
   points: number[];
   color: string;
 }

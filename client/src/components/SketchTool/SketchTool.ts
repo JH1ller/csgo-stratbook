@@ -426,7 +426,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   beforeDestroy() {
     this.wsService.emit('leave-draw-room', { roomId: this.roomId });
-    this.wsService.socket.removeAllListeners();
+    this.wsService.socket?.removeAllListeners();
     this.shortcutService.reset();
   }
 
@@ -481,7 +481,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       case ToolTypes.Brush:
         this.lineItems.push({
           id,
-          stroke: 'white',
           points: [pos.x, pos.y, pos.x, pos.y],
           color: this.currentColor,
         });
@@ -813,6 +812,11 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.storageService.set('draw-data', json);
   }
 
+  loadFromStorage(): void {
+    const data = this.storageService.get('draw-data');
+    if (data) this.applyStageData(data);
+  }
+
   // TODO: this is a bit buggy when undoing a change, then creating a new one
   // and then undoing again
   saveStateToHistory(): void {
@@ -1015,7 +1019,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     // for testing
     (window as any).konva = this.stage;
     (window as any).saveToFile = this.saveToFile;
-    (window as any).stage = this.stage;
+    (window as any).loadjson = this.loadFromStorage;
     (window as any).dialog = this.showConnectionDialog;
   }
 }
