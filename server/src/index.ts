@@ -28,10 +28,7 @@ const port = process.env.PORT || 3000;
 
 const isDev = process.env.NODE_ENV === 'development';
 
-mongoose.connect(isDev ? process.env.DATABASE_URL_DEV! : process.env.DATABASE_URL!, {
-  // useNewUrlParser: true,
-  // useUnifiedTopology: true,
-});
+mongoose.connect(isDev ? process.env.DATABASE_URL_DEV! : process.env.DATABASE_URL!);
 
 const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
@@ -82,18 +79,11 @@ app.use(
   })
 );
 
-app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((error: Error, _: Request, res: Response) => {
   console.error('Error handler >>> ', error.message);
-  res.status(500).json({ error: 'An error occured on the server.' });
+  return res.status(500).json({ error: 'An error occured on the server.' });
 });
 
-// * allow all origins again
-// io.origins((_, callback) => {
-//   callback(null, true);
-// });
-
 initialize(io);
-
-//app.set('io', io);
 
 httpServer.listen(port, undefined, () => console.log(`Server started on port ${port}`));

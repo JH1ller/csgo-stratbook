@@ -50,6 +50,31 @@ export const initialize = (io: Server) => {
       io.to(socket.id).emit('draw-room-joined', { roomId, clientId: socket.id, stratName: boards[roomId].stratName });
     });
 
+    socket.on('leave-draw-room', async ({ roomId }) => {
+      if (!roomId) {
+        console.warn('leave-draw-room -> Missing roomId');
+        return;
+      }
+      const test = socket.leave(roomId);
+      console.log('typeof test', typeof test);
+
+      console.log(`Socket with ID: ${socket.id} left draw room with id: ${roomId}`);
+
+      const stratId = boards[roomId].stratId;
+
+      delete boards[roomId].clients[socket.id];
+
+      if (stratId) {
+        const strat = await StratModel.findById(stratId);
+        if (!strat) {
+          console.warn(`leave-draw-room -> Strat with ID ${stratId} not found.`);
+          return;
+        }
+        strat.drawData = { ...boards[roomId].data };
+        strat.save();
+      }
+    });
+
     socket.on('pointer-position', ({ x, y }) => {
       //* First room is always the clientId, therefore we grab the second
       const room = [...socket.rooms.values()][1];

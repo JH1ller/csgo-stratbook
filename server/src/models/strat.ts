@@ -4,6 +4,12 @@ import { GameMap, StratSide, StratType } from '../types/enums';
 
 const arrNotEmpty = (value: unknown[]) => !!value.length;
 
+export interface DrawBoardState {
+  images: unknown[];
+  lines: unknown[];
+  texts: unknown[];
+}
+
 export interface Strat {
   name: string;
   map: GameMap;
@@ -13,7 +19,7 @@ export interface Strat {
   active: boolean;
   videoLink?: string;
   note?: string;
-  drawData?: string;
+  drawData?: DrawBoardState;
   content?: string;
   createdBy: Types.ObjectId;
   createdAt: Date;
@@ -23,6 +29,12 @@ export interface Strat {
 }
 
 export type StratDocument = Document<unknown, any, Strat>;
+
+const drawBoardStateSchema = new Schema<DrawBoardState>({
+  images: [Object],
+  lines: [Object],
+  texts: [Object],
+});
 
 const stratSchema = new Schema<Strat>({
   name: {
@@ -69,9 +81,7 @@ const stratSchema = new Schema<Strat>({
     maxlength: 100,
   },
 
-  drawData: {
-    type: String,
-  },
+  drawData: drawBoardStateSchema,
 
   content: {
     type: String,
@@ -108,10 +118,10 @@ const stratSchema = new Schema<Strat>({
 
 stratSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
 
-stratSchema.pre('save', function (next, res: any) {
+stratSchema.pre('save', function (next) {
   if (this.isModified()) {
     this.modifiedAt = Date.now();
-    if (res && res.locals.player) this.modifiedBy = res.locals.player._id;
+    if (this.$locals.playerId) this.modifiedBy = this.$locals.playerId;
   }
   next();
 });

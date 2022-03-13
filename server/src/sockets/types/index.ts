@@ -4,6 +4,7 @@ export interface Boards {
 
 export interface Room {
   stratName?: string;
+  stratId?: string;
   clients: Record<string, Client>;
   data: {
     images: unknown[];

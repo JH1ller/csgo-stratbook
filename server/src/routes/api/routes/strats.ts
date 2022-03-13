@@ -38,6 +38,8 @@ router.post('/', verifyAuth, async (req, res) => {
     createdAt: Date.now(),
   });
 
+  strat.$locals.playerId = res.locals.player._id;
+
   const newStrat = await strat.save();
   res.status(201).json(newStrat);
 });
@@ -89,6 +91,7 @@ router.patch('/', verifyAuth, getStrat, async (req, res) => {
     'note',
     'content',
     'shared',
+    // TODO: probably remove this key because it's only updated on socket disconnect.
     'drawData',
   ];
   Object.entries(req.body).forEach(([key, value]) => {

@@ -3,6 +3,7 @@
     <div class="backdrop-dialog__content" :class="{ '-fullscreen': fullscreen }">
       <slot />
     </div>
+    <button v-if="fullscreen" class="backdrop-dialog__close-btn"><fa-icon icon="close" /></button>
   </div>
 </template>
 
