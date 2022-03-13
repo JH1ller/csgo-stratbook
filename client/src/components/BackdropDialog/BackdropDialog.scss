@@ -32,12 +32,22 @@
         position: absolute;
         left: 94px;
         top: 24px;
+        padding: 8px;
+
+        & > :first-child {
+          border-radius: 8px;
+          overflow: hidden;
+        }
       }
     }
 
     @include viewport_mq7 {
       padding: 24px;
       min-width: 360px;
+
+      &.-fullscreen {
+        padding: 8px;
+      }
     }
   }
 }

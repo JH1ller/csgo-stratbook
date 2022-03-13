@@ -1,6 +1,6 @@
 <template>
   <div class="sketch-tool">
-    <span v-if="strat && strat.name" class="sketch-tool__strat-name">{{ strat.name }}</span>
+    <span v-if="stratName" class="sketch-tool__strat-name">{{ stratName }}</span>
     <div
       class="sketch-tool__stage"
       :class="'-' + activeTool.toLowerCase()"
@@ -99,51 +99,37 @@
       >
         <fa-icon icon="i-cursor" /><span class="sketch-tool__btn-label">Text</span>
       </button>
-      <button class="sketch-tool__btn" @click="clearStage">
+      <button class="sketch-tool__btn" @click="clearStage" v-tippy content="Clear">
         <fa-icon icon="eraser" /><span class="sketch-tool__btn-label">Clear</span>
       </button>
-      <button class="sketch-tool__btn" @click="setResponsiveStageSize()">
+      <button class="sketch-tool__btn" @click="setResponsiveStageSize()" v-tippy content="Center">
         <fa-icon icon="align-center" /><span class="sketch-tool__btn-label">Center</span>
       </button>
-      <button class="sketch-tool__btn" @click="saveToFile">
-        <fa-icon icon="download" /><span class="sketch-tool__btn-label">Save as file</span>
+      <button class="sketch-tool__btn" @click="saveToFile" v-tippy content="Save to file">
+        <fa-icon icon="download" /><span class="sketch-tool__btn-label">Save to file</span>
       </button>
       <template>
-        <button v-if="!roomId" class="sketch-tool__btn" @click="() => connect()">
+        <button v-if="!roomId" class="sketch-tool__btn" @click="() => connect()" v-tippy content="Create room">
           <fa-icon icon="network-wired" /><span class="sketch-tool__btn-label">Create room</span>
         </button>
-        <button v-else class="sketch-tool__btn" @click="copyRoomLink">
-          <fa-icon icon="copy" /><span class="sketch-tool__btn-label">Room ID: {{ roomId }}</span>
-        </button>
+        <!-- <button v-else class="sketch-tool__btn" @click="copyRoomLink" v-tippy content="Copy link">
+          <fa-icon icon="copy" /><span class="sketch-tool__btn-label">Copy link</span>
+        </button> -->
       </template>
-      <button class="sketch-tool__btn" @click="showConnectionDialog">
-        <fa-icon icon="cog" /><span class="sketch-tool__btn-label">Config</span>
+      <button v-if="showConfigBtn" class="sketch-tool__btn" @click="showConnectionDialog" v-tippy content="Connection">
+        <fa-icon icon="cog" /><span class="sketch-tool__btn-label">Connection</span>
       </button>
     </div>
     <div class="sketch-tool__draggables-bar">
       <div
         class="sketch-tool__draggable"
+        v-for="item in UtilityTypes"
+        :key="item"
         draggable="true"
-        @dragstart="handleDragStart($event, UtilityTypes.GRENADE)"
+        @dragstart="handleDragStart($event, item)"
         @dragend="handleDragEnd"
       >
-        <img src="@/assets/icons/grenade.png" />
-      </div>
-      <div
-        class="sketch-tool__draggable"
-        draggable="true"
-        @dragstart="handleDragStart($event, UtilityTypes.MOLOTOV)"
-        @dragend="handleDragEnd"
-      >
-        <img src="@/assets/icons/molotov.png" />
-      </div>
-      <div
-        class="sketch-tool__draggable"
-        draggable="true"
-        @dragstart="handleDragStart($event, UtilityTypes.SMOKE)"
-        @dragend="handleDragEnd"
-      >
-        <img src="@/assets/icons/smoke.png" />
+        <img :src="getUtilityIcon(item)" />
       </div>
     </div>
   </div>

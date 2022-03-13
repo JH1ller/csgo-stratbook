@@ -3,6 +3,8 @@ import SketchTool from '@/components/SketchTool/SketchTool.vue';
 import ConnectionDialog from './components/ConnectionDialog.vue';
 import StorageService from '@/services/storage.service';
 import { StageState } from '@/components/SketchTool/types';
+import { authModule } from '@/store/namespaces';
+import { Player } from '@/api/models/Player';
 
 @Component({
   components: {
@@ -12,6 +14,8 @@ import { StageState } from '@/components/SketchTool/types';
 })
 export default class MapView extends Vue {
   @Inject() storageService!: StorageService;
+  @authModule.State profile!: Player;
+
   userName = '';
   stratName = '';
   roomId = '';
@@ -39,7 +43,9 @@ export default class MapView extends Vue {
 
   mounted() {
     const userName = this.storageService.get('draw-username');
-    if (userName) {
+    if (this.profile) {
+      this.userName = this.profile.name;
+    } else if (userName) {
       this.userName = userName;
     }
 
@@ -47,6 +53,8 @@ export default class MapView extends Vue {
 
     if (this.$route.params.roomId) {
       this.changeRoomId(this.$route.params.roomId);
+    } else if (this.profile?.team) {
+      this.changeRoomId(this.profile.team.slice(0, 10));
     } else if (storageRoomId) {
       this.changeRoomId(storageRoomId);
     } else {

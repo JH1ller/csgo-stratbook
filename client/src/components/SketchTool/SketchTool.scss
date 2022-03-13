@@ -5,12 +5,13 @@
 
   &__strat-name {
     @include typo_hl1;
+    @include spacing('left', sm);
+    @include spacing('top', sm);
 
     position: absolute;
-    top: 12px;
-    left: 12px;
     color: white;
     z-index: 1;
+    pointer-events: none;
   }
 
   &__stage {
@@ -31,8 +32,8 @@
     &.-text {
       cursor: text;
     }
-
-    background-image: linear-gradient(60deg, #29323c 0%, #20242a 100%);
+    background: #29323c;
+    //background-image: linear-gradient(60deg, #29323c 0%, #20242a 100%);
   }
   &__btn {
     @include button-default(white, $color--navyblue, false);
@@ -55,25 +56,22 @@
     margin-left: 6px;
     font-size: 0.9rem;
 
-    @include viewport_mq4 {
+    @include viewport_mq5 {
       display: inline;
     }
   }
 
   &__draggables-bar {
-    //@include spacing('padding', '0 3xs');
-
     position: absolute;
     top: 50%;
     right: 0;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    background: rgba($color--darkblue, 0.5);
-
-    // & > :not(:first-child) {
-    //   margin-top: 12px;
-    // }
+    background: rgba(white, 0.1);
+    backdrop-filter: blur(4px);
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
   }
 
   &__toolbar {
@@ -89,6 +87,7 @@
     align-items: center;
     flex-wrap: wrap;
     height: 70px;
+    backdrop-filter: blur(4px);
 
     & > :not(:first-child) {
       margin-left: 12px;
@@ -100,7 +99,7 @@
   }
 
   &__draggable {
-    @include spacing('padding', 'xs 2xs');
+    @include spacing('padding', '2xs 2xs');
 
     filter: invert(1) drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.6));
     transition: 0.3s transform ease, 0.3s filter ease;
@@ -112,8 +111,13 @@
     }
 
     & > img {
-      width: 52px;
-      height: 52px;
+      width: 42px;
+      height: 42px;
+
+      @include viewport_mq6 {
+        width: 48px;
+        height: 48px;
+      }
     }
   }
 

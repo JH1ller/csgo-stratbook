@@ -66,7 +66,6 @@ export const initialize = (io: Server) => {
     });
 
     socket.on('update-data', ({ images, lines, texts }) => {
-      console.log('updatedata', images.length, lines.length, texts.length);
       //* First room is always the clientId, therefore we grab the second
       const room = [...socket.rooms.values()][1];
 
@@ -103,20 +102,22 @@ export const initialize = (io: Server) => {
     });
 
     socket.on('disconnecting', async () => {
-      // try {
-      //   const playerID = clients.get(socket.id).playerID;
-      //   clients.delete(socket.id);
-      //   const playerInClientList = [...clients].find(([_key, value]) => value.playerID === playerID);
-      //   if (!playerInClientList) {
-      //     const player = await Player.findById(playerID);
-      //     player.isOnline = false;
-      //     player.lastOnline = Date.now();
-      //     player.save();
-      //     console.log(`Websocket client disconnected with id: ${socket.id}`);
-      //   }
-      // } catch (error) {
-      //   console.log(error);
-      // }
+      try {
+        const client = clients.get(socket.id);
+        if (!client) return;
+        clients.delete(socket.id);
+        const playerInClientList = [...clients].find(([_key, value]) => value.playerID === client.playerID);
+        if (!playerInClientList) {
+          const player = await PlayerModel.findById(client.playerID);
+          if (!player) return;
+          player.isOnline = false;
+          player.lastOnline = new Date();
+          player.save();
+          console.log(`Websocket client disconnected with id: ${socket.id}`);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     });
   });
 

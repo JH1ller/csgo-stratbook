@@ -1,5 +1,6 @@
 import { UtilityTypes } from '@/api/models/UtilityTypes';
 import { Line } from 'konva/lib/shapes/Line';
+import { Node as KonvaNode } from 'konva/lib/Node';
 import { Vector2d } from 'konva/lib/types';
 import CursorIcon from '!!raw-loader!../../../assets/icons/cursor.svg';
 
@@ -135,3 +136,6 @@ export const handleDragEnd = () => {
     dragGhost.parentNode.removeChild(dragGhost);
   }
 };
+
+export const fadeIn = (node: KonvaNode) => node.to({ opacity: 1, duration: 0.2 });
+export const fadeOut = (node: KonvaNode) => node.to({ opacity: 0, duration: 0.2 });

@@ -104,8 +104,16 @@
       />
     </transition>
     <transition name="fade">
-      <BackdropDialog :fullscreen="true" v-if="drawToolOpen">
-        <SketchTool @close="drawToolOpen = false" @save="updateStrat" :strat="currentDrawToolStrat" :map="currentMap" />
+      <BackdropDialog :fullscreen="true" v-if="drawToolOpen && currentDrawToolStrat">
+        <SketchTool
+          @close="drawToolOpen = false"
+          @save="updateStrat"
+          :stratName="currentDrawToolStrat.name"
+          :userName="profile.name"
+          :roomId="currentDrawToolStrat._id"
+          :map="currentMap"
+          :showConfigBtn="false"
+        />
       </BackdropDialog>
     </transition>
   </div>

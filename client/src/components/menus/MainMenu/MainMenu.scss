@@ -176,7 +176,7 @@
   &__link {
     color: $color--grey;
     align-items: center;
-    font-size: 0.8em;
+    font-size: 0.8rem;
     opacity: 0;
     padding: 8px 24px;
     white-space: nowrap;
@@ -184,10 +184,18 @@
     transition: opacity 0.3s ease, background-color 0.3s ease;
     display: flex;
 
+    @include viewport_mq3 {
+      font-size: 1rem;
+    }
+
     & > svg {
       margin-right: 6px;
       width: 14px;
       height: 14px;
+
+      @include viewport_mq3 {
+        margin-right: 10px;
+      }
     }
 
     &.--twitter {

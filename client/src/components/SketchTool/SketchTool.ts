@@ -20,6 +20,8 @@ import {
   clamp,
   createPointerImage,
   createUtilImage,
+  fadeIn,
+  fadeOut,
   handleDragEnd,
   handleDragOver,
   handleDragStart,
@@ -52,11 +54,11 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   @Ref() selectionRect!: KonvaRef<Rect>;
   @Ref() textbox!: HTMLInputElement;
 
-  @Prop() strat!: Strat;
   @Prop() map!: MapID;
   @Prop() userName!: string;
   @Prop() stratName!: string;
   @Prop() roomId!: string;
+  @Prop() showConfigBtn!: boolean;
 
   //* Images
   backgroundImage = new Image();
@@ -276,6 +278,10 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     stroke: 'white',
     strokeWidth: 1,
   };
+
+  getUtilityIcon(type: UtilityTypes) {
+    return require(`@/assets/icons/${type.toLowerCase()}.png`);
+  }
 
   getAllNodes(): KonvaNode[] {
     return this.stage.getLayers()[1].children ?? [];
@@ -550,6 +556,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       case 'Enter':
       case 'Escape':
         e.preventDefault();
+        e.stopPropagation();
+
         this.textbox.style.display = 'none';
 
         this.updateItem(this.currentText.attrs.id, {
@@ -867,7 +875,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.updateRoomId(roomId);
     this.updateStratName(stratName);
 
-    // for testing
+    // TODO: remove, just for testing
     this.copyRoomLink();
 
     this.setupListeners();
@@ -945,11 +953,11 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
           remotePointer.timeout = undefined;
         }
         remotePointer.timeout = setTimeout(() => {
-          remotePointerCursorNode.visible(false);
-          remotePointerTextNode.visible(false);
+          fadeOut(remotePointerCursorNode);
+          fadeOut(remotePointerTextNode);
         }, 3000);
-        remotePointerCursorNode.visible(true);
-        remotePointerTextNode.visible(true);
+        fadeIn(remotePointerCursorNode);
+        fadeIn(remotePointerTextNode);
         remotePointerCursorNode.to({
           x: pointerData.x,
           y: pointerData.y,
