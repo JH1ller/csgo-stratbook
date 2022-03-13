@@ -1,6 +1,7 @@
 import { Socket, io } from 'socket.io-client';
 import { WS_URL } from '@/config';
 import { Log } from '@/utils/logger';
+import { StageState } from '../types';
 
 class SocketConnection {
   private static instance: SocketConnection;
@@ -29,24 +30,34 @@ class SocketConnection {
     roomId?: string;
     userName?: string;
     stratId?: string;
-  }): Promise<{ roomId: string; clientId: string; stratName: string }> {
+  }): Promise<{ roomId: string; clientId: string; stratName: string; drawData: StageState }> {
     return new Promise(resolve => {
       if (!this.socket || !this.socket.connected) {
         this.socket = io(WS_URL);
-        this.socket.on('connect', () => {
+        this.socket.once('connect', () => {
           Log.info('ws::drawtool:connected', 'Websocket connection established.');
           this.socket.emit('join-draw-room', { targetRoomId: roomId, userName, stratId });
         });
       } else {
         this.socket.emit('join-draw-room', { targetRoomId: roomId, userName, stratId });
       }
-      this.socket.on(
+      this.socket.once(
         'draw-room-joined',
-        ({ roomId, clientId, stratName }: { roomId: string; clientId: string; stratName: string }) => {
+        ({
+          roomId,
+          clientId,
+          stratName,
+          drawData,
+        }: {
+          roomId: string;
+          clientId: string;
+          stratName: string;
+          drawData: StageState;
+        }) => {
           Log.info('ws::drawtool:joined', `Joined room ${roomId} as client ${clientId}`);
           this.roomId = roomId;
           this.clientId = clientId;
-          resolve({ roomId, clientId, stratName });
+          resolve({ roomId, clientId, stratName, drawData });
         },
       );
     });

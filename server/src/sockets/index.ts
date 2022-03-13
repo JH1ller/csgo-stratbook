@@ -34,7 +34,7 @@ export const initialize = (io: Server) => {
       io.to(data.teamID).emit('room-joined', { roomID: data.teamID });
     });
 
-    socket.on('join-draw-room', ({ targetRoomId, userName, stratId }) => {
+    socket.on('join-draw-room', async ({ targetRoomId, userName, stratId }) => {
       if (targetRoomId && typeof targetRoomId !== 'string') return;
       const roomId = targetRoomId ?? nanoid(10);
       socket.join(roomId);
@@ -43,11 +43,22 @@ export const initialize = (io: Server) => {
       boards[roomId] = boards[roomId] ?? { stratId, clients: {}, data: {} };
       boards[roomId].clients[socket.id] = boards[roomId].clients[socket.id] ?? { position: { x: 0, y: 0 } };
 
+      if (stratId) {
+        const strat = await StratModel.findById(stratId);
+        if (strat?.drawData) {
+          boards[roomId].data = strat.drawData;
+        }
+      }
       if (userName) {
         boards[roomId].clients[socket.id].userName = userName;
       }
 
-      io.to(socket.id).emit('draw-room-joined', { roomId, clientId: socket.id, stratName: boards[roomId].stratName });
+      io.to(socket.id).emit('draw-room-joined', {
+        roomId,
+        clientId: socket.id,
+        stratName: boards[roomId].stratName,
+        drawData: boards[roomId].data,
+      });
     });
 
     socket.on('leave-draw-room', async ({ roomId }) => {

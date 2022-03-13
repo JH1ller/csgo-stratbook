@@ -426,6 +426,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   beforeDestroy() {
     this.wsService.emit('leave-draw-room', { roomId: this.roomId });
+    this.wsService.socket.removeAllListeners();
     this.shortcutService.reset();
   }
 
@@ -872,7 +873,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   async connect(targetRoomId?: string) {
-    const { roomId, stratName } = await this.wsService.connect({
+    const { roomId, stratName, drawData } = await this.wsService.connect({
       roomId: targetRoomId,
       userName: this.userName,
       stratId: this.stratId,
@@ -880,6 +881,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     Log.success('sketchtool::ws:joined', roomId);
     this.updateRoomId(roomId);
     this.updateStratName(stratName);
+    this.applyStageData(drawData);
 
     // TODO: remove, just for testing
     this.copyRoomLink();
@@ -925,9 +927,9 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   applyStageData({ images, lines, texts }: StageState) {
-    this.imageItems = images;
-    this.lineItems = lines;
-    this.textItems = texts;
+    this.imageItems = images ?? [];
+    this.lineItems = lines ?? [];
+    this.textItems = texts ?? [];
   }
 
   copyRoomLink() {
@@ -958,6 +960,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
           clearTimeout(remotePointer.timeout);
           remotePointer.timeout = undefined;
         }
+
         remotePointer.timeout = setTimeout(() => {
           fadeOut(remotePointerCursorNode);
           fadeOut(remotePointerTextNode);
@@ -1006,6 +1009,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     if (this.roomId) this.connect(this.roomId);
 
     this.saveStateToHistory();
+
+    console.log('mounted');
 
     // for testing
     (window as any).konva = this.stage;
