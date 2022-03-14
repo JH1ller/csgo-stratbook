@@ -87,7 +87,6 @@
     align-items: center;
     flex-wrap: wrap;
     height: 70px;
-    backdrop-filter: blur(4px);
 
     & > :not(:first-child) {
       margin-left: 12px;

@@ -1,4 +1,4 @@
-import { Vue, Component, Mixins, Prop, Ref, Inject, Emit, Watch } from 'vue-property-decorator';
+import { Component, Mixins, Prop, Ref, Inject, Emit, Watch } from 'vue-property-decorator';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
 import { appModule } from '@/store/namespaces';
 import { MapID } from '../MapPicker/MapPicker';
@@ -29,7 +29,6 @@ import {
   rotateVector,
 } from './utils';
 import VSwatches from 'vue-swatches';
-import { Strat } from '@/api/models/Strat';
 import { timeout } from '@/utils/timeout';
 import { Vector2d } from 'konva/lib/types';
 import { Log } from '@/utils/logger';
@@ -647,8 +646,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       case ToolTypes.Brush:
         if (this.isDrawing) {
           this.isDrawing = false;
-
-          optimizeLine(this.currentLine!, this.optimizeThreshold);
+          const lineItem = this.lineItems.find(i => i.id === this.currentLine?.attrs.id);
+          optimizeLine(lineItem!, this.optimizeThreshold);
           this.saveStateToHistory();
           this.handleDataChange();
 
@@ -1021,5 +1020,11 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     (window as any).saveToFile = this.saveToFile;
     (window as any).loadjson = this.loadFromStorage;
     (window as any).dialog = this.showConnectionDialog;
+    (window as any).optimize = () => {
+      this.lineItems.forEach(item => {
+        const line = this.stage.findOne('#' + item.id);
+        optimizeLine(line as Line);
+      });
+    };
   }
 }

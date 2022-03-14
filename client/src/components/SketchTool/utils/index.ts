@@ -3,6 +3,7 @@ import { Line } from 'konva/lib/shapes/Line';
 import { Node as KonvaNode } from 'konva/lib/Node';
 import { Vector2d } from 'konva/lib/types';
 import CursorIcon from '!!raw-loader!../../../assets/icons/cursor.svg';
+import { LineItem } from '../types';
 
 /**
  * Map array of points '[x, y, x, y]' to array of {x, y} objects '[{x, y}, {x, y}]'
@@ -36,9 +37,10 @@ export const getAngle = (a: Vector2d, b: Vector2d, c: Vector2d): number => {
  * Optimize lines by removing unnecessary points which fall under a certain angle
  * threshold which is barely noticable
  */
-export const optimizeLine = (line: Line, threshold: number = 5) => {
+export const optimizeLine = (line: Line | LineItem, threshold: number = 4) => {
+  const isNode = line instanceof Line;
   // convert array of x & y values to array of {x, y} objects
-  const points = pointsToVectorArray(line.points());
+  const points = pointsToVectorArray(isNode ? line.points() : line.points);
 
   const newPoints = points.reduce<Vector2d[]>((acc, curr, i, arr) => {
     if (i !== 0 && i !== arr.length - 1) {
@@ -58,7 +60,11 @@ export const optimizeLine = (line: Line, threshold: number = 5) => {
 
   // convert array of {x, y} objects back to flat array of x & y values
   const mappedPoints = newPoints.flatMap(({ x, y }) => [x, y]);
-  line.points(mappedPoints);
+  if (isNode) {
+    line.points(mappedPoints);
+  } else {
+    line.points = mappedPoints;
+  }
 };
 
 export const pxToNumber = (str: string): number => +str.split('px')[0];
