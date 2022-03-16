@@ -1,8 +1,8 @@
-const nodemailer = require('nodemailer');
-const Email = require('email-templates');
-const path = require('path');
-const urljoin = require('url-join');
-const { API_URL, APP_URL } = require('../../config');
+import nodemailer from 'nodemailer';
+import Email from 'email-templates';
+import path from 'path';
+import urljoin from 'url-join';
+import { API_URL, APP_URL } from '@/config';
 
 export enum MailTemplate {
   'VERIFY_NEW' = 'verifyNew',

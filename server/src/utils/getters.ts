@@ -1,7 +1,7 @@
-import { StratModel } from '../../models/strat';
-import { PlayerModel } from '../../models/player';
-import { TeamModel } from '../../models/team';
-import { UtilityModel } from '../../models/utility';
+import { StratModel } from '../models/strat';
+import { PlayerModel } from '../models/player';
+import { TeamModel } from '../models/team';
+import { UtilityModel } from '../models/utility';
 import { RequestHandler } from 'express';
 
 export const getStrat: RequestHandler = async (req, res, next) => {
