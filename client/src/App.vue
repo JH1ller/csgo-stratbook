@@ -24,7 +24,6 @@
 
 <script lang="ts">
 import { Component, Provide, Vue } from 'vue-property-decorator';
-import ViewTitle from '@/components/ViewTitle/ViewTitle.vue';
 import Loader from '@/components/Loader/Loader.vue';
 import ToastWrapper from '@/components/ToastWrapper/ToastWrapper.vue';
 import MainMenu from '@/components/menus/MainMenu/MainMenu.vue';
@@ -39,10 +38,10 @@ import StorageService from './services/storage.service';
 import { gt, major, minor } from 'semver';
 import { Breakpoints } from './services/breakpoint.service';
 import { Team } from './api/models/Team';
+import WebSocketService from './services/websocket.service';
 
 @Component({
   components: {
-    ViewTitle,
     Loader,
     MainMenu,
     ToastWrapper,
@@ -51,8 +50,9 @@ import { Team } from './api/models/Team';
   },
 })
 export default class App extends Vue {
-  @Provide() trackingService: TrackingService = TrackingService.getInstance();
-  @Provide() storageService: StorageService = StorageService.getInstance();
+  @Provide() trackingService = TrackingService.getInstance();
+  @Provide() storageService = StorageService.getInstance();
+  wsService = WebSocketService.getInstance();
 
   @appModule.State latency!: number;
   @appModule.State gameMode!: boolean;
@@ -89,6 +89,10 @@ export default class App extends Vue {
     }
     this.checkVersion();
     window.twttr?.widgets.load();
+
+    window.onbeforeunload = () => {
+      this.wsService.disconnect();
+    };
   }
 
   private checkVersion() {
