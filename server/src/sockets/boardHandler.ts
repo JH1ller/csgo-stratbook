@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import { Server, Socket } from 'socket.io';
-import { StratModel } from '../models/strat';
+import { StratModel } from '@/models/strat';
 import { Boards } from './types';
 
 const boards: Boards = {};
@@ -45,7 +45,7 @@ export const registerBoardHandler = (io: Server, socket: Socket) => {
 
     console.log(`Socket with ID: ${socket.id} left draw room with id: ${roomId}`);
 
-    const stratId = boards[roomId].stratId;
+    const stratId = boards[roomId]?.stratId;
 
     delete boards[roomId].clients[socket.id];
 
@@ -57,7 +57,7 @@ export const registerBoardHandler = (io: Server, socket: Socket) => {
         console.warn(`leave-draw-room -> Strat with ID ${stratId} not found.`);
         return;
       }
-      if (strat.team !== player.team) {
+      if (!strat.team.equals(player.team)) {
         console.warn(`leave-draw-room -> Player not part of team associated with strat.`);
         return;
       }

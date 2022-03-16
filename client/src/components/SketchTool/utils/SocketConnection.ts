@@ -32,6 +32,7 @@ class SocketConnection {
     userName?: string;
     stratId?: string;
   }): Promise<{ roomId: string; clientId: string; stratName: string; drawData: StageState }> {
+    Log.debug('ws::socketconnection:connect');
     return new Promise(resolve => {
       if (!this.socket || !this.socket.connected) {
         this.socket = io(WS_URL, {

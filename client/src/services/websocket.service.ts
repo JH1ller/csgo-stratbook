@@ -24,13 +24,18 @@ class WebSocketService {
   }
 
   connect() {
-    if (!this.socket || !this.socket.connected) {
+    console.trace(this.socket);
+    if (!this.socket) {
+      Log.warn('wssocket new socket connection');
       this.socket = io(WS_URL, {
         auth: {
           token: store.state.auth.token,
         },
       });
       this.setupListeners();
+    }
+    if (this.socket && !this.socket.connected) {
+      this.socket.connect();
     }
   }
 

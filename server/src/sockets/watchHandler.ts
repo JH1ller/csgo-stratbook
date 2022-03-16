@@ -1,13 +1,13 @@
 import { Server, Socket } from 'socket.io';
-import { PlayerModel } from '../models/player';
-import { StratModel } from '../models/strat';
-import { TeamModel } from '../models/team';
-import { UtilityModel } from '../models/utility';
+import { PlayerModel } from '@/models/player';
+import { StratModel } from '@/models/strat';
+import { TeamModel } from '@/models/team';
+import { UtilityModel } from '@/models/utility';
 
-export const registerWatchHandler = (io: Server, socket: Socket) => {
+export const registerWatchHandler = (io: Server) => {
   StratModel.watch(undefined, { fullDocument: 'updateLookup' }).on('change', async (data) => {
     if (data.operationType === 'delete') return;
-    console.log(data.operationType, data.fullDocument.team.toString(), [...socket.rooms]);
+    console.log(data.operationType, data.fullDocument.team.toString());
     switch (data.operationType) {
       case 'insert':
         io.to(data.fullDocument.team.toString()).emit('created-strat', { strat: data.fullDocument });
@@ -51,11 +51,11 @@ export const registerWatchHandler = (io: Server, socket: Socket) => {
 
   PlayerModel.watch(undefined, { fullDocument: 'updateLookup' }).on('change', async (data) => {
     if (data.operationType === 'delete') return;
-
     switch (
       data.operationType // keep switch statement in case "insert" is handled here later
     ) {
       case 'update':
+        console.log('updated-player', data.updateDescription?.updatedFields);
         data.updateDescription?.updatedFields.deleted
           ? io.to(data.fullDocument.team.toString()).emit('deleted-player', { playerID: data.fullDocument._id })
           : io.to(data.fullDocument.team.toString()).emit('updated-player', {
