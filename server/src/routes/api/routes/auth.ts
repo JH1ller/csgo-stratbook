@@ -1,18 +1,18 @@
-import { Router, Request } from 'express';
+import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import ms from 'ms';
 import { nanoid } from 'nanoid';
 import cookieParser from 'cookie-parser';
 import urljoin from 'url-join';
-import { PlayerModel } from '../../../models/player';
-import { SessionModel } from '../../../models/session';
-import { registerSchema } from '../../utils/validation';
-import { sendMail, MailTemplate } from '../../utils/mailService';
-import { uploadSingle, processImage, deleteFile } from '../../utils/fileUpload';
-import { APP_URL } from '../../../config';
-import { verifyAuth } from '../../utils/verifyToken';
-import UserNotFoundError from '../../utils/errors/UserNotFoundError';
+import { PlayerModel } from '@/models/player';
+import { SessionModel } from '@/models/session';
+import { registerSchema } from '@/utils/validation';
+import { sendMail, MailTemplate } from '@/utils/mailService';
+import { uploadSingle, processImage, deleteFile } from '@/utils/fileUpload';
+import { APP_URL } from '@/config';
+import { verifyAuth } from '@/utils/verifyToken';
+import UserNotFoundError from '@/utils/errors/UserNotFoundError';
 
 const router = Router();
 

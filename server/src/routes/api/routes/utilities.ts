@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { UtilityModel } from '../../../models/utility';
-import { getUtility } from '../../utils/getters';
-import { verifyAuth } from '../../utils/verifyToken';
-import { uploadMultiple, deleteFile, processImage } from '../../utils/fileUpload';
+import { UtilityModel } from '@/models/utility';
+import { getUtility } from '@/utils/getters';
+import { verifyAuth } from '@/utils/verifyToken';
+import { uploadMultiple, deleteFile, processImage } from '@/utils/fileUpload';
 
 const router = Router();
 

@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { StratModel } from '../../../models/strat';
-import { getStrat } from '../../utils/getters';
-import { verifyAuth } from '../../utils/verifyToken';
-import { sanitize } from '../../utils/sanitizeHtml';
-import { minifyHtml } from '../../utils/minifyHtml';
+import { StratModel } from '@/models/strat';
+import { getStrat } from '@/utils/getters';
+import { verifyAuth } from '@/utils/verifyToken';
+import { sanitize } from '@/utils/sanitizeHtml';
+import { minifyHtml } from '@/utils/minifyHtml';
 
 const router = Router();
 

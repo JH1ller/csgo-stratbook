@@ -1,6 +1,6 @@
 import { Types, Schema, model, Document } from 'mongoose';
 import mongooseDelete from 'mongoose-delete';
-import { GameMap, StratSide, StratType } from '../types/enums';
+import { GameMap, StratSide, StratType } from '@/types/enums';
 
 const arrNotEmpty = (value: unknown[]) => !!value.length;
 

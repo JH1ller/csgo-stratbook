@@ -1,12 +1,11 @@
 import { Router } from 'express';
-import { TeamModel } from '../../../models/team';
-import { PlayerModel } from '../../../models/player';
-import { StratModel } from '../../../models/strat';
+import { TeamModel } from '@/models/team';
+import { PlayerModel } from '@/models/player';
+import { StratModel } from '@/models/strat';
 import crypto from 'crypto';
-import { getTeam } from '../../utils/getters';
-import { verifyAuth } from '../../utils/verifyToken';
-import { teamSchema } from '../../utils/validation';
-import { uploadSingle, processImage, deleteFile } from '../../utils/fileUpload';
+import { verifyAuth } from '@/utils/verifyToken';
+import { teamSchema } from '@/utils/validation';
+import { uploadSingle, processImage, deleteFile } from '@/utils/fileUpload';
 
 const router = Router();
 

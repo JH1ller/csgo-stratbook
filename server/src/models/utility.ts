@@ -1,6 +1,6 @@
 import { Types, Schema, model, Document } from 'mongoose';
 import mongooseDelete from 'mongoose-delete';
-import { GameMap, MouseButton, Movement, StratSide, UtilityType } from '../types/enums';
+import { GameMap, MouseButton, Movement, StratSide, UtilityType } from '@/types/enums';
 
 export interface Utility {
   name: string;

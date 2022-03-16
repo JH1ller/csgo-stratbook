@@ -1,17 +1,17 @@
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { StratModel } from '../../../models/strat';
-import { PlayerModel } from '../../../models/player';
-import { uploadSingle, processImage, deleteFile } from '../../utils/fileUpload';
-import { verifyAuth } from '../../utils/verifyToken';
-import { sendMail, MailTemplate } from '../../utils/mailService';
-import { profileUpdateSchema } from '../../utils/validation';
+import { StratModel } from '@/models/strat';
+import { PlayerModel } from '@/models/player';
+import { uploadSingle, processImage, deleteFile } from '@/utils/fileUpload';
+import { verifyAuth } from '@/utils/verifyToken';
+import { sendMail, MailTemplate } from '@/utils/mailService';
+import { profileUpdateSchema } from '@/utils/validation';
 
 const router = Router();
 
 // * Get User Profile
-router.get('/', verifyAuth, (req, res) => {
+router.get('/', verifyAuth, (_req, res) => {
   const {
     _id,
     name,

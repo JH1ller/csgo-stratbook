@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
-import { PlayerModel } from '../models/player';
+import { PlayerModel } from '@/models/player';
 
 export const verifyAuth: RequestHandler = async (req, res, next) => {
   const token = req.header('Authorization');
