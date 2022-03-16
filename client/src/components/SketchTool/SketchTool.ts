@@ -49,7 +49,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   @appModule.Action private showToast!: (toast: Toast) => void;
   @Ref() stageRef!: KonvaRef<Stage>;
   @Ref() stageContainer!: HTMLDivElement;
-  @Ref() transformer!: KonvaRef<Transformer>;
+  @Ref() transformerRef!: KonvaRef<Transformer>;
   @Ref() selectionRect!: KonvaRef<Rect>;
   @Ref() textbox!: HTMLInputElement;
 
@@ -70,7 +70,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   textItems: TextItem[] = [];
 
   //* Tool State
-  activeItem: KonvaNode | null = null;
   activeTool: ToolTypes = ToolTypes.Pointer;
   // to save previous tool when switching active tool to PAN
   previousTool!: ToolTypes | null;
@@ -106,7 +105,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       const historySnapshot = this.changeHistory[this.historyPointer];
       if (!historySnapshot) return;
       this.applyStageData(historySnapshot);
-      this.transformer.getNode().nodes([]);
+      this.transformer.nodes([]);
       this.handleDataChange();
     }
   }
@@ -116,7 +115,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       this.historyPointer++;
       const historySnapshot = this.changeHistory[this.historyPointer];
       this.applyStageData(historySnapshot);
-      this.transformer.getNode().nodes([]);
+      this.transformer.nodes([]);
       this.handleDataChange();
     }
   }
@@ -385,7 +384,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.handleDataChange();
     this.activeTool = ToolTypes.Pointer;
     await this.$nextTick();
-    this.setActiveItem(this.stage.findOne('#' + newId));
+    this.setActiveItems([this.stage.findOne('#' + newId)]);
   }
 
   created() {
@@ -401,7 +400,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.shortcutService.add([
       {
         shortcut: 'del',
-        handler: () => this.removeActiveItem(),
+        handler: () => this.removeActiveItems(),
       },
       {
         shortcut: 'ctrl+z',
@@ -418,7 +417,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.imageItems = [];
     this.lineItems = [];
     this.textItems = [];
-    this.setActiveItem(null);
+    this.setActiveItems([]);
     this.saveStateToHistory();
     this.handleDataChange();
   }
@@ -426,6 +425,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   beforeDestroy() {
     this.wsService.emit('leave-draw-room', { roomId: this.roomId });
     this.wsService.socket?.removeAllListeners();
+    this.wsService.disconnect();
     this.shortcutService.reset();
   }
 
@@ -459,18 +459,41 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     }
   }
 
-  removeActiveItem(): void {
-    if (!this.activeItem) return;
-    this.lineItems = this.lineItems.filter(line => line.id !== this.activeItem?.attrs.id);
-    this.imageItems = this.imageItems.filter(item => item.id !== this.activeItem?.attrs.id);
-    this.textItems = this.textItems.filter(item => item.id !== this.activeItem?.attrs.id);
-    this.setActiveItem(null);
+  removeActiveItems(): void {
+    console.info('removeActiveitems');
+    if (!this.activeItems.length) return;
+    this.lineItems = this.lineItems.filter(
+      item => !this.activeItems.some(activeItem => activeItem.attrs.id === item.id),
+    );
+    this.imageItems = this.imageItems.filter(
+      item => !this.activeItems.some(activeItem => activeItem.attrs.id === item.id),
+    );
+    this.textItems = this.textItems.filter(
+      item => !this.activeItems.some(activeItem => activeItem.attrs.id === item.id),
+    );
+    this.setActiveItems([]);
     this.saveStateToHistory();
     this.handleDataChange();
   }
 
   get stage(): Stage {
     return this.stageRef.getStage();
+  }
+
+  get transformer(): Transformer {
+    return this.transformerRef.getNode();
+  }
+
+  activeItems: KonvaNode[] = [];
+
+  setActiveItems(items: KonvaNode[]) {
+    if (
+      items.length === 1 &&
+      items.some(item => this.activeItems.some(activeItem => activeItem.attrs.id === item.attrs.id))
+    )
+      return;
+    this.activeItems = items;
+    this.transformer.nodes(items);
   }
 
   async handleMouseDown({ target }: KonvaEventObject<MouseEvent>) {
@@ -490,16 +513,16 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
         break;
       case ToolTypes.Pointer:
         if (target instanceof KonvaImage && target.attrs.class !== 'static') {
-          this.setActiveItem(target);
+          this.setActiveItems([target]);
           return;
         }
         if ((target instanceof Line || target instanceof Text) && target.attrs.class !== 'static') {
-          this.setActiveItem(target);
+          this.setActiveItems([target]);
           return;
         }
         if (!(target.parent instanceof Transformer)) {
           // remove activeItem when clicking outside of a node.
-          this.setActiveItem(null);
+          this.setActiveItems([]);
         }
         if ((target instanceof KonvaImage && target.attrs.class === 'static') || target instanceof Stage) {
           // start selection rectangle
@@ -529,7 +552,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   async showTextbox() {
     if (!this.currentText) return;
     this.currentText.visible(false);
-    this.setActiveItem(null);
+    this.setActiveItems([]);
     this.moveTextboxElement();
     this.textbox.style.display = 'block';
     this.setTextboxColor(this.currentColor);
@@ -572,21 +595,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     }
   }
 
-  setActiveItem(item: KonvaNode | null): void {
-    this.activeItem = item;
-
-    if (
-      item &&
-      this.transformer
-        .getNode()
-        .nodes()
-        .includes(item)
-    ) {
-      return;
-    }
-    this.transformer.getNode().nodes(this.activeItem ? [this.activeItem] : []);
-  }
-
   handleMouseMove({ evt }: KonvaEventObject<MouseEvent>) {
     const pos = this.getScaledPointerPosition();
     this.emitPointerPos(pos);
@@ -605,7 +613,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
           this.selectionRectConfig.height = Math.abs(y2 - y1);
           const box = this.selectionRect.getNode().getClientRect();
           const selectedNodes = this.getAllNodes().filter(node => Util.haveIntersection(box, node.getClientRect()));
-          this.transformer.getNode().nodes(selectedNodes);
+          this.setActiveItems(selectedNodes);
         }
     }
   }
@@ -763,16 +771,28 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   handleTransform({ target }: KonvaEventObject<MouseEvent>) {
     if (target instanceof KonvaImage || target instanceof Text || target instanceof Line) {
-      const { id, rotation, scaleX, scaleY, skewX, skewY, x, y } = target.attrs;
-      this.updateItem(id, { rotation, scaleX, scaleY, skewX, skewY, x, y });
+      const items = this.transformer.nodes();
+      for (const item of items) {
+        const { id, rotation, scaleX, scaleY, skewX, skewY, x, y } = item.attrs;
+        this.updateItem(id, { rotation, scaleX, scaleY, skewX, skewY, x, y });
+      }
       this.handleDataChange();
       return;
     }
   }
 
-  handleTransformEnd(): void {
-    this.saveStateToHistory();
-    this.handleDataChange();
+  handleTransformEnd({ target }: KonvaEventObject<MouseEvent>): void {
+    if (target instanceof KonvaImage || target instanceof Text || target instanceof Line) {
+      const items = this.transformer.nodes();
+      for (const item of items) {
+        const { id, rotation, scaleX, scaleY, skewX, skewY, x, y } = item.attrs;
+        console.log({ id, rotation, scaleX, scaleY, skewX, skewY, x, y });
+        this.updateItem(id, { rotation, scaleX, scaleY, skewX, skewY, x, y });
+      }
+      this.handleDataChange();
+      this.saveStateToHistory();
+      return;
+    }
   }
 
   handleTextDblClick(event: KonvaEventObject<MouseEvent>) {

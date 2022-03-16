@@ -87,7 +87,6 @@ export const createPointerImage = (colorIndex: number): HTMLImageElement => {
     tempEl.innerHTML = CursorIcon;
     tempEl.querySelector('path')!.style.fill = colors[Math.min(colorIndex, colors.length - 1)];
     const base64string = btoa(tempEl.innerHTML);
-    console.log(base64string);
     img.src = 'data:image/svg+xml;base64,' + base64string;
   } catch (error) {
     console.log(error);

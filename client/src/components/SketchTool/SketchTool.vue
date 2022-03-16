@@ -41,7 +41,7 @@
         <!-- Overlayed utility layer -->
         <v-layer>
           <v-transformer
-            ref="transformer"
+            ref="transformerRef"
             :config="transformerConfig"
             @transform="handleTransform"
             @transformend="handleTransformEnd"
