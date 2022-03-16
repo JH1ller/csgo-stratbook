@@ -1,10 +1,13 @@
 import { Server } from 'socket.io';
-import { PlayerModel } from '../models/player';
+import { PlayerModel } from '@/models/player';
 import jwt from 'jsonwebtoken';
 import { registerBoardHandler } from './boardHandler';
 import { registerWatchHandler } from './watchHandler';
+import { Log } from '@/utils/logger';
 
 export const initialize = (io: Server) => {
+  registerWatchHandler(io);
+  (global as any).io = io;
   //* Auth middleware
   io.use(async (socket, next) => {
     const token = socket.handshake.auth.token;
@@ -25,9 +28,8 @@ export const initialize = (io: Server) => {
   });
 
   io.on('connection', (socket) => {
-    console.log('new connection', socket.id);
+    Log.info(`Socket.io -> User '${socket.id}' connected. Active connections: ${io.sockets.sockets.size}`);
     registerBoardHandler(io, socket);
-    registerWatchHandler(io, socket);
 
     socket.on('join-room', async () => {
       console.log('join room called ', socket.id, [...socket.rooms]);
@@ -39,8 +41,13 @@ export const initialize = (io: Server) => {
       socket.join(player.team.toString());
 
       try {
+        if (socket.data.activeQuery) {
+          await socket.data.activeQuery;
+        }
         player.isOnline = true;
-        await player.save();
+        socket.data.activeQuery = player.save();
+        await socket.data.activeQuery;
+        socket.data.activeQuery = undefined;
       } catch (error) {
         console.error(
           `Error while saving isOnline status for player: ${player.name} (#${player._id})\n`,
@@ -51,14 +58,21 @@ export const initialize = (io: Server) => {
       io.to(player.team).emit('room-joined');
     });
 
-    socket.on('disconnecting', async () => {
+    socket.on('disconnect', async (reason) => {
+      console.info(
+        `Socket.io -> User '${socket.id}' disconnected. Active connections: ${io.sockets.sockets.size}. Disconnect reason: ${reason}`
+      );
       const player = socket.data.player;
       if (!player) return;
-      //const player = await PlayerModel.findById(client.playerID);
       try {
+        if (socket.data.activeQuery) {
+          await socket.data.activeQuery;
+        }
         player.isOnline = false;
         player.lastOnline = new Date();
-        await player.save();
+        socket.data.activeQuery = player.save();
+        await socket.data.activeQuery;
+        socket.data.activeQuery = undefined;
         console.log(`Websocket client disconnected with id: ${socket.id}`);
       } catch (error) {
         console.log('Disconnect error ->', error.message);
