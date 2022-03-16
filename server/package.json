@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node --files --transpile-only -r tsconfig-paths/register src/index.ts",
+    "start": "tsc && cross-env TS_NODE_BASEURL=./dist_server node -r tsconfig-paths/register dist_server/index.js",
     "serve": "tsnd --respawn --inspect=0.0.0.0:9229 --files -r tsconfig-paths/register src/index.ts"
   },
   "repository": {
@@ -72,6 +72,7 @@
     "@types/url-join": "^4.0.1",
     "@typescript-eslint/eslint-plugin": "^5.14.0",
     "@typescript-eslint/parser": "^5.14.0",
+    "cross-env": "^7.0.3",
     "eslint-plugin-security": "^1.4.0",
     "nodemon": "^2.0.15",
     "p-queue": "^7.2.0",
