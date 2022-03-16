@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import store from '@/store';
 import router from '@/router';
 import { Routes, RouteNames } from '@/router/router.models';
@@ -12,6 +12,10 @@ import { TeamService } from './team.service';
 import { StratService } from './strat.service';
 import { UtilityService } from './utility.service';
 
+const isAxiosError = (error: any): error is AxiosError => {
+  return !!error.response?.data?.error;
+};
+
 export default class ApiService {
   private static axiosInstance: AxiosInstance = ApiService.setupAxios();
 
@@ -24,7 +28,7 @@ export default class ApiService {
       const { data } = await request;
       return { success: data };
     } catch (error) {
-      return { error: error.response?.data?.error };
+      return { error: isAxiosError(error) ? error.response?.data?.error : (error as Error).message };
     }
   }
 
@@ -75,7 +79,7 @@ export default class ApiService {
       error => {
         Log.error('axios::interceptor', 'User not authenticated. Request cancelled.');
         return Promise.reject(error);
-      }
+      },
     );
     axiosInstance.interceptors.response.use(
       response => {
@@ -101,7 +105,7 @@ export default class ApiService {
           }
         }
         return Promise.reject(error);
-      }
+      },
     );
 
     return axiosInstance;

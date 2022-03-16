@@ -25,7 +25,11 @@ class WebSocketService {
 
   connect() {
     if (!this.socket || !this.socket.connected) {
-      this.socket = io(WS_URL);
+      this.socket = io(WS_URL, {
+        auth: {
+          token: store.state.auth.token,
+        },
+      });
       this.setupListeners();
     }
   }
@@ -35,18 +39,16 @@ class WebSocketService {
   }
 
   private setupListeners() {
-    this.socket.on('connect', () => {
+    console.info('setupListeners');
+    this.socket.once('connect', () => {
       Log.info('ws::connected', 'Websocket connection established.');
-      this.socket.emit('join-room', {
-        teamID: (store.state.auth.profile as Player).team,
-        playerID: (store.state.auth.profile as Player)._id,
-      });
+      this.socket.emit('join-room');
     });
 
     this.socket.on('pong', (ms: number) => store.dispatch('app/updateLatency', ms));
 
-    this.socket.on('room-joined', (data: { roomID: string }) => {
-      Log.info('ws::joined', `Connected to room ${data.roomID}`);
+    this.socket.on('room-joined', () => {
+      Log.info('ws::joined', `Connected to room`);
     });
 
     this.socket.on('disconnect', () => {

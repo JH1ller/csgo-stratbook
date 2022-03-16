@@ -104,10 +104,10 @@
       />
     </transition>
     <transition name="fade">
-      <BackdropDialog :fullscreen="true" v-if="drawToolOpen && currentDrawToolStrat">
+      <BackdropDialog :fullscreen="true" v-if="drawToolOpen && currentDrawToolStrat" @close="drawToolOpen = false">
         <SketchTool
-          @close="drawToolOpen = false"
           @save="updateStrat"
+          @close="drawToolOpen = false"
           :stratName="currentDrawToolStrat.name"
           :userName="profile.name"
           :roomId="currentDrawToolStrat._id.slice(0, 10)"

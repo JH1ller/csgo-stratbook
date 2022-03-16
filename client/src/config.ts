@@ -15,3 +15,5 @@ export const GA_ID = 'G-787NDTZVPN';
 export const GTM_ID = 'GTM-TTHQVT5';
 
 export const MXP_TOKEN = '626f6b394032519f813a44d8de173ee3';
+
+export const SENTRY_DSN = 'https://47606468801448cd909f02edde2defd7@o1161937.ingest.sentry.io/6248588';

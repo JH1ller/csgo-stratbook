@@ -64,7 +64,13 @@
       >
         <fa-icon icon="film" />
       </div>
-      <div class="strat-item__btn --map" @click="showMap" content="Open map" v-tippy>
+      <div
+        class="strat-item__btn --map"
+        :class="{ '-active': !!strat.drawData }"
+        @click="showMap"
+        content="Open map"
+        v-tippy
+      >
         <fa-icon icon="map" />
       </div>
       <transition name="fade">
@@ -80,7 +86,7 @@
           </div>
           <div
             class="strat-item__btn --share"
-            :class="{ '-shared': strat.shared }"
+            :class="{ '-active': strat.shared }"
             @click="strat.shared ? unshareStrat() : shareStrat()"
             :content="strat.shared ? 'Stop sharing' : 'Create share link'"
             v-tippy

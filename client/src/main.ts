@@ -70,6 +70,7 @@ import { BreakpointService } from './services/breakpoint.service';
 import VueKonva from 'vue-konva';
 import * as Sentry from '@sentry/vue';
 import { BrowserTracing } from '@sentry/tracing';
+import { SENTRY_DSN } from './config';
 
 Vue.use(VueTippy, {
   directive: 'tippy',
@@ -147,7 +148,7 @@ library.add(
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
     Vue,
-    dsn: 'https://47606468801448cd909f02edde2defd7@o1161937.ingest.sentry.io/6248588',
+    dsn: SENTRY_DSN,
     integrations: [
       new BrowserTracing({
         routingInstrumentation: Sentry.vueRouterInstrumentation(router),

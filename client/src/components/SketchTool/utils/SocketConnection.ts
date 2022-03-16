@@ -2,6 +2,7 @@ import { Socket, io } from 'socket.io-client';
 import { WS_URL } from '@/config';
 import { Log } from '@/utils/logger';
 import { StageState } from '../types';
+import store from '@/store';
 
 class SocketConnection {
   private static instance: SocketConnection;
@@ -33,7 +34,11 @@ class SocketConnection {
   }): Promise<{ roomId: string; clientId: string; stratName: string; drawData: StageState }> {
     return new Promise(resolve => {
       if (!this.socket || !this.socket.connected) {
-        this.socket = io(WS_URL);
+        this.socket = io(WS_URL, {
+          auth: {
+            token: store.state.auth.token,
+          },
+        });
         this.socket.once('connect', () => {
           Log.info('ws::drawtool:connected', 'Websocket connection established.');
           this.socket.emit('join-draw-room', { targetRoomId: roomId, userName, stratId });

@@ -14,6 +14,7 @@ import { initialize } from './sockets';
 import apiRouter from './routes/api';
 import { secureRedirect } from './middleware/secureRedirect';
 import { logger } from './middleware/logger';
+import * as Sentry from '@sentry/node';
 
 const app = express();
 const httpServer = createServer(app);
@@ -40,6 +41,9 @@ const limiter = rateLimit({
 });
 
 if (!isDev) {
+  Sentry.init({ dsn: process.env.SENTRY_DSN });
+  app.use(Sentry.Handlers.requestHandler());
+
   app.use(limiter);
   app.set('trust proxy', 1);
   app.use(secureRedirect);
@@ -78,6 +82,10 @@ app.use(
     index: '/dist_app/index.html',
   })
 );
+
+if (!isDev) {
+  app.use(Sentry.Handlers.errorHandler());
+}
 
 app.use((error: Error, _: Request, res: Response) => {
   console.error('Error handler >>> ', error.message);
