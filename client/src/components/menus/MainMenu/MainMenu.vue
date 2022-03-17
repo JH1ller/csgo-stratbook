@@ -1,7 +1,7 @@
 <template>
   <div class="main-menu">
     <ul class="main-menu__list" :class="{ '-open': menuOpen }">
-      <router-link to="/" class="main-menu__list-item main-menu__logo">
+      <router-link to="/" class="main-menu__logo">
         <img
           src="@/assets/icons/logo_small.png"
           class="main-menu__icon main-menu__logo-icon"
