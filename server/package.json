@@ -3,9 +3,11 @@
   "version": "1.10.0",
   "description": "",
   "scripts": {
-    "start": "./node_modules/typescript/bin/tsc && cross-env TS_NODE_BASEURL=./dist_server node -r tsconfig-paths/register dist_server/index.js",
+    "start": "cross-env TS_NODE_BASEURL=./dist_server node -r tsconfig-paths/register dist_server/index.js",
     "start:pm2": "tsc && cross-env TS_NODE_BASEURL=./dist_server pm2 start dist_server/index.js --node-args=\"-r tsconfig-paths/register\"",
-    "serve": "tsnd --respawn --inspect=0.0.0.0:9229 --files -r tsconfig-paths/register src/index.ts"
+    "serve": "tsnd --respawn --inspect=0.0.0.0:9229 --files -r tsconfig-paths/register src/index.ts",
+    "build": "tsc",
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
