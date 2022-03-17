@@ -6,11 +6,12 @@ import { Player } from '../api/models/Player';
 import { Strat } from '../api/models/Strat';
 import { Team } from '../api/models/Team';
 import { Utility } from '../api/models/Utility';
+import { StageState } from '@/components/SketchTool/types';
 
 class WebSocketService {
   private static instance: WebSocketService;
 
-  private socket!: Socket;
+  socket!: Socket;
 
   private constructor() {
     // private to prevent instantiation
@@ -23,38 +24,75 @@ class WebSocketService {
     return WebSocketService.instance;
   }
 
-  connect() {
-    console.trace(this.socket);
-    if (!this.socket) {
-      Log.warn('wssocket new socket connection');
-      this.socket = io(WS_URL, {
-        auth: {
-          token: store.state.auth.token,
-        },
+  connect(): Promise<void> {
+    return new Promise(resolve => {
+      if (this.socket?.connected && (this.socket.auth as Record<string, string>).token) {
+        resolve();
+      }
+      if (!this.socket) {
+        Log.info('WebSocketService::connect()', 'new socket connection');
+        this.socket = io(WS_URL, {
+          auth: {
+            token: store.state.auth.token,
+          },
+        });
+        this.setupListeners();
+      }
+      //* Don't create new socket connection and try reconnect the existing instead.
+      //* Otherwise we might have two connected sockets when connect() is called twice
+      if (this.socket && !this.socket.connected) {
+        this.socket.connect();
+      }
+      //* If socket already connected but without auth.
+      //* (e.g. when using the Map anonymously before logging in)
+      if (this.socket?.connected && !(this.socket.auth as Record<string, string>).token && store.state.auth.token) {
+        Log.info('WebSocketService::connect()', 'reconnecting with auth');
+        this.socket.close();
+        this.socket = io(WS_URL, {
+          auth: {
+            token: store.state.auth.token,
+          },
+        });
+      }
+      this.socket.once('connect', () => {
+        Log.info('ws::connected', 'Websocket connection established.');
+        console.log(this.socket);
+        resolve();
       });
-      this.setupListeners();
-    }
-    if (this.socket && !this.socket.connected) {
-      this.socket.connect();
-    }
+    });
+  }
+
+  get connected(): boolean {
+    return this.socket?.connected;
   }
 
   disconnect() {
     this.socket?.close();
   }
 
+  async joinDrawRoom({
+    roomId,
+    userName,
+    stratId,
+  }: {
+    roomId?: string;
+    userName?: string;
+    stratId?: string;
+  }): Promise<{ roomId: string; stratName: string; drawData: StageState }> {
+    Log.debug('WebSocketService::joinDrawRoom()', roomId, userName, stratId);
+    await this.connect();
+
+    return new Promise(resolve => {
+      this.socket.emit('join-draw-room', { targetRoomId: roomId, userName, stratId });
+      this.socket.once('draw-room-joined', (data: { roomId: string; stratName: string; drawData: StageState }) => {
+        Log.info('ws::drawroom-joined', `Joined room ${data.roomId} as client ${this.socket.id}`);
+        resolve(data);
+      });
+    });
+  }
+
   private setupListeners() {
-    console.info('setupListeners');
-    this.socket.once('connect', () => {
-      Log.info('ws::connected', 'Websocket connection established.');
-      this.socket.emit('join-room');
-    });
-
     this.socket.on('pong', (ms: number) => store.dispatch('app/updateLatency', ms));
-
-    this.socket.on('room-joined', () => {
-      Log.info('ws::joined', `Connected to room`);
-    });
 
     this.socket.on('disconnect', () => {
       Log.info('ws::disconnect', 'Websocket connection lost or disconnected');
@@ -114,6 +152,8 @@ class WebSocketService {
   emit(event: string, ...args: any[]) {
     if (this.socket?.connected) {
       this.socket.emit(event, ...args);
+    } else {
+      Log.warn('ws::drawtool:emit', `Tried emitting ${event} without connection.`);
     }
   }
 }

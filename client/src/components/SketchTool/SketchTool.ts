@@ -32,12 +32,12 @@ import VSwatches from 'vue-swatches';
 import { timeout } from '@/utils/timeout';
 import { Vector2d } from 'konva/lib/types';
 import { Log } from '@/utils/logger';
-import SocketConnection from './utils/SocketConnection';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import { KonvaRef, ImageItem, LineItem, TextItem, ToolTypes, StageState, RemotePointer } from './types';
 import urljoin from 'url-join';
 import StorageService from '@/services/storage.service';
 import { writeToClipboard } from '@/utils/writeToClipboard';
+import WebSocketService from '@/services/websocket.service';
 
 @Component({
   components: {
@@ -97,7 +97,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   //* Services
   shortcutService = ShortcutService.getInstance();
-  wsService = SocketConnection.getInstance();
+  wsService = WebSocketService.getInstance();
 
   undo(): void {
     if (this.historyPointer > 0) {
@@ -425,15 +425,13 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   beforeDestroy() {
     this.wsService.emit('leave-draw-room', { roomId: this.roomId });
     this.wsService.socket?.removeAllListeners();
-    this.wsService.disconnect();
     this.shortcutService.reset();
   }
 
   @Listen('keyup')
-  keyupHandler({ code, type }: KeyboardEvent) {
+  keyupHandler({ code }: KeyboardEvent) {
     switch (code) {
       case 'Space':
-        console.log('keyup', code);
         this.activeTool = this.previousTool ?? ToolTypes.Pan;
         this.previousTool = null;
     }
@@ -896,7 +894,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   async connect(targetRoomId?: string) {
-    const { roomId, stratName, drawData } = await this.wsService.connect({
+    const { roomId, stratName, drawData } = await this.wsService.joinDrawRoom({
       roomId: targetRoomId,
       userName: this.userName,
       stratId: this.stratId,
@@ -946,6 +944,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   @Watch('roomId')
   handleRoomChange(to: string) {
     console.log('watch roomid', to);
+    if (to === this.roomId) return;
     this.connect(to);
   }
 
@@ -956,14 +955,14 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   copyRoomLink() {
-    writeToClipboard(urljoin(window.location.origin, '#', 'map', this.wsService.roomId));
+    writeToClipboard(urljoin(window.location.origin, '#', 'map', this.roomId));
     this.showToast({ id: 'sketchTool/roomlinkCopied', text: 'Room link copied' });
   }
 
   setupListeners() {
     this.wsService.socket.on('pointer-data', (pointerData: Vector2d & { id: string; userName: string }) => {
       // don't show icon for your own cursor
-      if (pointerData.id === this.wsService.clientId) return;
+      if (pointerData.id === this.wsService.socket.id) return;
 
       const remotePointer = this.remotePointers.find(pointer => pointer.id === pointerData.id);
       if (!remotePointer) {
@@ -1005,13 +1004,13 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
     this.wsService.socket.on('data-updated', (data: StageState & { id: string }) => {
       // console.log('data-updated', { images, lines, texts, id });
-      if (data.id === this.wsService.clientId) return;
+      if (data.id === this.wsService.socket.id) return;
       this.applyStageData(data);
     });
 
     this.wsService.socket.on('username-updated', ({ userName, id }: { userName: string; id: string }) => {
       console.log('username-updated', { userName, id });
-      if (id === this.wsService.clientId) return;
+      if (id === this.wsService.socket.id) return;
       const remotePointer = this.remotePointers.find(i => i.id === id);
       if (remotePointer) {
         remotePointer.userName = userName;
@@ -1021,7 +1020,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
     this.wsService.socket.on('stratname-updated', ({ stratName, id }: { stratName: string; id: string }) => {
       console.log('stratname-updated', { stratName, id });
-      if (id === this.wsService.clientId) return;
+      if (id === this.wsService.socket.id) return;
       this.updateStratName(stratName);
     });
   }
