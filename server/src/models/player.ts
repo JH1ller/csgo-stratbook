@@ -86,13 +86,7 @@ const playerSchema = new Schema<Player>({
 playerSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
 
 playerSchema.pre('save', function (next) {
-  if (this.isModified()) {
-    const changedProperties = Object.keys(this.getChanges()?.$set ?? {});
-
-    if (changedProperties.length === 1 && changedProperties[0] === 'isOnline') {
-      console.info('change to "isOnline", not saving time');
-      return;
-    }
+  if (this.isModified() && !this.$locals.skipModified) {
     this.modifiedAt = Date.now();
   }
   next();

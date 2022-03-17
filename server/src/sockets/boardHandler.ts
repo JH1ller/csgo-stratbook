@@ -13,6 +13,7 @@ export const registerBoardHandler = (io: Server, socket: Socket) => {
     if (targetRoomId && typeof targetRoomId !== 'string') return;
     const roomId = targetRoomId ?? nanoid(10);
     socket.join(roomId);
+    socket.data.drawRoomId = roomId;
     console.log('Joined draw room, target id', roomId);
 
     boards[roomId] = boards[roomId] ?? { stratId, clients: {}, data: {} };
@@ -30,13 +31,13 @@ export const registerBoardHandler = (io: Server, socket: Socket) => {
 
     io.to(socket.id).emit('draw-room-joined', {
       roomId,
-      clientId: socket.id,
-      stratName: boards[roomId].stratName,
+      stratName: boards[roomId].stratName ?? '',
       drawData: boards[roomId].data,
     });
   });
 
-  socket.on('leave-draw-room', async ({ roomId }) => {
+  socket.on('leave-draw-room', async () => {
+    const roomId = socket.data.drawRoomId;
     if (!roomId) {
       console.warn('leave-draw-room -> Missing roomId');
       return;
@@ -68,53 +69,50 @@ export const registerBoardHandler = (io: Server, socket: Socket) => {
   });
 
   socket.on('pointer-position', ({ x, y }) => {
-    //* First room is always the clientId, therefore we grab the second
-    const room = [...socket.rooms.values()][1];
+    const roomId = socket.data.drawRoomId;
 
-    if (!boards[room]) return;
-    boards[room].clients[socket.id].position.x = x;
-    boards[room].clients[socket.id].position.y = y;
+    if (!boards[roomId]?.clients[socket.id]) return;
+    boards[roomId].clients[socket.id].position.x = x;
+    boards[roomId].clients[socket.id].position.y = y;
 
-    io.to(room).emit('pointer-data', {
-      ...boards[room].clients[socket.id].position,
+    io.to(roomId).emit('pointer-data', {
+      ...boards[roomId].clients[socket.id].position,
       id: socket.id,
-      userName: boards[room].clients[socket.id].userName,
+      userName: boards[roomId].clients[socket.id].userName,
     });
   });
 
   socket.on('update-data', ({ images, lines, texts }) => {
-    //* First room is always the clientId, therefore we grab the second
-    const room = [...socket.rooms.values()][1];
+    const roomId = socket.data.drawRoomId;
 
-    if (!boards[room]) return;
-    boards[room].data.images = images;
-    boards[room].data.lines = lines;
-    boards[room].data.texts = texts;
+    if (!boards[roomId]) return;
+    boards[roomId].data.images = images;
+    boards[roomId].data.lines = lines;
+    boards[roomId].data.texts = texts;
 
-    io.to(room).emit('data-updated', { images, lines, texts, id: socket.id });
+    io.to(roomId).emit('data-updated', { images, lines, texts, id: socket.id });
   });
 
   socket.on('update-username', (userName) => {
     console.log('update username', userName);
-    //* First room is always the clientId, therefore we grab the second
-    const room = [...socket.rooms.values()][1];
+    const roomId = socket.data.drawRoomId;
 
-    if (!boards[room]) return;
-    boards[room].clients[socket.id].userName = userName;
+    if (!boards[roomId]?.clients[socket.id]) return;
+    boards[roomId].clients[socket.id].userName = userName;
 
-    io.to(room).emit('username-updated', { userName, id: socket.id });
+    io.to(roomId).emit('username-updated', { userName, id: socket.id });
   });
 
   socket.on('update-stratname', (stratName) => {
     console.log('update stratname', stratName);
 
     if (!stratName) return;
-    //* First room is always the clientId, therefore we grab the second
-    const room = [...socket.rooms.values()][1];
 
-    if (!boards[room]) return;
-    boards[room].stratName = stratName;
+    const roomId = socket.data.drawRoomId;
 
-    io.to(room).emit('stratname-updated', { stratName, id: socket.id });
+    if (!boards[roomId]) return;
+    boards[roomId].stratName = stratName;
+
+    io.to(roomId).emit('stratname-updated', { stratName, id: socket.id });
   });
 };
