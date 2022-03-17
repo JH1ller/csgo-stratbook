@@ -899,7 +899,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       userName: this.userName,
       stratId: this.stratId,
     });
-    Log.success('sketchtool::ws:joined', roomId);
+    Log.success('sketchtool::ws:joined', roomId, drawData);
     this.updateRoomId(roomId);
     this.updateStratName(stratName);
     this.applyStageData(drawData);
@@ -973,7 +973,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
             image: createPointerImage(this.remotePointers.length),
           },
         ];
-        this.showToast({ id: 'sketchTool/clientJoined', text: `Client with id "${pointerData.id}" joined.` });
+        this.showToast({ id: 'sketchTool/clientJoined', text: `${pointerData.userName ?? 'User'} joined.` });
       } else {
         const remotePointerCursorNode = this.stage.findOne('#cursor_' + remotePointer.id);
         const remotePointerTextNode = this.stage.findOne('#text_' + remotePointer.id);

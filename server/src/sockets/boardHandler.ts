@@ -19,7 +19,8 @@ export const registerBoardHandler = (io: Server, socket: Socket) => {
     boards[roomId] = boards[roomId] ?? { stratId, clients: {}, data: {} };
     boards[roomId].clients[socket.id] = boards[roomId].clients[socket.id] ?? { position: { x: 0, y: 0 } };
 
-    if (stratId) {
+    //* only fetch drawData from db for the first user who joins
+    if (stratId && Object.keys(boards[roomId].clients).length === 1) {
       const strat = await StratModel.findById(stratId);
       if (strat?.drawData) {
         boards[roomId].data = strat.drawData;
@@ -62,7 +63,7 @@ export const registerBoardHandler = (io: Server, socket: Socket) => {
         console.warn(`leave-draw-room -> Player not part of team associated with strat.`);
         return;
       }
-      strat.drawData = { ...boards[roomId].data };
+      strat.drawData = boards[roomId].data;
       console.log('leave-draw-room -> successfully saved data');
       strat.save();
     }

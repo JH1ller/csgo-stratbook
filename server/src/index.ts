@@ -88,8 +88,12 @@ if (!isDev) {
 }
 
 app.use((error: Error, _: Request, res: Response) => {
-  console.error('Error handler >>> ', error.message);
-  return res.status(500).json({ error: 'An error occured on the server.' });
+  if (error instanceof Error) {
+    console.error('Error handler >>> ', error.message);
+    return res.status(500).json({ error: 'An error occured on the server.' });
+  } else {
+    console.log(error);
+  }
 });
 
 initialize(io);

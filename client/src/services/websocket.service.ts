@@ -56,7 +56,6 @@ class WebSocketService {
       }
       this.socket.once('connect', () => {
         Log.info('ws::connected', 'Websocket connection established.');
-        console.log(this.socket);
         resolve();
       });
     });
