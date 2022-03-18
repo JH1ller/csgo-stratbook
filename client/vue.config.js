@@ -17,10 +17,10 @@ function getPublishConfig() {
       };
 }
 
-const isDevOrStaging = process.env.APP_ENV === 'staging' || process.env.NODE_ENV === 'development';
+const isStaging = process.env.APP_ENV === 'staging';
 
 module.exports = {
-  publicPath: isDevOrStaging ? '/app/' : '/',
+  publicPath: isStaging ? '/app/' : '/',
   outputDir: path.resolve(__dirname, '../server/dist_app'),
   pages: {
     index: 'src/main.ts',
