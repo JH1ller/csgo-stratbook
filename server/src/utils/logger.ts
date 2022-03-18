@@ -1,30 +1,26 @@
+import { red, blue, green, yellow, gray, Color, bold, cyan } from 'colors';
 export class Log {
-  private static log(color: string, ns: string, ...data: any[]): void {
-    console.log(
-      `%c${new Date().toLocaleTimeString()}%c${ns.padEnd(15, ' ')}`,
-      `color: #c3c3c3; background: #141418; border: 1px solid ${color}; border-right: none; padding: 2px 8px;`,
-      `color: ${color}; background: #141418; border: 1px solid ${color}; padding: 2px 8px;`,
-      ...data
-    );
+  private static log(colorFunc: Color, ns: string, ...data: any[]): void {
+    console.log(`[${gray(new Date().toLocaleTimeString())} ${bold(colorFunc(ns))}] -`, ...data);
   }
 
   static success(namespace?: string, ...data: any[]): void {
-    this.log('#41b883', namespace ?? 'log::success', ...data);
+    this.log(green, namespace ?? 'log::success', ...data);
   }
 
   static error(namespace?: string, ...data: any[]): void {
-    this.log('#ff8484', namespace ?? 'log::error', ...data);
+    this.log(red, namespace ?? 'log::error', ...data);
   }
 
   static warn(namespace?: string, ...data: any[]): void {
-    this.log('#ebba34', namespace ?? 'log::warn', ...data);
+    this.log(yellow, namespace ?? 'log::warn', ...data);
   }
 
   static info(namespace?: string, ...data: any[]): void {
-    this.log('#9fd1ff', namespace ?? 'log::info', ...data);
+    this.log(cyan, namespace ?? 'log::info', ...data);
   }
 
   static debug(namespace?: string, ...data: any[]): void {
-    this.log('#9fd1ff', namespace ?? 'log::info', ...data);
+    this.log(gray, namespace ?? 'log::info', ...data);
   }
 }

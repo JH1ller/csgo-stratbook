@@ -1,4 +1,4 @@
-import { green, blue } from 'colors';
+import { Log } from '@/utils/logger';
 import { RequestHandler } from 'express';
 
 const truncate = (input: string, length: number) =>
@@ -8,10 +8,10 @@ export const logger: RequestHandler = (req, _res, next) => {
   try {
     const bodyCopy = { ...req.body };
     delete bodyCopy.password;
-    console.log(
-      green(`HTTP ${req.method} ${req.url}`),
-      ...Object.entries(bodyCopy).map(([key, value], index) =>
-        blue(`${index !== 0 ? '| ' : ' '}${key}: ${truncate(value as string, 50)}`)
+    Log.info(
+      `http::${req.method.toLowerCase()}->${req.url}`,
+      ...Object.entries(bodyCopy).map(
+        ([key, value], index) => `${index !== 0 ? '| ' : ' '}${key}: ${truncate(value as string, 50)}`
       )
     );
   } catch (error) {}

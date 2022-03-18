@@ -15,14 +15,15 @@ import apiRouter from './routes/api';
 import { secureRedirect } from './middleware/secureRedirect';
 import { logger } from './middleware/logger';
 import * as Sentry from '@sentry/node';
-import { green, blue } from 'colors';
+import { green } from 'colors';
+import { Log } from './utils/logger';
 
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   pingInterval: 10000,
   cors: {
-    origin: ['https://stratbook.live', 'http://localhost:8080'],
+    origin: ['https://stratbook.live', 'http://localhost:8080', 'http://csstrats-app.herokuapp.com/'],
     methods: ['GET', 'POST'],
   },
 });
@@ -33,8 +34,8 @@ const isDev = process.env.NODE_ENV === 'development';
 mongoose.connect(isDev ? process.env.DATABASE_URL_DEV! : process.env.DATABASE_URL!);
 
 const db = mongoose.connection;
-db.on('error', (error) => console.error(error));
-db.once('open', () => console.log('Connected to database'));
+db.on('error', (error) => Log.error('mongoose', error.message));
+db.once('open', () => Log.success('mongoose', 'Connected to database'));
 
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutes
@@ -90,16 +91,18 @@ if (!isDev) {
 
 app.use((error: unknown, _: Request, res: Response, next: NextFunction) => {
   if (error instanceof Error) {
-    console.error('Error handler >>> ', error.message);
+    Log.error('error::middleware', error.message);
     return res.status(500).json({ error: 'An error occured on the server.' });
   } else if (error instanceof IncomingMessage) {
-    console.log(`Error trying to fetch ${error.url}`);
+    Log.error('error::middleware', `Error trying to fetch ${error.url}`);
     next(error);
   }
 });
 
+app.set('io', io);
+
 initialize(io);
 
 httpServer.listen(port, undefined, () =>
-  console.log(`Server started on port ${port}\n[${green(process.env.NODE_ENV!.toUpperCase())}]`)
+  Log.success('httpServer::listen', `Server started on port ${port} [${green(process.env.NODE_ENV!.toUpperCase())}]`)
 );
