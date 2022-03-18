@@ -5,7 +5,5 @@ node_modules
 server/public/upload
 server/dist
 server/dist_server
-server/dist_landingpage
-server/dist_app
 server/cert
 server/scripts
