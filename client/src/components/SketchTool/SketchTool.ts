@@ -424,7 +424,10 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   beforeDestroy() {
     this.wsService.emit('leave-draw-room', { roomId: this.roomId });
-    this.wsService.socket?.removeAllListeners();
+    this.wsService.socket?.off('pointer-data');
+    this.wsService.socket?.off('data-updated');
+    this.wsService.socket?.off('username-updated');
+    this.wsService.socket?.off('stratname-updated');
     this.shortcutService.reset();
   }
 
@@ -944,7 +947,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   @Watch('roomId')
   handleRoomChange(to: string) {
     console.log('watch roomid', to);
-    if (to === this.roomId) return;
     this.connect(to);
   }
 

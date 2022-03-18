@@ -12,6 +12,7 @@ class WebSocketService {
   private static instance: WebSocketService;
 
   socket!: Socket;
+  connectionPromise: Promise<void> | undefined;
 
   private constructor() {
     // private to prevent instantiation
@@ -24,41 +25,49 @@ class WebSocketService {
     return WebSocketService.instance;
   }
 
-  connect(): Promise<void> {
-    return new Promise(resolve => {
-      if (this.socket?.connected && (this.socket.auth as Record<string, string>).token) {
-        resolve();
-      }
-      if (!this.socket) {
-        Log.info('WebSocketService::connect()', 'new socket connection');
-        this.socket = io(WS_URL, {
-          auth: {
-            token: store.state.auth.token,
-          },
-        });
-        this.setupListeners();
-      }
-      //* Don't create new socket connection and try reconnect the existing instead.
-      //* Otherwise we might have two connected sockets when connect() is called twice
-      if (this.socket && !this.socket.connected) {
-        this.socket.connect();
-      }
-      //* If socket already connected but without auth.
-      //* (e.g. when using the Map anonymously before logging in)
-      if (this.socket?.connected && !(this.socket.auth as Record<string, string>).token && store.state.auth.token) {
-        Log.info('WebSocketService::connect()', 'reconnecting with auth');
-        this.socket.close();
-        this.socket = io(WS_URL, {
-          auth: {
-            token: store.state.auth.token,
-          },
-        });
-      }
-      this.socket.once('connect', () => {
-        Log.info('ws::connected', 'Websocket connection established.');
-        resolve();
-      });
+  reconnect() {
+    Log.info('WebSocketService::reconnect()', 'reconnecting with auth');
+    if (!store.state.auth.token) Log.warn('WebSocketService::reconnect()', 'Missing auth token');
+    this.socket?.close();
+    this.socket?.removeAllListeners();
+    this.socket = io(WS_URL, {
+      auth: {
+        token: store.state.auth.token,
+      },
     });
+    this.setupListeners();
+  }
+
+  async connect(): Promise<void> {
+    //* Caching connection promise to avoid creating two connections simultaneously.
+    if (!this.connectionPromise) {
+      this.connectionPromise = new Promise(resolve => {
+        if (this.socket?.connected && (this.socket.auth as Record<string, string>).token) {
+          resolve();
+        }
+        if (!this.socket) {
+          Log.info('WebSocketService::connect()', 'new socket connection');
+          this.socket = io(WS_URL, {
+            auth: {
+              token: store.state.auth.token,
+            },
+          });
+          this.setupListeners();
+        }
+
+        if (this.socket?.connected && !(this.socket.auth as Record<string, string>).token && store.state.auth.token) {
+          this.reconnect();
+        }
+
+        this.socket.once('connect', () => {
+          Log.info('ws::connected', 'Websocket connection established.', !!(this.socket.auth as any).token);
+          resolve();
+        });
+      });
+    }
+
+    await this.connectionPromise;
+    this.connectionPromise = undefined;
   }
 
   get connected(): boolean {
@@ -91,6 +100,8 @@ class WebSocketService {
   }
 
   private setupListeners() {
+    Log.info('WebSocketService::setupListeners()');
+
     this.socket.on('pong', (ms: number) => store.dispatch('app/updateLatency', ms));
 
     this.socket.on('disconnect', () => {
