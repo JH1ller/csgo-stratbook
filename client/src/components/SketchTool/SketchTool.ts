@@ -38,6 +38,7 @@ import urljoin from 'url-join';
 import StorageService from '@/services/storage.service';
 import { writeToClipboard } from '@/utils/writeToClipboard';
 import WebSocketService from '@/services/websocket.service';
+import { Circle, CircleConfig } from 'konva/lib/shapes/Circle';
 
 @Component({
   components: {
@@ -50,7 +51,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   @Ref() stageRef!: KonvaRef<Stage>;
   @Ref() stageContainer!: HTMLDivElement;
   @Ref() transformerRef!: KonvaRef<Transformer>;
-  @Ref() selectionRect!: KonvaRef<Rect>;
+  @Ref() selectionRectRef!: KonvaRef<Rect>;
+  @Ref() pointerRef!: KonvaRef<Circle>;
   @Ref() textbox!: HTMLInputElement;
 
   @Prop() map!: MapID;
@@ -83,6 +85,9 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   //* Online State
   remotePointers: RemotePointer[] = [];
+
+  //* Other State
+  mouseOverStage: boolean = false;
 
   //* Configuration
   readonly linePrecision = 10; // lower = more precise, larger data size
@@ -173,13 +178,23 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     };
   }
 
+  get pointerConfig(): CircleConfig {
+    return {
+      class: 'static',
+      visible: this.activeTool === ToolTypes.Brush && this.mouseOverStage,
+      width: 6,
+      height: 6,
+      fill: this.currentColor,
+    };
+  }
+
   getLineItemConfig(item: LineItem): LineConfig {
     return {
       id: item.id,
       x: item.x,
       y: item.y,
       stroke: item.color,
-      strokeWidth: 5,
+      strokeWidth: 6,
       draggable: this.activeTool === ToolTypes.Pointer,
       lineCap: 'round',
       points: item.points,
@@ -453,6 +468,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
         break;
       case 'KeyB':
         this.activeTool = ToolTypes.Brush;
+        this.pointerRef.getNode().position(this.getScaledPointerPosition());
         break;
       case 'KeyT':
         this.activeTool = ToolTypes.Text;
@@ -550,6 +566,15 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     }
   }
 
+  handleMouseLeave() {
+    this.mouseOverStage = false;
+    this.handleMouseUp();
+  }
+
+  handleMouseEnter() {
+    this.mouseOverStage = true;
+  }
+
   async showTextbox() {
     if (!this.currentText) return;
     this.currentText.visible(false);
@@ -601,6 +626,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.emitPointerPos(pos);
     switch (this.activeTool) {
       case ToolTypes.Brush:
+        this.pointerRef.getNode().position(pos);
         this.draw(evt);
         break;
       case ToolTypes.Pointer:
@@ -612,7 +638,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
           this.selectionRectConfig.y = Math.min(y1, y2);
           this.selectionRectConfig.width = Math.abs(x2 - x1);
           this.selectionRectConfig.height = Math.abs(y2 - y1);
-          const box = this.selectionRect.getNode().getClientRect();
+          const box = this.selectionRectRef.getNode().getClientRect();
           const selectedNodes = this.getAllNodes().filter(node => Util.haveIntersection(box, node.getClientRect()));
           this.setActiveItems(selectedNodes);
         }

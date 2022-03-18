@@ -19,7 +19,8 @@
         @touchmove="handleMouseMove"
         @mouseup="handleMouseUp"
         @touchup="handleMouseUp"
-        @mouseleave="handleMouseUp"
+        @mouseenter="handleMouseEnter"
+        @mouseleave="handleMouseLeave"
         @wheel="handleZoom"
       >
         <!-- Background layer without events -->
@@ -46,9 +47,10 @@
             @transform="handleTransform"
             @transformend="handleTransformEnd"
           />
-          <v-rect :config="selectionRectConfig" ref="selectionRect" />
+          <v-rect :config="selectionRectConfig" ref="selectionRectRef" />
           <v-image v-for="item in remotePointers" :key="'i' + item.id" :config="getRemotePointerCursorConfig(item)" />
           <v-text v-for="item in remotePointers" :key="'t' + item.id" :config="getRemotePointerTextConfig(item)" />
+          <v-circle :config="pointerConfig" ref="pointerRef" />
         </v-layer>
       </v-stage>
       <span role="textbox" contenteditable ref="textbox" class="sketch-tool__textbox" @keydown="handleTextboxKeydown" />
