@@ -39,6 +39,7 @@ class WebSocketService {
   }
 
   async connect(): Promise<void> {
+    Log.debug('WebSocketService::connect()');
     //* Caching connection promise to avoid creating two connections simultaneously.
     if (!this.connectionPromise) {
       this.connectionPromise = new Promise(resolve => {

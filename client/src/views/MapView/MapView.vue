@@ -10,7 +10,13 @@
       @update-room-id="changeRoomId"
       @update-strat-name="changeStratName"
     />
-    <ConnectionDialog v-if="showConnectionDialog" :userName="userName" :stratName="stratName" @submit="handleSubmit" />
+    <ConnectionDialog
+      v-if="showConnectionDialog"
+      :userName="userName"
+      :stratName="stratName"
+      @submit="handleSubmit"
+      @close="showConnectionDialog = false"
+    />
   </div>
 </template>
 

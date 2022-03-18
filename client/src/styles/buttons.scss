@@ -1,5 +1,5 @@
 @mixin button-default($bgcolor: white, $color: $color--navyblue, $has-text: true) {
-  display: flex;
+  display: inline-flex;
   padding: 6px 11px;
   border-radius: 3px;
   justify-content: center;

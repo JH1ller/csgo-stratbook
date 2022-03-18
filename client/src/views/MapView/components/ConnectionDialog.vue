@@ -6,17 +6,21 @@
       :field="formFields.stratName"
       v-model="formFields.stratName.value"
     />
-    <button class="connection-dialog__submit" @click="handleSubmitAttempt">Submit</button>
+    <div class="connection-dialog__actions">
+      <button class="connection-dialog__btn-submit" @click="handleSubmitAttempt">Submit</button>
+      <button class="connection-dialog__btn-cancel" @click="close">Cancel</button>
+    </div>
   </BackdropDialog>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Emit, Prop } from 'vue-property-decorator';
+import { Component, Emit, Prop, Mixins } from 'vue-property-decorator';
 import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
 import TextInput from '@/components/TextInput/TextInput.vue';
 import { validateForm, Validators } from '@/utils/validation';
 import FormField from '@/utils/FormField';
 import { nanoid } from 'nanoid';
+import CloseOnEscape from '@/mixins/CloseOnEscape';
 
 @Component({
   components: {
@@ -24,7 +28,7 @@ import { nanoid } from 'nanoid';
     TextInput,
   },
 })
-export default class ConnectionDialog extends Vue {
+export default class ConnectionDialog extends Mixins(CloseOnEscape) {
   @Prop() userName!: string;
   @Prop() stratName!: string;
 
@@ -53,9 +57,17 @@ export default class ConnectionDialog extends Vue {
 
 <style lang="scss">
 .connection-dialog {
-  &__submit {
+  &__actions {
+    @include spacing('margin-top', xs);
+  }
+
+  &__btn-submit {
+    @include button-default($color--green, white);
+  }
+
+  &__btn-cancel {
     @include button-default;
-    @include spacing('margin-top', sm);
+    @include spacing('margin-left', '3xs');
   }
 
   &__text-field {

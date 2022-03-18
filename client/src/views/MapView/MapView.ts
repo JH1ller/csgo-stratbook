@@ -43,7 +43,7 @@ export default class MapView extends Vue {
 
   mounted() {
     const userName = this.storageService.get('draw-username');
-    if (this.profile) {
+    if (this.profile?.name) {
       this.userName = this.profile.name;
     } else if (userName) {
       this.userName = userName;
