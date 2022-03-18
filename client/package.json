@@ -10,6 +10,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:staging": "cross-env APP_ENV=staging vue-cli-service build",
     "lint": "vue-cli-service lint",
     "electron:build": "vue-cli-service electron:build",
     "electron:publish": "cross-env BUILD_TARGET=ELECTRON PUBLISHTO=prod vue-cli-service electron:build --publish always",

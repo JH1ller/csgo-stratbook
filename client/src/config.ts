@@ -1,8 +1,10 @@
 const isProd = () => process.env.NODE_ENV === 'production';
 
-export const WS_URL = isProd() ? 'https://stratbook.live/' : `http://${window.location.hostname}:3000/`;
+export const WS_URL = isProd() ? 'https://csstrats-app.herokuapp.com/' : `http://${window.location.hostname}:3000/`;
 
-export const API_URL = isProd() ? 'https://api.stratbook.live/' : `http://${window.location.hostname}:3000/api/`;
+export const API_URL = isProd()
+  ? 'https://csstrats-app.herokuapp.com/api/'
+  : `http://${window.location.hostname}:3000/api/`;
 
 export const S3_URL = 'https://csgo-stratbook.s3.amazonaws.com/';
 

@@ -4,7 +4,7 @@ import 'express-async-errors';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import compression from 'compression';
-import { createServer } from 'http';
+import { createServer, IncomingMessage } from 'http';
 import { Server } from 'socket.io';
 import mongoose from 'mongoose';
 import historyFallback from 'connect-history-api-fallback';
@@ -15,6 +15,7 @@ import apiRouter from './routes/api';
 import { secureRedirect } from './middleware/secureRedirect';
 import { logger } from './middleware/logger';
 import * as Sentry from '@sentry/node';
+import { green, blue } from 'colors';
 
 const app = express();
 const httpServer = createServer(app);
@@ -64,17 +65,17 @@ app.use(compression());
 
 app.use(logger);
 
+app.use('/', express.static('dist_landingpage'));
+
 if (isDev) {
+  app.use('/app', express.static('dist_app'));
   app.use('/static', express.static('public'));
   app.use('/api', apiRouter);
-  app.use('/app', express.static('dist_app'));
-  app.use('/', express.static('dist_landingpage'));
 } else {
-  app.use(subdomain('static', express.static('public')));
   app.use(subdomain('app', express.static('dist_app')));
+  app.use(subdomain('static', express.static('public')));
   app.use(subdomain('api', apiRouter));
   app.use('/.well-known/pki-validation/', express.static('cert'));
-  app.use('/', express.static('dist_landingpage'));
 }
 
 app.use(
@@ -87,15 +88,18 @@ if (!isDev) {
   app.use(Sentry.Handlers.errorHandler());
 }
 
-app.use((error: Error, _: Request, res: Response) => {
+app.use((error: unknown, _: Request, res: Response, next: NextFunction) => {
   if (error instanceof Error) {
     console.error('Error handler >>> ', error.message);
     return res.status(500).json({ error: 'An error occured on the server.' });
-  } else {
-    console.log(error);
+  } else if (error instanceof IncomingMessage) {
+    console.log(`Error trying to fetch ${error.url}`);
+    next(error);
   }
 });
 
 initialize(io);
 
-httpServer.listen(port, undefined, () => console.log(`Server started on port ${port}`));
+httpServer.listen(port, undefined, () =>
+  console.log(`Server started on port ${port}\n[${green(process.env.NODE_ENV!.toUpperCase())}]`)
+);
