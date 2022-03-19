@@ -166,7 +166,7 @@ Vue.component('fa-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
-window.debugMode = process.env.NODE_ENV === 'development' || !!localStorage.getItem('debug');
+window.debugMode = process.env.NODE_ENV !== 'production' || !!localStorage.getItem('debug');
 window.desktopMode = isDesktop();
 
 const storageService = StorageService.getInstance();

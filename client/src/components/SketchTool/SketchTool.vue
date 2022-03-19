@@ -118,7 +118,13 @@
           <fa-icon icon="copy" /><span class="sketch-tool__btn-label">Copy link</span>
         </button> -->
       </template>
-      <button v-if="showConfigBtn" class="sketch-tool__btn" @click="showConnectionDialog" v-tippy content="Connection">
+      <button
+        v-if="showConfigBtn && roomId"
+        class="sketch-tool__btn"
+        @click="showConnectionDialog"
+        v-tippy
+        content="Connection"
+      >
         <fa-icon icon="cog" /><span class="sketch-tool__btn-label">Connection</span>
       </button>
     </div>

@@ -28,7 +28,7 @@ export default class TrackingService {
     splitbee.init({ disableCookie, token: SPLITBEE_ID });
 
     mixpanel.init(MXP_TOKEN, {
-      debug: process.env.NODE_ENV === 'development',
+      debug: process.env.NODE_ENV !== 'production',
       disable_cookie: disableCookie,
       disable_persistence: disableCookie,
     });

@@ -15,7 +15,7 @@ import ElectronStore from 'electron-store';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 const store = new ElectronStore();
-const isDebug = !!store.get('debug') || false;
+// const isDebug = !!store.get('debug') || false;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -87,8 +87,8 @@ const createWindow = (options: Electron.BrowserWindowConstructorOptions, devPath
       session.defaultSession.loadExtension(
         path.join(
           os.homedir(),
-          '/AppData/Local/Google/Chrome/User Data/Default/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/5.3.4_0'
-        )
+          '/AppData/Local/Google/Chrome/User Data/Default/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/5.3.4_0',
+        ),
       );
     } catch (error) {
       console.log(error.message);

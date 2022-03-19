@@ -17,10 +17,8 @@ function getPublishConfig() {
       };
 }
 
-const isStaging = process.env.APP_ENV === 'staging';
-
 module.exports = {
-  publicPath: isStaging ? '/app/' : '/',
+  publicPath: process.env.NODE_ENV === 'staging' ? '/app/' : '/',
   outputDir: path.resolve(__dirname, '../server/dist_app'),
   pages: {
     index: 'src/main.ts',
@@ -38,7 +36,7 @@ module.exports = {
     if (process.env.BUILD_TARGET === 'ELECTRON') {
       config.target = 'electron-renderer';
     }
-    config.devtool = process.env.NODE_ENV === 'development' ? 'eval-source-map' : false;
+    config.devtool = process.env.NODE_ENV !== 'production' ? 'eval-source-map' : false;
   },
   pluginOptions: {
     electronBuilder: {
