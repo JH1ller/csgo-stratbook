@@ -1,5 +1,6 @@
 <template>
   <div class="app">
+    <LoadingBar />
     <div class="app__version-wrapper">
       <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi"/></span>
       <span class="app__version">{{ appVersion }}</span>
@@ -24,7 +25,7 @@
 
 <script lang="ts">
 import { Component, Provide, Vue } from 'vue-property-decorator';
-import Loader from '@/components/Loader/Loader.vue';
+import LoadingBar from '@/components/LoadingBar/LoadingBar.vue';
 import ToastWrapper from '@/components/ToastWrapper/ToastWrapper.vue';
 import MainMenu from '@/components/menus/MainMenu/MainMenu.vue';
 import DialogWrapper from './components/DialogWrapper/DialogWrapper.vue';
@@ -42,7 +43,7 @@ import WebSocketService from './services/websocket.service';
 
 @Component({
   components: {
-    Loader,
+    LoadingBar,
     MainMenu,
     ToastWrapper,
     DialogWrapper,
@@ -135,8 +136,8 @@ export default class App extends Vue {
   }
 
   private checkCookies() {
-    const bannerShown = this.getCookie('bannerShown');
-    const allowAnalytics = this.getCookie('allowAnalytics');
+    const bannerShown = this.getCookie('bannerShown') === 'true' || this.storageService.get('bannerShown');
+    const allowAnalytics = this.getCookie('allowAnalytics') === 'true' || this.storageService.get('allowAnalytics');
 
     if (!bannerShown) this.showCookieBanner = true;
 
