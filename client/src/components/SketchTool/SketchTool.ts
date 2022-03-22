@@ -14,7 +14,6 @@ import { KonvaEventObject, Node as KonvaNode } from 'konva/lib/Node';
 import { Util } from 'konva/lib/Util';
 import { DebouncedFunc, throttle, cloneDeep } from 'lodash-es';
 import { downloadURI } from '@/utils/downloadUri';
-import ShortcutService from '@/services/shortcut.service';
 import { Listen } from '@/utils/decorators/listen.decorator';
 import {
   clamp,
@@ -101,7 +100,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   ToolTypes: typeof ToolTypes = ToolTypes;
 
   //* Services
-  shortcutService = ShortcutService.getInstance();
   wsService = WebSocketService.getInstance();
 
   undo(): void {
@@ -410,22 +408,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       acc[type] = createUtilImage(type);
       return acc;
     }, {});
-
-    // setup shortcuts & key events
-    this.shortcutService.add([
-      {
-        shortcut: 'del',
-        handler: () => this.removeActiveItems(),
-      },
-      {
-        shortcut: 'ctrl+z',
-        handler: () => this.undo(),
-      },
-      {
-        shortcut: 'ctrl+y',
-        handler: () => this.redo(),
-      },
-    ]);
   }
 
   clearStage(): void {
@@ -443,7 +425,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.wsService.socket?.off('data-updated');
     this.wsService.socket?.off('username-updated');
     this.wsService.socket?.off('stratname-updated');
-    this.shortcutService.reset();
   }
 
   @Listen('keyup')
@@ -456,22 +437,35 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   @Listen('keydown')
-  keydownHandler({ code }: KeyboardEvent) {
-    switch (code) {
-      case 'Space':
+  keydownHandler({ key }: KeyboardEvent) {
+    if (this.currentText) return;
+    switch (key) {
+      case ' ':
         if (this.activeTool === ToolTypes.Pan) return;
         this.previousTool = this.activeTool;
         this.activeTool = ToolTypes.Pan;
         break;
-      case 'KeyV':
+      case 'v':
         this.activeTool = ToolTypes.Pointer;
         break;
-      case 'KeyB':
+      case 'b':
         this.activeTool = ToolTypes.Brush;
         this.pointerRef.getNode().position(this.getScaledPointerPosition());
         break;
-      case 'KeyT':
+      case 't':
         this.activeTool = ToolTypes.Text;
+        break;
+      case 'r':
+        this.clearStage();
+        break;
+      case 'z':
+        this.undo();
+        break;
+      case 'y':
+        this.redo();
+        break;
+      case 'Delete':
+        this.removeActiveItems();
         break;
     }
   }
@@ -934,7 +928,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.applyStageData(drawData);
 
     // TODO: remove, just for testing
-    this.copyRoomLink();
+    //this.copyRoomLink();
 
     this.setupListeners();
 

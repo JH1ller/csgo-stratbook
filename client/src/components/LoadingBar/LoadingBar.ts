@@ -1,5 +1,6 @@
 import { appModule } from '@/store/namespaces';
 import { Component, Vue, Watch } from 'vue-property-decorator';
+import { random } from 'lodash-es';
 
 @Component({})
 export default class LoadingBar extends Vue {
@@ -24,7 +25,7 @@ export default class LoadingBar extends Vue {
       if (this.wait) return;
       this.wait = true;
       this.transition = true;
-      this.width = 60;
+      this.width = random(60, 80);
       this.visible = true;
     } else {
       this.wait = true;

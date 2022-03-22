@@ -8,7 +8,7 @@
     "serve": "tsnd --respawn --inspect=0.0.0.0:9229 --files -r tsconfig-paths/register src/index.ts",
     "build": "tsc",
     "postinstall": "npm run build",
-    "deploy": "git subtree push --prefix server heroku master",
+    "deploy": "zx scripts/deploy.mjs",
     "showlogs": "heroku logs --remote heroku --tail"
   },
   "repository": {

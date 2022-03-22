@@ -140,6 +140,38 @@
         <img :src="getUtilityIcon(item)" />
       </div>
     </div>
+    <div class="sketch-tool__keymaps-bar">
+      <div class="sketch-tool__keymap">
+        <button class="sketch-tool__key-outer" @click="undo">
+          <div class="sketch-tool__key-inner">Z</div>
+        </button>
+        <div class="sketch-tool__keymap-label">Undo</div>
+      </div>
+      <div class="sketch-tool__keymap">
+        <button class="sketch-tool__key-outer" @click="redo">
+          <div class="sketch-tool__key-inner">Y</div>
+        </button>
+        <div class="sketch-tool__keymap-label">Redo</div>
+      </div>
+      <div class="sketch-tool__keymap">
+        <button class="sketch-tool__key-outer" @click="removeActiveItems">
+          <div class="sketch-tool__key-inner">Del</div>
+        </button>
+        <div class="sketch-tool__keymap-label">Delete objects</div>
+      </div>
+      <div class="sketch-tool__keymap">
+        <button class="sketch-tool__key-outer" @click="clearStage">
+          <div class="sketch-tool__key-inner">R</div>
+        </button>
+        <div class="sketch-tool__keymap-label">Clear board</div>
+      </div>
+      <div class="sketch-tool__keymap">
+        <button class="sketch-tool__key-outer sketch-tool__key-outer--large" @click="activeTool = ToolTypes.Pan">
+          <div class="sketch-tool__key-inner">Space</div>
+        </button>
+        <div class="sketch-tool__keymap-label">(Hold) Pan around</div>
+      </div>
+    </div>
   </div>
 </template>
 

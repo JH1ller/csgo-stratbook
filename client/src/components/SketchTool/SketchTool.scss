@@ -130,4 +130,76 @@
     white-space: nowrap;
     transform-origin: left center;
   }
+
+  &__keymaps-bar {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    background: rgba(white, 0.1);
+    backdrop-filter: blur(4px);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    // width: 150px;
+    padding: 12px;
+  }
+
+  &__keymap {
+    display: flex;
+    align-items: center;
+
+    &:not(:first-child) {
+      @include spacing('margin-top', xs);
+    }
+  }
+
+  &__keymap-label {
+    @include spacing('margin-left', xs);
+
+    color: white;
+  }
+
+  &__key-inner {
+    height: 100%;
+    width: 100%;
+    background: $color--navyblue;
+    border-radius: 2px;
+    font-weight: bold;
+    font-size: 0.7rem;
+    line-height: 13px;
+    color: white;
+    padding-left: 4px;
+    padding-top: 2px;
+  }
+
+  &__key-outer {
+    width: 34px;
+    height: 32px;
+    background: $color--darkblue;
+    border-radius: 2px;
+    padding: 2px 6px 4px 3px;
+    text-align: left;
+    border: 0px solid rgba(0, 0, 0, 0);
+    cursor: pointer;
+
+    &:not(:first-of-type) {
+      margin-left: 8px;
+    }
+
+    &--mid {
+      width: 55px;
+    }
+
+    &--large {
+      width: 70px;
+    }
+
+    &:hover {
+      .sketch-tool__key-inner {
+        background: lighten($color--navyblue, 5%);
+      }
+    }
+  }
 }
