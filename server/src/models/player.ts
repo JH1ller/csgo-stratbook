@@ -16,7 +16,8 @@ export interface Player {
   completedTutorial: boolean;
 }
 
-export type PlayerDocument = Document<unknown, any, Player>;
+export type PlayerDocument = Player &
+  Document<unknown, any, Player> & { _id: Types.ObjectId; $locals: { skipModified?: boolean } };
 
 const playerSchema = new Schema<Player>({
   name: {

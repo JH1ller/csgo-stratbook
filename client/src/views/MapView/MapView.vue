@@ -1,7 +1,7 @@
 <template>
   <div class="map-view">
     <SketchTool
-      :map="'DUST_2'"
+      :map="map"
       :userName="userName"
       :stratName="stratName"
       :roomId="roomId"
@@ -9,6 +9,7 @@
       @show-connection-dialog="showConnectionDialog = true"
       @update-room-id="changeRoomId"
       @update-strat-name="changeStratName"
+      @update-map="changeMap"
     />
     <ConnectionDialog
       v-if="showConnectionDialog"
@@ -17,6 +18,22 @@
       @submit="handleSubmit"
       @close="showConnectionDialog = false"
     />
+    <div class="map-view__map-btn" @click.prevent="openContextMenu">
+      <SmartImage :src="mapImage" class="map-view__map-img" />
+      <span class="map-view__map-label">{{ mapTable[map] }}</span>
+    </div>
+    <vue-context ref="mapPicker">
+      <li
+        v-for="[id, label] in Object.entries(mapTable)"
+        :key="id"
+        class="map-view__context-link"
+        :disabled="!['DUST_2', 'MIRAGE'].includes(id)"
+      >
+        <a @click="map = id">
+          {{ label }}
+        </a>
+      </li>
+    </vue-context>
   </div>
 </template>
 

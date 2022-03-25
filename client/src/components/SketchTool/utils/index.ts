@@ -4,6 +4,7 @@ import { Node as KonvaNode } from 'konva/lib/Node';
 import { Vector2d } from 'konva/lib/types';
 import CursorIcon from '!!raw-loader!../../../assets/icons/cursor.svg';
 import { LineItem } from '../types';
+import { GameMap } from '@/api/models/GameMap';
 
 /**
  * Map array of points '[x, y, x, y]' to array of {x, y} objects '[{x, y}, {x, y}]'
@@ -79,13 +80,20 @@ export const createUtilImage = (util: UtilityTypes): HTMLImageElement => {
   return img;
 };
 
-export const createPointerImage = (colorIndex: number): HTMLImageElement => {
-  const colors = ['#1EBC9C', '#3298DB', '#F2C512', '#A463BF', '#E84B3C', '#DDE6E8'];
+export const createMapImage = (map: GameMap): HTMLImageElement => {
+  const img = new Image();
+    img.src = `minimaps/${map.toLowerCase()}.png`;
+    img.onerror = () => img.src = '';
+  return img;
+};
+
+export const createPointerImage = (color: string): HTMLImageElement => {
+  //const colors = ['#1EBC9C', '#3298DB', '#F2C512', '#A463BF', '#E84B3C', '#DDE6E8'];
   const img = new Image();
   const tempEl = document.createElement('div');
   try {
     tempEl.innerHTML = CursorIcon;
-    tempEl.querySelector('path')!.style.fill = colors[Math.min(colorIndex, colors.length - 1)];
+    tempEl.querySelector('path')!.style.fill = color; // colors[Math.min(colorIndex, colors.length - 1)];
     const base64string = btoa(tempEl.innerHTML);
     img.src = 'data:image/svg+xml;base64,' + base64string;
   } catch (error) {

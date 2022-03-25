@@ -1,12 +1,12 @@
 import { Component, Emit, Mixins, Prop, Ref, Watch } from 'vue-property-decorator';
 import ImageEditor from 'vue-image-markup';
 import { appModule, mapModule } from '@/store/namespaces';
-import { MapID } from '../MapPicker/MapPicker';
 import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
 import { Strat } from '@/api/models/Strat';
 import VSwatches from 'vue-swatches';
 import SmartImage from '@/components/SmartImage/SmartImage.vue';
+import { GameMap } from '@/api/models/GameMap';
 
 @Component({
   components: {
@@ -17,7 +17,7 @@ import SmartImage from '@/components/SmartImage/SmartImage.vue';
   },
 })
 export default class DrawTool extends Mixins(CloseOnEscape) {
-  @mapModule.State private currentMap!: MapID;
+  @mapModule.State private currentMap!: GameMap;
   @appModule.Getter private isMobile!: boolean;
   @Ref() private editor!: any;
   @Ref() private wrapper!: HTMLDivElement;

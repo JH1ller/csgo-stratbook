@@ -1,14 +1,14 @@
-import { Server, Socket } from 'socket.io';
 import { PlayerModel } from '@/models/player';
 import jwt from 'jsonwebtoken';
-import { registerBoardHandler } from './boardHandler';
+import { leaveDrawRoomHandler, registerBoardHandler } from './boardHandler';
 import { registerWatchHandler } from './watchHandler';
 import { Log } from '@/utils/logger';
+import { TypedServer, TypedSocket } from './interfaces';
 
-const handleConnection = async (socket: Socket) => {
+const handleConnection = async (socket: TypedSocket) => {
   const player = socket.data.player;
   (global as any).socket = socket;
-  if (player) {
+  if (player && player.team) {
     socket.join(player.team.toString());
 
     try {
@@ -32,7 +32,7 @@ const handleConnection = async (socket: Socket) => {
   }
 };
 
-export const initialize = (io: Server) => {
+export const initialize = (io: TypedServer) => {
   registerWatchHandler(io);
 
   //* Auth middleware
@@ -44,6 +44,7 @@ export const initialize = (io: Server) => {
         const player = await PlayerModel.findById(verifiedUserId);
         if (!player) {
           next(new Error('Error during socket authorization.'));
+          return;
         }
         socket.data.player = player;
       } catch (error) {
@@ -66,6 +67,9 @@ export const initialize = (io: Server) => {
         `User '${socket.id}' disconnected. Active connections: ${io.sockets.sockets.size}. Disconnect reason: ${reason}`
       );
       const player = socket.data.player;
+
+      leaveDrawRoomHandler(io, socket);
+
       if (!player) return;
       try {
         if (socket.data.activeQuery) {

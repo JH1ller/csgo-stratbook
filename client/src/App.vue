@@ -39,7 +39,7 @@ import StorageService from './services/storage.service';
 import { gt, major, minor } from 'semver';
 import { Breakpoints } from './services/breakpoint.service';
 import { Team } from './api/models/Team';
-import WebSocketService from './services/websocket.service';
+import WebSocketService from './services/WebSocketService';
 
 @Component({
   components: {

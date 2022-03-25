@@ -15,7 +15,6 @@ import { Strat } from '@/api/models/Strat';
 import { Player } from '@/api/models/Player';
 import { StratTypes } from '@/api/models/StratTypes';
 import { Sides } from '@/api/models/Sides';
-import { MapID } from '@/components/MapPicker/MapPicker';
 import UtilityLightbox from '@/components/UtilityLightbox/UtilityLightbox.vue';
 import { Utility } from '@/api/models/Utility';
 import { catchPromise } from '@/utils/catchPromise';
@@ -23,6 +22,7 @@ import ShortcutService from '@/services/shortcut.service';
 import { Sort } from '@/store/modules/strat';
 import TrackingService from '@/services/tracking.service';
 import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
+import { GameMap } from '@/api/models/GameMap';
 
 @Component({
   components: {
@@ -42,7 +42,7 @@ import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
 export default class StratsView extends Vue {
   @Provide('lightbox') showLightboxFunc = this.showLightbox;
 
-  @mapModule.State currentMap!: MapID;
+  @mapModule.State currentMap!: GameMap;
   @stratModule.State collapsedStrats!: string[];
   @stratModule.State editedStrats!: string[];
   @stratModule.State sort!: Sort;
@@ -60,7 +60,7 @@ export default class StratsView extends Vue {
   @filterModule.Action clearStratFilters!: () => Promise<void>;
 
   @authModule.Action updateProfile!: (formData: FormData) => Promise<void>;
-  @mapModule.Action updateCurrentMap!: (mapID: MapID) => Promise<void>;
+  @mapModule.Action updateCurrentMap!: (mapID: GameMap) => Promise<void>;
   @stratModule.Action updateStrat!: (payload: Partial<Strat>) => Promise<void>;
   @stratModule.Action createStrat!: (payload: Partial<Strat>) => Promise<Strat>;
   @stratModule.Action deleteStrat!: (stratID: string) => Promise<void>;
@@ -157,7 +157,7 @@ export default class StratsView extends Vue {
             formData.append('completedTutorial', 'true');
             this.updateProfile(formData);
             this.trackingService.track('Action: Completed Tutorial');
-          }
+          },
         );
       }
     }
@@ -185,7 +185,7 @@ export default class StratsView extends Vue {
         key: 'strats-view/confirm-delete',
         text: 'Are you sure you want to delete this strat?',
       }),
-      () => this.deleteStrat(stratID)
+      () => this.deleteStrat(stratID),
     );
   }
 
@@ -195,7 +195,7 @@ export default class StratsView extends Vue {
         key: 'strats-view/confirm-share',
         text: 'Do you want to create a share-link to let other teams add this strat to their stratbook?',
       }),
-      () => this.shareStrat(stratID)
+      () => this.shareStrat(stratID),
     );
   }
 

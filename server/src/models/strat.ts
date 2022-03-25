@@ -1,14 +1,9 @@
 import { Types, Schema, model, Document } from 'mongoose';
 import mongooseDelete from 'mongoose-delete';
 import { GameMap, StratSide, StratType } from '@/types/enums';
+import { DrawBoardState } from '@/types';
 
 const arrNotEmpty = (value: unknown[]) => !!value.length;
-
-export interface DrawBoardState {
-  images: unknown[];
-  lines: unknown[];
-  texts: unknown[];
-}
 
 export interface Strat {
   name: string;

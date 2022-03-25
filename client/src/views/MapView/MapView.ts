@@ -1,21 +1,30 @@
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { Component, Inject, Ref, Vue } from 'vue-property-decorator';
 import SketchTool from '@/components/SketchTool/SketchTool.vue';
 import ConnectionDialog from './components/ConnectionDialog.vue';
 import StorageService from '@/services/storage.service';
 import { StageState } from '@/components/SketchTool/types';
 import { authModule } from '@/store/namespaces';
 import { Player } from '@/api/models/Player';
-
+import VueContext from 'vue-context';
+import { GameMap, gameMapTable } from '@/api/models/GameMap';
+import SmartImage from '@/components/SmartImage/SmartImage.vue';
+import { Log } from '@/utils/logger';
 @Component({
   components: {
     SketchTool,
     ConnectionDialog,
+    VueContext,
+    SmartImage,
   },
 })
 export default class MapView extends Vue {
   @Inject() storageService!: StorageService;
   @authModule.State profile!: Player;
+  @Ref() mapPicker!: Vue & any;
+  GameMap = GameMap;
+  mapTable = gameMapTable;
 
+  map = GameMap.Dust2;
   userName = '';
   stratName = '';
   roomId = '';
@@ -39,6 +48,21 @@ export default class MapView extends Vue {
 
   changeStratName(stratName: string) {
     this.stratName = stratName;
+  }
+
+  changeMap(map: GameMap) {
+    Log.info('MapView::changeMap', map);
+    this.map = map;
+  }
+
+  get mapImage() {
+    return `maps/${this.map.toLowerCase()}.jpg`;
+  }
+
+  openContextMenu(e: MouseEvent) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    this.mapPicker.open(e);
   }
 
   mounted() {

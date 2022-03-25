@@ -37,6 +37,7 @@
   }
   &__btn {
     @include button-default(white, $color--navyblue, false);
+    @include slideFromY(10%, 6, 'tool');
 
     & > svg {
       transition: color 0.2s ease;
@@ -99,6 +100,9 @@
 
   &__draggable {
     @include spacing('padding', '2xs 2xs');
+    &.-anim {
+      @include slideFromX(10%, 6, 'draggable');
+    }
 
     filter: invert(1) drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.6));
     transition: 0.3s transform ease, 0.3s filter ease;
@@ -149,10 +153,13 @@
   &__keymap {
     display: flex;
     align-items: center;
+    cursor: pointer;
 
     &:not(:first-child) {
       @include spacing('margin-top', xs);
     }
+
+    @include slideFromX(-10%, 6, 'keymap');
   }
 
   &__keymap-label {
@@ -201,5 +208,30 @@
         background: lighten($color--navyblue, 5%);
       }
     }
+  }
+
+  &__clients {
+    position: absolute;
+    left: 24px;
+    bottom: 96px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__client {
+    display: flex;
+    align-items: center;
+    color: white;
+
+    &:not(:first-child) {
+      margin-top: 16px;
+    }
+  }
+
+  &__client-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 12px;
   }
 }

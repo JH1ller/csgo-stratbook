@@ -48,8 +48,8 @@
             @transformend="handleTransformEnd"
           />
           <v-rect :config="selectionRectConfig" ref="selectionRectRef" />
-          <v-image v-for="item in remotePointers" :key="'i' + item.id" :config="getRemotePointerCursorConfig(item)" />
-          <v-text v-for="item in remotePointers" :key="'t' + item.id" :config="getRemotePointerTextConfig(item)" />
+          <v-image v-for="item in remoteClients" :key="'i' + item.id" :config="getRemoteClientCursorConfig(item)" />
+          <v-text v-for="item in remoteClients" :key="'t' + item.id" :config="getRemoteClientTextConfig(item)" />
           <v-circle :config="pointerConfig" ref="pointerRef" />
         </v-layer>
       </v-stage>
@@ -101,12 +101,6 @@
       >
         <fa-icon icon="i-cursor" /><span class="sketch-tool__btn-label">Text</span>
       </button>
-      <button class="sketch-tool__btn" @click="clearStage" v-tippy content="Clear">
-        <fa-icon icon="eraser" /><span class="sketch-tool__btn-label">Clear</span>
-      </button>
-      <button class="sketch-tool__btn" @click="setResponsiveStageSize()" v-tippy content="Center">
-        <fa-icon icon="align-center" /><span class="sketch-tool__btn-label">Center</span>
-      </button>
       <button class="sketch-tool__btn" @click="saveToFile" v-tippy content="Save to file">
         <fa-icon icon="download" /><span class="sketch-tool__btn-label">Save to file</span>
       </button>
@@ -130,47 +124,59 @@
     </div>
     <div class="sketch-tool__draggables-bar">
       <div
-        class="sketch-tool__draggable"
+        class="sketch-tool__draggable -anim"
         v-for="item in UtilityTypes"
         :key="item"
         draggable="true"
         @dragstart="handleDragStart($event, item)"
         @dragend="handleDragEnd"
+        @animationend="e => e.target.classList.remove('-anim')"
       >
         <img :src="getUtilityIcon(item)" />
       </div>
     </div>
     <div class="sketch-tool__keymaps-bar">
-      <div class="sketch-tool__keymap">
-        <button class="sketch-tool__key-outer" @click="undo">
+      <div class="sketch-tool__keymap" @click="undo">
+        <button class="sketch-tool__key-outer">
           <div class="sketch-tool__key-inner">Z</div>
         </button>
         <div class="sketch-tool__keymap-label">Undo</div>
       </div>
-      <div class="sketch-tool__keymap">
-        <button class="sketch-tool__key-outer" @click="redo">
+      <div class="sketch-tool__keymap" @click="redo">
+        <button class="sketch-tool__key-outer">
           <div class="sketch-tool__key-inner">Y</div>
         </button>
         <div class="sketch-tool__keymap-label">Redo</div>
       </div>
-      <div class="sketch-tool__keymap">
-        <button class="sketch-tool__key-outer" @click="removeActiveItems">
+      <div class="sketch-tool__keymap" @click="removeActiveItems">
+        <button class="sketch-tool__key-outer">
           <div class="sketch-tool__key-inner">Del</div>
         </button>
         <div class="sketch-tool__keymap-label">Delete objects</div>
       </div>
-      <div class="sketch-tool__keymap">
-        <button class="sketch-tool__key-outer" @click="clearStage">
+      <div class="sketch-tool__keymap" @click="clearStage">
+        <button class="sketch-tool__key-outer">
           <div class="sketch-tool__key-inner">R</div>
         </button>
         <div class="sketch-tool__keymap-label">Clear board</div>
       </div>
-      <div class="sketch-tool__keymap">
-        <button class="sketch-tool__key-outer sketch-tool__key-outer--large" @click="activeTool = ToolTypes.Pan">
+      <div class="sketch-tool__keymap" @click="setResponsiveStageSize()">
+        <button class="sketch-tool__key-outer">
+          <div class="sketch-tool__key-inner">C</div>
+        </button>
+        <div class="sketch-tool__keymap-label">Center board</div>
+      </div>
+      <div class="sketch-tool__keymap" @click="activeTool = ToolTypes.Pan">
+        <button class="sketch-tool__key-outer sketch-tool__key-outer--large">
           <div class="sketch-tool__key-inner">Space</div>
         </button>
         <div class="sketch-tool__keymap-label">(Hold) Pan around</div>
       </div>
+    </div>
+    <div class="sketch-tool__clients">
+      <span class="sketch-tool__client" v-for="client in remoteClients" :key="client.id">
+        <span class="sketch-tool__client-dot" :style="{ background: client.color }" /> {{ client.userName }}
+      </span>
     </div>
   </div>
 </template>

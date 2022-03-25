@@ -1,7 +1,6 @@
 import { Component, Mixins, Prop, Ref, Inject, Emit, Watch } from 'vue-property-decorator';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
 import { appModule } from '@/store/namespaces';
-import { MapID } from '../MapPicker/MapPicker';
 import { Stage, StageConfig } from 'konva/lib/Stage';
 import { UtilityTypes } from '@/api/models/UtilityTypes';
 import { nanoid } from 'nanoid';
@@ -17,6 +16,7 @@ import { downloadURI } from '@/utils/downloadUri';
 import { Listen } from '@/utils/decorators/listen.decorator';
 import {
   clamp,
+  createMapImage,
   createPointerImage,
   createUtilImage,
   fadeIn,
@@ -32,12 +32,13 @@ import { timeout } from '@/utils/timeout';
 import { Vector2d } from 'konva/lib/types';
 import { Log } from '@/utils/logger';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
-import { KonvaRef, ImageItem, LineItem, TextItem, ToolTypes, StageState, RemotePointer } from './types';
+import { KonvaRef, ImageItem, LineItem, TextItem, ToolTypes, StageState, RemoteClient } from './types';
 import urljoin from 'url-join';
 import StorageService from '@/services/storage.service';
 import { writeToClipboard } from '@/utils/writeToClipboard';
-import WebSocketService from '@/services/websocket.service';
+import WebSocketService from '@/services/WebSocketService';
 import { Circle, CircleConfig } from 'konva/lib/shapes/Circle';
+import { GameMap } from '@/api/models/GameMap';
 
 @Component({
   components: {
@@ -54,7 +55,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   @Ref() pointerRef!: KonvaRef<Circle>;
   @Ref() textbox!: HTMLInputElement;
 
-  @Prop() map!: MapID;
+  @Prop() map!: GameMap;
   @Prop() userName!: string;
   @Prop() stratName!: string;
   @Prop() roomId!: string;
@@ -62,8 +63,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   @Prop() showConfigBtn!: boolean;
 
   //* Images
-  backgroundImage = new Image();
   utilImages!: Record<UtilityTypes, HTMLImageElement>;
+  mapImages!: Record<GameMap, HTMLImageElement>;
 
   //* Item State
   imageItems: ImageItem[] = [];
@@ -83,7 +84,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   currentColor = '#ffffff'; //'#1fbc9c';
 
   //* Online State
-  remotePointers: RemotePointer[] = [];
+  remoteClients: RemoteClient[] = [];
 
   //* Other State
   mouseOverStage: boolean = false;
@@ -147,11 +148,11 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     };
   }
 
-  getRemotePointerCursorConfig(item: RemotePointer): ImageConfig {
+  getRemoteClientCursorConfig(item: RemoteClient): ImageConfig {
     return {
       id: 'cursor_' + item.id,
-      x: item.x,
-      y: item.y,
+      x: item.position.x,
+      y: item.position.y,
       width: this.cursorSize,
       height: this.cursorSize,
       image: item.image,
@@ -159,12 +160,12 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     };
   }
 
-  getRemotePointerTextConfig(item: RemotePointer): TextConfig {
+  getRemoteClientTextConfig(item: RemoteClient): TextConfig {
     return {
       id: 'text_' + item.id,
       class: 'static',
-      x: item.x + 16,
-      y: item.y + 22,
+      x: item.position.x + 16,
+      y: item.position.y + 22,
       text: item.userName,
       fontSize: 14,
       fontFamily: 'Calibri',
@@ -172,7 +173,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       shadowColor: 'black',
       shadowBlur: 6,
       shadowOpacity: 0.8,
-      //shadowOffset: { x: 2, y: 2 },
     };
   }
 
@@ -236,15 +236,17 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     };
   }
 
-  backgroundConfig: ImageConfig = {
-    id: 'background-image',
-    class: 'static',
-    x: 0,
-    y: 0,
-    image: this.backgroundImage,
-    width: this.backgroundSize,
-    height: this.backgroundSize,
-  };
+  get backgroundConfig(): ImageConfig {
+    return {
+      id: 'background-image',
+      class: 'static',
+      x: 0,
+      y: 0,
+      image: this.mapImages[this.map],
+      width: this.backgroundSize,
+      height: this.backgroundSize,
+    };
+  }
 
   backgroundRectConfig: RectConfig = {
     id: 'background-rect',
@@ -401,11 +403,15 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   created() {
-    this.backgroundImage.src = `minimaps/${this.map.toLowerCase()}.png`;
-
     // cache available utility icons
-    this.utilImages = Object.values(UtilityTypes).reduce<any>((acc, type) => {
+    this.utilImages = Object.values(UtilityTypes).reduce<Record<any, HTMLImageElement>>((acc, type) => {
       acc[type] = createUtilImage(type);
+      return acc;
+    }, {});
+
+    // cache available map images
+    this.mapImages = Object.values(GameMap).reduce<Record<any, HTMLImageElement>>((acc, map) => {
+      acc[map] = createMapImage(map);
       return acc;
     }, {});
   }
@@ -420,11 +426,14 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   beforeDestroy() {
-    this.wsService.emit('leave-draw-room', { roomId: this.roomId });
+    this.wsService.emit('leave-draw-room');
     this.wsService.socket?.off('pointer-data');
     this.wsService.socket?.off('data-updated');
     this.wsService.socket?.off('username-updated');
     this.wsService.socket?.off('stratname-updated');
+    this.wsService.socket?.off('map-updated');
+    this.wsService.socket?.off('client-joined');
+    this.wsService.socket?.off('client-left');
   }
 
   @Listen('keyup')
@@ -463,6 +472,9 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
         break;
       case 'y':
         this.redo();
+        break;
+      case 'c':
+        this.setResponsiveStageSize();
         break;
       case 'Delete':
         this.removeActiveItems();
@@ -611,6 +623,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
         this.currentText = null;
         this.activeTool = ToolTypes.Pointer;
         this.handleDataChange();
+        this.saveStateToHistory();
         break;
     }
   }
@@ -917,15 +930,23 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   async connect(targetRoomId?: string) {
-    const { roomId, stratName, drawData } = await this.wsService.joinDrawRoom({
+    const { roomId, stratName, drawData, map, clients } = await this.wsService.joinDrawRoom({
       roomId: targetRoomId,
       userName: this.userName,
       stratId: this.stratId,
+      map: this.map,
     });
     Log.success('sketchtool::ws:joined', roomId, drawData);
     this.updateRoomId(roomId);
+    this.updateMap(map);
     this.updateStratName(stratName);
     this.applyStageData(drawData);
+    this.remoteClients = clients
+      .map(client => ({
+        ...client,
+        image: createPointerImage(client.color),
+      }))
+      .filter(client => client.id !== this.wsService.socket.id);
 
     // TODO: remove, just for testing
     //this.copyRoomLink();
@@ -951,6 +972,10 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   updateStratName(stratName: string) {
     return stratName;
   }
+  @Emit()
+  updateMap(map: GameMap) {
+    return map;
+  }
 
   @Watch('userName')
   handleUserNameChange(to: string) {
@@ -970,6 +995,12 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.connect(to);
   }
 
+  @Watch('map')
+  handleMapChange(to: string, from: string) {
+    console.log('watch map', from, '->', to);
+    this.wsService.emit('update-map', to);
+  }
+
   applyStageData({ images, lines, texts }: StageState) {
     this.imageItems = images ?? [];
     this.lineItems = lines ?? [];
@@ -982,68 +1013,91 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   setupListeners() {
-    this.wsService.socket.on('pointer-data', (pointerData: Vector2d & { id: string; userName: string }) => {
+    this.wsService.socket.on('pointer-data', pointerData => {
       // don't show icon for your own cursor
       if (pointerData.id === this.wsService.socket.id) return;
 
-      const remotePointer = this.remotePointers.find(pointer => pointer.id === pointerData.id);
-      if (!remotePointer) {
-        this.remotePointers = [
-          ...this.remotePointers,
-          {
-            ...pointerData,
-            image: createPointerImage(this.remotePointers.length),
-          },
-        ];
-        this.showToast({ id: 'sketchTool/clientJoined', text: `${pointerData.userName ?? 'User'} joined.` });
-      } else {
-        const remotePointerCursorNode = this.stage.findOne('#cursor_' + remotePointer.id);
-        const remotePointerTextNode = this.stage.findOne('#text_' + remotePointer.id);
+      const remoteClient = this.remoteClients.find(client => client.id === pointerData.id);
+      if (!remoteClient) return;
 
-        if (remotePointer.timeout) {
-          clearTimeout(remotePointer.timeout);
-          remotePointer.timeout = undefined;
-        }
+      const remoteClientCursorNode = this.stage.findOne('#cursor_' + remoteClient.id);
+      const remoteClientTextNode = this.stage.findOne('#text_' + remoteClient.id);
 
-        remotePointer.timeout = setTimeout(() => {
-          fadeOut(remotePointerCursorNode);
-          fadeOut(remotePointerTextNode);
-        }, 3000);
-        fadeIn(remotePointerCursorNode);
-        fadeIn(remotePointerTextNode);
-        remotePointerCursorNode.to({
-          x: pointerData.x,
-          y: pointerData.y,
-          duration: 0.05,
-        });
-        remotePointerTextNode.to({
-          x: pointerData.x + 16,
-          y: pointerData.y + 22,
-          duration: 0.05,
-        });
+      if (remoteClient.timeout) {
+        clearTimeout(remoteClient.timeout);
+        remoteClient.timeout = undefined;
       }
+
+      remoteClient.timeout = setTimeout(() => {
+        fadeOut(remoteClientCursorNode);
+        fadeOut(remoteClientTextNode);
+      }, 3000);
+      fadeIn(remoteClientCursorNode);
+      fadeIn(remoteClientTextNode);
+      remoteClientCursorNode.to({
+        x: pointerData.x,
+        y: pointerData.y,
+        duration: 0.05,
+      });
+      remoteClientTextNode.to({
+        x: pointerData.x + 16,
+        y: pointerData.y + 22,
+        duration: 0.05,
+      });
     });
 
-    this.wsService.socket.on('data-updated', (data: StageState & { id: string }) => {
+    this.wsService.socket.on('data-updated', data => {
       // console.log('data-updated', { images, lines, texts, id });
       if (data.id === this.wsService.socket.id) return;
       this.applyStageData(data);
     });
 
-    this.wsService.socket.on('username-updated', ({ userName, id }: { userName: string; id: string }) => {
-      console.log('username-updated', { userName, id });
+    this.wsService.socket.on('username-updated', ({ userName, id }) => {
+      Log.info('sketchtool::username-updated', { userName, id });
       if (id === this.wsService.socket.id) return;
-      const remotePointer = this.remotePointers.find(i => i.id === id);
-      if (remotePointer) {
-        remotePointer.userName = userName;
+      const remoteClient = this.remoteClients.find(i => i.id === id);
+      if (remoteClient) {
+        remoteClient.userName = userName;
         console.log('remote pointer updated');
       }
     });
 
-    this.wsService.socket.on('stratname-updated', ({ stratName, id }: { stratName: string; id: string }) => {
-      console.log('stratname-updated', { stratName, id });
+    this.wsService.socket.on('stratname-updated', ({ stratName, id }) => {
+      Log.info('sketchtool::stratname-updated', { stratName, id });
       if (id === this.wsService.socket.id) return;
       this.updateStratName(stratName);
+    });
+
+    this.wsService.socket.on('map-updated', ({ map, stratName, drawData, id }) => {
+      Log.info('sketchtool::map-updated', { map, id, stratName, drawData });
+      if (id === this.wsService.socket.id) return;
+      this.updateMap(map);
+      this.applyStageData(drawData);
+      if (stratName) this.updateStratName(stratName);
+    });
+
+    this.wsService.socket.on('client-joined', ({ position, id, color, userName }) => {
+      Log.info('sketchtool::client-joined', userName);
+      if (id === this.wsService.socket.id) {
+        this.currentColor = color;
+      } else {
+        this.remoteClients = [
+          ...this.remoteClients,
+          {
+            id,
+            position,
+            color,
+            userName,
+            image: createPointerImage(color),
+          },
+        ];
+      }
+    });
+
+    this.wsService.socket.on('client-left', ({ clientId }) => {
+      Log.info('sketchtool::client-left', clientId);
+      if (clientId === this.wsService.socket.id) return;
+      this.remoteClients = this.remoteClients.filter(client => client.id !== clientId);
     });
   }
 

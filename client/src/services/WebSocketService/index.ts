@@ -2,16 +2,18 @@ import { io, Socket } from 'socket.io-client';
 import { WS_URL } from '@/config';
 import store from '@/store';
 import { Log } from '@/utils/logger';
-import { Player } from '../api/models/Player';
-import { Strat } from '../api/models/Strat';
-import { Team } from '../api/models/Team';
-import { Utility } from '../api/models/Utility';
+import { Player } from '../../api/models/Player';
+import { Strat } from '../../api/models/Strat';
+import { Team } from '../../api/models/Team';
+import { Utility } from '../../api/models/Utility';
 import { StageState } from '@/components/SketchTool/types';
+import { ClientToServerEvents, JoinedRoomResponse, ServerToClientEvents } from './types';
+import { GameMap } from '@/api/models/GameMap';
 
 class WebSocketService {
   private static instance: WebSocketService;
 
-  socket!: Socket;
+  socket!: Socket<ServerToClientEvents, ClientToServerEvents>;
   connectionPromise: Promise<void> | undefined;
 
   private constructor() {
@@ -83,17 +85,19 @@ class WebSocketService {
     roomId,
     userName,
     stratId,
+    map,
   }: {
     roomId?: string;
     userName?: string;
     stratId?: string;
-  }): Promise<{ roomId: string; stratName: string; drawData: StageState }> {
+    map: GameMap;
+  }): Promise<JoinedRoomResponse> {
     Log.debug('WebSocketService::joinDrawRoom()', roomId, userName, stratId);
     await this.connect();
 
     return new Promise(resolve => {
-      this.socket.emit('join-draw-room', { targetRoomId: roomId, userName, stratId });
-      this.socket.once('draw-room-joined', (data: { roomId: string; stratName: string; drawData: StageState }) => {
+      this.socket.emit('join-draw-room', { targetRoomId: roomId, userName, stratId, map });
+      this.socket.once('draw-room-joined', data => {
         Log.info('ws::drawroom-joined', `Joined room ${data.roomId} as client ${this.socket.id}`);
         resolve(data);
       });
@@ -119,7 +123,7 @@ class WebSocketService {
       store.dispatch('strat/updateStratLocally', data);
     });
 
-    this.socket.on('deleted-strat', (data: { stratID: string }) => {
+    this.socket.on('deleted-strat', (data: { stratId: string }) => {
       Log.info('ws::deleted', data);
       store.dispatch('strat/deleteStratLocally', data);
     });
@@ -134,12 +138,12 @@ class WebSocketService {
       store.dispatch('utility/updateUtilityLocally', data);
     });
 
-    this.socket.on('deleted-utility', (data: { utilityID: string }) => {
+    this.socket.on('deleted-utility', (data: { utilityId: string }) => {
       Log.info('ws::deleted', data);
       store.dispatch('utility/deleteUtilityLocally', data);
     });
 
-    this.socket.on('deleted-player', (data: { playerID: string }) => {
+    this.socket.on('deleted-player', (data: { playerId: string }) => {
       Log.info('ws::deleted', data);
       store.dispatch('team/deleteMemberLocally', data);
     });
@@ -160,9 +164,9 @@ class WebSocketService {
     });
   }
 
-  emit(event: string, ...args: any[]) {
+  emit(event: keyof ClientToServerEvents, ...args: unknown[]) {
     if (this.socket?.connected) {
-      this.socket.emit(event, ...args);
+      this.socket.emit(event, ...(args as any));
     } else {
       Log.warn('ws::drawtool:emit', `Tried emitting ${event} without connection.`);
     }

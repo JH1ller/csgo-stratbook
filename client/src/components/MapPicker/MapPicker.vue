@@ -3,13 +3,13 @@
     <div class="map-picker__container">
       <div
         class="map-picker__map"
-        v-for="map in maps"
-        :key="map._id"
-        @click="mapClicked(map._id)"
-        :class="{ '-current': isCurrentMap(map._id) }"
+        v-for="[id, label] in Object.entries(maps)"
+        :key="id"
+        @click="mapClicked(id)"
+        :class="{ '-current': isCurrentMap(id) }"
       >
-        <SmartImage :src="getMapImage(map._id)" alt="Map" class="map-picker__image" />
-        <p class="map-picker__label">{{ map.name }}</p>
+        <SmartImage :src="getMapImage(id)" alt="Map" class="map-picker__image" />
+        <p class="map-picker__label">{{ label }}</p>
       </div>
     </div>
   </div>

@@ -28,12 +28,15 @@ export interface TextItem extends Partial<TextConfig> {
   fill: string;
 }
 
-export interface RemotePointer {
+export interface RemoteClient {
   userName?: string;
   id: string;
-  x: number;
-  y: number;
+  position: {
+    x: number;
+    y: number;
+  };
   image: CanvasImageSource;
+  color: string;
   timeout?: NodeJS.Timeout;
 }
 

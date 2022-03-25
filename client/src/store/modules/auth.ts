@@ -1,6 +1,6 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
-import WebSocketService from '@/services/websocket.service';
+import WebSocketService from '@/services/WebSocketService';
 import { Player } from '@/api/models/Player';
 import api from '@/api/base';
 import router from '@/router';
