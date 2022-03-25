@@ -104,14 +104,12 @@
       <button class="sketch-tool__btn" @click="saveToFile" v-tippy content="Save to file">
         <fa-icon icon="download" /><span class="sketch-tool__btn-label">Save to file</span>
       </button>
-      <template>
-        <button v-if="!roomId" class="sketch-tool__btn" @click="() => connect()" v-tippy content="Create room">
-          <fa-icon icon="network-wired" /><span class="sketch-tool__btn-label">Create room</span>
-        </button>
-        <!-- <button v-else class="sketch-tool__btn" @click="copyRoomLink" v-tippy content="Copy link">
+      <button v-if="!roomId" class="sketch-tool__btn" @click="() => connect()" v-tippy content="Create room">
+        <fa-icon icon="network-wired" /><span class="sketch-tool__btn-label">Create room</span>
+      </button>
+      <!-- <button v-else class="sketch-tool__btn" @click="copyRoomLink" v-tippy content="Copy link">
           <fa-icon icon="copy" /><span class="sketch-tool__btn-label">Copy link</span>
         </button> -->
-      </template>
       <button
         v-if="showConfigBtn && roomId"
         class="sketch-tool__btn"

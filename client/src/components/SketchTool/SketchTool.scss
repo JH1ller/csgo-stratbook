@@ -37,7 +37,7 @@
   }
   &__btn {
     @include button-default(white, $color--navyblue, false);
-    @include slideFromY(10%, 6, 'tool');
+    @include slideFromY(10%, 7, 'tool');
 
     & > svg {
       transition: color 0.2s ease;
