@@ -60,7 +60,7 @@ import {
   faNetworkWired,
   faCog,
 } from '@fortawesome/free-solid-svg-icons';
-import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faDiscord, faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueTippy, { TippyComponent } from 'vue-tippy';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
@@ -143,6 +143,7 @@ library.add(
   faICursor,
   faNetworkWired,
   faCog,
+  faGithub,
 );
 
 if (process.env.NODE_ENV === 'production') {

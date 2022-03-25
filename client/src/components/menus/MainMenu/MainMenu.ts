@@ -68,9 +68,7 @@ export default class MainMenu extends Vue {
       () => {
         this.trackingService.track('Action: Download Desktop Client');
         // TODO: consider if we should just insert current version here
-        window.open(
-          'https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+1.9.0.exe',
-        );
+        window.open('https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+1.9.0.exe');
       },
     );
     this.trackingService.track('Click: Get Desktop Client');
@@ -84,6 +82,11 @@ export default class MainMenu extends Vue {
   private openDiscord() {
     this.trackingService.track('Click: Open Discord');
     openLink('https://discord.com/invite/mkxzQJGRgq');
+  }
+
+  private openGithub() {
+    this.trackingService.track('Click: Open Github');
+    openLink('https://github.com/JH1ller/csgo-stratbook');
   }
 
   private openDonationLink() {
