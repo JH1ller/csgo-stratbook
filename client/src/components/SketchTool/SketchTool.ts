@@ -39,6 +39,7 @@ import { writeToClipboard } from '@/utils/writeToClipboard';
 import WebSocketService from '@/services/WebSocketService';
 import { Circle, CircleConfig } from 'konva/lib/shapes/Circle';
 import { GameMap } from '@/api/models/GameMap';
+import { isInputFocussed } from '@/utils/inputFocussed';
 
 @Component({
   components: {
@@ -410,7 +411,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     }, {});
 
     // cache available map images
-    this.mapImages = Object.values(GameMap).reduce<Record<any, HTMLImageElement>>((acc, map) => {
+    this.mapImages = [GameMap.Dust2, GameMap.Mirage].reduce<Record<any, HTMLImageElement>>((acc, map) => {
       acc[map] = createMapImage(map);
       return acc;
     }, {});
@@ -438,6 +439,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   @Listen('keyup')
   keyupHandler({ code }: KeyboardEvent) {
+    if (isInputFocussed()) return;
     switch (code) {
       case 'Space':
         this.activeTool = this.previousTool ?? ToolTypes.Pan;
@@ -447,7 +449,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   @Listen('keydown')
   keydownHandler({ key }: KeyboardEvent) {
-    if (this.currentText) return;
+    if (this.currentText || isInputFocussed()) return;
     switch (key) {
       case ' ':
         if (this.activeTool === ToolTypes.Pan) return;
@@ -558,6 +560,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
         }
         break;
       case ToolTypes.Text:
+        if (this.currentText) return;
         this.textItems.push({
           id,
           text: 'Add your text here',
@@ -587,7 +590,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.setActiveItems([]);
     this.moveTextboxElement();
     this.textbox.style.display = 'block';
-    this.setTextboxColor(this.currentColor);
+    this.setTextboxColor(this.currentText.attrs.fill);
     this.textbox.innerText = this.currentText.attrs.text;
 
     await timeout(10);

@@ -63,16 +63,16 @@
   }
 
   &__draggables-bar {
+    @include blurry-bg;
+
     position: absolute;
     top: 50%;
     right: 0;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    background: rgba(white, 0.1);
-    backdrop-filter: blur(4px);
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
   }
 
   &__toolbar {
@@ -135,36 +135,35 @@
     transform-origin: left center;
   }
 
-  &__keymaps-bar {
+  &__left-container {
+    @include blurry-bg;
+    @include spacing('padding', 'xs');
+
     position: absolute;
     top: 50%;
     left: 0;
     transform: translateY(-50%);
+  }
+
+  &__keymaps-bar {
+    @include spacing('gap', xs);
+
     display: flex;
     flex-direction: column;
-    background: rgba(white, 0.1);
-    backdrop-filter: blur(4px);
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-    // width: 150px;
-    padding: 12px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
   }
 
   &__keymap {
+    @include slideFromX(-10%, 6, 'keymap');
+    @include spacing('gap', xs);
+
     display: flex;
     align-items: center;
     cursor: pointer;
-
-    &:not(:first-child) {
-      @include spacing('margin-top', xs);
-    }
-
-    @include slideFromX(-10%, 6, 'keymap');
   }
 
   &__keymap-label {
-    @include spacing('margin-left', xs);
-
     color: white;
   }
 
@@ -211,21 +210,19 @@
   }
 
   &__clients {
-    position: absolute;
-    left: 24px;
-    bottom: 96px;
+    @include spacing('gap', 'xs');
+    @include spacing('margin-top', 'xs');
+
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
+    height: 100px;
   }
 
   &__client {
     display: flex;
     align-items: center;
     color: white;
-
-    &:not(:first-child) {
-      margin-top: 16px;
-    }
   }
 
   &__client-dot {
@@ -233,5 +230,12 @@
     height: 12px;
     border-radius: 50%;
     margin-right: 12px;
+  }
+
+  &__clients-headline {
+    @include typo_hl3;
+    @include spacing('margin-top', 'md');
+
+    color: white;
   }
 }

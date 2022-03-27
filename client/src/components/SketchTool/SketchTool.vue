@@ -133,48 +133,51 @@
         <img :src="getUtilityIcon(item)" />
       </div>
     </div>
-    <div class="sketch-tool__keymaps-bar">
-      <div class="sketch-tool__keymap" @click="undo">
-        <button class="sketch-tool__key-outer">
-          <div class="sketch-tool__key-inner">Z</div>
-        </button>
-        <div class="sketch-tool__keymap-label">Undo</div>
+    <div class="sketch-tool__left-container">
+      <div class="sketch-tool__keymaps-bar">
+        <div class="sketch-tool__keymap" @click="undo">
+          <button class="sketch-tool__key-outer">
+            <div class="sketch-tool__key-inner">Z</div>
+          </button>
+          <div class="sketch-tool__keymap-label">Undo</div>
+        </div>
+        <div class="sketch-tool__keymap" @click="redo">
+          <button class="sketch-tool__key-outer">
+            <div class="sketch-tool__key-inner">Y</div>
+          </button>
+          <div class="sketch-tool__keymap-label">Redo</div>
+        </div>
+        <div class="sketch-tool__keymap" @click="removeActiveItems">
+          <button class="sketch-tool__key-outer">
+            <div class="sketch-tool__key-inner">Del</div>
+          </button>
+          <div class="sketch-tool__keymap-label">Delete objects</div>
+        </div>
+        <div class="sketch-tool__keymap" @click="clearStage">
+          <button class="sketch-tool__key-outer">
+            <div class="sketch-tool__key-inner">R</div>
+          </button>
+          <div class="sketch-tool__keymap-label">Clear board</div>
+        </div>
+        <div class="sketch-tool__keymap" @click="setResponsiveStageSize()">
+          <button class="sketch-tool__key-outer">
+            <div class="sketch-tool__key-inner">C</div>
+          </button>
+          <div class="sketch-tool__keymap-label">Center board</div>
+        </div>
+        <div class="sketch-tool__keymap" @click="activeTool = ToolTypes.Pan">
+          <button class="sketch-tool__key-outer sketch-tool__key-outer--large">
+            <div class="sketch-tool__key-inner">Space</div>
+          </button>
+          <div class="sketch-tool__keymap-label">(Hold) Pan around</div>
+        </div>
       </div>
-      <div class="sketch-tool__keymap" @click="redo">
-        <button class="sketch-tool__key-outer">
-          <div class="sketch-tool__key-inner">Y</div>
-        </button>
-        <div class="sketch-tool__keymap-label">Redo</div>
-      </div>
-      <div class="sketch-tool__keymap" @click="removeActiveItems">
-        <button class="sketch-tool__key-outer">
-          <div class="sketch-tool__key-inner">Del</div>
-        </button>
-        <div class="sketch-tool__keymap-label">Delete objects</div>
-      </div>
-      <div class="sketch-tool__keymap" @click="clearStage">
-        <button class="sketch-tool__key-outer">
-          <div class="sketch-tool__key-inner">R</div>
-        </button>
-        <div class="sketch-tool__keymap-label">Clear board</div>
-      </div>
-      <div class="sketch-tool__keymap" @click="setResponsiveStageSize()">
-        <button class="sketch-tool__key-outer">
-          <div class="sketch-tool__key-inner">C</div>
-        </button>
-        <div class="sketch-tool__keymap-label">Center board</div>
-      </div>
-      <div class="sketch-tool__keymap" @click="activeTool = ToolTypes.Pan">
-        <button class="sketch-tool__key-outer sketch-tool__key-outer--large">
-          <div class="sketch-tool__key-inner">Space</div>
-        </button>
-        <div class="sketch-tool__keymap-label">(Hold) Pan around</div>
-      </div>
-    </div>
-    <div class="sketch-tool__clients">
-      <span class="sketch-tool__client" v-for="client in remoteClients" :key="client.id">
-        <span class="sketch-tool__client-dot" :style="{ background: client.color }" /> {{ client.userName }}
-      </span>
+      <div class="sketch-tool__clients-headline">Connected players</div>
+      <transition-group name="fade" tag="div" class="sketch-tool__clients">
+        <span class="sketch-tool__client" v-for="client in remoteClients" :key="client.id">
+          <span class="sketch-tool__client-dot" :style="{ background: client.color }" /> {{ client.userName }}
+        </span>
+      </transition-group>
     </div>
   </div>
 </template>

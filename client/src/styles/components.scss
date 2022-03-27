@@ -121,7 +121,12 @@
   }
 }
 
-@mixin blurry-backdrop {
+@mixin blurry-bg {
+  background: rgba(black, 0.1);
+  backdrop-filter: blur(6px);
+}
+
+@mixin blurry-panel {
   @include spacing('padding', xs);
 
   background-color: rgba(white, 0.2);
