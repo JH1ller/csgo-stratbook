@@ -5,7 +5,7 @@ export interface Boards {
 }
 
 export interface MapData {
-  stratName?: string;
+  stratName: string;
   stratId?: string;
   data: DrawBoardState;
 }

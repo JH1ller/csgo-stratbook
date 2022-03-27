@@ -1,15 +1,21 @@
 <template>
   <BackdropDialog>
-    <TextInput class="connection-dialog__text-field" :field="formFields.userName" v-model="formFields.userName.value" />
-    <TextInput
-      class="connection-dialog__text-field"
-      :field="formFields.stratName"
-      v-model="formFields.stratName.value"
-    />
-    <div class="connection-dialog__actions">
-      <button class="connection-dialog__btn-submit" @click="handleSubmitAttempt">Submit</button>
-      <button class="connection-dialog__btn-cancel" @click="close">Cancel</button>
-    </div>
+    <form @submit.prevent="handleSubmitAttempt" novalidate>
+      <TextInput
+        class="connection-dialog__text-field"
+        :field="formFields.userName"
+        v-model="formFields.userName.value"
+      />
+      <TextInput
+        class="connection-dialog__text-field"
+        :field="formFields.stratName"
+        v-model="formFields.stratName.value"
+      />
+      <div class="connection-dialog__actions">
+        <button class="connection-dialog__btn-submit" @click="handleSubmitAttempt">Submit</button>
+        <button class="connection-dialog__btn-cancel" @click="close">Cancel</button>
+      </div>
+    </form>
   </BackdropDialog>
 </template>
 

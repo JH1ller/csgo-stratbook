@@ -975,6 +975,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   updateStratName(stratName: string) {
     return stratName;
   }
+
   @Emit()
   updateMap(map: GameMap) {
     return map;
@@ -1076,7 +1077,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       if (id === this.wsService.socket.id) return;
       this.updateMap(map);
       this.applyStageData(drawData);
-      if (stratName) this.updateStratName(stratName);
+      this.updateStratName(stratName ?? '');
     });
 
     this.wsService.socket.on('client-joined', ({ position, id, color, userName }) => {

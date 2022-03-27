@@ -14,6 +14,7 @@ export class Room {
     this.maps = Object.values(GameMap).reduce<Record<GameMap, MapData> & any>((acc, map) => {
       acc[map] = {
         stratId,
+        stratName: '',
         data: {},
       };
       return acc;
