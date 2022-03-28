@@ -23,7 +23,12 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, {
   pingInterval: 10000,
   cors: {
-    origin: ['https://stratbook.live', 'http://localhost:8080', 'http://csstrats-app.herokuapp.com/'],
+    origin: [
+      'https://stratbook.live',
+      'http://localhost:8080',
+      'http://192.168.0.11:8080',
+      'http://csstrats-app.herokuapp.com/',
+    ],
     methods: ['GET', 'POST'],
   },
 });

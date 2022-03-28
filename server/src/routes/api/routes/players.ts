@@ -7,6 +7,7 @@ import { uploadSingle, processImage, deleteFile } from '@/utils/fileUpload';
 import { verifyAuth } from '@/utils/verifyToken';
 import { sendMail, MailTemplate } from '@/utils/mailService';
 import { profileUpdateSchema } from '@/utils/validation';
+import { TypedServer } from '@/sockets/interfaces';
 
 const router = Router();
 
@@ -93,35 +94,12 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
 
   const updatedPlayer = await res.locals.player.save();
 
-  const {
-    _id,
-    name,
-    role,
-    avatar,
-    team,
-    email,
-    confirmed,
-    isAdmin,
-    createdAt,
-    isOnline,
-    lastOnline,
-    completedTutorial,
-  } = updatedPlayer;
+  const { email, password, deleted, modifiedAt, ...sanitizedPlayer } = updatedPlayer.toObject();
 
-  res.json({
-    _id,
-    name,
-    role,
-    avatar,
-    team,
-    email,
-    confirmed,
-    isAdmin,
-    createdAt,
-    isOnline,
-    lastOnline,
-    completedTutorial,
-  });
+  res.json(sanitizedPlayer);
+  (req.app.get('io') as TypedServer)
+    .to(updatedPlayer.team.toString())
+    .emit('updated-player', { player: sanitizedPlayer });
 });
 
 export default router;

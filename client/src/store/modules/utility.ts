@@ -118,14 +118,14 @@ export const utilityModule: Module<UtilityState, RootState> = {
         );
       }
     },
-    addUtilityLocally({ commit, dispatch }, payload: { utility: Utility }) {
+    addUtilityLocally({ commit }, payload: { utility: Utility }) {
       commit(ADD_UTILITY, payload.utility);
     },
-    updateUtilityLocally({ commit, dispatch }, payload: { utility: Utility }) {
+    updateUtilityLocally({ commit }, payload: { utility: Utility }) {
       commit(UPDATE_UTILITY, payload);
     },
-    deleteUtilityLocally({ commit, dispatch }, payload: { utilityID: string }) {
-      commit(DELETE_UTILITY, payload.utilityID);
+    deleteUtilityLocally({ commit }, payload: { utilityId: string }) {
+      commit(DELETE_UTILITY, payload.utilityId);
     },
     resetState({ commit }) {
       commit(RESET_STATE);

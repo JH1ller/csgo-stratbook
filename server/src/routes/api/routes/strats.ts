@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { StratModel } from '@/models/strat';
+import { Strat, StratModel } from '@/models/strat';
 import { getStrat } from '@/utils/getters';
 import { verifyAuth } from '@/utils/verifyToken';
 import { sanitize } from '@/utils/sanitizeHtml';
 import { minifyHtml } from '@/utils/minifyHtml';
+import { TypedServer } from '@/sockets/interfaces';
 
 const router = Router();
 
@@ -41,7 +42,8 @@ router.post('/', verifyAuth, async (req, res) => {
   strat.$locals.playerId = res.locals.player._id;
 
   const newStrat = await strat.save();
-  res.status(201).json(newStrat);
+  res.status(201).json(newStrat.toObject());
+  (req.app.get('io') as TypedServer).to(newStrat.team.toString()).emit('created-strat', { strat: newStrat.toObject() });
 });
 
 // * Add shared
@@ -74,6 +76,9 @@ router.post('/share/:id', verifyAuth, async (req, res) => {
 
   await stratCopy.save();
   res.status(201).json(stratCopy);
+  (req.app.get('io') as TypedServer)
+    .to(stratCopy.team.toString())
+    .emit('created-strat', { strat: stratCopy.toObject() });
 });
 
 // * Update One
@@ -106,6 +111,9 @@ router.patch('/', verifyAuth, getStrat, async (req, res) => {
   });
   const updatedStrat = await res.locals.strat.save();
   res.json(updatedStrat);
+  (req.app.get('io') as TypedServer)
+    .to(updatedStrat.team.toString())
+    .emit('updated-strat', { strat: updatedStrat.toObject() });
 });
 
 // * Delete One
@@ -115,6 +123,9 @@ router.delete('/:strat_id', verifyAuth, getStrat, async (req, res) => {
   }
   await res.locals.strat.delete();
   res.json({ message: 'Deleted strat successfully' });
+  (req.app.get('io') as TypedServer)
+    .to(res.locals.strat.team.toString())
+    .emit('deleted-strat', { stratId: res.locals.strat._id });
 });
 
 export default router;

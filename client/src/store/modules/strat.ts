@@ -81,7 +81,7 @@ export const stratModule: Module<StratState, RootState> = {
         return { error: res.error };
       }
     },
-    async deleteStrat({ dispatch, state, rootState }, stratID: string) {
+    async deleteStrat({ dispatch, state }, stratID: string) {
       const res = await api.strat.deleteStrat(stratID);
       if (res.success) {
         dispatch('app/showToast', { id: 'strat/deleteStrat', text: 'Deleted strat.' }, { root: true });
@@ -143,8 +143,8 @@ export const stratModule: Module<StratState, RootState> = {
     updateStratLocally({ commit }, payload: { strat: Strat }) {
       commit(UPDATE_STRAT, payload);
     },
-    deleteStratLocally({ commit }, payload: { stratID: string }) {
-      commit(DELETE_STRAT, payload.stratID);
+    deleteStratLocally({ commit }, payload: { stratId: string }) {
+      commit(DELETE_STRAT, payload.stratId);
     },
     collapseAll({ commit, state }) {
       const collapsed = state.strats.filter(strat => !state.editedStrats.includes(strat._id)).map(strat => strat._id);

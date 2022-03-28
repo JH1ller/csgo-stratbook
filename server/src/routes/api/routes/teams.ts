@@ -6,6 +6,7 @@ import crypto from 'crypto';
 import { verifyAuth } from '@/utils/verifyToken';
 import { teamSchema } from '@/utils/validation';
 import { uploadSingle, processImage, deleteFile } from '@/utils/fileUpload';
+import { TypedServer } from '@/sockets/interfaces';
 
 const router = Router();
 
@@ -21,7 +22,7 @@ router.get('/', verifyAuth, async (_, res) => {
   }
 });
 
-router.get('/players', verifyAuth, async (req, res) => {
+router.get('/players', verifyAuth, async (_, res) => {
   const players = await PlayerModel.find({ team: res.locals.player.team });
   const sanitizedPlayers = players.map((player) => ({
     _id: player._id,
@@ -115,6 +116,7 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
   const updatedTeam = await team.save();
 
   res.json(updatedTeam);
+  (req.app.get('io') as TypedServer).to(team._id.toString()).emit('updated-team', { team: updatedTeam.toObject() });
 });
 
 // * Delete One
@@ -141,6 +143,7 @@ router.delete('/', verifyAuth, async (req, res) => {
   await Promise.all(stratPromises);
 
   res.json(res.locals.player);
+  (req.app.get('io') as TypedServer).to(team._id.toString()).emit('deleted-team');
 });
 
 // * Join team

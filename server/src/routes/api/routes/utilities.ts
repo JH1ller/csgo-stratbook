@@ -3,6 +3,7 @@ import { UtilityModel } from '@/models/utility';
 import { getUtility } from '@/utils/getters';
 import { verifyAuth } from '@/utils/verifyToken';
 import { uploadMultiple, deleteFile, processImage } from '@/utils/fileUpload';
+import { TypedServer } from '@/sockets/interfaces';
 
 const router = Router();
 
@@ -50,6 +51,9 @@ router.post('/', verifyAuth, uploadMultiple('images'), async (req, res) => {
   }
   const newUtility = await utility.save();
   res.status(201).json(newUtility);
+  (req.app.get('io') as TypedServer)
+    .to(newUtility.team.toString())
+    .emit('created-utility', { utility: newUtility.toObject() });
 });
 
 // * Update One
@@ -99,15 +103,21 @@ router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, 
 
   const updatedUtility = await res.locals.utility.save();
   res.json(updatedUtility);
+  (req.app.get('io') as TypedServer)
+    .to(updatedUtility.team.toString())
+    .emit('updated-utility', { utility: updatedUtility.toObject() });
 });
 
 // * Delete One
-router.delete('/:utility_id', verifyAuth, getUtility, async (_req, res) => {
+router.delete('/:utility_id', verifyAuth, getUtility, async (req, res) => {
   if (!res.locals.player.team.equals(res.locals.utility.team)) {
     return res.status(400).json({ error: 'Cannot delete a utility of another team.' });
   }
   await res.locals.utility.delete();
   res.json({ message: 'Deleted utility successfully' });
+  (req.app.get('io') as TypedServer)
+    .to(res.locals.utility.team.toString())
+    .emit('deleted-utility', { utilityId: res.locals.utility._id });
 });
 
 export default router;

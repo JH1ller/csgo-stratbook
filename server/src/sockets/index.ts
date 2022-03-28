@@ -1,11 +1,10 @@
 import { PlayerModel } from '@/models/player';
 import jwt from 'jsonwebtoken';
 import { leaveDrawRoomHandler, registerBoardHandler } from './boardHandler';
-import { registerWatchHandler } from './watchHandler';
 import { Log } from '@/utils/logger';
 import { TypedServer, TypedSocket } from './interfaces';
 
-const handleConnection = async (socket: TypedSocket) => {
+const handleConnection = async (io: TypedServer, socket: TypedSocket) => {
   const player = socket.data.player;
   (global as any).socket = socket;
   if (player && player.team) {
@@ -22,6 +21,7 @@ const handleConnection = async (socket: TypedSocket) => {
       socket.data.activeQuery = player.save();
       await socket.data.activeQuery;
       socket.data.activeQuery = undefined;
+      io.to(player.team.toString()).emit('updated-player', { player: player.toObject() });
     } catch (error) {
       Log.error(
         'sockets::handleConnection',
@@ -33,8 +33,6 @@ const handleConnection = async (socket: TypedSocket) => {
 };
 
 export const initialize = (io: TypedServer) => {
-  registerWatchHandler(io);
-
   //* Auth middleware
   io.use(async (socket, next) => {
     const token = socket.handshake.auth.token;
@@ -59,7 +57,7 @@ export const initialize = (io: TypedServer) => {
     Log.info('sockets::onconnection', `User '${socket.id}' connected. Active connections: ${io.sockets.sockets.size}`);
     registerBoardHandler(io, socket);
 
-    handleConnection(socket);
+    handleConnection(io, socket);
 
     socket.on('disconnecting', async (reason) => {
       Log.info(
@@ -70,7 +68,7 @@ export const initialize = (io: TypedServer) => {
 
       leaveDrawRoomHandler(io, socket);
 
-      if (!player) return;
+      if (!player || !player.team) return;
       try {
         if (socket.data.activeQuery) {
           await socket.data.activeQuery;
@@ -83,6 +81,7 @@ export const initialize = (io: TypedServer) => {
         socket.data.activeQuery = player.save();
         await socket.data.activeQuery;
         socket.data.activeQuery = undefined;
+        io.to(player.team.toString()).emit('updated-player', { player: player.toObject() });
       } catch (error) {
         Log.debug('sockets::ondisconnect', 'Failed to update online status', error.message);
       }
