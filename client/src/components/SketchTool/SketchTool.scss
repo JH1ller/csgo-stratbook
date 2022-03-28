@@ -91,11 +91,23 @@
 
     & > :not(:first-child) {
       margin-left: 12px;
+
+      @include viewport_range(mq1, mq2) {
+        @include spacing('margin-left', '3xs');
+      }
+    }
+
+    @include viewport_range(mq1, mq2) {
+      @include spacing('padding', '3xs');
     }
   }
 
   &__color-picker {
     margin-right: 24px;
+
+    @include viewport_range(mq1, mq2) {
+      @include spacing('margin-right', '2xs');
+    }
   }
 
   &__draggable {
@@ -117,10 +129,19 @@
       width: 42px;
       height: 42px;
 
+      @include viewport_range(mq1, mq2) {
+        width: 36px;
+        height: 36px;
+      }
+
       @include viewport_mq6 {
         width: 48px;
         height: 48px;
       }
+    }
+
+    @include viewport_range(mq1, mq2) {
+      @include spacing('padding', '3xs 3xs');
     }
   }
 
@@ -143,10 +164,15 @@
     top: 50%;
     left: 0;
     transform: translateY(-50%);
+
+    @include viewport_range(mq1, mq2) {
+      display: none;
+    }
   }
 
   &__keymaps-bar {
     @include spacing('gap', xs);
+    @include spacing('margin-bottom', 'md');
 
     display: flex;
     flex-direction: column;
@@ -161,10 +187,21 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+
+    @include viewport_range(mq1, mq2) {
+      @include spacing('gap', '3xs');
+
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 
   &__keymap-label {
     color: white;
+
+    @include viewport_range(mq1, mq2) {
+      font-size: 0.8rem;
+    }
   }
 
   &__key-inner {
@@ -178,6 +215,10 @@
     color: white;
     padding-left: 4px;
     padding-top: 2px;
+
+    @include viewport_range(mq1, mq2) {
+      font-size: 0.6rem;
+    }
   }
 
   &__key-outer {
@@ -189,6 +230,11 @@
     text-align: left;
     border: 0px solid rgba(0, 0, 0, 0);
     cursor: pointer;
+
+    @include viewport_range(mq1, mq2) {
+      width: 28px;
+      height: 26px;
+    }
 
     &:not(:first-of-type) {
       margin-left: 8px;
@@ -211,7 +257,6 @@
 
   &__clients {
     @include spacing('gap', 'xs');
-    @include spacing('margin-top', 'xs');
 
     display: flex;
     flex-direction: column;
@@ -223,6 +268,10 @@
     display: flex;
     align-items: center;
     color: white;
+
+    @include viewport_range(mq1, mq2) {
+      font-size: 0.8rem;
+    }
   }
 
   &__client-dot {
@@ -234,8 +283,12 @@
 
   &__clients-headline {
     @include typo_hl3;
-    @include spacing('margin-top', 'md');
+    @include spacing('margin-bottom', 'xs');
 
     color: white;
+
+    @include viewport_range(mq1, mq2) {
+      font-size: 0.8rem;
+    }
   }
 }

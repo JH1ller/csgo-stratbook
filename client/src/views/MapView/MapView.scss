@@ -19,6 +19,13 @@
         opacity: 0.8;
       }
     }
+
+    @include viewport_range(mq1, mq2) {
+      top: 24px;
+      right: 24px;
+      width: 72px;
+      height: 72px;
+    }
   }
 
   &__map-label {

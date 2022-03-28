@@ -11,6 +11,10 @@
   border: 2px solid rgba(black, 0.1);
   color: $color;
 
+  @include viewport_range(mq1, mq2) {
+    padding: 5px 8px;
+  }
+
   &:hover,
   &:focus {
     border-color: rgba(black, 0.3);
