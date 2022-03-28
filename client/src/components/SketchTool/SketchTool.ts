@@ -411,10 +411,13 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     }, {});
 
     // cache available map images
-    this.mapImages = [GameMap.Dust2, GameMap.Mirage].reduce<Record<any, HTMLImageElement>>((acc, map) => {
-      acc[map] = createMapImage(map);
-      return acc;
-    }, {});
+    this.mapImages = [GameMap.Dust2, GameMap.Mirage, GameMap.Overpass].reduce<Record<any, HTMLImageElement>>(
+      (acc, map) => {
+        acc[map] = createMapImage(map);
+        return acc;
+      },
+      {},
+    );
   }
 
   clearStage(): void {
@@ -561,17 +564,22 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
         break;
       case ToolTypes.Text:
         if (this.currentText) return;
-        this.textItems.push({
-          id,
-          text: 'Add your text here',
-          x: pos.x,
-          y: pos.y - 8,
-          fontSize: 24,
-          fill: this.currentColor,
-        });
-        await this.$nextTick();
-        this.currentText = this.stage.findOne<Text>('#' + id);
-        this.showTextbox();
+        if (target instanceof Text) {
+          this.currentText = target;
+          this.showTextbox();
+        } else {
+          this.textItems.push({
+            id,
+            text: 'Add your text here',
+            x: pos.x,
+            y: pos.y - 8,
+            fontSize: 24,
+            fill: this.currentColor,
+          });
+          await this.$nextTick();
+          this.currentText = this.stage.findOne<Text>('#' + id);
+          this.showTextbox();
+        }
     }
   }
 
@@ -1074,7 +1082,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
     this.wsService.socket.on('map-updated', ({ map, stratName, drawData, id }) => {
       Log.info('sketchtool::map-updated', { map, id, stratName, drawData });
-      if (id === this.wsService.socket.id) return;
       this.updateMap(map);
       this.applyStageData(drawData);
       this.updateStratName(stratName ?? '');
