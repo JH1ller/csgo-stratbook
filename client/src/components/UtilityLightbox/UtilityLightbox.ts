@@ -1,4 +1,4 @@
-import { Component, Mixins, Prop, Emit } from 'vue-property-decorator';
+import { Component, Mixins, Prop } from 'vue-property-decorator';
 import { Sides } from '@/api/models/Sides';
 import { Utility } from '@/api/models/Utility';
 import { UtilityMovement } from '@/api/models/UtilityMovement';

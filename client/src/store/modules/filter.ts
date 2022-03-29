@@ -3,7 +3,6 @@ import { StratTypes } from '@/api/models/StratTypes';
 import { UtilityTypes } from '@/api/models/UtilityTypes';
 import StorageService from '@/services/storage.service';
 import TrackingService from '@/services/tracking.service';
-import { toggleArray } from '@/utils/toggleArray';
 import { Module } from 'vuex';
 import { RootState } from '..';
 

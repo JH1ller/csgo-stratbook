@@ -9,7 +9,6 @@ declare module 'vue-tribute';
 declare module 'sanitize-html';
 declare module '@feedback-fish/vue';
 declare module 'vue-tippy';
-declare module 'vue-image-markup';
 declare module 'vue-swatches';
 declare module 'vuex/dist/logger';
 declare module '@analytics/google-analytics';

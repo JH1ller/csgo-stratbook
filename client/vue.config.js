@@ -1,9 +1,5 @@
 const path = require('path');
 
-const electronConfig = {
-  target: 'electron-renderer',
-};
-
 function getPublishConfig() {
   return process.env.PUBLISHTO === 'prod'
     ? {

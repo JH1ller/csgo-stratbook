@@ -23,6 +23,7 @@
   "homepage": "https://github.com/JH1ller/csgo-stratbook#readme",
   "dependencies": {
     "@sentry/node": "^6.18.2",
+    "@socket.io/admin-ui": "^0.2.0",
     "aws-sdk": "^2.1089.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.2",
@@ -42,7 +43,7 @@
     "html-minifier": "^4.0.0",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.6",
     "mongodb": "^3.7.3",
     "mongoose": "^6.2.4",
     "mongoose-delete": "^0.5.4",

@@ -6,7 +6,6 @@ import StratForm from '@/components/StratForm/StratForm.vue';
 import StratFilterForm from '@/components/StratFilterForm/StratFilterForm.vue';
 import FilterMenu from '@/components/FilterMenu/FilterMenu.vue';
 import FilterButton from '@/components/FilterButton/FilterButton.vue';
-import DrawTool from '@/components/DrawTool/DrawTool.vue';
 import SketchTool from '@/components/SketchTool/SketchTool.vue';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { appModule, mapModule, stratModule, filterModule, teamModule, authModule } from '@/store/namespaces';
@@ -34,7 +33,6 @@ import { GameMap } from '@/api/models/GameMap';
     FilterButton,
     UtilityLightbox,
     FilterMenu,
-    DrawTool,
     SketchTool,
     BackdropDialog,
   },

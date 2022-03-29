@@ -2,7 +2,6 @@ import { Module } from 'vuex';
 import { RootState } from '..';
 import { Strat } from '@/api/models/Strat';
 import api from '@/api/base';
-import { Team } from '@/api/models/Team';
 import TrackingService from '@/services/tracking.service';
 import { extractTextFromHTML } from '@/utils/extractTextFromHTML';
 import StorageService from '@/services/storage.service';

@@ -1,12 +1,12 @@
 'use strict';
-import { app, protocol, BrowserWindow, ipcMain, session, dialog } from 'electron';
+import { app, protocol, BrowserWindow, ipcMain, session } from 'electron';
 import os from 'os';
 import path from 'path';
 import {
   createProtocol,
   /* installVueDevtools */
 } from 'vue-cli-plugin-electron-builder/lib';
-import { autoUpdater, UpdateInfo } from 'electron-updater';
+import { autoUpdater } from 'electron-updater';
 import ElectronLog from 'electron-log';
 //import debug from 'electron-debug';
 import ElectronStore from 'electron-store';
@@ -48,7 +48,7 @@ const init = async () => {
 
   autoUpdater.autoDownload = true;
 
-  autoUpdater.checkForUpdatesAndNotify().catch(err => showMainWindow());
+  autoUpdater.checkForUpdatesAndNotify().catch(() => showMainWindow());
 
   if (isDevelopment) {
     showMainWindow();
