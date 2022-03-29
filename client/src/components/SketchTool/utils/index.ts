@@ -82,7 +82,7 @@ export const createUtilImage = (util: UtilityTypes): HTMLImageElement => {
 
 export const createMapImage = (map: GameMap): HTMLImageElement => {
   const img = new Image();
-    img.src = `minimaps/${map.toLowerCase()}.png`;
+    img.src = `minimaps/${map.toLowerCase()}.webp`;
     img.onerror = () => img.src = '';
   return img;
 };

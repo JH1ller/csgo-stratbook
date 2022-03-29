@@ -9,6 +9,7 @@ import VueContext from 'vue-context';
 import { GameMap, gameMapTable } from '@/api/models/GameMap';
 import SmartImage from '@/components/SmartImage/SmartImage.vue';
 import { Log } from '@/utils/logger';
+
 @Component({
   components: {
     SketchTool,
