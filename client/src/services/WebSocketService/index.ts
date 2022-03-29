@@ -6,12 +6,12 @@ import { Player } from '../../api/models/Player';
 import { Strat } from '../../api/models/Strat';
 import { Team } from '../../api/models/Team';
 import { Utility } from '../../api/models/Utility';
-import { StageState } from '@/components/SketchTool/types';
 import { ClientToServerEvents, JoinedRoomResponse, ServerToClientEvents } from './types';
 import { GameMap } from '@/api/models/GameMap';
 
 class WebSocketService {
   private static instance: WebSocketService;
+  readonly socketTimeout = 10000;
 
   socket!: Socket<ServerToClientEvents, ClientToServerEvents>;
   connectionPromise: Promise<void> | undefined;
@@ -44,8 +44,18 @@ class WebSocketService {
     Log.debug('WebSocketService::connect()');
     //* Caching connection promise to avoid creating two connections simultaneously.
     if (!this.connectionPromise) {
-      this.connectionPromise = new Promise(resolve => {
+      this.connectionPromise = new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          Log.error('WebSocketService::connect()', 'Could not connect');
+          reject('Could not connect');
+        }, this.socketTimeout);
+
         if (this.socket?.connected && (this.socket.auth as Record<string, string>).token) {
+          clearTimeout(timeout);
+          resolve();
+        }
+        if (this.socket?.connected && !store.state.auth.token) {
+          clearTimeout(timeout);
           resolve();
         }
         if (!this.socket) {
@@ -64,6 +74,7 @@ class WebSocketService {
 
         this.socket.once('connect', () => {
           Log.info('ws::connected', 'Websocket connection established.', !!(this.socket.auth as any).token);
+          clearTimeout(timeout);
           resolve();
         });
       });
@@ -93,12 +104,22 @@ class WebSocketService {
     map: GameMap;
   }): Promise<JoinedRoomResponse> {
     Log.debug('WebSocketService::joinDrawRoom()', roomId, userName, stratId);
+    store.dispatch('app/updateLoading', true);
     await this.connect();
 
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       this.socket.emit('join-draw-room', { targetRoomId: roomId, userName, stratId, map });
+
+      const timeout = setTimeout(() => {
+        Log.error('WebSocketService::joinDrawRoom()', 'Could not join room');
+        store.dispatch('app/updateLoading', false);
+        reject('Could not join room');
+      }, this.socketTimeout);
+
       this.socket.once('draw-room-joined', data => {
         Log.info('ws::drawroom-joined', `Joined room ${data.roomId} as client ${this.socket.id}`);
+        store.dispatch('app/updateLoading', false);
+        clearTimeout(timeout);
         resolve(data);
       });
     });

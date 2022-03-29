@@ -1,4 +1,5 @@
 import { GameMap } from '@/types/enums';
+import { nanoid } from 'nanoid';
 import { Client, DrawBoardState, MapData } from '../types';
 
 export class Room {
@@ -30,6 +31,10 @@ export class Room {
     return color;
   }
 
+  static getRandomUsername() {
+    return `User-${nanoid(5)}`;
+  }
+
   get mapData() {
     return this.maps[this.currentMap];
   }
@@ -44,11 +49,11 @@ export class Room {
     }, []);
   }
 
-  addClient(socketId: string): void {
-    console.log(Room.colors[Object.keys(this.clients).length]);
+  addClient(socketId: string, userName?: string): void {
     this.clients[socketId] = {
       position: { x: 0, y: 0 },
       color: Room.colors[Object.keys(this.clients).length] ?? Room.getRandomColor(),
+      userName: userName || Room.getRandomUsername(),
     };
   }
 

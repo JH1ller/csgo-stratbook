@@ -12,8 +12,8 @@
         v-model="formFields.stratName.value"
       />
       <div class="connection-dialog__actions">
-        <button class="connection-dialog__btn-submit" @click="handleSubmitAttempt">Submit</button>
-        <button class="connection-dialog__btn-cancel" @click="close">Cancel</button>
+        <button class="connection-dialog__btn-submit" type="submit" @click="handleSubmitAttempt">Submit</button>
+        <button class="connection-dialog__btn-cancel" type="button" @click="close">Cancel</button>
       </div>
     </form>
   </BackdropDialog>
@@ -25,7 +25,6 @@ import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
 import TextInput from '@/components/TextInput/TextInput.vue';
 import { validateForm, Validators } from '@/utils/validation';
 import FormField from '@/utils/FormField';
-import { nanoid } from 'nanoid';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
 
 @Component({
@@ -55,7 +54,7 @@ export default class ConnectionDialog extends Mixins(CloseOnEscape) {
   }
 
   mounted() {
-    this.formFields.userName.value = this.userName ?? `User_${nanoid(5)}`;
+    this.formFields.userName.value = this.userName;
     this.formFields.stratName.value = this.stratName;
   }
 }
