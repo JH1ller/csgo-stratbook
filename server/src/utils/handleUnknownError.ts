@@ -1,5 +1,7 @@
+import { Log } from './logger';
+
 export const handleUnknownError = (error: unknown) => {
   if (error instanceof Error) {
-    console.error(error.message);
+    Log.error('unknown-error', error.message);
   }
 };

@@ -9,6 +9,7 @@ declare global {
       S3_BUCKET_NAME: string;
       TOKEN_SECRET: string;
       SENTRY_DSN: string;
+      SOCKET_ADMIN_UI_PW: string;
     }
   }
 }

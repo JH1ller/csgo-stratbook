@@ -4,8 +4,9 @@ import crypto from 'crypto';
 import sharp from 'sharp';
 import { unlinkSync, renameSync, readFileSync, mkdirSync, existsSync } from 'fs';
 import AWS from 'aws-sdk';
-import { Request, NextFunction, RequestHandler } from 'express';
+import { Request, RequestHandler } from 'express';
 import ImageProcessError from './errors/ImageProcessError';
+import { Log } from './logger';
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -95,29 +96,27 @@ export const processImage = async (file: Express.Multer.File, targetWidth: numbe
     await uploadFile(path.resolve(file.destination, targetFileName), targetFileName);
     return targetFileName;
   } catch (error) {
-    console.error(error);
+    Log.error('fileUpload::processImage', error.message);
     throw new ImageProcessError(error);
   }
 };
 
-export const uploadFile = (filepath: string, filename: string) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const fileContent = readFileSync(filepath);
-      const params: AWS.S3.PutObjectRequest = {
-        Bucket: process.env.S3_BUCKET_NAME!,
-        Key: filename, // filename on S3
-        Body: fileContent,
-      };
+export const uploadFile = async (filepath: string, filename: string) => {
+  try {
+    const fileContent = readFileSync(filepath);
+    const params: AWS.S3.PutObjectRequest = {
+      Bucket: process.env.S3_BUCKET_NAME!,
+      Key: filename, // filename on S3
+      Body: fileContent,
+    };
+    const data = await s3.upload(params).promise();
+    Log.success('fileUpload::uploadFile', `File uploaded successfully. ${data.Location}`);
 
-      const data = await s3.upload(params).promise();
-      console.log(`File uploaded successfully. ${data.Location}`);
-      resolve(data.Location);
-    } catch (error) {
-      console.error(error);
-      reject(error);
-    }
-  });
+    return data.Location;
+  } catch (error) {
+    Log.error('fileUpload::uploadFile', error.message);
+    throw error;
+  }
 };
 
 export const deleteFile = async (filename: string): Promise<void> => {
@@ -129,8 +128,7 @@ export const deleteFile = async (filename: string): Promise<void> => {
 
     const data = await s3.deleteObject(params).promise();
 
-    // TODO: check if data.Location is correct, seems to return undefined
-    console.log(`File deleted successfully. ${data.$response.data}`);
+    Log.success('fileUpload::deleteFile', `File deleted successfully. ${data.$response.data}`);
     return;
   } catch (error) {
     throw new Error((error as Error).message);

@@ -19,7 +19,7 @@ export const registerBoardHandler = (io: TypedServer, socket: TypedSocket) => {
     socket.data.drawRoomId = roomId;
 
     boards[roomId] = boards[roomId] ?? new Room(map, stratId);
-    boards[roomId].addClient(socket.id);
+    boards[roomId].addClient(socket.id, userName);
 
     //* only fetch drawData from db for the first user who joins
     if (stratId && Object.keys(boards[roomId].clients).length === 1) {
@@ -32,7 +32,10 @@ export const registerBoardHandler = (io: TypedServer, socket: TypedSocket) => {
       boards[roomId].clients[socket.id].userName = userName;
     }
 
-    Log.info('sockets::join-draw-room', `User ${socket.id} joined room ${roomId}. Map ${boards[roomId].currentMap}`);
+    Log.info(
+      'sockets::join-draw-room',
+      `User ${userName || socket.id} joined room ${roomId}. Map ${boards[roomId].currentMap}`
+    );
 
     io.to(socket.id).emit('draw-room-joined', {
       roomId,

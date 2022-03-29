@@ -3,6 +3,7 @@ import Email from 'email-templates';
 import path from 'path';
 import urljoin from 'url-join';
 import { API_URL, APP_URL } from '@/config';
+import { Log } from '@/utils/logger';
 
 export enum MailTemplate {
   'VERIFY_NEW' = 'verifyNew',
@@ -53,9 +54,9 @@ export const sendMail = async (to: string, token: string, name: string, template
         link,
       },
     });
-    console.log('Successfully sent verification mail with id: ' + res.messageId);
+    Log.success('mailService::sendMail', 'Successfully sent verification mail with id: ' + res.messageId);
   } catch (error) {
-    console.log(error);
+    Log.error('mailService::sendMail', error.message);
     throw new Error(error);
   }
 };
