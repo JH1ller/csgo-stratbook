@@ -45,6 +45,7 @@ class WebSocketService {
     //* Caching connection promise to avoid creating two connections simultaneously.
     if (!this.connectionPromise) {
       this.connectionPromise = new Promise((resolve, reject) => {
+        console.log(this.socket);
         const timeout = setTimeout(() => {
           Log.error('WebSocketService::connect()', 'Could not connect');
           reject('Could not connect');
@@ -72,6 +73,10 @@ class WebSocketService {
           this.reconnect();
         }
 
+        if (this.socket && !this.socket.connected) {
+          this.socket.connect();
+        }
+
         this.socket.once('connect', () => {
           Log.info('ws::connected', 'Websocket connection established.', !!(this.socket.auth as any).token);
           clearTimeout(timeout);
@@ -79,9 +84,11 @@ class WebSocketService {
         });
       });
     }
-
-    await this.connectionPromise;
-    this.connectionPromise = undefined;
+    try {
+      await this.connectionPromise;
+    } finally {
+      this.connectionPromise = undefined;
+    }
   }
 
   get connected(): boolean {
