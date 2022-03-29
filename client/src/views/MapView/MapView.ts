@@ -2,7 +2,6 @@ import { Component, Inject, Ref, Vue } from 'vue-property-decorator';
 import SketchTool from '@/components/SketchTool/SketchTool.vue';
 import ConnectionDialog from './components/ConnectionDialog.vue';
 import StorageService from '@/services/storage.service';
-import { StageState } from '@/components/SketchTool/types';
 import { authModule } from '@/store/namespaces';
 import { Player } from '@/api/models/Player';
 import VueContext from 'vue-context';
@@ -83,7 +82,7 @@ export default class MapView extends Vue {
     } else if (storageRoomId) {
       this.changeRoomId(storageRoomId);
     } else {
-      const previousData = this.storageService.get<StageState>('draw-data');
+      // const previousData = this.storageService.get<StageState>('draw-data');
       // TODO: apply previousData
     }
   }
