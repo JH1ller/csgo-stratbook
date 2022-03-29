@@ -158,6 +158,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       height: this.cursorSize,
       image: item.image,
       class: 'static',
+      visible: item.pointerVisible,
     };
   }
 
@@ -174,6 +175,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       shadowColor: 'black',
       shadowBlur: 6,
       shadowOpacity: 0.8,
+      visible: item.pointerVisible,
     };
   }
 
@@ -952,12 +954,11 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.updateMap(map);
     this.updateStratName(stratName);
     this.applyStageData(drawData);
-    this.remoteClients = clients
-      .map(client => ({
-        ...client,
-        image: createPointerImage(client.color),
-      }))
-      .filter(client => client.id !== this.wsService.socket.id);
+    this.remoteClients = clients.map(client => ({
+      ...client,
+      image: createPointerImage(client.color),
+      pointerVisible: false,
+    }));
 
     // TODO: remove, just for testing
     //this.copyRoomLink();
@@ -1035,6 +1036,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       const remoteClientCursorNode = this.stage.findOne('#cursor_' + remoteClient.id);
       const remoteClientTextNode = this.stage.findOne('#text_' + remoteClient.id);
 
+      remoteClient.pointerVisible = true;
+
       if (remoteClient.timeout) {
         clearTimeout(remoteClient.timeout);
         remoteClient.timeout = undefined;
@@ -1066,7 +1069,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
     this.wsService.socket.on('username-updated', ({ userName, id }) => {
       Log.info('sketchtool::username-updated', { userName, id });
-      if (id === this.wsService.socket.id) return;
       const remoteClient = this.remoteClients.find(i => i.id === id);
       if (remoteClient) {
         remoteClient.userName = userName;
@@ -1083,12 +1085,13 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.wsService.socket.on('map-updated', ({ map, stratName, drawData, id }) => {
       Log.info('sketchtool::map-updated', { map, id, stratName, drawData });
       this.updateMap(map);
+      this.setActiveItems([]);
       this.applyStageData(drawData);
       this.updateStratName(stratName ?? '');
     });
 
     this.wsService.socket.on('client-joined', ({ position, id, color, userName }) => {
-      Log.info('sketchtool::client-joined', userName);
+      Log.info('sketchtool::client-joined', userName, color);
       if (id === this.wsService.socket.id) {
         this.currentColor = color;
       } else {
@@ -1100,6 +1103,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
             color,
             userName,
             image: createPointerImage(color),
+            pointerVisible: false,
           },
         ];
       }

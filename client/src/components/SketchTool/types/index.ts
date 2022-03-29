@@ -38,6 +38,7 @@ export interface RemoteClient {
   image: CanvasImageSource;
   color: string;
   timeout?: NodeJS.Timeout;
+  pointerVisible: boolean;
 }
 
 export enum ToolTypes {
