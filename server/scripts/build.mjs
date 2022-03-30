@@ -6,6 +6,6 @@ await $`tsc`;
 
 await $`cp -r ./src/utils/templates/ ./dist_server/utils/`;
 
-await $`mkdir ./public/upload/`;
+await $`mkdir -p ./public/upload/`;
 
 console.log('\nBuild successful.');
