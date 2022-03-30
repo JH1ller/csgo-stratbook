@@ -4,7 +4,7 @@ cd('../client');
 
 await $`npm run build:staging`;
 await $`git add .`;
-await $`git commit -m "chore: rebuild fe"`;
+await $`git commit -m "chore: rebuild fe" || echo "No changes to commit"`;
 
 cd('..');
 
