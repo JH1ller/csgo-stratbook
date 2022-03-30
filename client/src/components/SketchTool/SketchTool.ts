@@ -957,7 +957,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   async connect(targetRoomId?: string) {
-    const { roomId, stratName, drawData, map, clients, userName } = await this.wsService.joinDrawRoom({
+    const { roomId, stratName, drawData, map, clients, userName, color } = await this.wsService.joinDrawRoom({
       roomId: targetRoomId,
       userName: this.userName,
       stratId: this.stratId,
@@ -971,6 +971,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       clients,
       userName,
     });
+    this.currentColor = color;
     this.updateRoomId(roomId);
     this.updateMap(map);
     this.updateUserName(userName);
@@ -981,9 +982,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       image: createPointerImage(client.color),
       pointerVisible: false,
     }));
-
-    // TODO: remove, just for testing
-    //this.copyRoomLink();
 
     this.setupListeners();
 
@@ -1116,10 +1114,10 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.wsService.socket.on('client-joined', ({ position, id, color, userName }) => {
       Log.info('sketchtool::client-joined', userName, color);
       const clientExists = this.remoteClients.some(client => client.id === id);
-      if (clientExists) return;
+
       if (id === this.wsService.socket.id) {
         this.currentColor = color;
-      } else {
+      } else if (!clientExists) {
         this.remoteClients = [
           ...this.remoteClients,
           {

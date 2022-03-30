@@ -13,6 +13,7 @@ export interface JoinedRoomResponse {
   drawData: StageState;
   clients: Omit<RemoteClient, 'image' | 'timeout'>[];
   userName: string;
+  color: string;
 }
 
 export interface ServerToClientEvents {

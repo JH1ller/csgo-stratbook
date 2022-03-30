@@ -292,3 +292,7 @@
     }
   }
 }
+
+.vue-swatches__trigger {
+  transition: background-color 0.3s ease;
+}

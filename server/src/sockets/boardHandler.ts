@@ -41,6 +41,7 @@ export const registerBoardHandler = (io: TypedServer, socket: TypedSocket) => {
       drawData: boards[roomId].mapData.data,
       clients: boards[roomId].clientsList,
       userName: boards[roomId].clients[socket.id].userName,
+      color: boards[roomId].clients[socket.id].color,
     });
     io.to(roomId).emit('client-joined', { ...boards[roomId].clients[socket.id], id: socket.id });
   });
