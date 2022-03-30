@@ -1,5 +1,9 @@
 #!/usr/bin/env zx
 
+cd('../client');
+
+await $`npm run build:staging`;
+
 cd('..');
 
 await $`git subtree push --prefix server heroku master`;
