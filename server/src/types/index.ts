@@ -11,7 +11,7 @@ export interface MapData {
 }
 
 export interface Client {
-  userName?: string;
+  userName: string;
   color: string;
   position: {
     x: number;
