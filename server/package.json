@@ -6,7 +6,7 @@
     "start": "cross-env TS_NODE_BASEURL=./dist_server node -r tsconfig-paths/register dist_server/index.js",
     "start:pm2": "tsc && cross-env TS_NODE_BASEURL=./dist_server pm2 start dist_server/index.js --node-args=\"-r tsconfig-paths/register\"",
     "serve": "tsnd --respawn --inspect=0.0.0.0:9229 --files -r tsconfig-paths/register src/index.ts",
-    "build": "tsc && cp -r ./src/utils/templates/ ./dist_server/utils/",
+    "build": "zx scripts/build.mjs",
     "postinstall": "npm run build",
     "deploy": "zx scripts/deploy.mjs",
     "showlogs": "heroku logs --remote heroku --tail"

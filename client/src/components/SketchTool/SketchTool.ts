@@ -400,7 +400,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     });
     this.saveStateToHistory();
     this.handleDataChange();
-    this.activeTool = ToolTypes.Pointer;
+    this.setActiveTool(ToolTypes.Pointer);
     await this.$nextTick();
     this.setActiveItems([this.stage.findOne('#' + newId)]);
   }
@@ -443,11 +443,11 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   @Listen('keyup')
-  keyupHandler({ code }: KeyboardEvent) {
-    if (isInputFocussed()) return;
-    switch (code) {
-      case 'Space':
-        this.activeTool = this.previousTool ?? ToolTypes.Pan;
+  keyupHandler({ key }: KeyboardEvent) {
+    if (this.currentText || isInputFocussed()) return;
+    switch (key) {
+      case ' ':
+        this.setActiveTool(this.previousTool ?? ToolTypes.Pan);
         this.previousTool = null;
     }
   }
@@ -459,17 +459,17 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       case ' ':
         if (this.activeTool === ToolTypes.Pan) return;
         this.previousTool = this.activeTool;
-        this.activeTool = ToolTypes.Pan;
+        this.setActiveTool(ToolTypes.Pan);
         break;
       case 'v':
-        this.activeTool = ToolTypes.Pointer;
+        this.setActiveTool(ToolTypes.Pointer);
         break;
       case 'b':
-        this.activeTool = ToolTypes.Brush;
+        this.setActiveTool(ToolTypes.Brush);
         this.pointerRef.getNode().position(this.getScaledPointerPosition());
         break;
       case 't':
-        this.activeTool = ToolTypes.Text;
+        this.setActiveTool(ToolTypes.Text);
         break;
       case 'r':
         this.clearStage();
@@ -526,6 +526,12 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.transformer.nodes(items);
   }
 
+  setActiveTool(tool: ToolTypes): void {
+    this.setActiveItems([]);
+    this.submitText();
+    this.activeTool = tool;
+  }
+
   async handleMouseDown({ target }: KonvaEventObject<MouseEvent>) {
     const pos = this.getScaledPointerPosition();
     const id = nanoid(10);
@@ -565,11 +571,12 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
         }
         break;
       case ToolTypes.Text:
-        if (this.currentText) return;
         if (target instanceof Text) {
+          this.submitText();
           this.currentText = target;
           this.showTextbox();
-        } else {
+        } else if (!this.currentText) {
+          this.submitText();
           this.textItems.push({
             id,
             text: 'Add your text here',
@@ -581,6 +588,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
           await this.$nextTick();
           this.currentText = this.stage.findOne<Text>('#' + id);
           this.showTextbox();
+        } else {
+          this.submitText();
         }
     }
   }
@@ -619,6 +628,19 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.textbox.style.color = color;
   }
 
+  submitText(): void {
+    if (!this.currentText) return;
+    this.textbox.style.display = 'none';
+
+    this.updateItem(this.currentText.attrs.id, {
+      text: this.textbox.innerText,
+    });
+    this.currentText.visible(true);
+    this.currentText = null;
+    this.handleDataChange();
+    this.saveStateToHistory();
+  }
+
   handleTextboxKeydown(e: KeyboardEvent) {
     if (!this.currentText) return;
     switch (e.code) {
@@ -626,17 +648,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       case 'Escape':
         e.preventDefault();
         e.stopPropagation();
-
-        this.textbox.style.display = 'none';
-
-        this.updateItem(this.currentText.attrs.id, {
-          text: this.textbox.innerText,
-        });
-        this.currentText.visible(true);
-        this.currentText = null;
-        this.activeTool = ToolTypes.Pointer;
-        this.handleDataChange();
-        this.saveStateToHistory();
+        this.submitText();
         break;
     }
   }
@@ -843,6 +855,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   handleTextDblClick(event: KonvaEventObject<MouseEvent>) {
+    //* Order is important here.
+    this.setActiveTool(ToolTypes.Text);
     this.currentText = event.target as Text;
     this.showTextbox();
   }

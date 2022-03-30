@@ -68,7 +68,7 @@
       <button
         class="sketch-tool__btn"
         :class="{ '-active': activeTool === ToolTypes.Pointer }"
-        @click="activeTool = ToolTypes.Pointer"
+        @click="setActiveTool(ToolTypes.Pointer)"
         v-tippy
         content="Pointer (V)"
       >
@@ -77,7 +77,7 @@
       <button
         class="sketch-tool__btn"
         :class="{ '-active': activeTool === ToolTypes.Brush }"
-        @click="activeTool = ToolTypes.Brush"
+        @click="setActiveTool(ToolTypes.Brush)"
         v-tippy
         content="Brush (B)"
       >
@@ -86,7 +86,7 @@
       <button
         class="sketch-tool__btn"
         :class="{ '-active': activeTool === ToolTypes.Pan }"
-        @click="activeTool = ToolTypes.Pan"
+        @click="setActiveTool(ToolTypes.Pan)"
         v-tippy
         content="Pan (Space)"
       >
@@ -95,7 +95,7 @@
       <button
         class="sketch-tool__btn"
         :class="{ '-active': activeTool === ToolTypes.Text }"
-        @click="activeTool = ToolTypes.Text"
+        @click="setActiveTool(ToolTypes.Text)"
         v-tippy
         content="Text (T)"
       >
@@ -165,7 +165,7 @@
           </button>
           <div class="sketch-tool__keymap-label">Center board</div>
         </div>
-        <div class="sketch-tool__keymap" @click="activeTool = ToolTypes.Pan">
+        <div class="sketch-tool__keymap" @click="setActiveTool(ToolTypes.Pan)">
           <button class="sketch-tool__key-outer sketch-tool__key-outer--large">
             <div class="sketch-tool__key-inner">Space</div>
           </button>

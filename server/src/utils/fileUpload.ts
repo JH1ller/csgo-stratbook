@@ -47,9 +47,11 @@ export const uploadSingle =
   (req, res, next) => {
     multerInstance.single(field)(req, res, (error) => {
       if (error instanceof multer.MulterError) {
-        return res.status(400).send({ error: error.message });
+        Log.error('fileUpload::uploadSingle', 'MulterError: ', error.message, req.file);
+        return res.status(500).send({ error: 'An error occurred during image upload.' });
       } else if (error) {
-        return res.status(400).send({ error: error });
+        Log.error('fileUpload::uploadSingle', error, req.file);
+        return res.status(500).send({ error: 'An error occurred during image upload.' });
       }
       next();
     });
@@ -60,9 +62,11 @@ export const uploadMultiple =
   (req, res, next) => {
     multerInstance.array(field)(req, res, (error) => {
       if (error instanceof multer.MulterError) {
-        return res.status(400).send({ error: error.message });
+        Log.error('fileUpload::uploadSingle', 'MulterError: ', error.message, req.file);
+        return res.status(500).send({ error: 'An error occurred during image upload.' });
       } else if (error) {
-        return res.status(400).send({ error: error });
+        Log.error('fileUpload::uploadSingle', error, req.file);
+        return res.status(500).send({ error: 'An error occurred during image upload.' });
       }
       next();
     });
