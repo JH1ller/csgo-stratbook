@@ -1,4 +1,4 @@
-import { Component, Mixins, Prop, Ref, Inject, Emit, Watch } from 'vue-property-decorator';
+import { Component, Mixins, Prop, Ref, Inject, Emit } from 'vue-property-decorator';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
 import { appModule } from '@/store/namespaces';
 import { Stage, StageConfig } from 'konva/lib/Stage';
@@ -957,15 +957,23 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   async connect(targetRoomId?: string) {
-    const { roomId, stratName, drawData, map, clients } = await this.wsService.joinDrawRoom({
+    const { roomId, stratName, drawData, map, clients, userName } = await this.wsService.joinDrawRoom({
       roomId: targetRoomId,
       userName: this.userName,
       stratId: this.stratId,
       map: this.map,
     });
-    Log.success('sketchtool::ws:joined', roomId, drawData);
+    Log.success('SketchTool::connect', 'Room joined. Response:', {
+      roomId,
+      stratName,
+      drawData,
+      map,
+      clients,
+      userName,
+    });
     this.updateRoomId(roomId);
     this.updateMap(map);
+    this.updateUserName(userName);
     this.updateStratName(stratName);
     this.applyStageData(drawData);
     this.remoteClients = clients.map(client => ({
@@ -1000,32 +1008,33 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   @Emit()
+  updateUserName(userName: string) {
+    return userName;
+  }
+
+  @Emit()
   updateMap(map: GameMap) {
     return map;
   }
 
-  @Watch('userName')
-  handleUserNameChange(to: string) {
-    console.log('watch username', to);
-    this.wsService.emit('update-username', to);
+  submitUserName(userName: string) {
+    Log.info('Sketchtool::submitUserName', userName);
+    this.wsService.emit('update-username', userName);
   }
 
-  @Watch('stratName')
-  handleStratNameChange(to: string) {
-    console.log('watch stratName', to);
-    this.wsService.emit('update-stratname', to);
+  submitStratName(stratName: string) {
+    Log.info('Sketchtool::submitStratName', stratName);
+    this.wsService.emit('update-stratname', stratName);
   }
 
-  @Watch('roomId')
-  handleRoomChange(to: string) {
-    console.log('watch roomid', to);
-    this.connect(to);
+  connectToRoomId(roomId: string) {
+    Log.info('Sketchtool::connectToRoomId', roomId);
+    this.connect(roomId);
   }
 
-  @Watch('map')
-  handleMapChange(to: string, from: string) {
-    console.log('watch map', from, '->', to);
-    this.wsService.emit('update-map', to);
+  changeMap(map: GameMap) {
+    Log.info('Sketchtool::changeMap', map);
+    this.wsService.emit('update-map', map);
   }
 
   applyStageData({ images, lines, texts }: StageState) {
@@ -1106,6 +1115,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
     this.wsService.socket.on('client-joined', ({ position, id, color, userName }) => {
       Log.info('sketchtool::client-joined', userName, color);
+      const clientExists = this.remoteClients.some(client => client.id === id);
+      if (clientExists) return;
       if (id === this.wsService.socket.id) {
         this.currentColor = color;
       } else {

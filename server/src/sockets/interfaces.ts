@@ -15,6 +15,7 @@ interface ServerToClientEvents {
     stratName: string;
     drawData: DrawBoardState;
     clients: (Client & { id: string })[];
+    userName: string;
   }) => void;
   'client-joined': (payload: Client & { id: string }) => void;
   'client-left': (payload: { clientId: string }) => void;

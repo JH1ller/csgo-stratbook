@@ -22,9 +22,13 @@ export class Room {
     }, {});
   }
 
-  static getRandomColor() {
+  getColor() {
+    let color = Room.colors.find((color) => !Object.values(this.clients).some((client) => client.color === color));
+    if (color) return color;
+
+    //* No unused color found in static array, so we generate a random one
     const letters = '0123456789ABCDEF';
-    let color = '#';
+    color = '#';
     for (var i = 0; i < 6; i++) {
       color += letters[Math.floor(Math.random() * 16)];
     }
@@ -52,7 +56,7 @@ export class Room {
   addClient(socketId: string, userName?: string): void {
     this.clients[socketId] = {
       position: { x: 0, y: 0 },
-      color: Room.colors[Object.keys(this.clients).length] ?? Room.getRandomColor(),
+      color: this.getColor(),
       userName: userName || Room.getRandomUsername(),
     };
   }

@@ -1,15 +1,17 @@
 <template>
   <div class="map-view">
     <SketchTool
+      ref="sketchTool"
       :map="map"
       :userName="userName"
       :stratName="stratName"
       :roomId="roomId"
       :showConfigBtn="true"
       @show-connection-dialog="showConnectionDialog = true"
-      @update-room-id="changeRoomId"
-      @update-strat-name="changeStratName"
-      @update-map="changeMap"
+      @update-room-id="handleRoomIdChange"
+      @update-strat-name="handleStratNameChange"
+      @update-user-name="handleUserNameChange"
+      @update-map="handleMapChange"
     />
     <ConnectionDialog
       v-if="showConnectionDialog"
@@ -29,7 +31,7 @@
         class="map-view__context-link"
         :disabled="!['DUST_2', 'MIRAGE', 'OVERPASS'].includes(id)"
       >
-        <a @click="map = id">
+        <a @click="() => changeMap(id)">
           {{ label }}
         </a>
       </li>

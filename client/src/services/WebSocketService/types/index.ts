@@ -12,6 +12,7 @@ export interface JoinedRoomResponse {
   stratName: string;
   drawData: StageState;
   clients: Omit<RemoteClient, 'image' | 'timeout'>[];
+  userName: string;
 }
 
 export interface ServerToClientEvents {

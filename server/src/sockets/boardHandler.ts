@@ -28,9 +28,6 @@ export const registerBoardHandler = (io: TypedServer, socket: TypedSocket) => {
         boards[roomId].updateData(map, strat.drawData);
       }
     }
-    if (userName) {
-      boards[roomId].clients[socket.id].userName = userName;
-    }
 
     Log.info(
       'sockets::join-draw-room',
@@ -43,6 +40,7 @@ export const registerBoardHandler = (io: TypedServer, socket: TypedSocket) => {
       stratName: boards[roomId].mapData.stratName ?? '',
       drawData: boards[roomId].mapData.data,
       clients: boards[roomId].clientsList,
+      userName: boards[roomId].clients[socket.id].userName,
     });
     io.to(roomId).emit('client-joined', { ...boards[roomId].clients[socket.id], id: socket.id });
   });
