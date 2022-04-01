@@ -66,7 +66,7 @@
       </div>
       <div
         class="strat-item__btn --map"
-        :class="{ '-active': !!strat.drawData }"
+        :class="{ '-active': hasDrawData }"
         @click="showMap"
         content="Open map"
         v-tippy
