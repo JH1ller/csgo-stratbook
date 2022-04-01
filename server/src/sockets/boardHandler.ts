@@ -139,7 +139,8 @@ export const leaveDrawRoomHandler = async (io: TypedServer, socket: TypedSocket)
     }
     try {
       strat.drawData = boards[roomId].mapData.data;
-      await strat.save();
+      const updatedStrat = await strat.save();
+      io.to(player.team.toString()).emit('updated-strat', { strat: updatedStrat.toObject() });
       Log.debug('sockets::leave-draw-room', `Drawdata saved.`);
     } catch (error) {
       Log.error('sockets::leave-draw-room', error.message);
