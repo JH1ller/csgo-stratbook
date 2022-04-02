@@ -87,6 +87,8 @@
   }
 
   &__list-item {
+    position: relative;
+    
     &::after {
       opacity: 0;
       position: absolute;
