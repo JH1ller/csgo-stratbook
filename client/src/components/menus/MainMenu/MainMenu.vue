@@ -5,7 +5,6 @@
         <img
           src="@/assets/icons/logo_small.png"
           class="main-menu__icon main-menu__logo-icon"
-          :class="{ '-loading': loading }"
           alt="Application Logo"
         />
         <span class="main-menu__label main-menu__logo-label">{{ appName }}</span>

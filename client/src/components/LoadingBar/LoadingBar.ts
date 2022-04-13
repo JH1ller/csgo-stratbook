@@ -4,7 +4,7 @@ import { random } from 'lodash-es';
 
 @Component({})
 export default class LoadingBar extends Vue {
-  @appModule.State loading!: boolean;
+  @appModule.State activeRequests!: number;
 
   visible = false;
   width = 0;
@@ -19,9 +19,9 @@ export default class LoadingBar extends Vue {
     };
   }
 
-  @Watch('loading')
-  loadingChanged(to: boolean) {
-    if (to) {
+  @Watch('activeRequests')
+  loadingChanged(to: number) {
+    if (to > 0) {
       if (this.wait) return;
       this.wait = true;
       this.transition = true;

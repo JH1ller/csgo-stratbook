@@ -45,7 +45,6 @@ class WebSocketService {
     //* Caching connection promise to avoid creating two connections simultaneously.
     if (!this.connectionPromise) {
       this.connectionPromise = new Promise((resolve, reject) => {
-        console.log(this.socket);
         const timeout = setTimeout(() => {
           Log.error('WebSocketService::connect()', 'Could not connect');
           reject('Could not connect');
@@ -85,8 +84,10 @@ class WebSocketService {
       });
     }
     try {
+      store.dispatch('app/addRequest');
       await this.connectionPromise;
     } finally {
+      store.dispatch('app/removeRequest');
       this.connectionPromise = undefined;
     }
   }
@@ -111,21 +112,21 @@ class WebSocketService {
     map: GameMap;
   }): Promise<JoinedRoomResponse> {
     Log.debug('WebSocketService::joinDrawRoom()', roomId, userName, stratId);
-    store.dispatch('app/updateLoading', true);
     await this.connect();
 
     return new Promise((resolve, reject) => {
+      store.dispatch('app/addRequest');
       this.socket.emit('join-draw-room', { targetRoomId: roomId, userName, stratId, map });
 
       const timeout = setTimeout(() => {
         Log.error('WebSocketService::joinDrawRoom()', 'Could not join room');
-        store.dispatch('app/updateLoading', false);
+        store.dispatch('app/removeRequest');
         reject('Could not join room');
       }, this.socketTimeout);
 
       this.socket.once('draw-room-joined', data => {
         Log.info('ws::drawroom-joined', `Joined room ${data.roomId} as client ${this.socket.id}`);
-        store.dispatch('app/updateLoading', false);
+        store.dispatch('app/removeRequest');
         clearTimeout(timeout);
         resolve(data);
       });

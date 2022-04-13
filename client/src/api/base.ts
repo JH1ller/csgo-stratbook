@@ -69,7 +69,7 @@ export default class ApiService {
       config => {
         if (store.state.auth.token) {
           config.headers['Authorization'] = store.state.auth.token;
-          store.dispatch('app/updateLoading', true);
+          store.commit('app/ADD_ACTIVE_REQUEST');
           return config;
         } else {
           Log.error('axios::interceptor', 'User not authenticated. Request cancelled.');
@@ -83,11 +83,11 @@ export default class ApiService {
     );
     axiosInstance.interceptors.response.use(
       response => {
-        store.dispatch('app/updateLoading', false);
+        store.commit('app/REMOVE_ACTIVE_REQUEST');
         return response;
       },
       error => {
-        store.dispatch('app/updateLoading', false);
+        store.commit('app/REMOVE_ACTIVE_REQUEST');
         Log.error('axios::interceptor', error.response.data.error);
         if (error.response.status === 401) {
           if (router.currentRoute.name !== RouteNames.Login) router.push(Routes.Login);

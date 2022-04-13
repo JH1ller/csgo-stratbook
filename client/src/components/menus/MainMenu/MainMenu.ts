@@ -14,7 +14,6 @@ export default class MainMenu extends Vue {
   @Inject() private trackingService!: TrackingService;
   @authModule.State profile!: Player;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
-  @appModule.State private loading!: boolean;
   @Prop() private menuOpen!: boolean;
 
   private Routes: typeof Routes = Routes;

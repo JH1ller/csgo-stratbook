@@ -5,7 +5,8 @@ import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { Breakpoints } from '@/services/breakpoint.service';
 import { nanoid } from 'nanoid';
 
-const SET_LOADING = 'SET_LOADING';
+const ADD_ACTIVE_REQUEST = 'ADD_ACTIVE_REQUEST';
+const REMOVE_ACTIVE_REQUEST = 'REMOVE_ACTIVE_REQUEST';
 const SHOW_TOAST = 'SHOW_TOAST';
 const HIDE_TOAST = 'HIDE_TOAST';
 const OPEN_DIALOG = 'OPEN_DIALOG';
@@ -16,7 +17,7 @@ const SET_BREAKPOINT = 'SET_BREAKPOINT';
 const RESET_STATE = 'RESET_STATE';
 
 export interface AppState {
-  loading: boolean;
+  activeRequests: number;
   toasts: Toast[];
   openDialogs: Dialog[];
   latency: number;
@@ -25,7 +26,7 @@ export interface AppState {
 }
 
 const appInitialState = (): AppState => ({
-  loading: false,
+  activeRequests: 0,
   toasts: [],
   openDialogs: [],
   latency: 0,
@@ -40,6 +41,9 @@ export const appModule: Module<AppState, RootState> = {
     isMobile(state): boolean {
       return state.breakpoint === Breakpoints.MQ1 || state.breakpoint === Breakpoints.MQ2;
     },
+    loading(state): boolean {
+      return state.activeRequests > 0;
+    }
   },
   actions: {
     showToast({ commit, state }, toast: Toast) {
@@ -57,8 +61,11 @@ export const appModule: Module<AppState, RootState> = {
     hideToast({ commit }) {
       commit(HIDE_TOAST);
     },
-    updateLoading({ commit }, value: boolean) {
-      commit(SET_LOADING, value);
+    addRequest({ commit }) {
+      commit(ADD_ACTIVE_REQUEST);
+    },
+    removeRequest({ commit }) {
+      commit(REMOVE_ACTIVE_REQUEST);
     },
     showDialog({ commit, state }, dialogData: Partial<Dialog>) {
       return new Promise<void>((resolve, reject) => {
@@ -95,8 +102,11 @@ export const appModule: Module<AppState, RootState> = {
     },
   },
   mutations: {
-    [SET_LOADING](state, payload) {
-      state.loading = payload;
+    [ADD_ACTIVE_REQUEST](state) {
+      ++state.activeRequests;
+    },
+    [REMOVE_ACTIVE_REQUEST](state) {
+      --state.activeRequests;
     },
     [SHOW_TOAST](state, toast: Toast) {
       state.toasts.push(toast);
