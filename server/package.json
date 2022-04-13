@@ -2,6 +2,9 @@
   "name": "csgo-stratbook",
   "version": "1.0.0",
   "description": "",
+  "engines": {
+    "node": "14.15.x"
+  },
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
@@ -38,7 +41,7 @@
     "helmet": "^3.23.1",
     "html-minifier": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.6",
     "mongodb": "^3.5.9",
     "mongoose": "^5.12.10",
     "mongoose-delete": "^0.5.2",
@@ -48,7 +51,7 @@
     "nodemailer": "^6.6.1",
     "pug": "^3.0.1",
     "sanitize-html": "^2.3.2",
-    "sharp": "^0.25.4",
+    "sharp": "^0.30.3",
     "socket.io": "^2.4.0",
     "url-join": "^4.0.1"
   },

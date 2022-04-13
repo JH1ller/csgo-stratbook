@@ -35,13 +35,8 @@
 
 <script lang="ts">
 import { Component, Emit, Vue } from 'vue-property-decorator';
-import Button from '@/components/Button.vue';
 
-@Component({
-  components: {
-    Button
-  }
-})
+@Component({})
 export default class CookieBanner extends Vue {
   private analyticsChecked = false;
 
