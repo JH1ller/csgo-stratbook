@@ -413,7 +413,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     }, {});
 
     // cache available map images
-    this.mapImages = [GameMap.Dust2, GameMap.Mirage, GameMap.Overpass, GameMap.Nuke].reduce<
+    this.mapImages = [GameMap.Dust2, GameMap.Mirage, GameMap.Overpass, GameMap.Nuke, GameMap.Vertigo].reduce<
       Record<any, HTMLImageElement>
     >((acc, map) => {
       acc[map] = createMapImage(map);
