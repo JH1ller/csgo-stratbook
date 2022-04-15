@@ -25,7 +25,7 @@ export default class MapView extends Vue {
   @Ref() mapPicker!: Vue & any;
   @Ref() sketchTool!: ISketchTool;
   GameMap = GameMap;
-  mapTable = gameMapTable;
+  mapTable = Object.entries(gameMapTable) as [GameMap, string][];
 
   map = GameMap.Dust2;
   userName = '';

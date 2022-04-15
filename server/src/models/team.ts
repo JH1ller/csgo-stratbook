@@ -82,7 +82,7 @@ teamSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
 
 teamSchema.pre('save', function (next) {
   if (this.isModified()) {
-    this.modifiedAt = Date.now();
+    this.modifiedAt = new Date();
   }
   next();
 });

@@ -116,8 +116,8 @@ stratSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
 
 stratSchema.pre('save', function (next) {
   if (this.isModified()) {
-    this.modifiedAt = Date.now();
-    if (this.$locals.playerId) this.modifiedBy = this.$locals.playerId;
+    this.modifiedAt = new Date();
+    if (this.$locals.playerId) this.modifiedBy = this.$locals.playerId as Types.ObjectId;
   }
   next();
 });

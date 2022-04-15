@@ -36,7 +36,7 @@ router.post('/', verifyAuth, async (req, res) => {
     note: req.body.note,
     team: res.locals.player.team,
     createdBy: res.locals.player._id,
-    createdAt: Date.now(),
+    createdAt: new Date(),
   });
 
   strat.$locals.playerId = res.locals.player._id;
@@ -71,7 +71,7 @@ router.post('/share/:id', verifyAuth, async (req, res) => {
     types: strat.types,
     map: strat.map,
     createdBy: res.locals.player._id,
-    createdAt: Date.now(),
+    createdAt: new Date(),
   });
 
   await stratCopy.save();

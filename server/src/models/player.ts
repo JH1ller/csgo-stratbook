@@ -88,7 +88,7 @@ playerSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
 
 playerSchema.pre('save', function (next) {
   if (this.isModified() && !this.$locals.skipModified) {
-    this.modifiedAt = Date.now();
+    this.modifiedAt = new Date();
   }
   next();
 });
