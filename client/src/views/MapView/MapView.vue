@@ -29,7 +29,7 @@
         v-for="[id, label] in Object.entries(mapTable)"
         :key="id"
         class="map-view__context-link"
-        :disabled="!['DUST_2', 'MIRAGE', 'OVERPASS', 'NUKE', 'VERTIGO', 'INFERNO'].includes(id)"
+        :disabled="['TRAIN', 'ANCIENT'].includes(id)"
       >
         <a @click="() => changeMap(id)">
           {{ label }}

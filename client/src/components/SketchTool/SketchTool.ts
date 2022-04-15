@@ -32,7 +32,7 @@ import { timeout } from '@/utils/timeout';
 import { Vector2d } from 'konva/lib/types';
 import { Log } from '@/utils/logger';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
-import { KonvaRef, ImageItem, LineItem, TextItem, ToolTypes, StageState, RemoteClient } from './types';
+import { KonvaRef, ImageItem, LineItem, TextItem, ToolTypes, StageState, RemoteClient, StoredStageState } from './types';
 import urljoin from 'url-join';
 import StorageService from '@/services/storage.service';
 import { writeToClipboard } from '@/utils/writeToClipboard';
@@ -704,7 +704,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     // only add point if distance to previous point is over linePrecision value
     if (Math.hypot(pos.x - prevX, pos.y - prevY) > this.linePrecision) {
       points.push(pos.x, pos.y);
-      this.handleDataChange();
+      this.handleDataChange(false);
     }
     points[points.length - 2] = pos.x;
     points[points.length - 1] = pos.y;
@@ -746,7 +746,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     if (target instanceof KonvaImage || target instanceof Text || target instanceof Line) {
       const { id, x, y } = target.attrs;
       this.updateItem(id, { x, y });
-      this.handleDataChange();
+      this.handleDataChange(false);
       return;
     }
     if (target instanceof Stage) {
@@ -839,7 +839,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
         const { id, rotation, scaleX, scaleY, skewX, skewY, x, y } = item.attrs;
         this.updateItem(id, { rotation, scaleX, scaleY, skewX, skewY, x, y });
       }
-      this.handleDataChange();
+      this.handleDataChange(false);
       return;
     }
   }
@@ -873,32 +873,37 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.setTextboxColor(color);
   }
 
-  get handleDataChange(): DebouncedFunc<() => void> {
-    return throttle(() => {
+  get handleDataChange(): DebouncedFunc<(serialize?: boolean) => void> {
+    return throttle((serialize = true) => {
       if (this.wsService.connected) {
         this.wsService.emit('update-data', {
           images: this.imageItems,
           lines: this.lineItems,
           texts: this.textItems,
         });
-      } else {
+      } else if (serialize) {
         this.serializeAndStore();
       }
     }, 50);
   }
 
   serializeAndStore(): void {
+    const existingData = this.storageService.get<StoredStageState>('draw-data');
+    
     const json = JSON.stringify({
-      images: this.imageItems,
-      lines: this.lineItems,
-      texts: this.textItems,
+      ...existingData,
+      [this.map]: {
+        images: this.imageItems,
+        lines: this.lineItems,
+        texts: this.textItems,
+      }
     });
     this.storageService.set('draw-data', json);
   }
 
   loadFromStorage(): void {
-    const data = this.storageService.get('draw-data');
-    if (data) this.applyStageData(data);
+    const data = this.storageService.get<StoredStageState>('draw-data');
+    this.applyStageData(data?.[this.map] ?? {});
   }
 
   // TODO: this is a bit buggy when undoing a change, then creating a new one
@@ -1036,10 +1041,16 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   changeMap(map: GameMap) {
     Log.info('Sketchtool::changeMap', map);
-    this.wsService.emit('update-map', map);
+    if (this.wsService.connected) {
+      this.wsService.emit('update-map', map);
+    } else {
+      this.updateMap(map);
+      this.setActiveItems([]);
+      this.$nextTick().then(() => this.loadFromStorage());
+    }
   }
 
-  applyStageData({ images, lines, texts }: StageState) {
+  applyStageData({ images, lines, texts }: Partial<StageState>) {
     this.imageItems = images ?? [];
     this.lineItems = lines ?? [];
     this.textItems = texts ?? [];

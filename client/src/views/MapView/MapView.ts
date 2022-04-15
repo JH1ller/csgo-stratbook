@@ -9,6 +9,7 @@ import VueContext from 'vue-context';
 import { GameMap, gameMapTable } from '@/api/models/GameMap';
 import SmartImage from '@/components/SmartImage/SmartImage.vue';
 import { Log } from '@/utils/logger';
+import { StoredStageState } from '@/components/SketchTool/types';
 
 @Component({
   components: {
@@ -63,6 +64,7 @@ export default class MapView extends Vue {
   handleMapChange(map: GameMap) {
     Log.info('MapView::changeMap', map);
     this.map = map;
+    this.storageService.set('draw-map', map);
   }
 
   changeMap(map: GameMap) {
@@ -98,8 +100,10 @@ export default class MapView extends Vue {
     } else if (storageRoomId) {
       this.sketchTool.connectToRoomId(storageRoomId);
     } else {
-      // const previousData = this.storageService.get<StageState>('draw-data');
-      // TODO: apply previousData
+      const previousData = this.storageService.get<StoredStageState>('draw-data');
+      const previousMap = this.storageService.get<GameMap>('draw-map');
+      if (previousMap) this.map = previousMap;
+      if (previousData?.[this.map]) this.sketchTool.applyStageData(previousData[this.map]);
     }
   }
 }

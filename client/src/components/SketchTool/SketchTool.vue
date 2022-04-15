@@ -14,14 +14,14 @@
         @dragend="handleMoveEnd"
         @dragmove="handleMoveTick"
         @mousedown="handleMouseDown"
-        @touchstart="handleMouseDown"
+        @touchstart.passive="handleMouseDown"
         @mousemove="handleMouseMove"
-        @touchmove="handleMouseMove"
+        @touchmove.passive="handleMouseMove"
         @mouseup="handleMouseUp"
-        @touchup="handleMouseUp"
+        @touchup.passive="handleMouseUp"
         @mouseenter="handleMouseEnter"
         @mouseleave="handleMouseLeave"
-        @wheel="handleZoom"
+        @wheel.passive="handleZoom"
       >
         <!-- Background layer without events -->
         <v-layer :config="{ listening: false }">

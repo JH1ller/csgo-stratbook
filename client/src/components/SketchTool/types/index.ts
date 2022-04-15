@@ -1,3 +1,4 @@
+import { GameMap } from '@/api/models/GameMap';
 import { UtilityTypes } from '@/api/models/UtilityTypes';
 import { ImageConfig } from 'konva/lib/shapes/Image';
 import { LineConfig } from 'konva/lib/shapes/Line';
@@ -53,3 +54,5 @@ export interface StageState {
   lines: LineItem[];
   texts: TextItem[];
 }
+
+export type StoredStageState = Record<GameMap, StageState>;
