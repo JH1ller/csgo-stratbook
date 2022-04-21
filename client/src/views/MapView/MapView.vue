@@ -26,7 +26,7 @@
     </div>
     <vue-context ref="mapPicker">
       <li
-        v-for="[id, label] in Object.entries(mapTable)"
+        v-for="[id, label] in mapTable"
         :key="id"
         class="map-view__context-link"
         :disabled="['TRAIN', 'ANCIENT'].includes(id)"

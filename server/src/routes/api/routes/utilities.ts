@@ -38,7 +38,7 @@ router.post('/', verifyAuth, uploadMultiple('images'), async (req, res) => {
     description: req.body.description,
     team: res.locals.player.team,
     createdBy: res.locals.player._id,
-    createdAt: Date.now(),
+    createdAt: new Date(),
   });
 
   if (req.files && Array.isArray(req.files)) {
