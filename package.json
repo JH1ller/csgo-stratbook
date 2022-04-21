@@ -1,0 +1,8 @@
+{
+  "name": "csgo-stratbook",
+  "workspaces": [
+    "client",
+    "landingpage",
+    "server"
+  ]
+}
