@@ -34,6 +34,7 @@ module.exports = {
     }
     config.devtool = process.env.NODE_ENV !== 'production' ? 'eval-source-map' : false;
   },
+  transpileDependencies: [],
   pluginOptions: {
     electronBuilder: {
       nodeIntegration: true,
