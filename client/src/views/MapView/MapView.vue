@@ -25,12 +25,7 @@
       <span class="map-view__map-label">{{ mapTable[map] }}</span>
     </div>
     <vue-context ref="mapPicker">
-      <li
-        v-for="[id, label] in mapTable"
-        :key="id"
-        class="map-view__context-link"
-        :disabled="['TRAIN', 'ANCIENT'].includes(id)"
-      >
+      <li v-for="[id, label] in mapTable" :key="id" class="map-view__context-link" :disabled="['ANCIENT'].includes(id)">
         <a @click="() => changeMap(id)">
           {{ label }}
         </a>

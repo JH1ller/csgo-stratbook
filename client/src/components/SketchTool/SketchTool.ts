@@ -32,7 +32,16 @@ import { timeout } from '@/utils/timeout';
 import { Vector2d } from 'konva/lib/types';
 import { Log } from '@/utils/logger';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
-import { KonvaRef, ImageItem, LineItem, TextItem, ToolTypes, StageState, RemoteClient, StoredStageState } from './types';
+import {
+  KonvaRef,
+  ImageItem,
+  LineItem,
+  TextItem,
+  ToolTypes,
+  StageState,
+  RemoteClient,
+  StoredStageState,
+} from './types';
 import urljoin from 'url-join';
 import StorageService from '@/services/storage.service';
 import { writeToClipboard } from '@/utils/writeToClipboard';
@@ -420,6 +429,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       GameMap.Nuke,
       GameMap.Vertigo,
       GameMap.Inferno,
+      GameMap.Train,
     ].reduce<Record<any, HTMLImageElement>>((acc, map) => {
       acc[map] = createMapImage(map);
       return acc;
@@ -889,14 +899,14 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   serializeAndStore(): void {
     const existingData = this.storageService.get<StoredStageState>('draw-data');
-    
+
     const json = JSON.stringify({
       ...existingData,
       [this.map]: {
         images: this.imageItems,
         lines: this.lineItems,
         texts: this.textItems,
-      }
+      },
     });
     this.storageService.set('draw-data', json);
   }
