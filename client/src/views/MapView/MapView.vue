@@ -22,7 +22,7 @@
     />
     <div class="map-view__map-btn" @click.prevent="openContextMenu">
       <SmartImage :src="mapImage" class="map-view__map-img" />
-      <span class="map-view__map-label">{{ mapTable[map] }}</span>
+      <span class="map-view__map-label">{{ mapLabel }}</span>
     </div>
     <vue-context ref="mapPicker">
       <li v-for="[id, label] in mapTable" :key="id" class="map-view__context-link" :disabled="['ANCIENT'].includes(id)">

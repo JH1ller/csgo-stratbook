@@ -21,7 +21,7 @@
         @touchup.passive="handleMouseUp"
         @mouseenter="handleMouseEnter"
         @mouseleave="handleMouseLeave"
-        @wheel.passive="handleZoom"
+        @wheel="handleZoom"
       >
         <!-- Background layer without events -->
         <v-layer :config="{ listening: false }">

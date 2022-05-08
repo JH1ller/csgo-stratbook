@@ -75,6 +75,10 @@ export default class MapView extends Vue {
     return `maps/${this.map.toLowerCase()}.jpg`;
   }
 
+  get mapLabel() {
+    return gameMapTable[this.map];
+  }
+
   openContextMenu(e: MouseEvent) {
     e.preventDefault();
     e.stopImmediatePropagation();
