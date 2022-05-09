@@ -9,7 +9,8 @@ cd('..');
 await $`git add .`;
 await $`git commit -m "chore: rebuild fe" || echo "No changes to commit"`;
 
-await $`git subtree push --prefix server heroku master`;
-//await $`git push heroku \`git subtree split --prefix server master\`:master --force`;
+const branchName = await $`git branch --show-current`;
+
+await $`git push heroku \`git subtree split --prefix server ${branchName}\`:master --force`;
 
 console.log('done!');
