@@ -11,7 +11,7 @@ svg:not(:root) {
 html,
 body {
   height: 100%;
-  overflow: overlay;
+  overflow: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   * {

@@ -9,15 +9,13 @@
         {{ $t('index.hero.subline') }}
       </p>
       <div class="hero__button-wrapper">
-        <Button type="primary" class="hero__button"
-          ><a href="https://app.stratbook.live/">{{
-            $t('index.hero.btnOpenApp')
-          }}</a></Button
-        >
-        <Button type="secondary" class="hero__button"
-          ><a href="https://app.stratbook.live/#/register">{{
-            $t('index.hero.btnRegister')
-          }}</a></Button
+        <a class="hero__button-app" href="https://app.stratbook.live/">{{
+          $t('index.hero.btnOpenApp')
+        }}</a>
+        <a
+          class="hero__button-register"
+          href="https://app.stratbook.live/#/register"
+          >{{ $t('index.hero.btnRegister') }}</a
         >
       </div>
     </div>
@@ -38,13 +36,8 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Button from '@/components/Button.vue';
 
-@Component({
-  components: {
-    Button,
-  },
-})
+@Component({})
 export default class Hero extends Vue {}
 </script>
 
@@ -191,12 +184,21 @@ export default class Hero extends Vue {}
     }
   }
 
-  &__button {
+  &__button-app,
+  &__button-register {
     width: 100%;
 
     @include viewport_mq2 {
       width: unset;
     }
+  }
+
+  &__button-app {
+    @include button-primary;
+  }
+
+  &__button-register {
+    @include button-secondary;
   }
 }
 </style>
