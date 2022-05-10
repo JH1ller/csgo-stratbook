@@ -8,7 +8,6 @@ import FilterButton from '@/components/FilterButton/FilterButton.vue';
 import UtilityFilterForm from '@/components/UtilityFilterForm/UtilityFilterForm.vue';
 import FilterMenu from '@/components/FilterMenu/FilterMenu.vue';
 import { appModule, filterModule, mapModule, utilityModule } from '@/store/namespaces';
-import { MapID } from '@/components/MapPicker/MapPicker';
 import { Utility } from '@/api/models/Utility';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { UtilityTypes } from '@/api/models/UtilityTypes';
@@ -16,6 +15,7 @@ import { Sides } from '@/api/models/Sides';
 import { UtilityFilters } from '@/store/modules/filter';
 import { catchPromise } from '@/utils/catchPromise';
 import ShortcutService from '@/services/shortcut.service';
+import { GameMap } from '@/api/models/GameMap';
 
 @Component({
   components: {
@@ -30,9 +30,9 @@ import ShortcutService from '@/services/shortcut.service';
   },
 })
 export default class UtilityView extends Vue {
-  @mapModule.State currentMap!: MapID;
+  @mapModule.State currentMap!: GameMap;
   @utilityModule.Getter sortedFilteredUtilitiesOfCurrentMap!: Utility[];
-  @mapModule.Action updateCurrentMap!: (mapID: MapID) => Promise<void>;
+  @mapModule.Action updateCurrentMap!: (mapID: GameMap) => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
 
   @filterModule.State utilityFilters!: UtilityFilters;
@@ -96,7 +96,7 @@ export default class UtilityView extends Vue {
         key: 'utility-view/confirm-delete',
         text: 'Are you sure you want to delete this utility?',
       }),
-      () => this.deleteUtility(utility._id)
+      () => this.deleteUtility(utility._id),
     );
   }
 
@@ -106,7 +106,7 @@ export default class UtilityView extends Vue {
         key: 'utility-view/confirm-share',
         text: 'Do you want to create a share-link to let other teams add this utility to their stratbook?',
       }),
-      () => this.shareUtility(utility._id)
+      () => this.shareUtility(utility._id),
     );
   }
 

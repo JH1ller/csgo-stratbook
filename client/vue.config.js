@@ -1,9 +1,5 @@
 const path = require('path');
 
-const electronConfig = {
-  target: 'electron-renderer',
-};
-
 function getPublishConfig() {
   return process.env.PUBLISHTO === 'prod'
     ? {
@@ -18,7 +14,7 @@ function getPublishConfig() {
 }
 
 module.exports = {
-  publicPath: '/',
+  publicPath: process.env.NODE_ENV === 'staging' ? '/app/' : '/',
   outputDir: path.resolve(__dirname, '../server/dist_app'),
   pages: {
     index: 'src/main.ts',
@@ -32,7 +28,13 @@ module.exports = {
     },
   },
   parallel: 4,
-  configureWebpack: process.env.BUILD_TARGET === 'ELECTRON' ? electronConfig : {},
+  configureWebpack: config => {
+    if (process.env.BUILD_TARGET === 'ELECTRON') {
+      config.target = 'electron-renderer';
+    }
+    config.devtool = process.env.NODE_ENV !== 'production' ? 'eval-source-map' : false;
+  },
+  transpileDependencies: [],
   pluginOptions: {
     electronBuilder: {
       nodeIntegration: true,

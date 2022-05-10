@@ -1,5 +1,6 @@
 <template>
   <div class="app">
+    <LoadingBar />
     <div class="app__version-wrapper">
       <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi"/></span>
       <span class="app__version">{{ appVersion }}</span>
@@ -10,7 +11,11 @@
       <MainMenu v-show="!gameMode" :menuOpen="menuOpen" @toggle-menu="toggleMenu" @close-menu="closeMenu" />
     </transition>
     <transition name="fade" mode="out-in">
-      <router-view @click.native="closeMenu" class="router-view" :class="{ '-game-mode': gameMode }"></router-view>
+      <router-view
+        @click.native="closeMenu"
+        class="router-view"
+        :class="{ '-game-mode': gameMode, '-fullscreen': $route.meta.fullscreen }"
+      ></router-view>
     </transition>
     <transition name="fade">
       <CookieBanner v-if="showCookieBanner && isDesktop === false" @close="closeCookieBanner" />
@@ -20,8 +25,7 @@
 
 <script lang="ts">
 import { Component, Provide, Vue } from 'vue-property-decorator';
-import ViewTitle from '@/components/ViewTitle/ViewTitle.vue';
-import Loader from '@/components/Loader/Loader.vue';
+import LoadingBar from '@/components/LoadingBar/LoadingBar.vue';
 import ToastWrapper from '@/components/ToastWrapper/ToastWrapper.vue';
 import MainMenu from '@/components/menus/MainMenu/MainMenu.vue';
 import DialogWrapper from './components/DialogWrapper/DialogWrapper.vue';
@@ -35,11 +39,11 @@ import StorageService from './services/storage.service';
 import { gt, major, minor } from 'semver';
 import { Breakpoints } from './services/breakpoint.service';
 import { Team } from './api/models/Team';
+import WebSocketService from './services/WebSocketService';
 
 @Component({
   components: {
-    ViewTitle,
-    Loader,
+    LoadingBar,
     MainMenu,
     ToastWrapper,
     DialogWrapper,
@@ -47,8 +51,9 @@ import { Team } from './api/models/Team';
   },
 })
 export default class App extends Vue {
-  @Provide() trackingService: TrackingService = TrackingService.getInstance();
-  @Provide() storageService: StorageService = StorageService.getInstance();
+  @Provide() trackingService = TrackingService.getInstance();
+  @Provide() storageService = StorageService.getInstance();
+  wsService = WebSocketService.getInstance();
 
   @appModule.State latency!: number;
   @appModule.State gameMode!: boolean;
@@ -84,7 +89,11 @@ export default class App extends Vue {
       this.checkCookies();
     }
     this.checkVersion();
-    window.twttr.widgets.load();
+    window.twttr?.widgets.load();
+
+    window.onbeforeunload = () => {
+      this.wsService.disconnect();
+    };
   }
 
   private checkVersion() {
@@ -100,7 +109,7 @@ export default class App extends Vue {
           resolveBtn: 'OK',
           confirmOnly: true,
           htmlMode: true,
-        })
+        }),
       );
     }
     this.storageService.set('version', this.appVersion);
@@ -118,7 +127,7 @@ export default class App extends Vue {
           resolveBtn: 'Restart',
           htmlMode: true,
         }),
-        () => ipcRenderer.send('restart-app')
+        () => ipcRenderer.send('restart-app'),
       );
     });
 
@@ -127,8 +136,8 @@ export default class App extends Vue {
   }
 
   private checkCookies() {
-    const bannerShown = this.getCookie('bannerShown');
-    const allowAnalytics = this.getCookie('allowAnalytics');
+    const bannerShown = this.getCookie('bannerShown') === 'true' || this.storageService.get('bannerShown');
+    const allowAnalytics = this.getCookie('allowAnalytics') === 'true' || this.storageService.get('allowAnalytics');
 
     if (!bannerShown) this.showCookieBanner = true;
 
@@ -194,6 +203,10 @@ export default class App extends Vue {
     width: calc(100% - 70px);
     padding: 24px;
     transition: margin-left 0.3s ease, width 0.3s ease;
+
+    &.-fullscreen {
+      padding: 0;
+    }
 
     &.-game-mode {
       margin-left: 0;

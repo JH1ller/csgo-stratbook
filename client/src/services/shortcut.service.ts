@@ -1,5 +1,3 @@
-import { Log } from '@/utils/logger';
-import splitbee from '@splitbee/web';
 import { Shortcuts } from 'shortcuts';
 import { ShortcutDescriptor } from 'shortcuts/dist/types';
 

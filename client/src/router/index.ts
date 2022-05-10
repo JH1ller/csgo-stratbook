@@ -11,12 +11,10 @@ import { utilityResolver } from '@/views/UtilityView/UtilityView.resolver';
 import LoginView from '@/views/LoginView/LoginView.vue';
 import StratsView from '@/views/StratsView/StratsView.vue';
 import StorageService from '@/services/storage.service';
-import TrackingService from '@/services/tracking.service';
 
 Vue.use(VueRouter);
 
 const storageService = StorageService.getInstance();
-const trackingService = TrackingService.getInstance();
 
 const routes = [
   {
@@ -51,6 +49,14 @@ const routes = [
     path: '/reset',
     name: RouteNames.ResetPassword,
     component: () => import('@/views/ResetPasswordView/ResetPasswordView.vue'),
+  },
+  {
+    path: '/map/:roomId?',
+    name: RouteNames.Map,
+    component: () => import('@/views/MapView/MapView.vue'),
+    meta: {
+      fullscreen: true,
+    },
   },
   {
     path: '/forgot-password',

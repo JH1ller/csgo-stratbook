@@ -14,7 +14,6 @@ export default class MainMenu extends Vue {
   @Inject() private trackingService!: TrackingService;
   @authModule.State profile!: Player;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
-  @appModule.State private loading!: boolean;
   @Prop() private menuOpen!: boolean;
 
   private Routes: typeof Routes = Routes;
@@ -33,6 +32,12 @@ export default class MainMenu extends Vue {
         icon: 'bomb',
         link: '/utility',
         show: !!this.profile?.team,
+      },
+      {
+        label: 'Map',
+        icon: 'map',
+        link: '/map',
+        show: true,
       },
       {
         label: 'Team',
@@ -63,7 +68,7 @@ export default class MainMenu extends Vue {
         this.trackingService.track('Action: Download Desktop Client');
         // TODO: consider if we should just insert current version here
         window.open('https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+1.9.0.exe');
-      }
+      },
     );
     this.trackingService.track('Click: Get Desktop Client');
   }
@@ -76,6 +81,11 @@ export default class MainMenu extends Vue {
   private openDiscord() {
     this.trackingService.track('Click: Open Discord');
     openLink('https://discord.com/invite/mkxzQJGRgq');
+  }
+
+  private openGithub() {
+    this.trackingService.track('Click: Open Github');
+    openLink('https://github.com/JH1ller/csgo-stratbook');
   }
 
   private openDonationLink() {

@@ -142,7 +142,7 @@ table {
   border-spacing: 0;
 }
 
-*:focus {
+*:not([type='text']):focus {
   outline: none;
 }
 
@@ -166,11 +166,11 @@ textarea {
 
   /* Browsers have different default form fonts */
   font-size: 13px;
- // font-family: Open Sans, Arial, sans-serif;
+  // font-family: Open Sans, Arial, sans-serif;
 }
 
 /* Remove the stupid outer glow in Webkit */
-input:focus {
+input:not([type='text']):focus {
   outline: 0;
 }
 

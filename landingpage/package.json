@@ -1,6 +1,6 @@
 {
-  "name": "landingpage",
-  "version": "1.0.0",
+  "name": "csgo-stratbook-landingpage",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "dev": "nuxt-ts",

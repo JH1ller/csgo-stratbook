@@ -186,13 +186,14 @@
       }
     }
 
-    &.--share {
-      &.-shared {
-        box-shadow: 0 0 2px $color--green;
-        & > svg > path {
-          fill: $color--green;
-        }
+    &.-active {
+      box-shadow: 0 0 2px $color--green;
+      & > svg > path {
+        fill: $color--green;
       }
+    }
+
+    &.--share {
     }
 
     &.--save,

@@ -1,5 +1,5 @@
 <template>
-  <div class="utility-lightbox">
+  <BackdropDialog :fullscreen="true" @close="close">
     <div class="utility-lightbox__media-wrapper">
       <iframe
         v-if="currentMedia && currentMedia.type === 'video'"
@@ -40,7 +40,6 @@
         alt="Lightbox image preview"
       />
     </div>
-    <fa-icon icon="times" class="utility-lightbox__close" @click="close" />
     <div class="utility-lightbox__badge-wrapper">
       <div class="utility-lightbox__side-wrapper">
         <img
@@ -119,7 +118,7 @@
         </div>
       </div>
     </span>
-  </div>
+  </BackdropDialog>
 </template>
 
 <script lang="ts" src="./UtilityLightbox.ts"></script>

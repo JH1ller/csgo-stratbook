@@ -1,17 +1,19 @@
+import { Component, Mixins, Prop } from 'vue-property-decorator';
 import { Sides } from '@/api/models/Sides';
 import { Utility } from '@/api/models/Utility';
 import { UtilityMovement } from '@/api/models/UtilityMovement';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
-import { Component, Mixins, Prop } from 'vue-property-decorator';
 import MouseButtonDisplay from '@/components/MouseButtonDisplay/MouseButtonDisplay.vue';
 import UtilityTypeDisplay from '@/components/UtilityTypeDisplay/UtilityTypeDisplay.vue';
 import SmartImage from '@/components/SmartImage/SmartImage.vue';
+import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
 import isMobile from 'is-mobile';
 import { extractTimestamp, extractVideoId, getEmbedURL, getThumbnailURL } from '@/utils/youtubeUtils';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import { appModule } from '@/store/namespaces';
 import TrackingService from '@/services/tracking.service';
+import { writeToClipboard } from '@/utils/writeToClipboard';
 
 interface LightboxMedia {
   type: 'image' | 'video';
@@ -23,6 +25,7 @@ interface LightboxMedia {
     MouseButtonDisplay,
     UtilityTypeDisplay,
     SmartImage,
+    BackdropDialog,
   },
 })
 export default class UtilityLightbox extends Mixins(CloseOnEscape) {
@@ -88,7 +91,7 @@ export default class UtilityLightbox extends Mixins(CloseOnEscape) {
   }
 
   private copySetpos() {
-    navigator.clipboard.writeText(this.utility.setpos!);
+    writeToClipboard(this.utility.setpos!);
     this.showToast({ id: 'utilityLightbox/copySetpos', text: 'Setpos Command copied!' });
     this.trackingService.track('Action: Copy Setpos', { from: 'lightbox' });
   }

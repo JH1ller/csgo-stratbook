@@ -38,6 +38,10 @@
     &:hover {
       background-color: darken($color--orange, 15%);
     }
+
+    @include viewport_range(mq1, mq2) {
+      display: none;
+    }
   }
 
   &__floating-collapse,

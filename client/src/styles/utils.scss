@@ -25,3 +25,43 @@
     margin: $gap 0 0 $gap;
   }
 }
+
+@mixin slideFromX($offset, $count, $animId) {
+  opacity: 0;
+
+  @for $i from 1 through $count {
+    &:nth-child(#{$i}) {
+      animation: slideIn-#{$animId} 0.5s ease-out calc(#{$i} * 0.05s) normal forwards;
+    }
+  }
+  @keyframes slideIn-#{$animId} {
+    0% {
+      transform: translateX($offset) scale(1.1);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0) scale(1);
+      opacity: 1;
+    }
+  }
+}
+
+@mixin slideFromY($offset, $count, $animId) {
+  opacity: 0;
+
+  @for $i from 1 through $count {
+    &:nth-child(#{$i}) {
+      animation: slideIn-#{$animId} 0.5s ease-out calc(#{$i} * 0.07s) normal forwards;
+    }
+  }
+  @keyframes slideIn-#{$animId} {
+    0% {
+      transform: translateY($offset) scale(1.1);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+  }
+}

@@ -8,7 +8,7 @@
     width: 100%;
 
     &.-error {
-      border: 1px solid $color--red;
+      border-color: $color--red;
     }
 
     &:focus,

@@ -46,7 +46,7 @@ export default class StorageService {
       } else {
         localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
       }
-      Log.info(`StorageService (${this.useNativeStore ? 'native' : 'browser'})`, `Saved value to key '${key}':`, value);
+      Log.info(`StorageService (${this.useNativeStore ? 'native' : 'browser'})`, `Saved value to key '${key}'`);
     } catch (error) {
       Log.error(`StorageService (${this.useNativeStore ? 'native' : 'browser'})`, error);
     }

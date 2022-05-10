@@ -10,7 +10,7 @@ import { UtilityTypes } from '@/api/models/UtilityTypes';
 import { generateEquipmentData, generateWeaponData } from './data/equipment.data';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import { transformMap } from './utils/transformHtml';
-import ReplaceKeywords, { ReplaceEvent } from 'replace-keywords';
+import ReplaceKeywords from 'replace-keywords';
 export interface LinkOption {
   id?: string;
   icon?: string;
@@ -97,7 +97,7 @@ export default class StratEditor extends Vue {
           itemClass: 'strat-editor__mention-item',
           containerClass: 'strat-editor__mention-container',
           selectClass: 'strat-editor__mention-selected',
-          menuItemTemplate: (item: TributeItem<LinkOption>)  =>
+          menuItemTemplate: (item: TributeItem<LinkOption>) =>
             `<img class="strat-editor__mention-item-image" src="${resolveStaticImageUrl(item.original.icon)}"/>${
               item.original.label
             }`,
@@ -110,7 +110,7 @@ export default class StratEditor extends Vue {
           values: this.utilityOptionList,
           trigger: '#',
           lookup: 'query',
-          selectTemplate: (item: TributeItem<LinkOption>)  =>
+          selectTemplate: (item: TributeItem<LinkOption>) =>
             `<span 
                 contenteditable="false" ${item.original.id ? `data-util-id="${item.original.id}"` : ''}
                 class="strat-editor__tag --utility"><img 
@@ -120,7 +120,7 @@ export default class StratEditor extends Vue {
           itemClass: 'strat-editor__mention-item',
           containerClass: 'strat-editor__mention-container',
           selectClass: 'strat-editor__mention-selected',
-          menuItemTemplate: (item: TributeItem<LinkOption>)  =>
+          menuItemTemplate: (item: TributeItem<LinkOption>) =>
             `<img class="strat-editor__mention-item-image" src="utility/${item.original.icon}.png"/>${item.original.label}`,
           noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
@@ -148,7 +148,7 @@ export default class StratEditor extends Vue {
           itemClass: 'strat-editor__mention-item',
           containerClass: 'strat-editor__mention-container',
           selectClass: 'strat-editor__mention-selected',
-          menuItemTemplate: (item: TributeItem<LinkOption>)  =>
+          menuItemTemplate: (item: TributeItem<LinkOption>) =>
             `<img class="strat-editor__mention-item-image" src="utility/${item.original.icon}.png"/> ${item.original.label} `,
           noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
@@ -158,13 +158,13 @@ export default class StratEditor extends Vue {
           values: generateWeaponData(this.stratSide),
           trigger: 'w:',
           lookup: 'query',
-          selectTemplate: (item: TributeItem<LinkOption>)  =>
+          selectTemplate: (item: TributeItem<LinkOption>) =>
             `<span contenteditable="false" class="strat-editor__tag --weapon"><img class="strat-editor__tag-img" 
               src="utility/${item.original.icon}.png" />${item.original.label}</span>`,
           itemClass: 'strat-editor__mention-item',
           containerClass: 'strat-editor__mention-container',
           selectClass: 'strat-editor__mention-selected',
-          menuItemTemplate: (item: TributeItem<LinkOption>)  =>
+          menuItemTemplate: (item: TributeItem<LinkOption>) =>
             `<img class="strat-editor__mention-item-image" src="utility/${item.original.icon}.png"/> ${item.original.label} `,
           noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
@@ -174,13 +174,13 @@ export default class StratEditor extends Vue {
           values: generateEquipmentData(this.stratSide),
           trigger: 'e:',
           lookup: 'query',
-          selectTemplate: (item: TributeItem<LinkOption>)  =>
+          selectTemplate: (item: TributeItem<LinkOption>) =>
             `<span contenteditable="false" class="strat-editor__tag --equipment"><img class="strat-editor__tag-img" 
               src="utility/${item.original.icon}.png" />${item.original.label}</span>`,
           itemClass: 'strat-editor__mention-item',
           containerClass: 'strat-editor__mention-container',
           selectClass: 'strat-editor__mention-selected',
-          menuItemTemplate: (item: TributeItem<LinkOption>)  =>
+          menuItemTemplate: (item: TributeItem<LinkOption>) =>
             `<img class="strat-editor__mention-item-image" src="utility/${item.original.icon}.png"/> ${item.original.label} `,
           noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
@@ -233,7 +233,7 @@ export default class StratEditor extends Vue {
   private mounted() {
     this.tribute = new Tribute(this.tributeOptions);
     this.tribute.attach(this.textarea);
-    const rk = new ReplaceKeywords(this.textarea, { transformations: transformMap });
+    new ReplaceKeywords(this.textarea, { transformations: transformMap });
     this.addClickListeners();
   }
 

@@ -1,11 +1,10 @@
 <template>
   <div class="main-menu">
     <ul class="main-menu__list" :class="{ '-open': menuOpen }">
-      <router-link to="/" class="main-menu__list-item main-menu__logo">
+      <router-link to="/" class="main-menu__logo">
         <img
           src="@/assets/icons/logo_small.png"
           class="main-menu__icon main-menu__logo-icon"
-          :class="{ '-loading': loading }"
           alt="Application Logo"
         />
         <span class="main-menu__label main-menu__logo-label">{{ appName }}</span>
@@ -20,6 +19,9 @@
       >
       <a class="main-menu__list-item main-menu__link --discord" @click="openDiscord"
         ><fa-icon :icon="['fab', 'discord']" />Discord</a
+      >
+      <a class="main-menu__list-item main-menu__link --github" @click="openGithub"
+        ><fa-icon :icon="['fab', 'github']" />Github</a
       >
       <a v-if="!isDesktop" class="main-menu__list-item main-menu__link --download" @click="downloadDesktopClient"
         ><fa-icon icon="download" />Get desktop app</a

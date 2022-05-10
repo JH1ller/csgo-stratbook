@@ -1,13 +1,12 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
-import WebSocketService from '@/services/websocket.service';
+import WebSocketService from '@/services/WebSocketService';
 import { Player } from '@/api/models/Player';
 import api from '@/api/base';
 import router from '@/router';
 import { RouteNames, Routes } from '@/router/router.models';
 import { TOKEN_TTL } from '@/config';
 import TrackingService from '@/services/tracking.service';
-import { Team } from '@/api/models/Team';
 import StorageService from '@/services/storage.service';
 
 const SET_TOKEN = 'SET_TOKEN';
@@ -33,6 +32,8 @@ const authInitialState = (): AuthState => ({
   profile: {},
 });
 
+// doing the same thing for WebSocketService doesn't work here,
+// (probably) because of a circular dependency.
 const trackingService = TrackingService.getInstance();
 const storageService = StorageService.getInstance();
 
@@ -64,7 +65,7 @@ export const authModule: Module<AuthState, RootState> = {
               resolveBtn: 'Yes',
               rejectBtn: 'No',
             },
-            { root: true }
+            { root: true },
           );
           updateStrats = true;
         } catch (error) {
@@ -85,7 +86,7 @@ export const authModule: Module<AuthState, RootState> = {
     updateStatus({ commit }, status: Status) {
       commit(SET_STATUS, status);
     },
-    setProfile({ commit, rootState }, profile: Player) {
+    setProfile({ commit }, profile: Player) {
       commit(SET_PROFILE, profile);
       commit(SET_STATUS, profile.team ? Status.LOGGED_IN_WITH_TEAM : Status.LOGGED_IN_NO_TEAM);
       trackingService.identify(profile._id, profile.name);
@@ -161,7 +162,7 @@ export const authModule: Module<AuthState, RootState> = {
         dispatch(
           'app/showToast',
           { id: 'auth/forgotPassword', text: 'A mail has been sent to your email with a link to reset your password.' },
-          { root: true }
+          { root: true },
         );
       } else {
         return { error: res.error };
@@ -173,7 +174,7 @@ export const authModule: Module<AuthState, RootState> = {
         dispatch(
           'app/showToast',
           { id: 'auth/resetPassword', text: 'Your password has been changed successfully.' },
-          { root: true }
+          { root: true },
         );
         return { success: true };
       } else {
@@ -186,7 +187,7 @@ export const authModule: Module<AuthState, RootState> = {
         dispatch(
           'app/showToast',
           { id: 'auth/register', text: 'Registered successfully. A confirmation email has been sent.' },
-          { root: true }
+          { root: true },
         );
         trackingService.track('Action: Register', {
           email: formData.get('email') as string,

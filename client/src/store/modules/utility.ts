@@ -2,6 +2,7 @@ import { Module } from 'vuex';
 import { RootState } from '..';
 import { Utility } from '@/api/models/Utility';
 import api from '@/api/base';
+import { writeToClipboard } from '@/utils/writeToClipboard';
 
 const SET_UTILITIES = 'SET_UTILITIES';
 
@@ -33,12 +34,12 @@ export const utilityModule: Module<UtilityState, RootState> = {
           (rootState.filter.utilityFilters.type ? rootState.filter.utilityFilters.type === utility.type : true) &&
           (rootState.filter.utilityFilters.name
             ? utility.name.toLowerCase().includes(rootState.filter.utilityFilters.name.toLowerCase())
-            : true)
+            : true),
       );
     },
     sortedFilteredUtilitiesOfCurrentMap(_state, getters) {
       return (getters.filteredUtilitiesOfCurrentMap as Utility[]).sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       );
     },
   },
@@ -69,27 +70,28 @@ export const utilityModule: Module<UtilityState, RootState> = {
         dispatch(
           'app/showToast',
           { id: 'utility/updateUtility', text: 'Successfully updated the utility.' },
-          { root: true }
+          { root: true },
         );
     },
     async shareUtility({ dispatch }, utilityID: string) {
       dispatch(
         'app/showToast',
         { id: 'utility/shareUtility', text: 'Sharing utilities not yet implemented.' },
-        { root: true }
+        { root: true },
       );
       return;
+      //! TODO
       const formData = new FormData();
       formData.append('_id', utilityID);
       formData.append('shared', 'true');
       const res = await api.utility.updateUtility(formData);
       if (res.success) {
         const shareLink = `${window.location.origin}/#/share/${utilityID}`;
-        navigator.clipboard.writeText(shareLink);
+        writeToClipboard(shareLink);
         dispatch(
           'app/showToast',
           { id: 'utility/shareUtility', text: 'Copied share link to clipboard.' },
-          { root: true }
+          { root: true },
         );
       }
     },
@@ -102,7 +104,7 @@ export const utilityModule: Module<UtilityState, RootState> = {
         dispatch(
           'app/showToast',
           { id: 'utility/unshareUtility', text: 'Utility is no longer shared.' },
-          { root: true }
+          { root: true },
         );
       }
     },
@@ -112,18 +114,18 @@ export const utilityModule: Module<UtilityState, RootState> = {
         dispatch(
           'app/showToast',
           { id: 'utility/addedShared', text: 'Utility successfully added to your utilitybook.' },
-          { root: true }
+          { root: true },
         );
       }
     },
-    addUtilityLocally({ commit, dispatch }, payload: { utility: Utility }) {
+    addUtilityLocally({ commit }, payload: { utility: Utility }) {
       commit(ADD_UTILITY, payload.utility);
     },
-    updateUtilityLocally({ commit, dispatch }, payload: { utility: Utility }) {
+    updateUtilityLocally({ commit }, payload: { utility: Utility }) {
       commit(UPDATE_UTILITY, payload);
     },
-    deleteUtilityLocally({ commit, dispatch }, payload: { utilityID: string }) {
-      commit(DELETE_UTILITY, payload.utilityID);
+    deleteUtilityLocally({ commit }, payload: { utilityId: string }) {
+      commit(DELETE_UTILITY, payload.utilityId);
     },
     resetState({ commit }) {
       commit(RESET_STATE);

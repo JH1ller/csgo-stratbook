@@ -54,14 +54,23 @@ import {
   faPhotoVideo,
   faSortAmountUp,
   faSortAmountDown,
+  faAlignCenter,
+  faMousePointer,
+  faICursor,
+  faNetworkWired,
+  faCog,
 } from '@fortawesome/free-solid-svg-icons';
-import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faDiscord, faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueTippy, { TippyComponent } from 'vue-tippy';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 import { isDesktop } from './utils/isDesktop';
 import StorageService from './services/storage.service';
 import { BreakpointService } from './services/breakpoint.service';
+import VueKonva from 'vue-konva';
+import * as Sentry from '@sentry/vue';
+import { BrowserTracing } from '@sentry/tracing';
+import { SENTRY_DSN } from './config';
 
 Vue.use(VueTippy, {
   directive: 'tippy',
@@ -72,6 +81,8 @@ Vue.use(VueTippy, {
   animation: 'scale',
 });
 Vue.component('tippy', TippyComponent);
+
+Vue.use(VueKonva);
 
 config.autoAddCss = false;
 library.add(
@@ -126,14 +137,37 @@ library.add(
   faMapMarkerAlt,
   faPhotoVideo,
   faSortAmountUp,
-  faSortAmountDown
+  faSortAmountDown,
+  faAlignCenter,
+  faMousePointer,
+  faICursor,
+  faNetworkWired,
+  faCog,
+  faGithub,
 );
+
+if (process.env.NODE_ENV === 'production') {
+  Sentry.init({
+    Vue,
+    dsn: SENTRY_DSN,
+    integrations: [
+      new BrowserTracing({
+        routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+        tracingOrigins: ['localhost', 'stratbook.live', /^\//],
+      }),
+    ],
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 1.0,
+  });
+}
 
 Vue.component('fa-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
-window.debugMode = process.env.NODE_ENV === 'development' || !!localStorage.getItem('debug');
+window.debugMode = process.env.NODE_ENV !== 'production' || !!localStorage.getItem('debug');
 window.desktopMode = isDesktop();
 
 const storageService = StorageService.getInstance();

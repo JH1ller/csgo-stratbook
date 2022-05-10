@@ -65,7 +65,8 @@
   }
 
   &__list-item,
-  &__profile {
+  &__profile,
+  &__logo {
     width: 100%;
     padding: 15px 20px;
     cursor: pointer;
@@ -83,10 +84,33 @@
         background-color: $color--black;
       }
     }
+  }
 
-    &.router-link-exact-active {
+  &__list-item {
+    position: relative;
+    
+    &::after {
+      opacity: 0;
+      position: absolute;
+      content: '';
+      width: 3px;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(white, 0.7);
+      height: 50%;
+      border-bottom-right-radius: 3px;
+      border-top-right-radius: 3px;
+      transition: opacity 0.2s ease;
+    }
+
+    &.router-link-active {
+      position: relative;
+
+      &::after {
+        opacity: 1;
+      }
       .main-menu__icon {
-        transform: scale3d(1.2, 1.2, 1.2);
         & path {
           fill: white;
         }
@@ -111,7 +135,7 @@
 
     & path {
       transition: fill 0.3s ease;
-      fill: $color--grey;
+      fill: rgba(white, 0.7);
     }
   }
 
@@ -119,32 +143,9 @@
     width: 40px;
     height: 40px;
     object-fit: contain;
-    position: relative;
-    transform: scale(1);
-
-    &.-loading {
-      animation: pulse-scale 2s infinite;
-
-      &::after {
-        animation: pulse-shadow 2s infinite;
-      }
-    }
-
-    &::after {
-      content: '';
-      box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
-      background-color: black;
-      border-radius: 50%;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
   }
 
   &__label {
-    font-family: Open Sans, sans-serif;
     white-space: nowrap;
     margin-left: 1.5rem;
     opacity: 0;
@@ -176,7 +177,7 @@
   &__link {
     color: $color--grey;
     align-items: center;
-    font-size: 0.8em;
+    font-size: 0.8rem;
     opacity: 0;
     padding: 8px 24px;
     white-space: nowrap;
@@ -184,62 +185,68 @@
     transition: opacity 0.3s ease, background-color 0.3s ease;
     display: flex;
 
+    @include viewport_mq3 {
+      font-size: 0.9rem;
+    }
+
     & > svg {
       margin-right: 6px;
       width: 14px;
       height: 14px;
+
+      @include viewport_mq3 {
+        margin-right: 10px;
+      }
+    }
+
+    &:hover {
+      & > svg > path {
+        fill: white;
+        transition: fill 0.3s ease;
+      }
+      &.--twitter {
+        & > svg > path {
+          fill: #1da1f2;
+        }
+      }
+      &.--discord {
+        & > svg > path {
+          fill: #7289da;
+        }
+      }
+      &.--github {
+        & > svg > path {
+          fill: #7289da;
+        }
+      }
+      &.--download {
+        & > svg > path {
+          fill: $color--green;
+        }
+      }
+      &.--kofi {
+        & > svg > path {
+          fill: $color--red;
+        }
+      }
+      &.--feedback {
+        & > svg > path {
+          fill: $color--sand;
+        }
+      }
+      &.--imprint {
+        & > svg > path {
+          fill: $color--orange;
+        }
+      }
     }
 
     &.--twitter {
       margin-top: auto;
-      &:hover {
-        & > svg > path {
-          fill: #1da1f2;
-          transition: fill 0.3s ease;
-        }
-      }
     }
-    &.--discord {
-      &:hover {
-        & > svg > path {
-          fill: #7289da;
-          transition: fill 0.3s ease;
-        }
-      }
-    }
-    &.--download {
-      &:hover {
-        & > svg > path {
-          fill: $color--green;
-          transition: fill 0.3s ease;
-        }
-      }
-    }
-    &.--feedback {
-      &:hover {
-        & > svg > path {
-          fill: $color--sand;
-          transition: fill 0.3s ease;
-        }
-      }
-    }
-    &.--imprint {
-      &:hover {
-        & > svg > path {
-          fill: $color--orange;
-          transition: fill 0.3s ease;
-        }
-      }
-    }
+
     &.--kofi {
       margin-bottom: 24px;
-
-      &:hover {
-        & > svg > path {
-          fill: $color--red;
-          transition: fill 0.3s ease;
-        }
-      }
     }
   }
 
@@ -248,6 +255,7 @@
     background: $color--black;
     opacity: 0;
     transition: opacity 0.3s ease;
+    height: 70px;
 
     @include viewport_mq3 {
       opacity: 1;

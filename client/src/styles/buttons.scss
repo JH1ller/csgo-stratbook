@@ -1,5 +1,5 @@
 @mixin button-default($bgcolor: white, $color: $color--navyblue, $has-text: true) {
-  display: flex;
+  display: inline-flex;
   padding: 6px 11px;
   border-radius: 3px;
   justify-content: center;
@@ -11,8 +11,13 @@
   border: 2px solid rgba(black, 0.1);
   color: $color;
 
-  &:hover {
-    border-color: rgba(black, 0.2);
+  @include viewport_range(mq1, mq2) {
+    padding: 5px 8px;
+  }
+
+  &:hover,
+  &:focus {
+    border-color: rgba(black, 0.3);
     background-color: darken($bgcolor, 2%);
   }
 

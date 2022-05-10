@@ -61,6 +61,10 @@ export default class StratItem extends Vue {
     }
   }
 
+  get hasDrawData(): boolean {
+    return !!this.strat.drawData && Object.values(this.strat.drawData).some(value => value.length);
+  }
+
   private setComponentHeight() {
     this.componentEl.style.height = this.deferredCollapsed ? '54px' : `${this.componentHeight + 5}px`;
   }

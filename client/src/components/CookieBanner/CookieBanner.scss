@@ -1,5 +1,5 @@
 .cookie-banner {
-  @include blurry-backdrop;
+  @include blurry-panel;
   @include spacing('padding', xs);
 
   border-radius: 8px;

@@ -23,11 +23,49 @@
       min-width: 320px;
       border-radius: 10px;
       animation: 0.3s ease-in-out expand;
+
+      &.-fullscreen {
+        // 24px top-margin + 2 * 16px FAB margins + 48px FAB height
+        height: calc(100% - 104px);
+        // 70px sidebar + 24px outer-margin * 2 + 10px scrollbar
+        width: calc(100% - 128px);
+        position: absolute;
+        left: 94px;
+        top: 24px;
+        padding: 8px;
+
+        & > :first-child {
+          border-radius: 8px;
+          overflow: hidden;
+        }
+      }
     }
 
     @include viewport_mq7 {
       padding: 24px;
       min-width: 360px;
+
+      &.-fullscreen {
+        padding: 8px;
+      }
+    }
+  }
+
+  &__close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    color: white;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    background-color: rgba(black, 0.1);
+
+    &:hover {
+      transform: scale(1.05);
     }
   }
 }

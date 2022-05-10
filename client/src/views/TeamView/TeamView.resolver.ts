@@ -5,7 +5,7 @@ import { authGuard } from '@/guards/auth.guard';
 import { teamGuard } from '@/guards/team.guard';
 
 export const teamResolver: NavigationGuard = async (to, from, next) => {
-  await store.dispatch('auth/fetchProfile');
+  //await store.dispatch('auth/fetchProfile');
 
   const authGuardResult = authGuard(to, from, next);
   if (!authGuardResult) return;

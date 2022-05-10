@@ -1,4 +1,4 @@
-import { MapID } from '@/components/MapPicker/MapPicker';
+import { GameMap } from './GameMap';
 import { Model } from './Model';
 import { MouseButtons } from './MouseButtons';
 import { Sides } from './Sides';
@@ -8,7 +8,7 @@ import { UtilityTypes } from './UtilityTypes';
 export interface Utility extends Model {
   name: string;
   type: UtilityTypes;
-  map: MapID;
+  map: GameMap;
   side: Sides;
   mouseButton: MouseButtons;
   crouch: boolean;

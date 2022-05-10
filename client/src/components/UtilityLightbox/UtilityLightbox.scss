@@ -1,24 +1,4 @@
 .utility-lightbox {
-  height: 200px;
-  border: 2px solid white;
-  box-shadow: 0 0 7px rgba(black, 0.2);
-  overflow: hidden;
-  background-color: white;
-  position: relative;
-  border-radius: 6px;
-  width: 100%;
-  height: calc(100% - 100px);
-  position: absolute;
-  z-index: 9;
-  top: 16px;
-  left: 0;
-
-  @include viewport_mq3 {
-    width: calc(100% - 128px);
-    top: 24px;
-    left: 94px;
-  }
-
   &__media-wrapper {
     width: 100%;
     height: calc(100% - 30px);
@@ -65,14 +45,18 @@
     bottom: 0;
     height: 30px;
     width: 100%;
-    background-color: white;
+    // background-color: white;
     display: flex;
     align-items: center;
     padding: 4px;
   }
 
   &__name {
+    @include spacing('margin-left', '2xs');
+    @include spacing('margin-bottom', '2xs');
+
     font-family: $font_ubuntu-bold;
+    font-size: 1.2rem;
     margin-right: auto;
     max-width: calc(100% - 95px);
     text-overflow: ellipsis;
@@ -192,24 +176,6 @@
     color: white;
   }
 
-  &__close {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 36px;
-    height: 36px;
-    color: white;
-    transition: transform 0.3s ease;
-    cursor: pointer;
-    padding: 4px;
-    border-radius: 50%;
-    background-color: rgba(black, 0.1);
-
-    &:hover {
-      transform: scale(1.05);
-    }
-  }
-
   &__navigation {
     color: $color--smoke;
     transition: transform 0.3s ease, background-color 0.3s ease;
@@ -283,7 +249,8 @@
     right: 0;
     border-top-left-radius: 6px;
     padding: 12px;
-    width: 200px;
+    width: 190px;
+    box-shadow: $shadow-subtle;
   }
 
   &__fallback {

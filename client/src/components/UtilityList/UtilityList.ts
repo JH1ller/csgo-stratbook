@@ -5,6 +5,7 @@ import VueContext from 'vue-context';
 import { appModule } from '@/store/namespaces';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import TrackingService from '@/services/tracking.service';
+import { writeToClipboard } from '@/utils/writeToClipboard';
 
 @Component({
   components: {
@@ -40,7 +41,7 @@ export default class UtilityList extends Vue {
   }
 
   private copySetpos(utility: Utility) {
-    navigator.clipboard.writeText(utility.setpos!);
+    writeToClipboard(utility.setpos!);
     this.showToast({ id: 'utilityList/copySetpos', text: 'Setpos Command copied!' });
     this.trackingService.track('Action: Copy Setpos', { from: 'context-menu' });
   }

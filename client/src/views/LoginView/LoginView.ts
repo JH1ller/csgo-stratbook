@@ -22,7 +22,7 @@ export default class LoginView extends Vue {
       this.updateFormError(res.error);
     } else if (res.success) {
       this.updateFormError('');
-      this.$router.push(Routes.JoinTeam);
+      this.$router.push(Routes.JoinTeam).catch(error => console.warn(error.message));
     }
   }
 
