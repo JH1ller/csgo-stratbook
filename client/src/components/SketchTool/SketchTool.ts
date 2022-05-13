@@ -50,12 +50,10 @@ import { Circle, CircleConfig } from 'konva/lib/shapes/Circle';
 import { GameMap } from '@/api/models/GameMap';
 import { isInputFocussed } from '@/utils/inputFocussed';
 import TrackingService from '@/services/tracking.service';
-import TextInput from '../TextInput/TextInput.vue';
 
 @Component({
   components: {
     VSwatches,
-    TextInput,
   },
 })
 export default class SketchTool extends Mixins(CloseOnEscape) {
@@ -98,8 +96,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   //* Online State
   remoteClients: RemoteClient[] = [];
-  // inputRoomId = new FormField('Room ID', false);
-  inputRoomId = '';
 
   //* Other State
   mouseOverStage: boolean = false;

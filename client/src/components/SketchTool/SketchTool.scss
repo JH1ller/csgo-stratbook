@@ -291,17 +291,6 @@
       font-size: 0.8rem;
     }
   }
-
-  &__input {
-    // @include spacing('padding', '10px 2xs');
-
-    // background-color: white;
-    // color: $color--navyblue;
-    // font-size: 1rem;
-    // font-weight: bold;
-    // border-radius: 4px;
-    @include input-default;
-  }
 }
 
 .vue-swatches__trigger {
