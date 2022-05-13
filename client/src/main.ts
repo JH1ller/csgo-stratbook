@@ -59,6 +59,7 @@ import {
   faICursor,
   faNetworkWired,
   faCog,
+  faSignInAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { faDiscord, faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -144,6 +145,7 @@ library.add(
   faNetworkWired,
   faCog,
   faGithub,
+  faSignInAlt,
 );
 
 if (process.env.NODE_ENV === 'production') {

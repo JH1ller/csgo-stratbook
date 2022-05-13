@@ -107,17 +107,20 @@
       <button v-if="!roomId" class="sketch-tool__btn" @click="() => connect()" v-tippy content="Create room">
         <fa-icon icon="network-wired" /><span class="sketch-tool__btn-label">Create room</span>
       </button>
-      <!-- <button v-else class="sketch-tool__btn" @click="copyRoomLink" v-tippy content="Copy link">
-          <fa-icon icon="copy" /><span class="sketch-tool__btn-label">Copy link</span>
-        </button> -->
+      <button v-if="roomId" class="sketch-tool__btn" @click="copyRoomLink" v-tippy content="Copy link">
+        <fa-icon icon="copy" /><span class="sketch-tool__btn-label">Copy link</span>
+      </button>
+      <button v-if="roomId" class="sketch-tool__btn" @click="leaveRoom" v-tippy content="Leave room">
+        <fa-icon icon="sign-out-alt" /><span class="sketch-tool__btn-label">Leave room</span>
+      </button>
       <button
-        v-if="showConfigBtn && roomId"
+        v-if="isMapView && roomId"
         class="sketch-tool__btn"
         @click="showConnectionDialog"
         v-tippy
         content="Connection"
       >
-        <fa-icon icon="cog" /><span class="sketch-tool__btn-label">Connection</span>
+        <fa-icon icon="cog" /><span class="sketch-tool__btn-label">Settings</span>
       </button>
     </div>
     <div class="sketch-tool__draggables-bar">

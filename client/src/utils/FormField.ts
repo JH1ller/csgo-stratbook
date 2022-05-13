@@ -17,7 +17,7 @@ export default class FormField implements FormFieldData {
   public autocompleteTag = 'off';
   public validators: ValidatorFunction[] = [];
 
-  constructor(label: string, required: boolean, validators: ValidatorFunction[], autocompleteTag?: string) {
+  constructor(label: string, required: boolean, validators: ValidatorFunction[] = [], autocompleteTag?: string) {
     this.label = label;
     this.required = required;
     this.autocompleteTag = autocompleteTag ?? 'off';

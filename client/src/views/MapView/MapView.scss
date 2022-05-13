@@ -1,4 +1,6 @@
 .map-view {
+  position: relative;
+
   &__map-btn {
     position: absolute;
     top: 48px;
@@ -52,5 +54,43 @@
         color: $color--emperor;
       }
     }
+  }
+
+  &__input {
+    @include input-default;
+
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+    &:focus {
+      + .map-view__join-btn {
+        border-color: rgba($color--navyblue, 0.65);
+      }
+    }
+  }
+
+  &__join-room-wrapper {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    display: flex;
+  }
+
+  &__join-btn {
+    @include button-default;
+
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 4px;
+    box-shadow: $shadow-subtle;
+    transition: border 0.2s ease, outline 0.2s ease;
+
+    &:hover,
+    &:focus {
+      border-color: rgba($color--navyblue, 0.65);
+    }
+
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 }
