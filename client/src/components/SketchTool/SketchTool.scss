@@ -37,7 +37,7 @@
   }
   &__btn {
     @include button-default(white, $color--navyblue, false);
-    @include slideFromY(10%, 7, 'tool');
+    @include slideFromY(10%, 10, 'tool');
 
     & > svg {
       transition: color 0.2s ease;
@@ -290,6 +290,17 @@
     @include viewport_range(mq1, mq2) {
       font-size: 0.8rem;
     }
+  }
+
+  &__input {
+    // @include spacing('padding', '10px 2xs');
+
+    // background-color: white;
+    // color: $color--navyblue;
+    // font-size: 1rem;
+    // font-weight: bold;
+    // border-radius: 4px;
+    @include input-default;
   }
 }
 

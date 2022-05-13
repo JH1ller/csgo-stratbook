@@ -49,10 +49,13 @@ import WebSocketService from '@/services/WebSocketService';
 import { Circle, CircleConfig } from 'konva/lib/shapes/Circle';
 import { GameMap } from '@/api/models/GameMap';
 import { isInputFocussed } from '@/utils/inputFocussed';
+import TrackingService from '@/services/tracking.service';
+import TextInput from '../TextInput/TextInput.vue';
 
 @Component({
   components: {
     VSwatches,
+    TextInput,
   },
 })
 export default class SketchTool extends Mixins(CloseOnEscape) {
@@ -70,7 +73,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   @Prop() stratName!: string;
   @Prop() roomId!: string;
   @Prop() stratId!: string;
-  @Prop() showConfigBtn!: boolean;
+  @Prop() isMapView!: boolean;
 
   //* Images
   utilImages!: Record<UtilityTypes, HTMLImageElement>;
@@ -95,6 +98,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   //* Online State
   remoteClients: RemoteClient[] = [];
+  // inputRoomId = new FormField('Room ID', false);
+  inputRoomId = '';
 
   //* Other State
   mouseOverStage: boolean = false;
@@ -112,6 +117,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   //* Services
   wsService = WebSocketService.getInstance();
+  trackingService = TrackingService.getInstance();
 
   undo(): void {
     if (this.historyPointer > 0) {
@@ -437,8 +443,23 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.handleDataChange();
   }
 
-  beforeDestroy() {
+  leaveRoom() {
     this.wsService.emit('leave-draw-room');
+    this.removeSocketListeners();
+    this.storageService.remove('draw-room-id');
+    this.storageService.remove('draw-data');
+    this.updateRoomId('');
+    this.remoteClients = [];
+    this.clearStage();
+    this.showToast({
+      id: 'SketchTool::leaveRoom',
+      text: 'Room left.',
+    });
+    this.$router.replace({ path: '/map' });
+    this.trackingService.track('Action: Leave Draw Room');
+  }
+
+  removeSocketListeners() {
     this.wsService.socket?.off('pointer-data');
     this.wsService.socket?.off('data-updated');
     this.wsService.socket?.off('username-updated');
@@ -446,6 +467,11 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.wsService.socket?.off('map-updated');
     this.wsService.socket?.off('client-joined');
     this.wsService.socket?.off('client-left');
+  }
+
+  beforeDestroy() {
+    this.wsService.emit('leave-draw-room');
+    this.removeSocketListeners();
   }
 
   @Listen('keyup')
@@ -499,13 +525,13 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     console.info('removeActiveitems');
     if (!this.activeItems.length) return;
     this.lineItems = this.lineItems.filter(
-      item => !this.activeItems.some(activeItem => activeItem.attrs.id === item.id),
+      (item) => !this.activeItems.some((activeItem) => activeItem.attrs.id === item.id),
     );
     this.imageItems = this.imageItems.filter(
-      item => !this.activeItems.some(activeItem => activeItem.attrs.id === item.id),
+      (item) => !this.activeItems.some((activeItem) => activeItem.attrs.id === item.id),
     );
     this.textItems = this.textItems.filter(
-      item => !this.activeItems.some(activeItem => activeItem.attrs.id === item.id),
+      (item) => !this.activeItems.some((activeItem) => activeItem.attrs.id === item.id),
     );
     this.setActiveItems([]);
     this.saveStateToHistory();
@@ -525,7 +551,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   setActiveItems(items: KonvaNode[]) {
     if (
       items.length === 1 &&
-      items.some(item => this.activeItems.some(activeItem => activeItem.attrs.id === item.attrs.id))
+      items.some((item) => this.activeItems.some((activeItem) => activeItem.attrs.id === item.attrs.id))
     )
       return;
     this.activeItems = items;
@@ -677,7 +703,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
           this.selectionRectConfig.width = Math.abs(x2 - x1);
           this.selectionRectConfig.height = Math.abs(y2 - y1);
           const box = this.selectionRectRef.getNode().getClientRect();
-          const selectedNodes = this.getAllNodes().filter(node => Util.haveIntersection(box, node.getClientRect()));
+          const selectedNodes = this.getAllNodes().filter((node) => Util.haveIntersection(box, node.getClientRect()));
           this.setActiveItems(selectedNodes);
         }
     }
@@ -719,7 +745,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       case ToolTypes.Brush:
         if (this.isDrawing) {
           this.isDrawing = false;
-          const lineItem = this.lineItems.find(i => i.id === this.currentLine?.attrs.id);
+          const lineItem = this.lineItems.find((i) => i.id === this.currentLine?.attrs.id);
           optimizeLine(lineItem!, this.optimizeThreshold);
           this.saveStateToHistory();
           this.handleDataChange();
@@ -809,7 +835,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   get updateItem() {
     return throttle((id: string, attributes: Partial<ImageItem | LineItem | TextItem>) => {
-      const target = [...this.imageItems, ...this.lineItems, ...this.textItems].find(item => item.id === id);
+      const target = [...this.imageItems, ...this.lineItems, ...this.textItems].find((item) => item.id === id);
       if (!target) {
         console.warn(`Stage item with id: ${id} not found`);
         return;
@@ -819,7 +845,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   updateLine(id: string, attributes: Partial<LineItem>): void {
-    const target = this.lineItems.find(item => item.id === id);
+    const target = this.lineItems.find((item) => item.id === id);
     if (!target) {
       console.warn(`Line item with id: ${id} not found`);
       return;
@@ -965,9 +991,13 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
         ? this.stratName.replaceAll(/[^a-zA-Z ]/g, '').replaceAll(' ', '_') + '.png'
         : `new_strat-${new Date().toISOString()}.png`,
     );
+    this.trackingService.track('Action: Save To File');
   }
 
   async connect(targetRoomId?: string) {
+    this.trackingService.track(`Action: ${targetRoomId ? 'Join Draw Room' : 'Create Draw Room'}`, {
+      map: this.map,
+    });
     const { roomId, stratName, drawData, map, clients, userName, color } = await this.wsService.joinDrawRoom({
       roomId: targetRoomId,
       userName: this.userName,
@@ -982,13 +1012,14 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       clients,
       userName,
     });
+    this.showToast({ id: 'SketchTool::connect', text: 'Room joined.' });
     this.currentColor = color;
     this.updateRoomId(roomId);
     this.updateMap(map);
     this.updateUserName(userName);
     this.updateStratName(stratName);
     this.applyStageData(drawData);
-    this.remoteClients = clients.map(client => ({
+    this.remoteClients = clients.map((client) => ({
       ...client,
       image: createPointerImage(client.color),
       pointerVisible: false,
@@ -1059,16 +1090,16 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   copyRoomLink() {
-    writeToClipboard(urljoin(window.location.origin, '#', 'map', this.roomId));
+    writeToClipboard(urljoin(window.location.origin, '/', '/#/map', this.roomId));
     this.showToast({ id: 'sketchTool/roomlinkCopied', text: 'Room link copied' });
   }
 
   setupListeners() {
-    this.wsService.socket.on('pointer-data', pointerData => {
+    this.wsService.socket.on('pointer-data', (pointerData) => {
       // don't show icon for your own cursor
       if (pointerData.id === this.wsService.socket.id) return;
 
-      const remoteClient = this.remoteClients.find(client => client.id === pointerData.id);
+      const remoteClient = this.remoteClients.find((client) => client.id === pointerData.id);
       if (!remoteClient) return;
 
       const remoteClientCursorNode = this.stage.findOne('#cursor_' + remoteClient.id);
@@ -1099,7 +1130,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       });
     });
 
-    this.wsService.socket.on('data-updated', data => {
+    this.wsService.socket.on('data-updated', (data) => {
       // console.log('data-updated', { images, lines, texts, id });
       if (data.id === this.wsService.socket.id) return;
       this.applyStageData(data);
@@ -1107,7 +1138,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
     this.wsService.socket.on('username-updated', ({ userName, id }) => {
       Log.info('sketchtool::username-updated', { userName, id });
-      const remoteClient = this.remoteClients.find(i => i.id === id);
+      const remoteClient = this.remoteClients.find((i) => i.id === id);
       if (remoteClient) {
         remoteClient.userName = userName;
         console.log('remote pointer updated');
@@ -1130,7 +1161,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
     this.wsService.socket.on('client-joined', ({ position, id, color, userName }) => {
       Log.info('sketchtool::client-joined', userName, color);
-      const clientExists = this.remoteClients.some(client => client.id === id);
+      const clientExists = this.remoteClients.some((client) => client.id === id);
 
       if (id === this.wsService.socket.id) {
         this.currentColor = color;
@@ -1152,7 +1183,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.wsService.socket.on('client-left', ({ clientId }) => {
       Log.info('sketchtool::client-left', clientId);
       if (clientId === this.wsService.socket.id) return;
-      this.remoteClients = this.remoteClients.filter(client => client.id !== clientId);
+      this.remoteClients = this.remoteClients.filter((client) => client.id !== clientId);
     });
   }
 
@@ -1171,7 +1202,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     (window as any).loadjson = this.loadFromStorage;
     (window as any).dialog = this.showConnectionDialog;
     (window as any).optimize = () => {
-      this.lineItems.forEach(item => {
+      this.lineItems.forEach((item) => {
         const line = this.stage.findOne('#' + item.id);
         optimizeLine(line as Line);
       });

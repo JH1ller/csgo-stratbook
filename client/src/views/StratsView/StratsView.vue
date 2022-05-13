@@ -113,7 +113,7 @@
           :roomId="currentDrawToolStrat._id.slice(0, 10)"
           :stratId="currentDrawToolStrat._id"
           :map="currentMap"
-          :showConfigBtn="false"
+          :isMapView="false"
         />
       </BackdropDialog>
     </transition>
