@@ -72,6 +72,16 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '2.0.0',
+        date: '2022-05-14',
+        changes: [
+          'New and improved collaborative draw board',
+          'New "Map" page where the draw board can be used without an account',
+          'Loading bar at the top',
+          'Indicator showing if a strat has draw data',
+        ],
+      },
+      {
         version: '1.9.2',
         date: '2022-01-24',
         changes: ['Fix de_ancient missing map in DrawTool'],
