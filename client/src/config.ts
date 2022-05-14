@@ -30,6 +30,14 @@ const apiUrls: Record<Environment, string> = {
 
 export const API_URL = apiUrls[env];
 
+const appUrls: Record<Environment, string> = {
+  development: `http://${window.location.hostname}:8080/`,
+  staging: 'https://csstrats-app.herokuapp.com/app/',
+  production: 'https://app.stratbook.live/',
+};
+
+export const APP_URL = appUrls[env];
+
 export const S3_URL = 'https://csgo-stratbook.s3.amazonaws.com/';
 
 export const TOKEN_TTL = 1 * 60 * 60 * 1000; // 1h

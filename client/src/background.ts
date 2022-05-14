@@ -102,7 +102,6 @@ const createWindow = (options: Electron.BrowserWindowConstructorOptions, devPath
     window.setMenu(null);
     // Load the index.html when not in development
     window.loadURL(`app://./${prodPath}`);
-    window.webContents.openDevTools();
   }
 
   return window;

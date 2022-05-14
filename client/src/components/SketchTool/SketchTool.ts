@@ -50,6 +50,7 @@ import { Circle, CircleConfig } from 'konva/lib/shapes/Circle';
 import { GameMap } from '@/api/models/GameMap';
 import { isInputFocussed } from '@/utils/inputFocussed';
 import TrackingService from '@/services/tracking.service';
+import { APP_URL } from '@/config';
 
 @Component({
   components: {
@@ -1086,7 +1087,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   copyRoomLink() {
-    writeToClipboard(urljoin(window.location.origin, '/', '/#/map', this.roomId));
+    writeToClipboard(urljoin(APP_URL, '/', '/#/map', this.roomId));
     this.showToast({ id: 'sketchTool/roomlinkCopied', text: 'Room link copied' });
   }
 
