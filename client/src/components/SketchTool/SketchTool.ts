@@ -1008,7 +1008,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       clients,
       userName,
     });
-    this.showToast({ id: 'SketchTool::connect', text: 'Room joined.' });
+    if (this.isMapView) this.showToast({ id: 'SketchTool::connect', text: 'Room joined.' });
     this.currentColor = color;
     this.updateRoomId(roomId);
     this.updateMap(map);
