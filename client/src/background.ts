@@ -77,6 +77,7 @@ const createWindow = (options: Electron.BrowserWindowConstructorOptions, devPath
     useContentSize: true,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
     },
     ...options,
   });
@@ -101,6 +102,7 @@ const createWindow = (options: Electron.BrowserWindowConstructorOptions, devPath
     window.setMenu(null);
     // Load the index.html when not in development
     window.loadURL(`app://./${prodPath}`);
+    window.webContents.openDevTools();
   }
 
   return window;
@@ -173,7 +175,7 @@ ipcMain.on('restart-app', () => {
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
   if (process.platform === 'win32') {
-    process.on('message', data => {
+    process.on('message', (data) => {
       if (data === 'graceful-exit') {
         app.quit();
       }

@@ -27,6 +27,7 @@ const io = new Server(httpServer, {
   cors: {
     origin: [
       'https://stratbook.live',
+      'app://.',
       'https://app.stratbook.live',
       'http://localhost:8080',
       'http://192.168.0.11:8080',
