@@ -2,7 +2,7 @@
   <div class="app">
     <LoadingBar />
     <div class="app__version-wrapper">
-      <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi"/></span>
+      <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi" /></span>
       <span class="app__version">{{ appVersion }}</span>
     </div>
     <DialogWrapper />
@@ -69,11 +69,7 @@ export default class App extends Vue {
   private getCookie(name: string) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2)
-      return parts
-        ?.pop()
-        ?.split(';')
-        ?.shift();
+    if (parts.length === 2) return parts?.pop()?.split(';')?.shift();
   }
 
   private closeCookieBanner() {
@@ -105,7 +101,7 @@ export default class App extends Vue {
       catchPromise(
         this.showDialog({
           key: 'app/update-notice',
-          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><br><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Update 1.9.0 🎉<br>• Strats can now have multiple economy types<br>• Your filters are persisted across sessions <br>• The window size and position of the desktop app is also remembered <br>• Button to invert sort direction of strats</p>&mdash; Stratbook (@csgostratbook) <a href="https://twitter.com/csgostratbook/status/1416079598702448640?ref_src=twsrc%5Etfw">July 16, 2021</a></blockquote>`,
+          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><br>`,
           resolveBtn: 'OK',
           confirmOnly: true,
           htmlMode: true,
