@@ -14,18 +14,20 @@ const transform = (input) => {
   try {
     const parsed = JSON.parse(input);
     const lines =
-      parsed?.objects?.map((object) => {
-        const points = object.path.reduce((acc, curr) => {
-          const [, x, y] = curr;
-          acc.push(x * 2, y * 2);
-          return acc;
-        }, []);
-        return {
-          id: nanoid(10),
-          color: object.stroke,
-          points,
-        };
-      }) ?? [];
+      parsed?.objects
+        ?.filter((obj) => obj.path)
+        .map((object) => {
+          const points = object.path.reduce((acc, curr) => {
+            const [, x, y] = curr;
+            acc.push(x * 2, y * 2);
+            return acc;
+          }, []);
+          return {
+            id: nanoid(10),
+            color: object.stroke,
+            points,
+          };
+        }) ?? [];
     return {
       lines,
     };
@@ -41,10 +43,11 @@ const transform = (input) => {
 };
 
 (async () => {
-  await mongoose.connect(process.env.DATABASE_URL_DEV);
+  await mongoose.connect(process.env.DATABASE_URL);
 
   const allStrats = await StratModel.find();
   let counter = 0;
+  let skipped = 0;
   await Promise.all(
     allStrats.map(async (strat) => {
       if (strat.drawData && typeof strat.drawData === 'string') {
@@ -54,9 +57,12 @@ const transform = (input) => {
         await queue.add(() => strat.save());
         console.log(`migrated - "${strat.name}"`);
         counter++;
+      } else {
+        skipped++;
+        console.log(`skipped - "${strat.name}"`);
       }
     })
   );
-  console.log(`\nSuccessfully migrated ${counter} strats.`);
+  console.log(`\nSuccessfully migrated ${counter} strats. Skipped ${skipped} strats.`);
   process.exit();
 })();

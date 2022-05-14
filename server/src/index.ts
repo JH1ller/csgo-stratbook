@@ -27,6 +27,7 @@ const io = new Server(httpServer, {
   cors: {
     origin: [
       'https://stratbook.live',
+      'https://app.stratbook.live',
       'http://localhost:8080',
       'http://192.168.0.11:8080',
       'http://csstrats-app.herokuapp.com/',
@@ -75,16 +76,16 @@ app.use(compression());
 
 app.use(logger);
 
-app.use('/', express.static('dist_landingpage'));
-
 if (isDev) {
   app.use('/app', express.static('dist_app'));
   app.use('/static', express.static('public'));
   app.use('/api', apiRouter);
+  app.use('/', express.static('dist_landingpage'));
 } else {
   app.use(subdomain('app', express.static('dist_app')));
   app.use(subdomain('static', express.static('public')));
   app.use(subdomain('api', apiRouter));
+  app.use('/', express.static('dist_landingpage'));
   app.use('/.well-known/pki-validation/', express.static('cert'));
 }
 
