@@ -14,7 +14,7 @@
       <router-view
         @click.native="closeMenu"
         class="router-view"
-        :class="{ '-game-mode': gameMode, '-fullscreen': $route.meta.fullscreen }"
+        :class="{ '-game-mode': gameMode, '-fullscreen': $route.meta && $route.meta.fullscreen }"
       ></router-view>
     </transition>
     <transition name="fade">

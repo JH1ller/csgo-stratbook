@@ -20,7 +20,7 @@ export default class RegisterView extends Vue {
   private mounted() {
     console.log(
       `%cHey there, looks like you're a developer checking out stratbook! If you find any bugs or just want help to improve stratbook, feel free to open issues and submit PR's on Github: https://github.com/JH1ller/csgo-stratbook`,
-      `color: #c3c3c3; background: #141418; border: 1px solid #9fd1ff; border-right: none; padding: 2px 8px;`
+      `color: #c3c3c3; background: #141418; border: 1px solid #9fd1ff; border-right: none; padding: 2px 8px;`,
     );
   }
 
@@ -35,15 +35,15 @@ export default class RegisterView extends Vue {
       // TODO: remove once hotmail issue is resolved.
       // * checks if registered email is microsoft email
       const email = formData.get('email') as string;
-      if (['@hotmail', '@live', '@outlook'].some(suffix => email.includes(suffix))) {
+      if (['@hotmail', '@live', '@outlook'].some((suffix) => email.includes(suffix))) {
         catchPromise(
           this.showDialog({
             key: 'register-view/hotmail-warning',
-            text: `Hey there, glad to have you on board!<br>It seems like you registered with a Microsoft email.<br>The confirmation mail might land in your spam folder or not arrive at all.<br>If that's the case, please contact me at support@stratbook.live`,
+            text: `Hey there, glad to have you on board!<br>It seems like you registered with a Microsoft email.<br>The confirmation mail might land in your spam folder or not arrive at all.<br>If that's the case, please contact me via our Discord, or at support@stratbook.live`,
             resolveBtn: 'OK',
             htmlMode: true,
             confirmOnly: true,
-          })
+          }),
         );
       }
     }
