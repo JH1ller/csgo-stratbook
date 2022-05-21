@@ -10,8 +10,8 @@ import { GameMap, gameMapTable } from '@/api/models/GameMap';
 import SmartImage from '@/components/SmartImage/SmartImage.vue';
 import { Log } from '@/utils/logger';
 import { StoredStageState } from '@/components/SketchTool/types';
-import { Validators } from '@/utils/validation';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
+import TrackingService from '@/services/tracking.service';
 
 @Component({
   components: {
@@ -36,6 +36,8 @@ export default class MapView extends Vue {
   roomId = '';
   inputRoomId = '';
   showConnectionDialog = false;
+
+  trackingService = TrackingService.getInstance();
 
   handleSubmit({ userName, stratName }: { userName: string; stratName: string }) {
     this.userName = userName;
@@ -103,16 +105,24 @@ export default class MapView extends Vue {
 
     if (this.$route.params.roomId) {
       this.sketchTool.connectToRoomId(this.$route.params.roomId);
+      this.trackJoin();
     } else if (this.profile?.team) {
       this.sketchTool.connectToRoomId(this.profile.team.slice(0, 10));
     } else if (storageRoomId) {
       this.sketchTool.connectToRoomId(storageRoomId);
+      this.trackJoin();
     } else {
       const previousData = this.storageService.get<StoredStageState>('draw-data');
       const previousMap = this.storageService.get<GameMap>('draw-map');
       if (previousMap) this.map = previousMap;
       if (previousData?.[this.map]) this.sketchTool.applyStageData(previousData[this.map]);
     }
+  }
+
+  trackJoin() {
+    this.trackingService.track(`Action: Join Draw Room`, {
+      map: this.map,
+    });
   }
 
   joinWithLinkOrRoomId() {
@@ -126,5 +136,6 @@ export default class MapView extends Vue {
         this.inputRoomId.split('/')[this.inputRoomId.split('/').length - 1]
       : this.inputRoomId;
     this.sketchTool.connect(targetRoomId);
+    this.trackJoin();
   }
 }

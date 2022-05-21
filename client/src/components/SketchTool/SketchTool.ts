@@ -51,6 +51,8 @@ import { GameMap } from '@/api/models/GameMap';
 import { isInputFocussed } from '@/utils/inputFocussed';
 import TrackingService from '@/services/tracking.service';
 import { APP_URL } from '@/config';
+import isMobile from 'is-mobile';
+import { Dialog } from '../DialogWrapper/DialogWrapper.models';
 
 @Component({
   components: {
@@ -59,7 +61,10 @@ import { APP_URL } from '@/config';
 })
 export default class SketchTool extends Mixins(CloseOnEscape) {
   @Inject() storageService!: StorageService;
+
   @appModule.Action private showToast!: (toast: Toast) => void;
+  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
+
   @Ref() stageRef!: KonvaRef<Stage>;
   @Ref() stageContainer!: HTMLDivElement;
   @Ref() transformerRef!: KonvaRef<Transformer>;
@@ -992,9 +997,11 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   async connect(targetRoomId?: string) {
-    this.trackingService.track(`Action: ${targetRoomId ? 'Join Draw Room' : 'Create Draw Room'}`, {
-      map: this.map,
-    });
+    if (!targetRoomId) {
+      this.trackingService.track(`Action: Create Draw Room`, {
+        map: this.map,
+      });
+    }
     const { roomId, stratName, drawData, map, clients, userName, color } = await this.wsService.joinDrawRoom({
       roomId: targetRoomId,
       userName: this.userName,
@@ -1191,9 +1198,16 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
     this.saveStateToHistory();
 
-    console.log('mounted');
+    if (isMobile()) {
+      this.showDialog({
+        key: 'sketch-tool/mobile-warning',
+        text: `Hi there! The tactics board is not working well on mobile devices yet. For the best experience, please use a Desktop PC or Laptop.`,
+        resolveBtn: 'OK',
+        confirmOnly: true,
+      });
+    }
 
-    // for testing
+    //TODO: remove, only for testing
     (window as any).konva = this.stage;
     (window as any).saveToFile = this.saveToFile;
     (window as any).loadjson = this.loadFromStorage;
