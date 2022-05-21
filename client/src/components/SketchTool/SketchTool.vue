@@ -25,7 +25,7 @@
       >
         <!-- Background layer without events -->
         <v-layer :config="{ listening: false }">
-          <v-rect :config="backgroundRectConfig" />
+          <v-rect :config="backgroundRectConfig" v-once />
           <v-image :config="backgroundConfig" />
         </v-layer>
         <!-- Main content layer -->

@@ -1,5 +1,5 @@
 require('dotenv').config();
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response, NextFunction, RequestHandler } from 'express';
 import 'express-async-errors';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
@@ -77,18 +77,28 @@ app.use(compression());
 
 app.use(logger);
 
+const mapRedirect: RequestHandler = (req, res, next) => {
+  const host = req.get('Host');
+  if (host === 'map.stratbook.live' || host === 'map.csstrats.app') {
+    return res.redirect(301, 'https://app.stratbook.live/#/map');
+  }
+  return next();
+};
+
+app.use(mapRedirect);
+
 if (isDev) {
   app.use('/app', express.static('dist_app'));
   app.use('/static', express.static('public'));
   app.use('/api', apiRouter);
-  app.use('/', express.static('dist_landingpage'));
 } else {
   app.use(subdomain('app', express.static('dist_app')));
   app.use(subdomain('static', express.static('public')));
   app.use(subdomain('api', apiRouter));
-  app.use('/', express.static('dist_landingpage'));
   app.use('/.well-known/pki-validation/', express.static('cert'));
 }
+
+app.use('/', express.static('dist_landingpage'));
 
 app.use(
   historyFallback({

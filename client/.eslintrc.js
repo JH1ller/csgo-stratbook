@@ -18,5 +18,6 @@ module.exports = {
     '@typescript-eslint/no-inferrable-types': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     'no-case-declarations': 'off',
+    'no-debugger': 'off',
   },
 };

@@ -50,7 +50,7 @@ export default class UtilityLightbox extends Mixins(CloseOnEscape) {
   }
 
   private get mediaList(): LightboxMedia[] {
-    const media: LightboxMedia[] = this.utility.images.map(utility => ({ type: 'image', src: utility }));
+    const media: LightboxMedia[] = this.utility.images.map((utility) => ({ type: 'image', src: utility }));
     if (this.utility.videoLink) media.push({ type: 'video', src: this.utility.videoLink });
 
     return media;
@@ -61,7 +61,7 @@ export default class UtilityLightbox extends Mixins(CloseOnEscape) {
   }
 
   private mounted() {
-    if (isMobile()) {
+    if (isMobile() && 'requestFullscreen' in this.$el) {
       this.$el.requestFullscreen();
       if ('lock' in screen.orientation) {
         screen.orientation.lock('landscape');
