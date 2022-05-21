@@ -1,5 +1,5 @@
 'use strict';
-import { app, protocol, BrowserWindow, ipcMain, session } from 'electron';
+import { app, protocol, BrowserWindow, ipcMain, session, shell } from 'electron';
 import os from 'os';
 import path from 'path';
 import {
@@ -116,6 +116,11 @@ const showMainWindow = () => {
 
   win.on('close', () => {
     store.set('window-config', win?.getBounds());
+  });
+
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: 'deny' };
   });
 };
 
