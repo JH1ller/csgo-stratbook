@@ -1,116 +1,80 @@
 .team-info {
+  @include spacing('margin-left', '68px');
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
 
-  &__head {
-    display: flex;
-    flex-direction: column;
+  &__avatar {
+    width: 184px;
+    height: 184px;
+    border-radius: 27px;
   }
 
   &__title {
-    font-family: $font_ubuntu-bold;
-    font-size: 2em;
-    text-transform: uppercase;
-  }
+    @include typo_hl1;
+    @include spacing('margin-top', 's');
 
-  &__container {
-    display: flex;
-    justify-content: space-between;
+    font-size: 2rem;
+    max-width: 280px;
+    word-break: break-word;
+    text-align: right;
   }
 
   &__website {
-    font-size: 1.1em;
-    font-style: italic;
-    margin-top: 12px;
+    @include typo_hl3(var(--color-text-secondary));
+    @include spacing('margin-top', '0.875rem');
+
     cursor: pointer;
-    width: fit-content;
-  }
-
-  &__button,
-  &__button {
-    @include icon-button;
-
-    width: 36px;
-    height: 36px;
-
-    @include viewport_mq3 {
-      width: 60px;
-      height: 60px;
-    }
-
-    &.--server-run {
-      margin-left: 8px;
-    }
-
-    &.--server-copy {
-      &::after {
-        left: 70px;
-      }
-    }
   }
 
   &__code {
-    @include icon-button;
+    @include typo_hl1(var(--color-blue));
+    @include spacing('margin-top', 'sm');
 
-    display: flex;
-    justify-content: space-between;
-    text-transform: uppercase;
-    font-family: $font_ubuntu-bold;
-    font-size: 1.2rem;
-    width: 120px;
-    height: 36px;
-
-    @include viewport_mq3 {
-      width: 180px;
-      height: 60px;
-    }
-  }
-
-  &__manage-wrapper {
-    display: flex;
-    flex-direction: column;
-    margin-top: 12px;
-
-    & > :not(:first-of-type) {
-      margin-top: 12px;
-    }
-
-    @include viewport_mq3 {
-      margin-top: auto;
-      flex-direction: row;
-
-      & > :not(:first-of-type) {
-        margin-left: 12px;
-        margin-top: 0;
-      }
-    }
-
-  }
-
-  &__fieldset {
-    @include fieldset;
-
-    height: 105px;
-
-    @include viewport_mq3 {
-      height: 150px;
-    }
-  }
-
-  &__fieldset-content {
     display: flex;
     align-items: center;
+    cursor: pointer;
+  }
 
-    @include viewport_mq3 {
-      margin-top: 12px;
-    }
+  &__code-text {
+    @include spacing('padding', '2xs 0.875rem');
+    height: 100%;
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    border: 2px solid var(--color-blue);
+    border-right: 1px solid var(--color-blue);
+  }
 
-    & > :not(:first-of-type) {
-      margin-left: 12px;
+  &__code-icon-wrapper {
+    @include spacing('padding', '2xs 0.875rem');
+    height: 100%;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    border: 2px solid var(--color-blue);
+    border-left: none;
+  }
+
+  &__code-text,
+  &__code-icon-wrapper {
+    transition: background 0.3s ease;
+    &:hover {
+      background: var(--color-blue-faded);
     }
   }
 
-  &__fieldset-headline {
-    @include fieldset-header;
+  &__code-icon {
+    width: 1rem;
+  }
+
+  &__btn-group {
+    @include spacing('gap', '2xs');
+    @include spacing('margin-top', 'md');
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__btn {
+    @include icon-button-big;
   }
 }

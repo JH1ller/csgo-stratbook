@@ -1,23 +1,45 @@
-$font_fjallaone-regular: 'FjallaOne-Regular', arial, sans-serif;
-
-$font_ubuntu-light: 'Ubuntu-Light', sans-serif;
-$font_ubuntu-regular: 'Ubuntu-Regular', sans-serif;
-$font_ubuntu-bold: 'Ubuntu-Bold', sans-serif;
-
-@mixin typo_hl1($color: $color--abbey) {
-  font-family: $font_ubuntu-bold;
+@mixin typo_hl1($color: var(--color-text)) {
+  font-family: var(--font-default);
+  font-weight: 700;
   font-size: 1.5rem;
   color: $color;
 }
 
-@mixin typo_hl2($color: $color--abbey) {
-  font-family: $font_ubuntu-bold;
-  font-size: 1.2rem;
+@mixin typo_hl2($color: var(--color-text)) {
+  font-family: var(--font-default);
+  font-weight: 700;
+  font-size: 1.25rem;
   color: $color;
 }
 
-@mixin typo_hl3($color: $color--abbey) {
-  font-family: $font_ubuntu-bold;
+@mixin typo_hl3($color: var(--color-text)) {
+  font-family: var(--font-default);
+  font-weight: 500;
+  font-size: 1.125rem;
+  color: $color;
+}
+
+@mixin typo_text($color: var(--color-text)) {
+  font-family: var(--font-default);
+  font-weight: 400;
   font-size: 1rem;
   color: $color;
 }
+
+@mixin typo_emphasis($color: var(--color-text)) {
+  font-family: var(--font-default);
+  font-weight: 500;
+  font-size: 1rem;
+  color: $color;
+}
+
+@mixin typo_subline($color: var(--color-text-secondary)) {
+  font-family: var(--font-default);
+  font-weight: 400;
+  font-size: 0.875rem;
+  color: $color;
+}
+
+$weight-regular: 400;
+$weight-medium: 500;
+$weight-bold: 700;

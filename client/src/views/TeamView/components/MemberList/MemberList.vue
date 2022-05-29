@@ -1,6 +1,5 @@
 <template>
   <ol class="member-list">
-    <p class="member-list__header">Members</p>
     <MemberItem
       class="member-list__member"
       v-for="member in sortedMembers"

@@ -19,7 +19,7 @@ export default class MemberList extends Vue {
     return { event: $event, member: this.member };
   }
 
-  private lastOnlineString(lastOnline: Date): string | undefined {
+  private lastOnlineString(lastOnline?: Date): string | undefined {
     if (!lastOnline) return;
     const date = new Date(lastOnline);
     return ago(date);

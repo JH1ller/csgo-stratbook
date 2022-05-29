@@ -1,14 +1,21 @@
 .profile-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   &__content {
     @include view-content;
+
+    @include viewport_range(mq1, mq3) {
+      width: 100%;
+      height: 100%;
+    }
 
     padding-bottom: 48px;
     position: relative;
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
-    flex-wrap: wrap;
-    min-height: 100%;
 
     @include viewport_mq3 {
       flex-direction: row;
@@ -21,8 +28,12 @@
   &__detail {
     @include fieldset;
 
-    margin-top: 24px;
     width: 100%;
+
+    @include viewport_range(mq1, mq3) {
+      @include spacing('margin-top', sm);
+      @include spacing('margin-bottom', '2xs');
+    }
 
     @include viewport_mq3 {
       width: 400px;
@@ -35,6 +46,10 @@
     object-fit: cover;
     border-radius: 50%;
     box-shadow: $shadow-subtle;
+
+    @include viewport_mq3 {
+      @include spacing('margin-left', sm);
+    }
 
     @include viewport_mq4 {
       width: 200px;

@@ -1,50 +1,66 @@
 .member-item {
-  &__wrapper {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    justify-content: space-between;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
+  background: white;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  padding: 19px 33px 19px 19px;
+  box-shadow: $shadow-subtle;
 
-    &.-self {
-      background-color: rgba($color--navyblue, 0.2);
+  &__avatar {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    object-fit: cover;
+
+    .-online & {
+      border: 2px solid var(--color-green);
     }
-
-    &.-online {
-      border: 1px solid $color--green;
-    }
-  }
-
-  &__last-online {
-    font-size: 0.8em;
-    font-style: italic;
-    color: rgba($color--navyblue, 0.8);
-    margin-left: 3px;
   }
 
   &__text {
+    @include spacing('margin-left', '18px');
+
     display: flex;
     flex-direction: column;
+    gap: 4px;
   }
 
   &__name {
-    display: flex;
-    align-items: center;
-    max-width: 200px;
+    @include typo_hl3;
+
+    color: var(--color-text);
   }
 
-  &__captain-icon {
-    width: 20px;
-    height: 20px;
-    color: rgba($color--navyblue, 0.8);
-    margin-right: 6px;
+  &__role {
+    @include typo_subline(var(--color-text-tertiary));
   }
 
-  &__avatar {
-    width: 48px;
-    height: 48px;
+  &__last-online {
+    @include typo_subline(var(--color-text-contrast));
+    @include spacing('padding', '2px 2xs');
+
+    font-size: 0.75rem;
+    background-color: var(--color-blue);
+    border-radius: 999px;
+  }
+
+  &__button-group {
+    margin-left: auto;
+
+    & > :not(:first-child) {
+      @include spacing('margin-left', '2xs');
+    }
+  }
+
+  &__btn {
+    @include icon-button-big;
+  }
+
+  &__color-dot {
+    @include spacing('margin-right', '2xs');
+
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
   }
 }

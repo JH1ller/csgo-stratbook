@@ -81,19 +81,15 @@
     padding: 8px 0;
   }
 
-  &__type {
-    &:not(:first-child) {
-      margin-left: 12px;
-    }
-  }
-
   &__types-wrapper {
+    @include spacing('gap', xs);
+
     display: flex;
     margin-left: auto;
   }
 
   &__side {
-    margin-left: 12px;
+    @include spacing('margin-left', xs);
   }
 
   &__type,
@@ -111,37 +107,27 @@
   }
 
   &__btn-wrapper {
-    margin-top: 8px;
+    @include spacing('gap', '2xs');
+    @include spacing('margin-top', '2xs');
+
     display: flex;
     justify-content: flex-end;
     align-items: center;
-
-    & > :not(:first-child) {
-      margin-left: 8px;
-    }
-
-    @include viewport_mq3 {
-      right: 16px;
-    }
   }
 
   &__edit-buttons {
-    display: flex;
+    @include spacing('gap', '2xs');
 
-    & > :not(:first-child) {
-      margin-left: 8px;
-    }
+    display: flex;
   }
 
   &__action-buttons {
+    @include spacing('gap', '2xs');
+
     display: flex;
 
     padding-right: 8px;
     border-right: 1px solid $color--grey;
-
-    & > :not(:first-child) {
-      margin-left: 8px;
-    }
 
     @include viewport_mq3 {
       padding-right: 12px;

@@ -34,7 +34,7 @@
   }
 
   &__name {
-    font-family: $font_ubuntu-bold;
+    font-weight: $weight-bold;
     margin-right: auto;
     max-width: calc(100% - 40px);
     text-overflow: ellipsis;

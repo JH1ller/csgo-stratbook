@@ -1,23 +1,18 @@
 <template>
   <div class="team-view">
-    <div class="team-view__content">
-      <TeamInfo
-        :teamInfo="teamInfo"
-        :serverString="serverString"
-        :isManager="isManager"
-        @show-edit="toggleEditForm"
-        @delete-team="requestTeamDelete"
-      />
-      <div class="team-view__right-wrapper">
-        <SmartImage :src="teamAvatarUrl" class="team-view__avatar" alt="Team Logo" />
-        <MemberList
-          class="team-view__member-list"
-          @leave-team="requestTeamLeave"
-          @transfer-manager="requestTransferManager"
-          @kick-member="requestKickMember"
-        />
-      </div>
-    </div>
+    <MemberList
+      class="team-view__member-list"
+      @leave-team="requestTeamLeave"
+      @transfer-manager="requestTransferManager"
+      @kick-member="requestKickMember"
+    />
+    <TeamInfo
+      :teamInfo="teamInfo"
+      :serverString="serverString"
+      :isManager="isManager"
+      @show-edit="toggleEditForm"
+      @delete-team="requestTeamDelete"
+    />
     <transition name="fade">
       <EditTeamForm v-if="showEditForm" :teamInfo="teamInfo" @cancel="toggleEditForm" @submit="requestTeamUpdate" />
     </transition>

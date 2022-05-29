@@ -1,56 +1,6 @@
 .team-view {
-  &__content {
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    background-color: white;
-    box-shadow: $shadow-subtle;
-    padding: 16px;
-    border-radius: 8px;
-    flex-direction: column;
-    overflow: auto;
+  @include view-content;
 
-    @include viewport_mq3 {
-      padding: 24px;
-      flex-direction: row;
-    }
-  }
-
-  &__title {
-    font-size: 2em;
-    text-transform: uppercase;
-    font-weight: bold;
-  }
-
-  &__right-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 24px;
-
-    @include viewport_mq3 {
-      align-items: flex-end;
-      margin-top: 0;
-    }
-  }
-
-  &__avatar {
-    width: 150px;
-    height: 150px;
-    min-height: 150px;
-    object-fit: cover;
-    border-radius: 50%;
-    box-shadow: $shadow-subtle;
-
-    @include viewport_mq4 {
-      width: 200px;
-      height: 200px;
-      min-height: 200px;
-    }
-  }
-
-  &__member-list {
-    height: 100%;
-    margin-top: 32px;
-  }
+  display: flex;
+  flex-direction: row;
 }

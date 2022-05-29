@@ -159,12 +159,13 @@ export default class App extends Vue {
 @import '~vue-swatches/dist/vue-swatches.css';
 
 .app {
-  font-family: $font_ubuntu-regular;
+  font-family: var(--font-default);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: var(--color-default);
   height: 100%;
   overflow: hidden;
+  font-size: 16px;
 
   &__version-wrapper {
     position: absolute;

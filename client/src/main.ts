@@ -60,6 +60,8 @@ import {
   faNetworkWired,
   faCog,
   faSignInAlt,
+  faUserTag,
+  faUserTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import { faDiscord, faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -146,6 +148,8 @@ library.add(
   faCog,
   faGithub,
   faSignInAlt,
+  faUserTag,
+  faUserTimes,
 );
 
 if (process.env.NODE_ENV === 'production') {
@@ -174,7 +178,7 @@ window.desktopMode = isDesktop();
 
 const storageService = StorageService.getInstance();
 
-new BreakpointService(MQ => store.dispatch('app/updateBreakpoint', MQ));
+new BreakpointService((MQ) => store.dispatch('app/updateBreakpoint', MQ));
 
 const hasSession = !!storageService.get('has-session');
 
@@ -185,9 +189,14 @@ const hasSession = !!storageService.get('has-session');
     await store.dispatch('loadDataFromStorage');
   }
 
+  // fade out app loader
+  const loaderEl: HTMLDivElement = document.querySelector('.loader-wrapper')!;
+  loaderEl.style.opacity = '0';
+  loaderEl.ontransitionend = () => loaderEl.remove();
+
   new Vue({
     router,
     store,
-    render: h => h(App),
+    render: (h) => h(App),
   }).$mount('#app');
 })();

@@ -1,13 +1,19 @@
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
-import { appModule } from '@/store/namespaces';
+import { appModule, teamModule } from '@/store/namespaces';
 import { Team } from '@/api/models/Team';
 import { openLink } from '@/utils/openLink';
 import TrackingService from '@/services/tracking.service';
 import { writeToClipboard } from '@/utils/writeToClipboard';
+import SmartImage from '@/components/SmartImage/SmartImage.vue';
 
-@Component({})
+@Component({
+  components: {
+    SmartImage,
+  },
+})
 export default class TeamInfo extends Vue {
+  @teamModule.Getter private teamAvatarUrl!: string;
   @appModule.Action private showToast!: (toast: Toast) => void;
   @Prop() private serverString!: string;
   @Prop() private isManager!: boolean;

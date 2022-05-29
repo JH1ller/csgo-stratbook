@@ -1,5 +1,6 @@
 @mixin input-default($placeholder: false) {
-  font-size: 1em;
+  @include typo_text;
+
   @if ($placeholder == true) {
     padding: 22px 10px 5px 12px;
   } @else {
@@ -121,13 +122,35 @@
   }
 }
 
+@mixin icon-button-big {
+  @include typo_emphasis(var(--color-text-secondary));
+
+  cursor: pointer;
+  padding: 9px 10px;
+  border: 2px solid var(--color-border);
+  border-radius: 6px;
+  transition: border-color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+
+  & > svg {
+    height: 16px;
+    @include spacing('margin-right', '2xs');
+  }
+
+  &:hover {
+    border-color: var(--color-yellow);
+  }
+}
+
 @mixin blurry-bg {
   background: rgba(black, 0.1);
   backdrop-filter: blur(6px);
 }
 
 @mixin blurry-panel {
-  @include spacing('padding', xs);
+  @include spacing('padding', s);
 
   background-color: rgba(white, 0.2);
   backdrop-filter: blur(15px);
@@ -164,6 +187,6 @@
 
   @include viewport_mq3 {
     border-radius: 8px;
-    padding: 24px;
+    @include spacing('padding', lg);
   }
 }

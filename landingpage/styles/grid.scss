@@ -25,7 +25,7 @@
 }
 
 @mixin grid-gutters {
-  @include spacing('padding', '0 xs');
+  @include spacing('padding', '0 s');
 
   @include viewport_mq2 {
     @include spacing('padding', '0 md');

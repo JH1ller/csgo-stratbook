@@ -8,18 +8,15 @@ import { Routes } from '@/router/router.models';
 import EditTeamForm from '@/components/EditTeamForm/EditTeamForm.vue';
 import { Team } from '@/api/models/Team';
 import { catchPromise } from '@/utils/catchPromise';
-import SmartImage from '@/components/SmartImage/SmartImage.vue';
 
 @Component({
   components: {
     MemberList,
     TeamInfo,
     EditTeamForm,
-    SmartImage,
   },
 })
 export default class TeamView extends Vue {
-  @teamModule.Getter private teamAvatarUrl!: string;
   @teamModule.Getter private serverString!: string;
   @teamModule.Getter private isManager!: boolean;
   @teamModule.State private teamInfo!: Team;
@@ -41,7 +38,7 @@ export default class TeamView extends Vue {
       async () => {
         const res = await this.leaveTeam();
         if (res.success) this.$router.push(Routes.JoinTeam);
-      }
+      },
     );
   }
   private requestTeamDelete() {
@@ -55,7 +52,7 @@ export default class TeamView extends Vue {
       async () => {
         const res = await this.deleteTeam();
         if (res.success) this.$router.push(Routes.JoinTeam);
-      }
+      },
     );
   }
 
@@ -65,7 +62,7 @@ export default class TeamView extends Vue {
         key: 'team-view/confirm-transfer',
         text: 'Are you sure you want to transfer team leadership?',
       }),
-      () => this.transferManager(memberID)
+      () => this.transferManager(memberID),
     );
   }
 
@@ -75,7 +72,7 @@ export default class TeamView extends Vue {
         key: 'team-view/confirm-kick',
         text: 'Are you sure you want to kick this player?',
       }),
-      () => this.kickMember(memberID)
+      () => this.kickMember(memberID),
     );
   }
 

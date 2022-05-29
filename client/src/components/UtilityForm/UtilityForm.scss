@@ -82,13 +82,11 @@
   }
 
   &__input-wrapper {
+    @include spacing('gap', '2xs');
+
     display: flex;
     width: 100%;
     justify-content: stretch;
-
-    & > :not(:first-child) {
-      margin-left: 8px;
-    }
 
     & > .text-input {
       width: 100%;

@@ -25,7 +25,7 @@
   &__input {
     & > input {
       text-transform: uppercase;
-      font-family: $font_ubuntu-bold;
+      font-weight: $weight-bold;
       color: $color--abbey;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }

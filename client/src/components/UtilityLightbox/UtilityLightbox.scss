@@ -55,7 +55,7 @@
     @include spacing('margin-left', '2xs');
     @include spacing('margin-bottom', '2xs');
 
-    font-family: $font_ubuntu-bold;
+    font-weight: $weight-bold;
     font-size: 1.2rem;
     margin-right: auto;
     max-width: calc(100% - 95px);

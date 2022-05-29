@@ -53,6 +53,7 @@ import TrackingService from '@/services/tracking.service';
 import { APP_URL } from '@/config';
 import isMobile from 'is-mobile';
 import { Dialog } from '../DialogWrapper/DialogWrapper.models';
+import { catchPromise } from '@/utils/catchPromise';
 
 @Component({
   components: {
@@ -1199,12 +1200,14 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.saveStateToHistory();
 
     if (isMobile()) {
-      this.showDialog({
-        key: 'sketch-tool/mobile-warning',
-        text: `Hi there! The tactics board is not working well on mobile devices yet. For the best experience, please use a Desktop PC or Laptop.`,
-        resolveBtn: 'OK',
-        confirmOnly: true,
-      });
+      catchPromise(
+        this.showDialog({
+          key: 'sketch-tool/mobile-warning',
+          text: `Hi there! The tactics board is not working well on mobile devices yet. For the best experience, please use a Desktop PC or Laptop.`,
+          resolveBtn: 'OK',
+          confirmOnly: true,
+        }),
+      );
     }
 
     //TODO: remove, only for testing

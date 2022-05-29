@@ -1,5 +1,5 @@
 %button {
-  @include spacing('padding', 'xs lg');
+  @include spacing('padding', 's lg');
   @include typo_button;
 
   border-radius: 6px;

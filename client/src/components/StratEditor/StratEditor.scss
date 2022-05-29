@@ -2,11 +2,12 @@
 
 .strat-editor {
   &__editor {
+    @include typo_text;
+
     user-select: text;
     transition: box-shadow 0.3s ease;
     border-radius: 6px;
     border: 1px solid $color--light;
-    font-family: $font_ubuntu-regular;
     padding: 8px 12px;
     color: $color--dark;
     background-color: white;
@@ -34,7 +35,7 @@
   &__tag {
     border-radius: 3px;
     padding: 3px 5px;
-    font-family: $font_ubuntu-bold;
+    font-weight: $weight-bold;
     font-size: 1rem;
     color: $color--emperor;
     transition: background-color 0.3s ease-out;
@@ -124,7 +125,8 @@
   }
 
   &__mention-item {
-    font-family: $font_ubuntu-bold;
+    @include typo_emphasis;
+
     padding: 12px;
     color: $color--dark;
     cursor: pointer;
@@ -145,7 +147,7 @@
     }
 
     &.-no-match {
-      font-family: $font_ubuntu-regular;
+      font-weight: $weight-regular;
     }
   }
 

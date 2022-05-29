@@ -57,9 +57,9 @@ img {
 }
 
 .tippy-popper {
-  font-family: $font_ubuntu-regular;
+  font-family: var(--font-default);
 }
 
 button {
-  font-family: $font_ubuntu-regular;
+  font-family: var(--font-default);
 }

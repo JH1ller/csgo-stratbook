@@ -10,20 +10,18 @@
   }
 
   &__buttons {
+    @include spacing('gap', xs);
+
     display: flex;
     margin-top: 24px;
     justify-content: center;
-
-    & > :not(:first-child) {
-      margin-left: 12px;
-    }
   }
 
   &__text {
     line-height: 1.4;
 
     & bold {
-      font-family: $font_ubuntu-bold;
+      font-weight: 700;
     }
   }
 
@@ -49,6 +47,6 @@
 
   strong,
   b {
-    font-family: $font_ubuntu-bold;
+    font-weight: $weight-bold;
   }
 }

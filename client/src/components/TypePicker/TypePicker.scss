@@ -1,7 +1,7 @@
 .type-picker {
   display: flex;
   justify-content: space-evenly;
-  
+
   &__button {
     position: relative;
     width: 64px;
@@ -38,7 +38,7 @@
   }
 
   &__label {
-    font-family: $font_ubuntu-bold;
+    font-weight: $weight-bold;
     color: $color--abbey;
     font-size: 0.8rem;
     position: absolute;

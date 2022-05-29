@@ -1,24 +1,31 @@
 <template>
-  <div class="member-item">
-    <li
-      class="member-item__wrapper"
-      :class="{ '-self': member._id === profile._id, '-online': member.isOnline }"
-      :key="member._id"
-      @click.prevent="openMenu"
-      @contextmenu.prevent="openMenu"
-    >
-      <div class="member-item__text">
-        <span class="member-item__name">
-          <fa-icon v-if="member._id === teamInfo.manager" icon="crown" class="member-item__captain-icon" />
-          {{ member.name }}
-        </span>
-        <p class="member-item__last-online">
-          {{ member.isOnline ? 'online' : lastOnlineString(member.lastOnline) }}
-        </p>
-      </div>
-      <img class="member-item__avatar" :src="resolveStaticImageUrl(member.avatar)" alt="Member Avatar" />
-    </li>
-  </div>
+  <li
+    class="member-item"
+    :class="{ '-self': member._id === profile._id, '-online': member.isOnline }"
+    @click.prevent="openMenu"
+    @contextmenu.prevent="openMenu"
+  >
+    <img class="member-item__avatar" :src="resolveStaticImageUrl(member.avatar)" alt="Member Avatar" />
+    <div class="member-item__text">
+      <p class="member-item__name">
+        {{ member.name }}
+      </p>
+      <p class="member-item__role">
+        {{ member._id === teamInfo.manager ? 'Captain' : 'Member' }}
+      </p>
+      <p v-if="!member.isOnline" class="member-item__last-online">
+        {{ `last online ${lastOnlineString(member.lastOnline)}` }}
+      </p>
+    </div>
+    <div class="member-item__button-group">
+      <button class="member-item__btn"><fa-icon class="" icon="users" />Role</button>
+      <button class="member-item__btn"><fa-icon class="" icon="user-times" />Kick</button>
+      <button class="member-item__btn">
+        <div class="member-item__color-dot" :style="{ background: '#a7c4f1' }" />
+        Color
+      </button>
+    </div>
+  </li>
 </template>
 
 <script lang="ts" src="./MemberItem.ts"></script>
