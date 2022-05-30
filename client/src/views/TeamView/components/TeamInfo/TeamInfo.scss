@@ -1,5 +1,4 @@
 .team-info {
-  @include spacing('margin-left', '68px');
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -69,6 +68,7 @@
   &__btn-group {
     @include spacing('gap', '2xs');
     @include spacing('margin-top', 'md');
+    @include spacing('margin-bottom', 'md');
 
     display: flex;
     flex-direction: column;
@@ -76,5 +76,27 @@
 
   &__btn {
     @include icon-button-big;
+  }
+
+  &__danger-zone {
+    @include spacing('gap', 'xs');
+
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  &__text-btn {
+    @include spacing('padding', '3xs 2xs');
+
+    color: var(--color-red);
+    cursor: pointer;
+    border-radius: 0.25rem;
+    transition: background 0.3s ease;
+
+    &:hover {
+      background: var(--color-bg-secondary);
+    }
   }
 }

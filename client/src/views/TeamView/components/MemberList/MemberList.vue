@@ -10,7 +10,7 @@
       @open-menu="openMenu"
     >
     </MemberItem>
-    <vue-context ref="menu" v-slot="{ data }">
+    <!-- <vue-context ref="menu" v-slot="{ data }">
       <li>
         <a
           v-if="data && isManager && data.member._id !== teamInfo.manager"
@@ -27,7 +27,7 @@
       <li>
         <a v-if="data && data.member._id === profile._id" @click.prevent="leaveTeam"> Leave team </a>
       </li>
-    </vue-context>
+    </vue-context> -->
   </ol>
 </template>
 

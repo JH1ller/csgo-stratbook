@@ -1,5 +1,5 @@
 .strat-item {
-  background-color: $color--smoke;
+  background-color: var(--color-bg-secondary);
   box-shadow: $shadow-subtle;
   padding: 0 12px 6px 12px;
   border-radius: 10px;
@@ -42,7 +42,7 @@
     font-size: 0.8em;
     display: flex;
     align-items: center;
-    color: $color--abbey;
+    color: var(--color-text-secondary);
     opacity: 0.6;
     margin-left: 2px;
     opacity: 1;

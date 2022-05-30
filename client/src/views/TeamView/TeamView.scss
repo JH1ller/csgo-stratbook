@@ -1,6 +1,17 @@
 .team-view {
-  @include view-content;
-
   display: flex;
-  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  &__content {
+    @include view-content;
+    @include spacing('gap', '68px');
+
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    max-width: 1440px;
+
+    overflow-y: auto;
+  }
 }

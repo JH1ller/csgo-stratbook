@@ -16,6 +16,10 @@
       <button class="team-info__btn"><fa-icon icon="gamepad" />Join Server</button>
       <button class="team-info__btn"><fa-icon icon="copy" />Copy IP</button>
     </div>
+    <div class="team-info__danger-zone">
+      <button class="team-info__text-btn">Leave team</button>
+      <button class="team-info__text-btn">Delete team</button>
+    </div>
     <!-- <div class="team-info__manage-wrapper">
       <div class="team-info__fieldset">
         <h3 class="team-info__fieldset-headline">Server actions</h3>

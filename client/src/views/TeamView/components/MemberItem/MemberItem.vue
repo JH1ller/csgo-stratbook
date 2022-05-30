@@ -1,10 +1,5 @@
 <template>
-  <li
-    class="member-item"
-    :class="{ '-self': member._id === profile._id, '-online': member.isOnline }"
-    @click.prevent="openMenu"
-    @contextmenu.prevent="openMenu"
-  >
+  <li class="member-item" :class="{ '-self': member._id === profile._id, '-online': member.isOnline }">
     <img class="member-item__avatar" :src="resolveStaticImageUrl(member.avatar)" alt="Member Avatar" />
     <div class="member-item__text">
       <p class="member-item__name">
@@ -18,9 +13,13 @@
       </p>
     </div>
     <div class="member-item__button-group">
-      <button class="member-item__btn"><fa-icon class="" icon="users" />Role</button>
-      <button class="member-item__btn"><fa-icon class="" icon="user-times" />Kick</button>
-      <button class="member-item__btn">
+      <button v-if="profile._id === teamInfo.manager" class="member-item__btn">
+        <fa-icon class="" icon="users" />Role
+      </button>
+      <button v-if="profile._id === teamInfo.manager" class="member-item__btn">
+        <fa-icon class="" icon="user-times" />Kick
+      </button>
+      <button v-if="profile._id === teamInfo.manager || member._id === profile._id" class="member-item__btn">
         <div class="member-item__color-dot" :style="{ background: '#a7c4f1' }" />
         Color
       </button>

@@ -37,7 +37,7 @@
 
   &__submit {
     @include button-big($color--green);
-    color: white;
+    color: var(--color-bg);
   }
 
   &__register-text {

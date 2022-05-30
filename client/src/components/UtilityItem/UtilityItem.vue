@@ -11,7 +11,7 @@
     <UtilityTypeDisplay :type="utility.type" class="utility-item__type" />
     <span class="utility-item__info">
       <div class="utility-item__name">{{ utility.name }}</div>
-      <button class="utility-item__context" @click="openMenu"><fa-icon icon="ellipsis-v" /></button>
+      <button class="utility-item__context" @click="openMenu"><fa-icon icon="caret-square-down" /></button>
     </span>
   </div>
 </template>

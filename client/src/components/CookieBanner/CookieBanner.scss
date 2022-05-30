@@ -64,7 +64,7 @@
 
     &.--accept {
       background-color: $color--green;
-      color: white;
+      color: var(--color-bg);
     }
 
     &.--save {

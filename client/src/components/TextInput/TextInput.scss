@@ -8,7 +8,7 @@
     width: 100%;
 
     &.-error {
-      border-color: $color--red;
+      border-color: var(--color-red);
     }
 
     &:focus,
@@ -53,7 +53,7 @@
     pointer-events: none;
     opacity: 0.7;
     font-size: 0.6rem;
-    color: $color--red;
+    color: var(--color-red);
     max-width: 160px;
     text-align: right;
 

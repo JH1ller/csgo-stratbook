@@ -59,7 +59,7 @@
   }
 
   &__utility {
-    background-color: $color--smoke;
+    background-color: var(--color-bg-secondary);
 
     &:hover {
       background-color: darken($color--smoke, 5%);

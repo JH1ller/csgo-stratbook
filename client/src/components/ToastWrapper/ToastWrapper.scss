@@ -17,7 +17,7 @@
 
   &__toast-text {
     background: rgba($color--navyblue, 0.7);
-    color: white;
+    color: var(--color-bg);
     text-align: center;
     font-size: 1.1em;
     padding: 12px 24px;

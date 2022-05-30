@@ -1,4 +1,4 @@
-@mixin button-default($bgcolor: white, $color: $color--navyblue, $has-text: true) {
+@mixin button-default($bgcolor: var(--color-bg), $color: $color--navyblue, $has-text: true) {
   display: inline-flex;
   padding: 6px 11px;
   border-radius: 3px;
@@ -17,8 +17,7 @@
 
   &:hover,
   &:focus {
-    border-color: rgba(black, 0.3);
-    background-color: darken($bgcolor, 2%);
+    border-color: var(--color-accent-35);
   }
 
   & > svg {
@@ -33,7 +32,7 @@
   }
 }
 
-@mixin button-big($color: white) {
+@mixin button-big($color: var(--color-bg)) {
   @include button-default($color);
 
   padding: 12px 6px;

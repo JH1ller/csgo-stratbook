@@ -2,9 +2,11 @@
   @include spacing('padding', sm);
 
   border-radius: 10px;
-  background: $color--light;
+  background: var(--color-bg-secondary);
   flex-grow: 1;
   flex-basis: auto;
+  max-height: 800px;
+  overflow-y: auto;
 
   &__member {
     &:not(:first-of-type) {

@@ -25,7 +25,7 @@
   }
 
   &__preview-item {
-    background-color: $color--smoke;
+    background-color: var(--color-bg-secondary);
     position: relative;
     height: 75px;
 
@@ -47,7 +47,7 @@
     cursor: pointer;
     border-radius: 50%;
     background-color: rgba($color--dark, 0.2);
-    color: white;
+    color: var(--color-bg);
     transition: color 0.3s ease, background-color 0.3s ease;
     padding: 2px;
 
@@ -83,7 +83,7 @@
       padding: 0.5rem 1rem;
       line-height: 1.5;
       color: #555;
-      background-color: white;
+      background-color: var(--color-bg);
       border: 2px solid rgba($color--navyblue, 0.2);
       border-radius: 0.25rem;
       box-shadow: $shadow-subtle;

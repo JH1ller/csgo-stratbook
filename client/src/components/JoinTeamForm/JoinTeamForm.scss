@@ -35,7 +35,7 @@
     @include button-big($color--green);
 
     margin-top: 16px;
-    color: white;
+    color: var(--color-bg);
   }
 
   &__error {

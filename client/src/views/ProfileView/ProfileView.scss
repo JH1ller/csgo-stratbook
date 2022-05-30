@@ -61,7 +61,7 @@
     position: absolute;
     right: 16px;
     bottom: 16px;
-    color: white;
+    color: var(--color-bg);
     display: flex;
 
     & > :not(:first-of-type) {
@@ -77,6 +77,6 @@
   &__btn {
     @include button-default($color--red);
 
-    color: white;
+    color: var(--color-bg);
   }
 }

@@ -45,7 +45,7 @@
     bottom: 0;
     height: 30px;
     width: 100%;
-    // background-color: white;
+    // background-color: var(--color-bg);
     display: flex;
     align-items: center;
     padding: 4px;
@@ -109,7 +109,7 @@
     box-shadow: 0 0 8px rgba(black, 0.2);
 
     &:hover {
-      background-color: white;
+      background-color: var(--color-bg);
       box-shadow: 0 0 8px rgba(black, 0.4);
     }
   }
@@ -173,11 +173,11 @@
   &__badge-icon {
     width: 60%;
     height: 60%;
-    color: white;
+    color: var(--color-bg);
   }
 
   &__navigation {
-    color: $color--smoke;
+    color: var(--color-bg-secondary);
     transition: transform 0.3s ease, background-color 0.3s ease;
     cursor: pointer;
     width: 48px;
@@ -239,7 +239,7 @@
   }
 
   &__icon-wrapper {
-    background-color: white;
+    background-color: var(--color-bg);
     height: 60px;
     display: flex;
     align-items: flex-end;

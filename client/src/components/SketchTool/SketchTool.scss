@@ -9,7 +9,7 @@
     @include spacing('top', sm);
 
     position: absolute;
-    color: white;
+    color: var(--color-bg);
     z-index: 1;
     pointer-events: none;
   }
@@ -194,7 +194,7 @@
   }
 
   &__keymap-label {
-    color: white;
+    color: var(--color-bg);
 
     @include viewport_range(mq1, mq2) {
       font-size: 0.8rem;
@@ -209,7 +209,7 @@
     font-weight: bold;
     font-size: 0.7rem;
     line-height: 13px;
-    color: white;
+    color: var(--color-bg);
     padding-left: 4px;
     padding-top: 2px;
 
@@ -264,7 +264,7 @@
   &__client {
     display: flex;
     align-items: center;
-    color: white;
+    color: var(--color-bg);
 
     @include viewport_range(mq1, mq2) {
       font-size: 0.8rem;
@@ -282,7 +282,7 @@
     @include typo_hl3;
     @include spacing('margin-bottom', 's');
 
-    color: white;
+    color: var(--color-bg);
 
     @include viewport_range(mq1, mq2) {
       font-size: 0.8rem;

@@ -4,7 +4,7 @@
   z-index: 10;
 
   &__list {
-    background: $color--darkblue;
+    background: var(--color-bg-blue);
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
@@ -81,7 +81,7 @@
 
     &:hover {
       @include viewport_mq3 {
-        background-color: $color--black;
+        background-color: var(--color-bg-dark);
       }
     }
   }
@@ -112,11 +112,11 @@
       }
       .main-menu__icon {
         & path {
-          fill: white;
+          fill: var(--color-text-contrast);
         }
       }
       .main-menu__label {
-        color: white;
+        color: var(--color-text-contrast);
       }
     }
   }
@@ -135,7 +135,7 @@
 
     & path {
       transition: fill 0.3s ease;
-      fill: rgba(white, 0.7);
+      fill: var(--color-text-contrast-70);
     }
   }
 
@@ -150,14 +150,14 @@
     margin-left: 1.5rem;
     opacity: 0;
     overflow: hidden;
-    color: $color--grey;
+    color: var(--color-text-contrast-70);
     transform: translateX(-20px);
     transition: opacity 0.5s ease-out, color 0.3s ease, transform 0.5s ease-out;
   }
 
   &__logo {
     padding-left: 16px;
-    background: $color--black;
+    background: var(--color-bg-dark);
     opacity: 0;
     transition: opacity 0.3s ease;
 
@@ -167,7 +167,7 @@
   }
 
   &__logo-label {
-    color: $color--orange;
+    color: var(--color-yellow);
     font-weight: $weight-bold;
     transform: translateX(0);
     margin-left: 16px;
@@ -175,7 +175,7 @@
   }
 
   &__link {
-    color: $color--grey;
+    color: var(--color-text-contrast-70);
     align-items: center;
     font-size: 0.8rem;
     opacity: 0;
@@ -201,7 +201,7 @@
 
     &:hover {
       & > svg > path {
-        fill: white;
+        fill: var(--color-bg);
         transition: fill 0.3s ease;
       }
       &.--twitter {
@@ -272,7 +272,7 @@
 
   &__profile-label {
     margin-left: 1rem;
-    color: white;
+    color: var(--color-text-contrast);
   }
 
   &__mobile {
@@ -284,7 +284,7 @@
     z-index: 10;
     padding: 4px;
     border-radius: 50%;
-    background-color: $color--dark;
+    background-color: var(--color-bg-dark);
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
     transition: opacity 0.3s ease;
     opacity: 1;

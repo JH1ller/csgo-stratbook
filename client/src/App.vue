@@ -3,7 +3,7 @@
     <LoadingBar />
     <div class="app__version-wrapper">
       <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi" /></span>
-      <span class="app__version">{{ appVersion }}</span>
+      <span class="app__version" @click="toggleDarkMode">{{ appVersion }}</span>
     </div>
     <DialogWrapper />
     <ToastWrapper />
@@ -151,6 +151,10 @@ export default class App extends Vue {
   private toggleMenu() {
     this.menuOpen = !this.menuOpen;
   }
+
+  toggleDarkMode() {
+    document.body.classList.toggle('-dark');
+  }
 }
 </script>
 
@@ -172,7 +176,7 @@ export default class App extends Vue {
     font-size: 0.8rem;
     top: 1px;
     right: 13px;
-    color: $color--smoke;
+    color: var(--color-bg-secondary);
     display: flex;
     align-items: center;
   }

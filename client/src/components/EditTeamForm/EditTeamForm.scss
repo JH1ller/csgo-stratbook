@@ -11,10 +11,7 @@
     &.--save {
       @include button-big($color--green);
 
-      color: white;
-    }
-
-    &.--cancel {
+      color: var(--color-bg);
     }
   }
 

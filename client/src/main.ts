@@ -62,6 +62,7 @@ import {
   faSignInAlt,
   faUserTag,
   faUserTimes,
+  faCaretSquareDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { faDiscord, faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -150,6 +151,7 @@ library.add(
   faSignInAlt,
   faUserTag,
   faUserTimes,
+  faCaretSquareDown,
 );
 
 if (process.env.NODE_ENV === 'production') {
