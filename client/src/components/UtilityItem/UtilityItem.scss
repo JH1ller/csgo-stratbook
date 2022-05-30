@@ -108,11 +108,11 @@
     border-radius: 4px;
     padding: 2px;
     cursor: pointer;
-    transition: border-color 0.1s ease;
+    transition: border-color 0.2s ease;
     margin-left: 12px;
 
     &:hover {
-      border-color: var(--color-accent-50);
+      border-color: var(--color-accent-65);
     }
 
     & > svg {
