@@ -1199,7 +1199,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
     this.saveStateToHistory();
 
-    if (isMobile()) {
+    if (isMobile() && !this.storageService.get('mobile-warning-shown')) {
       catchPromise(
         this.showDialog({
           key: 'sketch-tool/mobile-warning',
@@ -1208,6 +1208,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
           confirmOnly: true,
         }),
       );
+      this.storageService.set('mobile-warning-shown', true);
     }
 
     //TODO: remove, only for testing
