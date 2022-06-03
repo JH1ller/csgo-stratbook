@@ -65,7 +65,7 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
     res.locals.player.avatar = fileName;
   }
 
-  if (req.body.name && req.query.updateStrats === 'true') {
+  if (req.body.name && req.query.updateStrats === 'true' && res.locals.player.team) {
     const strats = await StratModel.find({ team: res.locals.player.team });
     const promises = strats.map(async (strat) => {
       strat.content = strat.content?.replace(res.locals.player.name, req.body.name);
@@ -97,9 +97,11 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
   const { email, password, deleted, modifiedAt, ...sanitizedPlayer } = updatedPlayer.toObject();
 
   res.json(sanitizedPlayer);
-  (req.app.get('io') as TypedServer)
-    .to(updatedPlayer.team.toString())
-    .emit('updated-player', { player: sanitizedPlayer });
+  if (updatedPlayer.team) {
+    (req.app.get('io') as TypedServer)
+      .to(updatedPlayer.team.toString())
+      .emit('updated-player', { player: sanitizedPlayer });
+  }
 });
 
 export default router;
