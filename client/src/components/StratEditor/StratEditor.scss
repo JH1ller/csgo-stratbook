@@ -48,14 +48,6 @@
         background-color: darken($color--light-purple, 7%);
       }
 
-      &.-is-user {
-        background-color: $color--aero;
-
-        &:hover {
-          background-color: darken($color--aero, 7%);
-        }
-      }
-
       &.-is-spawn {
         background-color: $color--sand;
 

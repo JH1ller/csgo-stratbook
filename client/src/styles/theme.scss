@@ -45,12 +45,12 @@ body.-dark {
   --color-yellow: #e6b352;
   --color-red: #ff3c3c;
 
-  --color-app-bg: #111114;
-  --color-bg: #0f0f0f;
-  --color-bg-secondary: #292929;
-  --color-bg-tertiary: #363636;
+  --color-app-bg: hsl(240deg 14% 8%);
+  --color-bg: hsl(240deg 14% 10%);
+  --color-bg-secondary: hsl(240deg 14% 16%);
+  --color-bg-tertiary: hsl(240deg 14% 20%);
 
-  --color-border: #464646;
+  --color-border: hsl(240deg 14% 10%);
 
   // Fonts
   --font-default: 'Ubuntu', sans-serif;
