@@ -15,5 +15,5 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {},
-  plugins: ['@typescript-eslint', 'security'],
+  plugins: ['prettier', '@typescript-eslint', 'security'],
 };

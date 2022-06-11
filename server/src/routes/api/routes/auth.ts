@@ -88,6 +88,7 @@ router.post('/login', async (req, res) => {
   res.set('Access-Control-Expose-Headers', 'Set-Cookie');
   res.set('Access-Control-Allow-Headers', 'Set-Cookie');
 
+  // TODO: check why we're using send() instead of json()
   res.send({
     token,
     refreshToken: jsonMode ? refreshToken : undefined,

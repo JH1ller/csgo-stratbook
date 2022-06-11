@@ -1,10 +1,10 @@
+import { COLORS } from '@/constants';
 import { GameMap } from '@/types/enums';
+import { getRandomColor } from '@/utils/colors';
 import { nanoid } from 'nanoid';
 import { Client, DrawBoardState, MapData } from '../types';
 
 export class Room {
-  static readonly colors = ['#1EBC9C', '#3298DB', '#F2C512', '#A463BF', '#E84B3C', '#DDE6E8'];
-
   clients: Record<string, Client>;
   maps: Record<GameMap, MapData>;
   currentMap: GameMap;
@@ -23,16 +23,9 @@ export class Room {
   }
 
   getColor() {
-    let color = Room.colors.find((color) => !Object.values(this.clients).some((client) => client.color === color));
-    if (color) return color;
-
-    //* No unused color found in static array, so we generate a random one
-    const letters = '0123456789ABCDEF';
-    color = '#';
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
+    return (
+      COLORS.find((color) => !Object.values(this.clients).some((client) => client.color === color)) ?? getRandomColor()
+    );
   }
 
   static getRandomUsername() {

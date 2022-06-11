@@ -19,7 +19,8 @@ export interface Team {
   deletedAt?: Date;
 }
 
-export type TeamDocument = Document<unknown, any, Team>;
+export type TeamDocument = Team &
+  Document<unknown, any, Team> & { _id: Types.ObjectId; $locals: { skipModified?: boolean } };
 
 const teamSchema = new Schema<Team>({
   name: {

@@ -76,8 +76,7 @@ const stratSchema = new Schema<Strat>({
     maxlength: 100,
   },
 
-  // TODO: revert to correct schema
-  drawData: Schema.Types.Mixed,
+  drawData: drawBoardStateSchema,
 
   content: {
     type: String,

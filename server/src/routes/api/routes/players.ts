@@ -8,40 +8,13 @@ import { verifyAuth } from '@/utils/verifyToken';
 import { sendMail, MailTemplate } from '@/utils/mailService';
 import { profileUpdateSchema } from '@/utils/validation';
 import { TypedServer } from '@/sockets/interfaces';
+import { toPlayerDto } from '@/dto/player.dto';
 
 const router = Router();
 
 // * Get User Profile
 router.get('/', verifyAuth, (_req, res) => {
-  const {
-    _id,
-    name,
-    role,
-    avatar,
-    team,
-    email,
-    confirmed,
-    isAdmin,
-    createdAt,
-    isOnline,
-    lastOnline,
-    completedTutorial,
-  } = res.locals.player;
-
-  res.json({
-    _id,
-    name,
-    role,
-    avatar,
-    team,
-    email,
-    confirmed,
-    isAdmin,
-    createdAt,
-    isOnline,
-    lastOnline,
-    completedTutorial,
-  });
+  return res.json(toPlayerDto(res.locals.player));
 });
 
 // * Update One
@@ -92,15 +65,20 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
     res.locals.player.completedTutorial = JSON.parse(req.body.completedTutorial);
   }
 
+  if (req.body.color) {
+    res.locals.player.color = req.body.color;
+  }
+
   const updatedPlayer = await res.locals.player.save();
 
-  const { email, password, deleted, modifiedAt, ...sanitizedPlayer } = updatedPlayer.toObject();
+  const updatedPlayerDto = toPlayerDto(updatedPlayer);
 
-  res.json(sanitizedPlayer);
+  res.json(updatedPlayerDto);
+
   if (updatedPlayer.team) {
     (req.app.get('io') as TypedServer)
       .to(updatedPlayer.team.toString())
-      .emit('updated-player', { player: sanitizedPlayer });
+      .emit('updated-player', { player: updatedPlayerDto });
   }
 });
 
