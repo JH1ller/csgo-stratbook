@@ -12,27 +12,27 @@ import { Player } from '@/api/models/Player';
   },
 })
 export default class MemberList extends Vue {
-  @teamModule.State private teamInfo!: Team;
-  @teamModule.State private teamMembers!: Player[];
-  @authModule.State private profile!: Player;
+  @teamModule.State teamInfo!: Team;
+  @teamModule.State teamMembers!: Player[];
+  @authModule.State profile!: Player;
   @Ref() menu!: any;
 
   @Emit()
-  private leaveTeam(): void {
-    return;
-  }
-
-  @Emit()
-  private kickMember(id: string): string {
+  kickMember(id: string): string {
     return id;
   }
 
   @Emit()
-  private transferManager(to: string): string {
+  updateColor(color: string): string {
+    return color;
+  }
+
+  @Emit()
+  transferManager(to: string): string {
     return to;
   }
 
-  private openMenu({ event, member }: { event: MouseEvent; member: Player }): void {
+  openMenu({ event, member }: { event: MouseEvent; member: Player }): void {
     if (this.shouldShowMenu(member)) {
       event.preventDefault();
       event.stopImmediatePropagation();
@@ -40,11 +40,11 @@ export default class MemberList extends Vue {
     }
   }
 
-  private get isManager(): boolean {
+  get isManager(): boolean {
     return this.teamInfo.manager === this.profile._id;
   }
 
-  private shouldShowMenu(member: Player): boolean {
+  shouldShowMenu(member: Player): boolean {
     return (
       (this.isManager && member._id !== this.teamInfo.manager) ||
       (this.isManager && member._id !== this.profile._id) ||
@@ -52,7 +52,7 @@ export default class MemberList extends Vue {
     );
   }
 
-  private get sortedMembers() {
+  get sortedMembers() {
     return this.teamMembers.sort((a, b) => new Date(b.lastOnline!).getTime() - new Date(a.lastOnline!).getTime());
   }
 }

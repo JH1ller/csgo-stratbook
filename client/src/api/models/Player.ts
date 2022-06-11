@@ -8,4 +8,5 @@ export interface Player extends Model {
   isOnline?: boolean;
   lastOnline?: Date;
   completedTutorial?: boolean;
+  color: string;
 }

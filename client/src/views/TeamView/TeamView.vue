@@ -3,15 +3,16 @@
     <div class="team-view__content">
       <MemberList
         class="team-view__member-list"
-        @leave-team="requestTeamLeave"
         @transfer-manager="requestTransferManager"
         @kick-member="requestKickMember"
+        @update-color="requestColorUpdate"
       />
       <TeamInfo
         :teamInfo="teamInfo"
         :serverString="serverString"
         :isManager="isManager"
         @show-edit="toggleEditForm"
+        @leave-team="requestTeamLeave"
         @delete-team="requestTeamDelete"
       />
       <transition name="fade">

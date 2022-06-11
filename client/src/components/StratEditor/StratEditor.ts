@@ -11,6 +11,7 @@ import { generateEquipmentData, generateWeaponData } from './data/equipment.data
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import { transformMap } from './utils/transformHtml';
 import ReplaceKeywords from 'replace-keywords';
+import { contrastColor } from '@/utils/colors';
 export interface LinkOption {
   id?: string;
   icon?: string;
@@ -55,8 +56,8 @@ export default class StratEditor extends Vue {
         label: 'Molotov',
       },
       ...this.utilitiesOfCurrentMap
-        .filter(utility => utility.side === this.stratSide)
-        .map(utility => ({
+        .filter((utility) => utility.side === this.stratSide)
+        .map((utility) => ({
           id: utility._id,
           icon: utility.type.toLowerCase(),
           label: utility.name,
@@ -67,7 +68,7 @@ export default class StratEditor extends Vue {
 
   private get mentionOptionList(): LinkOption[] {
     return [
-      ...this.teamMembers.map(member => ({
+      ...this.teamMembers.map((member) => ({
         id: member._id,
         icon: member.avatar,
         query: member.name,
@@ -208,7 +209,7 @@ export default class StratEditor extends Vue {
   private htmlInserted(e: CustomEvent) {
     const command: string = e.detail.item.original.id;
     if (command?.endsWith(':')) {
-      const collectionIndex = this.tributeOptions.collection.findIndex(collection => collection.trigger === command);
+      const collectionIndex = this.tributeOptions.collection.findIndex((collection) => collection.trigger === command);
       // * hack to prevent new menu being immediately closed
       this.$nextTick().then(() => this.tribute.showMenuForCollection(this.textarea, collectionIndex));
     }
@@ -239,10 +240,10 @@ export default class StratEditor extends Vue {
 
   private addClickListeners() {
     const utilNodes: NodeListOf<HTMLElement> = this.textarea.querySelectorAll('[data-util-id]');
-    utilNodes.forEach(node => {
+    utilNodes.forEach((node) => {
       const id = node.getAttribute('data-util-id');
       if (!node.onclick) {
-        if (this.utilitiesOfCurrentMap.find(utility => utility._id === id)) {
+        if (this.utilitiesOfCurrentMap.find((utility) => utility._id === id)) {
           node.onclick = () => this.utilClicked(id as string);
           node.classList.add('-linked');
         } else {
@@ -255,17 +256,20 @@ export default class StratEditor extends Vue {
         }
       }
     });
+    this.addPlayerColors();
+  }
+
+  addPlayerColors() {
     const playerNodes: NodeListOf<HTMLElement> = this.textarea.querySelectorAll('[data-player-id]');
-    playerNodes.forEach(node => {
-      const id = node.getAttribute('data-player-id');
-      if (id === this.profile._id && !node.classList.contains('-is-user')) {
-        node.classList.add('-is-user');
-      }
+    playerNodes.forEach((node) => {
+      const player = this.teamMembers.find((member) => member._id === node.getAttribute('data-player-id'));
+      node.style.background = player?.color ?? 'var(--color-accent)';
+      node.style.color = player?.color ? contrastColor(player.color) : 'white';
     });
   }
 
   private utilClicked(id: string) {
-    const utility = this.utilitiesOfCurrentMap.find(utility => utility._id === id);
+    const utility = this.utilitiesOfCurrentMap.find((utility) => utility._id === id);
     if (utility) this.showLightboxFunc(utility);
   }
 

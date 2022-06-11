@@ -1,13 +1,13 @@
 <template>
   <ol class="member-list">
     <MemberItem
-      class="member-list__member"
       v-for="member in sortedMembers"
+      class="member-list__member"
       :key="member._id"
       :member="member"
       :profile="profile"
       :teamInfo="teamInfo"
-      @open-menu="openMenu"
+      @update-color="updateColor"
     >
     </MemberItem>
     <!-- <vue-context ref="menu" v-slot="{ data }">

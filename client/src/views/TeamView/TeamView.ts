@@ -1,7 +1,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import MemberList from './components/MemberList/MemberList.vue';
 import TeamInfo from './components/TeamInfo/TeamInfo.vue';
-import { appModule, teamModule } from '@/store/namespaces';
+import { appModule, authModule, teamModule } from '@/store/namespaces';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { Response } from '@/store';
 import { Routes } from '@/router/router.models';
@@ -17,19 +17,20 @@ import { catchPromise } from '@/utils/catchPromise';
   },
 })
 export default class TeamView extends Vue {
-  @teamModule.Getter private serverString!: string;
-  @teamModule.Getter private isManager!: boolean;
-  @teamModule.State private teamInfo!: Team;
-  @teamModule.Action private leaveTeam!: () => Promise<Response>;
-  @teamModule.Action private deleteTeam!: () => Promise<Response>;
-  @teamModule.Action private transferManager!: (memberID: string) => Promise<Response>;
-  @teamModule.Action private kickMember!: (memberID: string) => Promise<Response>;
-  @teamModule.Action private updateTeam!: (data: FormData) => Promise<Response>;
+  @teamModule.Getter serverString!: string;
+  @teamModule.Getter isManager!: boolean;
+  @teamModule.State teamInfo!: Team;
+  @teamModule.Action leaveTeam!: () => Promise<Response>;
+  @teamModule.Action deleteTeam!: () => Promise<Response>;
+  @teamModule.Action transferManager!: (memberID: string) => Promise<Response>;
+  @teamModule.Action kickMember!: (memberID: string) => Promise<Response>;
+  @teamModule.Action updateTeam!: (data: FormData) => Promise<Response>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
+  @authModule.Action private updateProfile!: (data: FormData) => Promise<void>;
 
-  private showEditForm = false;
+  showEditForm = false;
 
-  private requestTeamLeave() {
+  requestTeamLeave() {
     catchPromise(
       this.showDialog({
         key: 'team-view/confirm-leave',
@@ -41,7 +42,7 @@ export default class TeamView extends Vue {
       },
     );
   }
-  private requestTeamDelete() {
+  requestTeamDelete() {
     if (!this.isManager) return;
 
     catchPromise(
@@ -56,7 +57,7 @@ export default class TeamView extends Vue {
     );
   }
 
-  private requestTransferManager(memberID: string) {
+  requestTransferManager(memberID: string) {
     catchPromise(
       this.showDialog({
         key: 'team-view/confirm-transfer',
@@ -66,7 +67,7 @@ export default class TeamView extends Vue {
     );
   }
 
-  private requestKickMember(memberID: string) {
+  requestKickMember(memberID: string) {
     catchPromise(
       this.showDialog({
         key: 'team-view/confirm-kick',
@@ -76,14 +77,20 @@ export default class TeamView extends Vue {
     );
   }
 
-  private async requestTeamUpdate(formData: FormData) {
+  async requestTeamUpdate(formData: FormData) {
     const res = await this.updateTeam(formData);
     if (res.success) {
       this.toggleEditForm();
     }
   }
 
-  private toggleEditForm() {
+  requestColorUpdate(color: string) {
+    const formData = new FormData();
+    formData.append('color', color);
+    return this.updateProfile(formData);
+  }
+
+  toggleEditForm() {
     if (!this.isManager) return;
 
     this.showEditForm = !this.showEditForm;
