@@ -1,0 +1,38 @@
+.darkmode-toggle {
+  width: 130px;
+  display: block;
+  --transition: 0.5s ease;
+
+  &__inner {
+    height: 65px;
+    width: 130px;
+    background: var(--black);
+    border-radius: 40px;
+    padding: 12px;
+    position: relative;
+    cursor: pointer;
+
+    &::before {
+      content: '';
+      display: block;
+      height: 41px;
+      width: 41px;
+      border-radius: 30px;
+      background: var(--white);
+      position: absolute;
+      z-index: 2;
+      transform: translate(0);
+      transition: transform var(--transition);
+    }
+  }
+
+  &__hidden {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+}
