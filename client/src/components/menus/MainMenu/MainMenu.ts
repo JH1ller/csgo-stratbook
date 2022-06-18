@@ -7,8 +7,13 @@ import TrackingService from '@/services/tracking.service';
 import { catchPromise } from '@/utils/catchPromise';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { openLink } from '@/utils/openLink';
+import DarkmodeToggle from '@/components/DarkmodeToggle/DarkmodeToggle.vue';
 
-@Component({})
+@Component({
+  components: {
+    DarkmodeToggle,
+  },
+})
 export default class MainMenu extends Vue {
   private appName = 'stratbook'; // TODO: dynamic
   @Inject() private trackingService!: TrackingService;

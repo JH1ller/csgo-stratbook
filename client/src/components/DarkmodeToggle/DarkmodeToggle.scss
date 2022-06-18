@@ -1,38 +1,57 @@
 .darkmode-toggle {
-  width: 130px;
-  display: block;
-  --transition: 0.5s ease;
+  --width: 60px;
+  --height: calc(var(--width) / 2);
+  --before-padding: calc((var(--height) - (var(--width) / 3.5)) / 2);
+  width: var(--width);
+  height: var(--height);
 
   &__inner {
-    height: 65px;
-    width: 130px;
-    background: var(--black);
-    border-radius: 40px;
-    padding: 12px;
+    height: 100%;
+    width: 100%;
+    background: var(--color-default);
+    border-radius: 999px;
+    padding: 10%;
     position: relative;
     cursor: pointer;
 
     &::before {
       content: '';
-      display: block;
-      height: 41px;
-      width: 41px;
-      border-radius: 30px;
-      background: var(--white);
+      height: calc(var(--width) / 3.5);
+      width: calc(var(--width) / 3.5);
+      border-radius: 999px;
+      background: var(--color-bg);
       position: absolute;
       z-index: 2;
-      transform: translate(0);
-      transition: transform var(--transition);
+      transform: translate(0, -50%);
+      transition: transform 0.3s ease;
+      top: 50%;
+      left: var(--before-padding);
+    }
+
+    &.-dark::before {
+      transform: translate(calc(var(--width) - var(--before-padding) * 2 - (var(--width) / 3.5)), -50%);
+    }
+
+    & input {
+      position: absolute;
+      top: 0;
+      opacity: 0;
     }
   }
 
-  &__hidden {
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    height: 1px;
-    overflow: hidden;
-    position: absolute;
-    white-space: nowrap;
-    width: 1px;
+  &__icon-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    margin: 0 3px;
+
+    & svg {
+      fill: var(--color-bg);
+      color: var(--color-bg);
+      height: calc(var(--width) / 4.5);
+      width: calc(var(--width) / 4.5);
+      z-index: 0;
+    }
   }
 }

@@ -9,7 +9,7 @@
   align-items: center;
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.2s ease, width 0.2s ease;
-  border: 2px solid var(--color-bg);
+  border: 2px solid var(--color-text-contrast);
 
   @include viewport_mq4 {
     width: auto;
@@ -24,12 +24,12 @@
   &__icon {
     width: 28px;
     height: 28px;
-    color: var(--color-bg);
+    color: var(--color-text-contrast);
   }
 
   &__label {
     display: none;
-    color: var(--color-bg);
+    color: var(--color-text-contrast);
     margin-left: 6px;
 
     @include viewport_mq4 {

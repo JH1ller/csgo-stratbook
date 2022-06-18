@@ -32,7 +32,8 @@
       .main-menu__profile-label,
       .main-menu__icon,
       .main-menu__profile,
-      .main-menu__logo {
+      .main-menu__logo,
+      .main-menu__darkmode-toggle {
         transform: translateX(0);
         opacity: 1;
         pointer-events: all;
@@ -52,7 +53,8 @@
         .main-menu__profile-label,
         .main-menu__icon,
         .main-menu__profile,
-        .main-menu__logo {
+        .main-menu__logo,
+        .main-menu__darkmode-toggle {
           transform: translateX(0);
           opacity: 1;
         }
@@ -241,10 +243,6 @@
       }
     }
 
-    &.--twitter {
-      margin-top: auto;
-    }
-
     &.--kofi {
       margin-bottom: 24px;
     }
@@ -296,5 +294,15 @@
     @include viewport_mq3 {
       display: none;
     }
+  }
+
+  &__darkmode-toggle {
+    @include spacing('margin-left', 'sm');
+    @include spacing('margin-bottom', 'xs');
+
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    align-self: flex-start;
+    margin-top: auto;
   }
 }

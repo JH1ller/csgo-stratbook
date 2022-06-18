@@ -1,5 +1,5 @@
 import StorageService from '@/services/storage.service';
-import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component({})
 export default class DarkmodeToggle extends Vue {
@@ -7,7 +7,8 @@ export default class DarkmodeToggle extends Vue {
   storageService = StorageService.getInstance();
 
   toggle() {
-    console.log('toggle');
+    this.isDark = !this.isDark;
+    document.body.classList.toggle('-dark');
   }
 
   mounted() {

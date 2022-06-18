@@ -4,7 +4,6 @@
     <div class="app__version-wrapper">
       <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi" /></span>
       <span class="app__version" @click="toggleDarkMode">{{ appVersion }}</span>
-      <DarkmodeToggle />
     </div>
     <DialogWrapper />
     <ToastWrapper />
@@ -31,7 +30,6 @@ import ToastWrapper from '@/components/ToastWrapper/ToastWrapper.vue';
 import MainMenu from '@/components/menus/MainMenu/MainMenu.vue';
 import DialogWrapper from './components/DialogWrapper/DialogWrapper.vue';
 import CookieBanner from './components/CookieBanner/CookieBanner.vue';
-import DarkmodeToggle from './components/DarkmodeToggle/DarkmodeToggle.vue';
 import pkg from '../package.json';
 import { appModule, teamModule } from './store/namespaces';
 import TrackingService from '@/services/tracking.service';
@@ -50,7 +48,6 @@ import WebSocketService from './services/WebSocketService';
     ToastWrapper,
     DialogWrapper,
     CookieBanner,
-    DarkmodeToggle,
   },
 })
 export default class App extends Vue {
@@ -194,6 +191,13 @@ export default class App extends Vue {
       width: 14px;
       height: 14px;
     }
+  }
+
+  &__darkmode-toggle {
+    position: absolute;
+
+    @include spacing('top', 'xs');
+    @include spacing('right', 'xs');
   }
 }
 
