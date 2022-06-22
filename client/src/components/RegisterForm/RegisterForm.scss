@@ -76,7 +76,7 @@
   }
 
   &__submit {
-    @include button-big($color--green);
+    @include button-big(var(--color-green));
 
     color: var(--color-bg);
     box-shadow: $shadow-subtle;
@@ -93,7 +93,7 @@
   &__register-link {
     font-weight: bold;
     margin-left: 4px;
-    color: $color--green;
+    color: var(--color-green);
     cursor: pointer;
   }
 

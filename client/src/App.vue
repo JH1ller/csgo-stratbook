@@ -224,6 +224,8 @@ export default class App extends Vue {
 }
 
 .v-context {
+  background-color: var(--color-bg);
+
   & > li {
     cursor: pointer;
 
@@ -236,6 +238,12 @@ export default class App extends Vue {
       display: flex;
       align-items: center;
       width: 100%;
+      color: var(--color-text);
+
+      &:hover {
+        background-color: var(--color-bg-secondary);
+        color: var(--color-text);
+      }
 
       & > svg {
         height: 70%;

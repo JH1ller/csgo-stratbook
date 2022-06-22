@@ -26,10 +26,10 @@
 
   &__btn {
     &.--submit {
-      @include button-default($color--green, var(--color-bg));
+      @include button-default(var(--color-green), var(--color-text-contrast));
     }
     &.--cancel {
-      @include button-default($color--red, var(--color-bg));
+      @include button-default($color--red, var(--color-text-contrast));
     }
 
     &:not(:first-of-type) {

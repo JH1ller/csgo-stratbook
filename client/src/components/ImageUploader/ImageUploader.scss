@@ -46,22 +46,22 @@
     right: 6px;
     cursor: pointer;
     border-radius: 50%;
-    background-color: rgba($color--dark, 0.2);
-    color: var(--color-bg);
+    background-color: var(--color-accent-35);
+    color: var(--color-text-contrast);
     transition: color 0.3s ease, background-color 0.3s ease;
     padding: 2px;
 
     &:hover {
-      color: $color--dark;
-      background-color: rgba($color--light, 0.5);
+      background-color: var(--color-accent-65);
     }
   }
 
   &__preview-placeholder {
     @include abs-center;
+
     opacity: 1;
     transition: opacity 0.3s ease;
-    color: rgba($color--navyblue, 0.3);
+    color: var(--color-accent-35);
 
     &.-has-content {
       opacity: 0;
@@ -82,9 +82,9 @@
       height: 2.5rem;
       padding: 0.5rem 1rem;
       line-height: 1.5;
-      color: #555;
+      color: var(--color-text-secondary);
       background-color: var(--color-bg);
-      border: 2px solid rgba($color--navyblue, 0.2);
+      border: 2px solid var(--color-accent-20);
       border-radius: 0.25rem;
       box-shadow: $shadow-subtle;
       user-select: none;
@@ -92,10 +92,10 @@
       transition: border-color 0.3s ease;
 
       &:hover {
-        border-color: rgba($color--navyblue, 0.4);
+        border-color: var(--color-accent-35);
         &:before {
-          background-color: #ddd;
-          border-color: rgba($color--navyblue, 0.4);
+          background-color: var(--color-bg-tertiary);
+          border-color: var(--color-accent-35);
         }
       }
 
@@ -103,14 +103,14 @@
         position: absolute;
         top: -2px;
         right: -2px;
-        border: 2px solid rgba($color--navyblue, 0.2);
+        border: 2px solid var(--color-accent-35);
         border-left: none;
         bottom: -2px;
         content: 'Browse';
         padding: 0.5rem 1rem;
         line-height: 1.5;
-        color: #555;
-        background-color: $color--light;
+        color: var(--color-text);
+        background-color: var(--color-bg-secondary);
         border-radius: 0 0.25rem 0.25rem 0;
         transition: background-color 0.3s ease, border-color 0.3s ease;
       }

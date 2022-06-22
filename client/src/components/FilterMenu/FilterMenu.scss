@@ -35,11 +35,11 @@
 
     &.--clear {
       margin-top: 24px;
-      background-color: $color--green;
-      color: var(--color-bg);
+      background-color: var(--color-green);
+      color: var(--color-text-contrast);
 
       & > svg {
-        color: var(--color-bg);
+        color: var(--color-text-contrast);
       }
     }
 

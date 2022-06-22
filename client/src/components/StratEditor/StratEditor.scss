@@ -66,18 +66,14 @@
     }
 
     &.--timestamp {
-      background-color: $color--puerto;
-      color: var(--color-bg);
+      background-color: var(--color-blue);
+      color: var(--color-text-contrast);
 
       & > img {
         width: 16px;
         height: 16px;
         transform: translateY(2px);
         margin-right: 4px;
-      }
-
-      &:hover {
-        background-color: darken($color--puerto, 5%);
       }
     }
 
@@ -88,7 +84,7 @@
 
       &.-linked {
         &::after {
-          background-color: $color--green;
+          background-color: var(--color-green);
         }
       }
 
@@ -101,7 +97,7 @@
         right: 6px;
         top: 50%;
         transform: translateY(-50%);
-        background-color: $color--orange;
+        background-color: var(--color-yellow);
       }
     }
   }

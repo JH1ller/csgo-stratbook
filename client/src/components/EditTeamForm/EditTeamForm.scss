@@ -9,7 +9,7 @@
     }
 
     &.--save {
-      @include button-big($color--green);
+      @include button-big(var(--color-green));
 
       color: var(--color-bg);
     }

@@ -12,7 +12,7 @@
     border-radius: 50%;
     transition: opacity 0.3s ease, border-color 0.3s ease;
     background-color: var(--color-bg-secondary);
-    border: 2px solid $color--grey;
+    border: 2px solid var(--color-text-tertiary);
 
     @include viewport_mq3 {
       width: 56px;
@@ -36,7 +36,7 @@
 
   &__label {
     font-weight: $weight-bold;
-    color: $color--abbey;
+    color: var(--color-text);
     font-size: 0.7rem;
     position: absolute;
     left: 50%;

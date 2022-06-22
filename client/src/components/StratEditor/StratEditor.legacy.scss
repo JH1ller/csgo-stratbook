@@ -16,7 +16,7 @@
 
       &.-linked {
         &::after {
-          background-color: $color--green;
+          background-color: var(--color-green);
         }
       }
 

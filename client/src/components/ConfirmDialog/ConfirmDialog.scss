@@ -29,7 +29,7 @@
     @include button-default;
 
     & > svg {
-      color: $color--green;
+      color: var(--color-green);
     }
   }
 

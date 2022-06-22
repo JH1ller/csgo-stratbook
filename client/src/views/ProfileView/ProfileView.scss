@@ -75,8 +75,8 @@
   }
 
   &__btn {
-    @include button-default($color--red);
+    @include button-default(var(--color-red));
 
-    color: var(--color-bg);
+    color: var(--color-text-contrast);
   }
 }
