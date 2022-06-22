@@ -60,15 +60,15 @@
     font-size: 1rem;
     border-radius: 6px;
     cursor: pointer;
-    border: 2px solid $color--green;
+    border: 2px solid var(--color-green);
 
     &.--accept {
-      background-color: $color--green;
+      background-color: var(--color-green);
       color: var(--color-bg);
     }
 
     &.--save {
-      color: $color--green;
+      color: var(--color-green);
       background-color: rgba(white, 0.3);
     }
 

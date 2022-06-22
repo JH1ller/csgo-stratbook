@@ -19,7 +19,7 @@
     top: -6px;
     right: -6px;
     border-radius: 50%;
-    background-color: $color--orange;
+    background-color: var(--color-yellow);
     width: 20px;
     height: 20px;
     font-size: 0.9rem;
@@ -27,7 +27,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--color-bg);
+    color: var(--color-text-contrast);
     text-shadow: $shadow-subtle;
     box-shadow: $shadow-subtle;
   }

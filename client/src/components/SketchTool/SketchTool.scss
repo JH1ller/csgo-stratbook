@@ -36,7 +36,7 @@
     //background-image: linear-gradient(60deg, #29323c 0%, #20242a 100%);
   }
   &__btn {
-    @include button-default(white, $color--navyblue, false);
+    @include button-default(var(--color-bg), var(--color-text), false);
     @include slideFromY(10%, 10, 'tool');
 
     & > svg {
@@ -47,7 +47,7 @@
 
     &.-active {
       & > svg {
-        color: $color--green;
+        color: var(--color-green);
       }
     }
   }
@@ -79,7 +79,7 @@
     @include spacing('padding', '2xs s');
     @include spacing('gap', xs);
 
-    background: rgba($color--darkblue, 0.5);
+    background: var(--color-bg-contrast-50);
     position: absolute;
     bottom: 0;
     left: 0;

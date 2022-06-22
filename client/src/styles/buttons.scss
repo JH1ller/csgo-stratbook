@@ -1,4 +1,4 @@
-@mixin button-default($bgcolor: var(--color-bg), $color: $color--navyblue, $has-text: true) {
+@mixin button-default($bgcolor: var(--color-bg), $color: var(--color-default), $has-text: true) {
   display: inline-flex;
   padding: 6px 11px;
   border-radius: 3px;

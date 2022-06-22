@@ -1,5 +1,5 @@
 .floating-button {
-  background-color: $color--green;
+  background-color: var(--color-green);
   border-radius: 999px; // * some high value to ensure pill shape when long, and circle when short
   width: 48px;
   height: 48px;

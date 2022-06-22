@@ -25,7 +25,7 @@
   }
 
   &__floating-add {
-    background-color: $color--green;
+    background-color: var(--color-green);
 
     &:hover {
       background-color: darken($color--green, 15%);

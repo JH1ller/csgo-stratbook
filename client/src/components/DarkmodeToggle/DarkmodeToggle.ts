@@ -9,10 +9,18 @@ export default class DarkmodeToggle extends Vue {
   toggle() {
     this.isDark = !this.isDark;
     document.body.classList.toggle('-dark');
+    this.storageService.set('dark-mode', this.isDark);
   }
 
   mounted() {
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const sitePrefersDark = this.storageService.get<boolean>('dark-mode');
+
+    if (this.storageService.exists('dark-mode')) {
+      this.isDark = this.storageService.get<boolean>('dark-mode')!;
+    } else {
+      this.isDark = systemPrefersDark;
+    }
+
+    if (this.isDark) document.body.classList.add('-dark');
   }
 }

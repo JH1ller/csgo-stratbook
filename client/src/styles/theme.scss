@@ -11,12 +11,13 @@ body {
   --color-accent-65: rgba(44, 62, 80, 0.65);
   --color-accent-50: rgba(44, 62, 80, 0.5);
   --color-accent-35: rgba(44, 62, 80, 0.35);
+  --color-accent-20: rgba(44, 62, 80, 0.2);
 
-  --color-green: #28eaa8;
-  --color-blue: #41b8b2;
+  --color-green: #41b883;
+  --color-blue: hsl(177deg 48% 49%);
   --color-blue-10: rgba(65, 184, 178, 0.1);
   --color-yellow: #e6b352;
-  --color-red: #ff3c3c;
+  --color-red: hsl(349deg 84% 62%);
 
   --color-app-bg: #4c4c53;
   --color-bg: #ffffff;
@@ -24,6 +25,8 @@ body {
   --color-bg-tertiary: #dfdfdf;
   --color-bg-blue: #23232e;
   --color-bg-dark: #141418;
+  --color-bg-contrast: rgb(35, 35, 46);
+  --color-bg-contrast-50: rgba(35, 35, 46, 0.5);
 
   --color-border: #dcdcdc;
 
@@ -35,15 +38,11 @@ body.-dark {
   // Colors
   --color-default: #fafafa;
   --color-text: #f1f1f1;
-  --color-text-secondary: #686868;
-  --color-text-tertiary: #7a7a7a;
+  --color-text-secondary: #7a7a7a;
+  --color-text-tertiary: #686868;
   --color-text-contrast: #ffffff;
 
-  --color-green: #28ea76;
-  --color-blue: #41b8b2;
-  --color-blue-10: rgba(65, 184, 178, 0.1);
-  --color-yellow: #e6b352;
-  --color-red: #ff3c3c;
+  --color-green: #28eaa8;
 
   --color-app-bg: hsl(240deg 14% 8%);
   --color-bg: hsl(240deg 14% 10%);

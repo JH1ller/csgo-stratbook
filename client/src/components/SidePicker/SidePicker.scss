@@ -8,11 +8,15 @@
     opacity: 0.4;
     cursor: pointer;
     border-radius: 50%;
-    transition: opacity 0.3s ease, filter 0.3s ease;
+    transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease;
     filter: grayscale(60%);
 
     &:first-of-type {
       margin-right: 12px;
+    }
+
+    &:hover {
+      transform: scale(1.03);
     }
 
     &.-selected {

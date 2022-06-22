@@ -12,7 +12,7 @@
   border-bottom: 2px solid transparent;
   border-radius: 4px;
   box-shadow: $shadow-subtle;
-  transition: border 0.2s ease, outline 0.2s ease;
+  transition: border 0.2s ease, outline 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 
   &:focus {
     outline-color: var(--color-accent-65);

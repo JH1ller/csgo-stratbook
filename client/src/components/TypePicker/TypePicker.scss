@@ -10,26 +10,27 @@
     opacity: 0.4;
     cursor: pointer;
     border-radius: 50%;
-    transition: opacity 0.3s ease, border-color 0.3s ease;
+    transition: opacity 0.3s ease, border-color 0.3s ease, filter 0.3s ease, transform 0.3s ease;
     background-color: var(--color-bg-secondary);
-    border: 2px solid $color--grey;
+    filter: grayscale(80%);
+
+    &:hover {
+      transform: scale(1.03);
+    }
 
     &.-selected {
       opacity: 1;
       filter: grayscale(0%);
     }
 
-    &.--buyround.-selected {
-      background-color: $color--blue;
-      border-color: darken($color--blue, 10%);
+    &.--buyround {
+      background-color: var(--color-blue);
     }
-    &.--pistol.-selected {
-      background-color: $color--yellow;
-      border-color: #d8d970;
+    &.--pistol {
+      background-color: var(--color-yellow);
     }
-    &.--force.-selected {
-      background-color: $color--red;
-      border-color: darken($color--red, 10%);
+    &.--force {
+      background-color: var(--color-red);
     }
 
     &:not(:first-of-type) {
@@ -39,10 +40,10 @@
 
   &__label {
     font-weight: $weight-bold;
-    color: $color--abbey;
+    color: var(--color-default);
     font-size: 0.8rem;
     position: absolute;
-    bottom: 16px;
+    bottom: 18px;
     left: 50%;
     transform: translateX(-50%);
     font-variant: small-caps;
@@ -62,7 +63,7 @@
     &.--buyround {
       width: 28px;
       height: 28px;
-      top: 6px;
+      top: 7px;
     }
   }
 }
