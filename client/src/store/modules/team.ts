@@ -72,7 +72,7 @@ export const teamModule: Module<TeamState, RootState> = {
             id: 'team/createTeam',
             text: 'Team successfully created. You can now visit the strats page and start creating strats!',
           },
-          { root: true }
+          { root: true },
         );
         trackingService.track('Action: Team Created', { name: formData.get('name') as string });
         return { success: true }; // TODO: probably obsolete. remove
@@ -89,7 +89,23 @@ export const teamModule: Module<TeamState, RootState> = {
             id: 'team/updateTeam',
             text: 'Team details updated.',
           },
-          { root: true }
+          { root: true },
+        );
+        return { success: true };
+      } else {
+        return { error: res.error };
+      }
+    },
+    async updatePlayerColor({ dispatch }, payload: { _id: string; color: string }) {
+      const res = await api.player.updatePlayerColor(payload);
+      if (res.success) {
+        dispatch(
+          'app/showToast',
+          {
+            id: 'team/updatePlayerColor',
+            text: 'Color updated.',
+          },
+          { root: true },
         );
         return { success: true };
       } else {
@@ -106,7 +122,7 @@ export const teamModule: Module<TeamState, RootState> = {
             id: 'team/createTeam',
             text: 'Successfully joined team.',
           },
-          { root: true }
+          { root: true },
         );
         trackingService.track('Action: Team Joined', { name: (rootState.team?.teamInfo as Team)?.name ?? '' });
         return { success: 'Successfully joined team.' };
@@ -143,7 +159,7 @@ export const teamModule: Module<TeamState, RootState> = {
         dispatch(
           'app/showToast',
           { id: 'team/transferManager', text: 'Leadership successfully transfered' },
-          { root: true }
+          { root: true },
         );
         return { success: true };
       } else {
@@ -185,11 +201,11 @@ export const teamModule: Module<TeamState, RootState> = {
       state.teamMembers = members;
     },
     [UPDATE_TEAM_MEMBER](state, player: Player) {
-      const member = state.teamMembers.find(member => member._id === player._id);
+      const member = state.teamMembers.find((member) => member._id === player._id);
       if (member) Object.assign(member, player);
     },
     [DELETE_TEAM_MEMBER](state, playerID: string) {
-      state.teamMembers = state.teamMembers.filter(member => member._id !== playerID);
+      state.teamMembers = state.teamMembers.filter((member) => member._id !== playerID);
     },
     [RESET_STATE](state) {
       Object.assign(state, teamInitialState());

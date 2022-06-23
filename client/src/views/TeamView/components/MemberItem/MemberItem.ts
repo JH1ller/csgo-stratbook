@@ -23,8 +23,22 @@ export default class MemberItem extends Vue {
     return ago(date);
   }
 
+  get isManager(): boolean {
+    return this.teamInfo.manager === this.profile._id;
+  }
+
   @Emit()
-  updateColor(color: string) {
-    return color;
+  updateColor(payload: { _id: string; color: string }) {
+    return payload;
+  }
+
+  @Emit()
+  transferManager(id: string) {
+    return id;
+  }
+
+  @Emit()
+  kickMember(id: string) {
+    return id;
   }
 }

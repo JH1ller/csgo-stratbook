@@ -9,6 +9,7 @@ import { sendMail, MailTemplate } from '@/utils/mailService';
 import { profileUpdateSchema } from '@/utils/validation';
 import { TypedServer } from '@/sockets/interfaces';
 import { toPlayerDto } from '@/dto/player.dto';
+import { TeamModel } from '@/models/team';
 
 const router = Router();
 
@@ -71,6 +72,32 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
 
   const updatedPlayer = await res.locals.player.save();
 
+  const updatedPlayerDto = toPlayerDto(updatedPlayer);
+
+  res.json(updatedPlayerDto);
+
+  if (updatedPlayer.team) {
+    (req.app.get('io') as TypedServer)
+      .to(updatedPlayer.team.toString())
+      .emit('updated-player', { player: updatedPlayerDto });
+  }
+});
+
+// * Update Color
+router.patch('/color', verifyAuth, async (req, res) => {
+  const team = await TeamModel.findById(res.locals.player.team);
+  if (!team) return res.status(400).json({ error: 'Could not find team with the provided ID.' });
+
+  const isSelf = res.locals.player._id === req.body._id;
+  const targetMember = isSelf ? res.locals.player : await PlayerModel.findById(req.body._id);
+
+  if (!isSelf && !team.manager.equals(res.locals.player._id)) {
+    return res.status(403).json({ error: 'Only the captain can change the color of other members.' });
+  }
+
+  targetMember.color = req.body.color;
+
+  const updatedPlayer = await targetMember.save();
   const updatedPlayerDto = toPlayerDto(updatedPlayer);
 
   res.json(updatedPlayerDto);

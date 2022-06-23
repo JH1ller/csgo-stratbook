@@ -8,6 +8,7 @@ import { Routes } from '@/router/router.models';
 import EditTeamForm from '@/components/EditTeamForm/EditTeamForm.vue';
 import { Team } from '@/api/models/Team';
 import { catchPromise } from '@/utils/catchPromise';
+import { Player } from '@/api/models/Player';
 
 @Component({
   components: {
@@ -20,13 +21,15 @@ export default class TeamView extends Vue {
   @teamModule.Getter serverString!: string;
   @teamModule.Getter isManager!: boolean;
   @teamModule.State teamInfo!: Team;
+  @teamModule.State teamMembers!: Player[];
   @teamModule.Action leaveTeam!: () => Promise<Response>;
   @teamModule.Action deleteTeam!: () => Promise<Response>;
   @teamModule.Action transferManager!: (memberID: string) => Promise<Response>;
   @teamModule.Action kickMember!: (memberID: string) => Promise<Response>;
   @teamModule.Action updateTeam!: (data: FormData) => Promise<Response>;
+  @teamModule.Action updatePlayerColor!: (data: { _id: string; color: string }) => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
-  @authModule.Action private updateProfile!: (data: FormData) => Promise<void>;
+  @authModule.Action updateProfile!: (data: FormData) => Promise<void>;
 
   showEditForm = false;
 
@@ -34,7 +37,11 @@ export default class TeamView extends Vue {
     catchPromise(
       this.showDialog({
         key: 'team-view/confirm-leave',
-        text: 'Are you sure you want to leave your team?',
+        text:
+          this.teamMembers.length === 1
+            ? 'Are you sure you want to leave your team?<br><bold>With no team members left, the team will be deleted.</bold>'
+            : 'Are you sure you want to leave your team?',
+        htmlMode: true,
       }),
       async () => {
         const res = await this.leaveTeam();
@@ -82,12 +89,6 @@ export default class TeamView extends Vue {
     if (res.success) {
       this.toggleEditForm();
     }
-  }
-
-  requestColorUpdate(color: string) {
-    const formData = new FormData();
-    formData.append('color', color);
-    return this.updateProfile(formData);
   }
 
   toggleEditForm() {

@@ -13,21 +13,30 @@
       </p>
     </div>
     <div class="member-item__button-group">
-      <button v-if="profile._id === teamInfo.manager" class="member-item__btn">
-        <fa-icon class="" icon="users" />Role
+      <button
+        v-if="isManager && member._id !== teamInfo.manager"
+        @click="() => transferManager(member._id)"
+        class="member-item__btn"
+      >
+        <fa-icon class="" icon="users" />Make captain
       </button>
-      <button v-if="profile._id === teamInfo.manager" class="member-item__btn">
+      <button
+        v-if="isManager && member._id !== profile._id"
+        @click="() => kickMember(member._id)"
+        class="member-item__btn"
+      >
         <fa-icon class="" icon="user-times" />Kick
       </button>
       <v-swatches
         class="member-item__color-picker"
         :value="member.color"
         :disabled="profile._id !== teamInfo.manager && member._id !== profile._id"
+        :data-disabled="profile._id !== teamInfo.manager && member._id !== profile._id"
         shapes="circles"
         swatch-size="30"
         popover-y="bottom"
         popover-x="left"
-        @input="updateColor"
+        @input="(color) => updateColor({ _id: member._id, color })"
       >
         <button
           slot="trigger"

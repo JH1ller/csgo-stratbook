@@ -5,7 +5,7 @@
         class="team-view__member-list"
         @transfer-manager="requestTransferManager"
         @kick-member="requestKickMember"
-        @update-color="requestColorUpdate"
+        @update-color="updatePlayerColor"
       />
       <TeamInfo
         :teamInfo="teamInfo"

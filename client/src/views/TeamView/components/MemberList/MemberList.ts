@@ -23,8 +23,8 @@ export default class MemberList extends Vue {
   }
 
   @Emit()
-  updateColor(color: string): string {
-    return color;
+  updateColor(payload: { _id: string; color: string }) {
+    return payload;
   }
 
   @Emit()
@@ -32,26 +32,7 @@ export default class MemberList extends Vue {
     return to;
   }
 
-  openMenu({ event, member }: { event: MouseEvent; member: Player }): void {
-    if (this.shouldShowMenu(member)) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      this.menu.open(event, { member });
-    }
-  }
-
-  get isManager(): boolean {
-    return this.teamInfo.manager === this.profile._id;
-  }
-
-  shouldShowMenu(member: Player): boolean {
-    return (
-      (this.isManager && member._id !== this.teamInfo.manager) ||
-      (this.isManager && member._id !== this.profile._id) ||
-      member._id === this.profile._id
-    );
-  }
-
+  // TODO: sort online members to be first
   get sortedMembers() {
     return this.teamMembers.sort((a, b) => new Date(b.lastOnline!).getTime() - new Date(a.lastOnline!).getTime());
   }

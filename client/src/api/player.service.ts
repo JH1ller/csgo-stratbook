@@ -1,6 +1,11 @@
+import urljoin from 'url-join';
 import ApiService from './base';
 import { Player } from './models/Player';
 import { APIResponse, Endpoints } from './types';
+
+export enum Actions {
+  ChangeColor = 'color',
+}
 
 export class PlayerService {
   private static instance: PlayerService;
@@ -27,7 +32,12 @@ export class PlayerService {
         params: {
           updateStrats,
         },
-      })
+      }),
     );
+  }
+
+  async updatePlayerColor(payload: { _id: string; color: string }): Promise<APIResponse<Player>> {
+    const target = urljoin(this.endpoint, Actions.ChangeColor);
+    return ApiService.makeRequest<Player>(ApiService.http.patch(target, payload));
   }
 }

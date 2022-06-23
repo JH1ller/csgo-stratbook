@@ -12,13 +12,15 @@
       </span>
     </div>
     <div class="team-info__btn-group">
-      <button class="team-info__btn"><fa-icon icon="edit" />Edit team</button>
-      <button class="team-info__btn"><fa-icon icon="gamepad" />Join Server</button>
-      <button class="team-info__btn"><fa-icon icon="copy" />Copy IP</button>
+      <button class="team-info__btn" :disabled="!isManager" @click="showEdit"><fa-icon icon="edit" />Edit team</button>
+      <button class="team-info__btn" :disabled="!serverIp" @click="runServer">
+        <fa-icon icon="gamepad" />Join Server
+      </button>
+      <button class="team-info__btn" :disabled="!serverIp" @click="copyServer"><fa-icon icon="copy" />Copy IP</button>
     </div>
     <div class="team-info__danger-zone">
       <button class="team-info__text-btn" @click="leaveTeam">Leave team</button>
-      <button class="team-info__text-btn" @click="deleteTeam">Delete team</button>
+      <button v-if="isManager" class="team-info__text-btn" @click="deleteTeam">Delete team</button>
     </div>
   </div>
 </template>
