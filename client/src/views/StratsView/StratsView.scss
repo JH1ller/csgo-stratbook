@@ -25,31 +25,16 @@
   }
 
   &__floating-add {
-    background-color: var(--color-green);
+    background-color: var(--color-green-80);
 
     &:hover {
-      background-color: darken($color--green, 15%);
+      background-color: var(--color-green);
     }
   }
 
   &__floating-game-mode {
-    background-color: $color--orange;
-
-    &:hover {
-      background-color: darken($color--orange, 15%);
-    }
-
     @include viewport_range(mq1, mq2) {
       display: none;
-    }
-  }
-
-  &__floating-collapse,
-  &__floating-sort {
-    background-color: $color--grey;
-
-    &:hover {
-      background-color: darken($color--grey, 15%);
     }
   }
 

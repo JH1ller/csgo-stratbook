@@ -9,6 +9,7 @@
     border-radius: 10px;
     flex-wrap: wrap;
     justify-content: center;
+    border: 2px solid var(--color-border);
 
     @include viewport_mq3 {
       justify-content: flex-start;

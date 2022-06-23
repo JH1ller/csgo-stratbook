@@ -3,7 +3,7 @@
     <h2 class="team-create-form__headline">Create a team</h2>
     <form class="team-create-form__form" @submit="createClicked" novalidate>
       <transition name="fade">
-        <span class="team-create-form__error" v-if="formError">{{ formError }}</span>
+        <p class="team-create-form__error" v-if="formError">{{ formError }}</p>
       </transition>
       <TextInput class="team-create-form__input" v-model="formFields.name.value" :field="formFields.name" />
       <TextInput class="team-create-form__input" v-model="formFields.website.value" :field="formFields.website" />

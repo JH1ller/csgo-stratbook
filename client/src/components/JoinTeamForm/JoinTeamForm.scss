@@ -32,7 +32,7 @@
   }
 
   &__submit {
-    @include button-big(var(--color-green));
+    @include button-primary(true, true);
 
     margin-top: 16px;
     color: var(--color-bg);

@@ -2,12 +2,6 @@
   position: relative;
 
   &__button {
-    background-color: $color--grey;
-
-    &:hover {
-      background-color: darken($color--grey, 15%);
-    }
-
     & > svg {
       width: 24px;
       height: 24px;
@@ -19,7 +13,7 @@
     top: -6px;
     right: -6px;
     border-radius: 50%;
-    background-color: var(--color-yellow);
+    background-color: var(--color-accent);
     width: 20px;
     height: 20px;
     font-size: 0.9rem;

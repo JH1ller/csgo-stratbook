@@ -1,6 +1,6 @@
 .edit-team-form {
   &__btn {
-    @include button-big;
+    @include button-default;
 
     flex: 1 0;
 
@@ -9,9 +9,9 @@
     }
 
     &.--save {
-      @include button-big(var(--color-green));
+      @include button-primary(true, true);
 
-      color: var(--color-bg);
+      color: var(--color-text-contrast);
     }
   }
 

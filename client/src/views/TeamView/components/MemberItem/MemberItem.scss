@@ -66,8 +66,12 @@
 }
 
 //* vue-swatches overrides
-
 .vue-swatches {
-  &__trigger__wrapper {
+  $root: &;
+  &[data-disabled] {
+    #{$root}__trigger__wrapper {
+      cursor: default;
+      pointer-events: none;
+    }
   }
 }

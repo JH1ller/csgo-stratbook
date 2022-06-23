@@ -36,7 +36,7 @@
   }
 
   &__submit {
-    @include button-big(var(--color-green));
+    @include button-primary(true, true);
     color: var(--color-bg);
   }
 
@@ -52,11 +52,10 @@
   }
 
   &__error {
-    color: $color--red;
-    max-width: 300px;
+    color: var(--color-red);
     margin-bottom: 12px;
     padding: 8px;
     border-radius: 6px;
-    background-color: rgba($color--red, 0.2);
+    background-color: var(--color-red-20);
   }
 }

@@ -45,7 +45,7 @@
   }
 
   &__submit {
-    @include button-big(var(--color-green));
+    @include button-primary(true, true);
 
     color: var(--color-bg);
     box-shadow: $shadow-subtle;

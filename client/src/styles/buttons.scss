@@ -1,15 +1,31 @@
-@mixin button-default($bgcolor: var(--color-bg), $color: var(--color-default), $has-text: true) {
+@mixin button-default($has-text: true, $big: false) {
   display: inline-flex;
-  padding: 6px 11px;
   border-radius: 3px;
   justify-content: center;
   align-items: center;
-  background-color: $bgcolor;
+  background-color: var(--color-bg);
   cursor: pointer;
   box-shadow: $shadow-subtle;
   transition: border-color 0.3s ease, background-color 0.3s ease;
-  border: 2px solid rgba(black, 0.1);
-  color: $color;
+  border: 2px solid var(--color-border);
+  color: var(--color-text);
+  position: relative;
+  overflow: hidden;
+
+  // TODO: implement and fix z-index issue with additional span element
+  // &:before {
+  //   content: '';
+  //   position: absolute;
+  //   top: 0px;
+  //   left: 0px;
+  //   width: 130%;
+  //   height: 100%;
+  //   opacity: 0;
+  //   transform: translateX(-100%);
+  //   clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%);
+  //   background: var(--color-bg-secondary);
+  //   transition: transform 0.3s ease-out, opacity 0.3s ease;
+  // }
 
   @include viewport_range(mq1, mq2) {
     padding: 5px 8px;
@@ -17,7 +33,18 @@
 
   &:hover,
   &:focus {
-    border-color: var(--color-accent-35);
+    background-color: var(--color-bg-secondary);
+
+    // &:before {
+    //   transform: translateX(0);
+    //   opacity: 1;
+    // }
+  }
+
+  [disabled] {
+    cursor: default;
+    pointer-events: none;
+    opacity: 0.7;
   }
 
   & > svg {
@@ -30,11 +57,35 @@
       margin-right: 6px;
     }
   }
+
+  @if ($big == true) {
+    padding: 12px 6px;
+    width: 100%;
+  } @else {
+    padding: 6px 11px;
+  }
 }
 
-@mixin button-big($color: var(--color-bg)) {
-  @include button-default($color);
+@mixin button-primary($has-text: true, $big: false) {
+  @include button-default($has-text, $big);
 
-  padding: 12px 6px;
-  width: 100%;
+  background-color: var(--color-green);
+  color: var(--color-text-contrast);
+  border-color: var(--color-green-dark);
+
+  &:hover {
+    background-color: var(--color-green-80);
+  }
+}
+
+@mixin button-danger($has-text: true, $big: false) {
+  @include button-default($has-text, $big);
+
+  background-color: var(--color-red);
+  color: var(--color-text-contrast);
+  border-color: var(--color-red-dark);
+
+  &:hover {
+    background-color: var(--color-red-80);
+  }
 }

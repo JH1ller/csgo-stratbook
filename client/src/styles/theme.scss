@@ -13,11 +13,16 @@ body {
   --color-accent-35: rgba(44, 62, 80, 0.35);
   --color-accent-20: rgba(44, 62, 80, 0.2);
 
-  --color-green: #41b883;
+  --color-green: hsl(153deg 48% 49%);
+  --color-green-dark: hsl(153deg 48% 40%);
+  --color-green-80: hsla(153, 48%, 49%, 0.8);
   --color-blue: hsl(177deg 48% 49%);
   --color-blue-10: rgba(65, 184, 178, 0.1);
   --color-yellow: #e6b352;
   --color-red: hsl(349deg 84% 62%);
+  --color-red-dark: hsl(349deg 60% 50%);
+  --color-red-20: hsla(349, 84%, 62%, 0.2);
+  --color-red-80: hsla(349, 84%, 62%, 0.8);
 
   --color-app-bg: #4c4c53;
   --color-bg: #ffffff;
@@ -42,7 +47,7 @@ body.-dark {
   --color-text-tertiary: #686868;
   --color-text-contrast: #ffffff;
 
-  --color-green: #28eaa8;
+  //--color-green: #28eaa8;
 
   --color-app-bg: hsl(240deg 14% 8%);
   --color-bg: hsl(240deg 14% 10%);

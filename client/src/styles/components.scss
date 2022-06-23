@@ -57,17 +57,17 @@
 }
 
 @mixin form-header {
-  @include typo_hl2($color--abbey);
+  @include typo_hl2;
   padding-bottom: 12px;
   margin-bottom: 24px;
   border-bottom: 1px solid rgba($color--abbey, 0.4);
 }
 
 @mixin fieldset-header {
-  @include typo_hl3($color--abbey);
+  @include typo_hl3(var(--color-text-secondary));
   padding-bottom: 8px;
   margin-bottom: 12px;
-  border-bottom: 1px solid rgba($color--abbey, 0.4);
+  border-bottom: 1px solid var(--color-text-secondary);
 }
 
 @mixin fieldset {
@@ -90,10 +90,12 @@
   padding: 9px 10px;
   border: 2px solid var(--color-border);
   border-radius: 6px;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, color 0.3s ease;
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
+  background-color: var(--color-bg);
+  color: var(--color-text-secondary);
 
   & > svg {
     height: 16px;
@@ -103,6 +105,8 @@
   &:hover:not([disabled]) {
     cursor: pointer;
     border-color: var(--color-blue);
+    color: var(--color-text);
+    box-shadow: $shadow-subtle;
   }
 
   &[disabled] {
