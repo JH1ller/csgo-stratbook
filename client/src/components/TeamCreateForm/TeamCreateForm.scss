@@ -37,7 +37,6 @@
 
   &__submit {
     @include button-primary(true, true);
-    color: var(--color-bg);
   }
 
   &__register-text {

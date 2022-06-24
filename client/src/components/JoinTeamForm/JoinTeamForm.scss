@@ -26,8 +26,6 @@
     & > input {
       text-transform: uppercase;
       font-weight: $weight-bold;
-      color: $color--abbey;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
   }
 
@@ -35,7 +33,6 @@
     @include button-primary(true, true);
 
     margin-top: 16px;
-    color: var(--color-bg);
   }
 
   &__error {

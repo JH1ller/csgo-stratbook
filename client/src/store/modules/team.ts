@@ -107,6 +107,7 @@ export const teamModule: Module<TeamState, RootState> = {
           },
           { root: true },
         );
+        trackingService.track('Action: Update Player Color', { color: payload.color });
         return { success: true };
       } else {
         return { error: res.error };
@@ -141,18 +142,19 @@ export const teamModule: Module<TeamState, RootState> = {
         return { error: res.error };
       }
     },
-    async deleteTeam({ dispatch }) {
+    async deleteTeam({ dispatch, rootState }) {
       const res = await api.team.deleteTeam();
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
         dispatch('resetState');
         dispatch('app/showToast', { id: 'team/deleteTeam', text: 'Team has been deleted' }, { root: true });
+        trackingService.track('Action: Team Deleted', { name: (rootState.team?.teamInfo as Team)?.name ?? '' });
         return { success: true };
       } else {
         return { error: res.error };
       }
     },
-    async transferManager({ dispatch, commit }, memberID: string) {
+    async transferManager({ dispatch, commit, rootState }, memberID: string) {
       const res = await api.team.transferManager(memberID);
       if (res.success) {
         commit(SET_TEAM_INFO, res.success);
@@ -161,16 +163,18 @@ export const teamModule: Module<TeamState, RootState> = {
           { id: 'team/transferManager', text: 'Leadership successfully transfered' },
           { root: true },
         );
+        trackingService.track('Action: Captain transferred', { team: (rootState.team?.teamInfo as Team)?.name ?? '' });
         return { success: true };
       } else {
         return { error: res.error };
       }
     },
-    async kickMember({ dispatch }, memberID: string) {
+    async kickMember({ dispatch, rootState }, memberID: string) {
       const res = await api.team.kickMember(memberID);
       if (res.success) {
         dispatch('fetchTeamMembers');
         dispatch('app/showToast', { id: 'team/kickMember', text: 'Player successfully kicked' }, { root: true });
+        trackingService.track('Action: Member kicked', { team: (rootState.team?.teamInfo as Team)?.name ?? '' });
         return { success: 'Successfully kicked.' };
       } else {
         return { error: res.error };

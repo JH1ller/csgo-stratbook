@@ -141,7 +141,9 @@ export default class App extends Vue {
   }
 
   private initTracking(disableCookie = false) {
-    this.trackingService.init(disableCookie, { breakpoint: this.breakpoint, team: this.teamInfo.name });
+    if (process.env.NODE_ENV === 'production') {
+      this.trackingService.init(disableCookie, { breakpoint: this.breakpoint, team: this.teamInfo.name });
+    }
   }
 
   private closeMenu() {
