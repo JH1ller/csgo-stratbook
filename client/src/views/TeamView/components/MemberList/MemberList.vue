@@ -9,6 +9,7 @@
       :teamInfo="teamInfo"
       @update-color="updateColor"
       @transfer-manager="transferManager"
+      @kick-member="kickMember"
     >
     </MemberItem>
   </ol>
