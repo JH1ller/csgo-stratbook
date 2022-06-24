@@ -88,7 +88,7 @@ router.patch('/color', verifyAuth, async (req, res) => {
   const team = await TeamModel.findById(res.locals.player.team);
   if (!team) return res.status(400).json({ error: 'Could not find team with the provided ID.' });
 
-  const isSelf = res.locals.player._id === req.body._id;
+  const isSelf = res.locals.player._id.equals(req.body._id);
   const targetMember = isSelf ? res.locals.player : await PlayerModel.findById(req.body._id);
 
   if (!isSelf && !team.manager.equals(res.locals.player._id)) {
