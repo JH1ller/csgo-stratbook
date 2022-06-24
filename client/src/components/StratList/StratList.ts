@@ -3,6 +3,8 @@ import StratItem from '@/components/StratItem/StratItem.vue';
 import { Strat } from '@/api/models/Strat';
 import { StratTypes } from '@/api/models/StratTypes';
 import { Sides } from '@/api/models/Sides';
+import { Listen } from '@/utils/decorators/listen.decorator';
+import { debounce, DebouncedFunc } from 'lodash-es';
 @Component({
   components: {
     StratItem,
@@ -16,12 +18,25 @@ export default class StratList extends Vue {
   @Prop() editedStrats!: string[];
   @Prop() gameMode!: boolean;
 
+  // used to force rerender of StratItem components after window resize
+  // to adjust their height
+  remountKey = 0;
+
   private isCollapsed(strat: Strat) {
-    return this.collapsedStrats.some(id => id === strat._id);
+    return this.collapsedStrats.some((id) => id === strat._id);
+  }
+
+  @Listen('resize', { window: true })
+  onResize() {
+    this.debouncedResizeHandler();
+  }
+
+  get debouncedResizeHandler(): DebouncedFunc<() => void> {
+    return debounce(() => this.remountKey++, 100);
   }
 
   private isEdited(strat: Strat) {
-    return this.editedStrats.some(id => id === strat._id);
+    return this.editedStrats.some((id) => id === strat._id);
   }
 
   // TODO: solve this drilling with provide/inject
