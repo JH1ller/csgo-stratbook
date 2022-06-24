@@ -2,7 +2,7 @@
   $root: &;
   position: relative;
   overflow: hidden;
-  background-color: $color--smoke;
+  background-color: var(--color-bg-secondary);
 
   &__img {
     width: 100%;
@@ -38,7 +38,7 @@
   &__error {
     width: 32px;
     height: 32px;
-    color: darken($color--smoke, 15%);
+    color: var(--color-bg-tertiary);
 
     #{$root}.-error & {
       opacity: 1;

@@ -170,3 +170,11 @@
   background-color: var(--color-blue);
   border-radius: 999px;
 }
+
+@mixin error-notification {
+  width: 100%;
+  color: var(--color-red);
+  padding: 8px;
+  border-radius: 6px;
+  background-color: var(--color-red-20);
+}

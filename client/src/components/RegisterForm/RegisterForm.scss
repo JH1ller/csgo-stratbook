@@ -98,11 +98,7 @@
   }
 
   &__error {
-    color: $color--red;
-    max-width: 300px;
-    margin-bottom: 12px;
-    padding: 8px;
-    border-radius: 6px;
-    background-color: rgba($color--red, 0.2);
+    @include error-notification;
+    @include spacing('margin-bottom', 'xs');
   }
 }

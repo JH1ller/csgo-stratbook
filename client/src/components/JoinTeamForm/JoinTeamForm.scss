@@ -36,10 +36,7 @@
   }
 
   &__error {
-    width: 100%;
-    color: $color--red;
-    padding: 8px;
-    border-radius: 6px;
-    background-color: rgba($color--red, 0.2);
+    @include error-notification;
+    @include spacing('margin-bottom', 'xs');
   }
 }

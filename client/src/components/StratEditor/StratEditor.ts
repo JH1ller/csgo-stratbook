@@ -263,8 +263,8 @@ export default class StratEditor extends Vue {
     const playerNodes: NodeListOf<HTMLElement> = this.textarea.querySelectorAll('[data-player-id]');
     playerNodes.forEach((node) => {
       const player = this.teamMembers.find((member) => member._id === node.getAttribute('data-player-id'));
-      node.style.background = player?.color ?? 'var(--color-accent)';
-      node.style.color = player?.color ? contrastColor(player.color) : 'white';
+      node.style.background = player?.color ?? '';
+      node.style.color = player?.color ? contrastColor(player.color) : '';
     });
   }
 

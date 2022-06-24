@@ -51,10 +51,7 @@
   }
 
   &__error {
-    color: var(--color-red);
-    margin-bottom: 12px;
-    padding: 8px;
-    border-radius: 6px;
-    background-color: var(--color-red-20);
+    @include error-notification;
+    @include spacing('margin-bottom', 'xs');
   }
 }
