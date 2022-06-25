@@ -5,6 +5,7 @@
       class="member-list__member"
       :key="member._id"
       :member="member"
+      :teamMembers="teamMembers"
       :profile="profile"
       :teamInfo="teamInfo"
       @update-color="updateColor"

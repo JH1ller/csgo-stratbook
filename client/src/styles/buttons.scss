@@ -1,4 +1,6 @@
 @mixin button-default($has-text: true, $big: false) {
+  @include typo_text;
+
   display: inline-flex;
   border-radius: 3px;
   justify-content: center;
@@ -12,21 +14,6 @@
   position: relative;
   overflow: hidden;
 
-  // TODO: implement and fix z-index issue with additional span element
-  // &:before {
-  //   content: '';
-  //   position: absolute;
-  //   top: 0px;
-  //   left: 0px;
-  //   width: 130%;
-  //   height: 100%;
-  //   opacity: 0;
-  //   transform: translateX(-100%);
-  //   clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%);
-  //   background: var(--color-bg-secondary);
-  //   transition: transform 0.3s ease-out, opacity 0.3s ease;
-  // }
-
   @include viewport_range(mq1, mq2) {
     padding: 5px 8px;
   }
@@ -34,11 +21,6 @@
   &:hover,
   &:focus {
     background-color: var(--color-bg-secondary);
-
-    // &:before {
-    //   transform: translateX(0);
-    //   opacity: 1;
-    // }
   }
 
   [disabled] {

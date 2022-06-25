@@ -30,6 +30,7 @@
       <v-swatches
         class="member-item__color-picker"
         :value="member.color"
+        :swatches="swatches"
         :disabled="profile._id !== teamInfo.manager && member._id !== profile._id"
         :data-disabled="profile._id !== teamInfo.manager && member._id !== profile._id"
         shapes="circles"

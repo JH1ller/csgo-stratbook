@@ -54,6 +54,7 @@ import { APP_URL } from '@/config';
 import isMobile from 'is-mobile';
 import { Dialog } from '../DialogWrapper/DialogWrapper.models';
 import { catchPromise } from '@/utils/catchPromise';
+import { COLORS } from '@/constants/colors';
 
 @Component({
   components: {
@@ -113,6 +114,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   readonly imageSize = 50;
   readonly cursorSize = 25;
   readonly backgroundSize = 1024;
+  readonly swatches = COLORS;
 
   //* Enum redeclaration for template exposure
   UtilityTypes: typeof UtilityTypes = UtilityTypes;

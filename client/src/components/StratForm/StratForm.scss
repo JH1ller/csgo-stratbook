@@ -19,7 +19,7 @@
       @include button-primary;
     }
     &.--cancel {
-      @include button-danger;
+      @include button-default;
     }
 
     &:not(:first-of-type) {

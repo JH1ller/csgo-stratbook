@@ -13,6 +13,7 @@
     padding: 10%;
     position: relative;
     cursor: pointer;
+    border: 1px solid var(--color-text-contrast-70);
 
     &::before {
       content: '';

@@ -1,14 +1,13 @@
 .cookie-banner {
-  @include blurry-panel;
   @include spacing('padding', s);
 
   border-radius: 8px;
   position: fixed;
   bottom: 0;
   left: 0;
-  background-color: rgba(white, 0.5);
   width: 100%;
   z-index: 10;
+  background-color: var(--color-bg-secondary);
 
   @include viewport_mq3 {
     @include spacing('padding', sm);
@@ -43,7 +42,7 @@
     }
 
     &[disabled] + label {
-      color: rgba(black, 0.5);
+      color: var(--color-text-secondary);
     }
   }
 
@@ -54,22 +53,13 @@
   }
 
   &__btn {
+    @include button-default;
     @include spacing('padding', '2xs sm');
 
     font-weight: $weight-bold;
-    font-size: 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    border: 2px solid var(--color-green);
 
     &.--accept {
-      background-color: var(--color-green);
-      color: var(--color-bg);
-    }
-
-    &.--save {
-      color: var(--color-green);
-      background-color: rgba(white, 0.3);
+      @include button-primary;
     }
 
     &:first-of-type {

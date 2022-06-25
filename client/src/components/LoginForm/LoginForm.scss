@@ -47,7 +47,6 @@
   &__submit {
     @include button-primary(true, true);
 
-    color: var(--color-bg);
     box-shadow: $shadow-subtle;
     margin-top: 16px;
     width: 100%;
@@ -69,14 +68,14 @@
   &__forgot-password {
     align-self: flex-start;
     cursor: pointer;
-    color: $color--grey;
+    color: var(--color-text-secondary);
     margin-top: 4px;
     transform: translateY(4px);
     transition: color 0.3s ease;
     font-size: 0.85rem;
 
     &:hover {
-      color: darken($color--grey, 10%);
+      color: var(--color-text);
     }
   }
 

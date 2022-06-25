@@ -28,34 +28,6 @@
   }
 }
 
-@mixin tooltip($text: attr(data-tooltip)) {
-  position: relative;
-  &::after {
-    content: $text;
-    font-size: 16px;
-    line-height: normal;
-    position: absolute;
-    top: -33px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: var(--color-accent-80);
-    color: var(--color-bg);
-    padding: 4px 8px;
-    border-radius: 4px;
-    opacity: 0;
-    white-space: nowrap;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-    text-transform: none;
-    z-index: 10;
-  }
-  &:hover {
-    &::after {
-      opacity: 1;
-    }
-  }
-}
-
 @mixin form-header {
   @include typo_hl2;
   padding-bottom: 12px;
@@ -123,7 +95,7 @@
 @mixin blurry-panel {
   @include spacing('padding', s);
 
-  background-color: rgba(white, 0.2);
+  background-color: var(--color-bg-secondary);
   backdrop-filter: blur(15px);
   border-radius: 8px;
   box-shadow: rgba(34, 35, 36, 0.2) 0px 8px 24px;

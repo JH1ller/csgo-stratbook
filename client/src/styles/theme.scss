@@ -26,6 +26,7 @@ body {
 
   --color-app-bg: #4c4c53;
   --color-bg: #ffffff;
+  --color-bg-20: rgba(255, 255, 255, 0.2);
   --color-bg-secondary: #eeeeee;
   --color-bg-tertiary: #dfdfdf;
   --color-bg-blue: #23232e;
@@ -51,6 +52,7 @@ body.-dark {
 
   --color-app-bg: hsl(240deg 14% 8%);
   --color-bg: hsl(240deg 14% 10%);
+  --color-bg-20: hsla(240, 14%, 10%, 0.2);
   --color-bg-secondary: hsl(240deg 14% 16%);
   --color-bg-tertiary: hsl(240deg 14% 20%);
 

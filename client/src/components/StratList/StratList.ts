@@ -5,6 +5,7 @@ import { StratTypes } from '@/api/models/StratTypes';
 import { Sides } from '@/api/models/Sides';
 import { Listen } from '@/utils/decorators/listen.decorator';
 import { debounce, DebouncedFunc } from 'lodash-es';
+
 @Component({
   components: {
     StratItem,

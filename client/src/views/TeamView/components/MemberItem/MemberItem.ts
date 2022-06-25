@@ -4,6 +4,7 @@ import ago from 's-ago';
 import { Player } from '@/api/models/Player';
 import { Team } from '@/api/models/Team';
 import VSwatches from 'vue-swatches';
+import { COLORS } from '@/constants/colors';
 
 @Component({
   components: {
@@ -12,8 +13,11 @@ import VSwatches from 'vue-swatches';
 })
 export default class MemberItem extends Vue {
   @Prop() member!: Player;
+  @Prop() teamMembers!: Player[];
   @Prop() profile!: Player;
   @Prop() teamInfo!: Team;
+
+  swatches = COLORS;
 
   resolveStaticImageUrl: (url?: string) => string = resolveStaticImageUrl;
 

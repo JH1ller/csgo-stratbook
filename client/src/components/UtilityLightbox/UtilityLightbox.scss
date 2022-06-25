@@ -173,29 +173,31 @@
   &__badge-icon {
     width: 60%;
     height: 60%;
-    color: var(--color-bg);
   }
 
   &__navigation {
-    color: var(--color-bg-secondary);
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    color: var(--color-text-contrast);
+    transition: transform 0.3s ease, opacity 0.3s ease;
     cursor: pointer;
     width: 48px;
     height: 48px;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+    background-color: var(--color-accent-20);
+    opacity: 0.5;
+    border-radius: 4px;
 
     &:hover {
       transform: translateY(-50%) scale(1.05);
-      background-color: rgba(black, 0.2);
+      opacity: 1;
     }
 
     &.--left {
-      left: 48px;
+      left: 96px;
     }
     &.--right {
-      right: 48px;
+      right: 96px;
     }
 
     @include viewport_mq3 {

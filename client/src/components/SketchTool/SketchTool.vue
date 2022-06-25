@@ -59,6 +59,7 @@
       <v-swatches
         class="sketch-tool__color-picker"
         v-model="currentColor"
+        :swatches="swatches"
         shapes="circles"
         swatch-size="30"
         popover-y="top"

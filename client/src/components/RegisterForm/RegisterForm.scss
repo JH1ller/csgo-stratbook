@@ -46,29 +46,6 @@
         margin-top: 16px;
       }
     }
-
-    &.--key {
-      position: relative;
-
-      &::after {
-        content: '?';
-        border-radius: 50%;
-        border: 1px solid $color--abbey;
-        color: $color--abbey;
-        position: absolute;
-        right: 12px;
-        top: 50%;
-        opacity: 0.4;
-        font-weight: bold;
-        width: 16px;
-        height: 16px;
-        display: flex;
-        font-size: 0.8rem;
-        justify-content: center;
-        align-items: center;
-        transform: translateY(-50%);
-      }
-    }
   }
 
   &__image-uploader {
@@ -78,7 +55,6 @@
   &__submit {
     @include button-primary(true, true);
 
-    color: var(--color-bg);
     box-shadow: $shadow-subtle;
     margin-top: 16px;
     width: 100%;
