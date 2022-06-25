@@ -68,7 +68,7 @@ app.use(
   cors({
     credentials: true,
     origin: true,
-  })
+  }),
 );
 
 app.use(helmet());
@@ -80,7 +80,7 @@ app.use(logger);
 const mapRedirect: RequestHandler = (req, res, next) => {
   const host = req.get('Host');
   if (host === 'map.stratbook.live' || host === 'map.csstrats.app') {
-    return res.redirect(301, 'https://app.stratbook.live/#/map');
+    return res.redirect(301, 'https://app.stratbook.live/map');
   }
   return next();
 };
@@ -103,7 +103,7 @@ app.use('/', express.static('dist_landingpage'));
 app.use(
   historyFallback({
     index: '/dist_app/index.html',
-  })
+  }),
 );
 
 if (!isDev) {
@@ -134,5 +134,5 @@ instrument(io, {
 });
 
 httpServer.listen(port, undefined, () =>
-  Log.success('httpServer::listen', `Server started on port ${port} [${green(process.env.NODE_ENV!.toUpperCase())}]`)
+  Log.success('httpServer::listen', `Server started on port ${port} [${green(process.env.NODE_ENV!.toUpperCase())}]`),
 );

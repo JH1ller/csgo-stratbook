@@ -25,7 +25,7 @@
       <NuxtLink class="navbar__link" :to="localePath('changelog')">{{
         $t('navbar.changelog')
       }}</NuxtLink>
-      <a class="navbar__link" href="https://app.stratbook.live/#/register">{{
+      <a class="navbar__link" href="https://app.stratbook.live/register">{{
         $t('navbar.register')
       }}</a>
       <a
@@ -69,7 +69,7 @@
         >
         <a
           class="navbar__mobile-link"
-          href="https://app.stratbook.live/#/register"
+          href="https://app.stratbook.live/register"
           @click="menuOpen = false"
           >{{ $t('navbar.register') }}</a
         >

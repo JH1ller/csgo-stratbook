@@ -106,13 +106,13 @@
     @include typo_emphasis;
 
     padding: 12px;
-    color: $color--dark;
+    color: var(--color-text);
     cursor: pointer;
     display: flex;
     align-items: center;
 
     &:not(:first-of-type) {
-      border-top: 1px solid darken(white, 10%);
+      border-top: 1px solid var(--color-border);
     }
     &:first-of-type {
       border-top-left-radius: 6px;
@@ -130,7 +130,7 @@
   }
 
   &__mention-container {
-    background-color: whitesmoke;
+    background-color: var(--color-bg-secondary);
     box-shadow: $shadow-subtle;
     border-radius: 6px;
 
@@ -140,7 +140,7 @@
   }
 
   &__mention-selected {
-    background-color: darken(white, 10%);
+    background-color: var(--color-bg-tertiary);
   }
 
   &__mention-item-image {

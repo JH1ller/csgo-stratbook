@@ -86,7 +86,7 @@ export const utilityModule: Module<UtilityState, RootState> = {
       formData.append('shared', 'true');
       const res = await api.utility.updateUtility(formData);
       if (res.success) {
-        const shareLink = `${window.location.origin}/#/share/${utilityID}`;
+        const shareLink = `${window.location.origin}/share/${utilityID}`;
         writeToClipboard(shareLink);
         dispatch(
           'app/showToast',

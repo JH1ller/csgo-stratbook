@@ -41,7 +41,7 @@ const email = new Email({
 export const sendMail = async (to: string, token: string, name: string, template: MailTemplate) => {
   const link =
     template === MailTemplate.RESET_PASSWORD
-      ? urljoin(APP_URL, `/#/reset?token=${token}`)
+      ? urljoin(APP_URL, `/reset?token=${token}`)
       : urljoin(API_URL, `/auth/confirmation/${token}`);
   try {
     const res = await email.send({
