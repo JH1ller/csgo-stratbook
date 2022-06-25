@@ -30,17 +30,11 @@
   }
 
   &__btn {
-    @include button-default;
-    padding: 12px 6px;
+    @include button-default(true, true);
 
     &.--clear {
-      margin-top: 24px;
-      background-color: var(--color-green);
-      color: var(--color-text-contrast);
-
-      & > svg {
-        color: var(--color-text-contrast);
-      }
+      @include button-primary(true, true);
+      @include spacing('margin-top', 'sm');
     }
 
     &.--close {

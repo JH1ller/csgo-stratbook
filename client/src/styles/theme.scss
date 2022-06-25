@@ -38,6 +38,9 @@ body {
 
   // Fonts
   --font-default: 'Ubuntu', sans-serif;
+
+  // Misc
+  --invert-value: invert(0);
 }
 
 body.-dark {
@@ -47,8 +50,6 @@ body.-dark {
   --color-text-secondary: #7a7a7a;
   --color-text-tertiary: #686868;
   --color-text-contrast: #ffffff;
-
-  //--color-green: #28eaa8;
 
   --color-app-bg: hsl(240deg 14% 8%);
   --color-bg: hsl(240deg 14% 10%);
@@ -60,4 +61,7 @@ body.-dark {
 
   // Fonts
   --font-default: 'Ubuntu', sans-serif;
+
+  // Misc
+  --invert-value: invert(1);
 }

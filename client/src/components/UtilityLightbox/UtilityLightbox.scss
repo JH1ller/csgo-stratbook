@@ -73,10 +73,11 @@
 
   &__pose {
     height: 100%;
-    opacity: 0.7;
+    opacity: 0.9;
+    filter: var(--invert-value);
 
     &.--default {
-      opacity: 0.3;
+      opacity: 0.5;
     }
   }
 

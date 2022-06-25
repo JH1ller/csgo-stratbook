@@ -51,7 +51,7 @@
 
       // TODO: create icons in white instead
       & > img {
-        filter: invert(100%);
+        filter: invert(1);
         opacity: 1;
       }
     }

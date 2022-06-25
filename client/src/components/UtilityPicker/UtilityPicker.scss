@@ -65,6 +65,7 @@
     height: 24px;
     opacity: 0.6;
     object-fit: contain;
+    filter: var(--invert-value);
 
     @include viewport_mq3 {
       top: 8px;
