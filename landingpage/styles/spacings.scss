@@ -1,6 +1,7 @@
 $spacing-3xs: 4px;
 $spacing-2xs: 8px;
-$spacing-xs: 16px;
+$spacing-xs: 12px;
+$spacing-s: 16px;
 $spacing-sm: 24px;
 $spacing-md: 32px;
 $spacing-lg: 40px;
@@ -12,6 +13,7 @@ $spacings: (
   '3xs': $spacing-3xs,
   '2xs': $spacing-2xs,
   'xs': $spacing-xs,
+  's': $spacing-s,
   'sm': $spacing-sm,
   'md': $spacing-md,
   'lg': $spacing-lg,

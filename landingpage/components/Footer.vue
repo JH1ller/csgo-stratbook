@@ -27,7 +27,7 @@
         href="https://ko-fi.com/Q5Q02X2XQ"
         rel="noreferrer"
         target="_blank"
-        class="footer__link"
+        class="footer__link --kofi"
         ><img
           height="36"
           src="https://cdn.ko-fi.com/cdn/kofi5.png?v=2"
@@ -112,8 +112,8 @@ export default {};
 
     font-size: 1.1rem;
     white-space: nowrap;
-    opacity: 0.5;
     transition: opacity 0.2s ease;
+    opacity: 0.7;
 
     &:hover {
       opacity: 1;
@@ -129,6 +129,10 @@ export default {};
           width: 28px;
         }
       }
+    }
+
+    &.--kofi {
+      opacity: 1;
     }
 
     @include viewport_mq3 {
