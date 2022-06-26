@@ -1097,7 +1097,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   copyRoomLink() {
-    writeToClipboard(urljoin(APP_URL, 'map', this.roomId));
+    writeToClipboard(urljoin(APP_URL, '/', '/#/map', this.roomId));
     this.showToast({ id: 'sketchTool/roomlinkCopied', text: 'Room link copied' });
   }
 

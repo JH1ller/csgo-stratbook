@@ -163,15 +163,15 @@ router.get('/confirmation/:token', async (req, res) => {
   if (email) {
     targetUser.email = email;
     await targetUser.save();
-    return res.redirect(urljoin(APP_URL, `/profile?confirmed=1`));
+    return res.redirect(urljoin(APP_URL, `/#/profile?confirmed=1`));
   }
 
   if (targetUser.confirmed) {
-    return res.redirect(urljoin(APP_URL, `/login?already_confirmed=${targetUser.email}`));
+    return res.redirect(urljoin(APP_URL, `/#/login?already_confirmed=${targetUser.email}`));
   } else {
     targetUser.confirmed = true;
     await targetUser.save();
-    return res.redirect(urljoin(APP_URL, `/login?confirmed=${targetUser.email}`));
+    return res.redirect(urljoin(APP_URL, `/#/login?confirmed=${targetUser.email}`));
   }
 });
 

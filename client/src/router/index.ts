@@ -102,8 +102,6 @@ const routes = [
 
 const router = new VueRouter({
   routes,
-  mode: 'history',
-  base: process.env.NODE_ENV === 'staging' ? '/app/' : '/',
 });
 
 export default router;

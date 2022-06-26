@@ -80,7 +80,7 @@ app.use(logger);
 const mapRedirect: RequestHandler = (req, res, next) => {
   const host = req.get('Host');
   if (host === 'map.stratbook.live' || host === 'map.csstrats.app') {
-    return res.redirect(301, 'https://app.stratbook.live/map');
+    return res.redirect(301, 'https://app.stratbook.live/#/map');
   }
   return next();
 };
@@ -99,12 +99,6 @@ if (isDev) {
 }
 
 app.use('/', express.static('dist_landingpage'));
-
-app.use(
-  historyFallback({
-    index: '/dist_app/index.html',
-  }),
-);
 
 if (!isDev) {
   app.use(Sentry.Handlers.errorHandler());

@@ -109,7 +109,7 @@ export const stratModule: Module<StratState, RootState> = {
     async shareStrat({ dispatch, state }, stratID: string) {
       const res = await api.strat.updateStrat({ _id: stratID, shared: true });
       if (res.success) {
-        const shareLink = `${window.location.origin}/share/${stratID}`;
+        const shareLink = `${window.location.origin}/#/share/${stratID}`;
         writeToClipboard(shareLink);
         dispatch('app/showToast', { id: 'strat/shareStrat', text: 'Copied share link to clipboard.' }, { root: true });
         trackingService.track('Action: Share Strat', {

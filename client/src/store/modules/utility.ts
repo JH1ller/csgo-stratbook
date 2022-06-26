@@ -25,11 +25,11 @@ export const utilityModule: Module<UtilityState, RootState> = {
   state: utilityInitialState(),
   getters: {
     utilitiesOfCurrentMap(state, _getters, rootState) {
-      return state.utilities.filter(utility => utility.map === rootState.map.currentMap);
+      return state.utilities.filter((utility) => utility.map === rootState.map.currentMap);
     },
     filteredUtilitiesOfCurrentMap(_state, getters, rootState) {
       return (getters.utilitiesOfCurrentMap as Utility[]).filter(
-        utility =>
+        (utility) =>
           (rootState.filter.utilityFilters.side ? rootState.filter.utilityFilters.side === utility.side : true) &&
           (rootState.filter.utilityFilters.type ? rootState.filter.utilityFilters.type === utility.type : true) &&
           (rootState.filter.utilityFilters.name
@@ -86,7 +86,7 @@ export const utilityModule: Module<UtilityState, RootState> = {
       formData.append('shared', 'true');
       const res = await api.utility.updateUtility(formData);
       if (res.success) {
-        const shareLink = `${window.location.origin}/share/${utilityID}`;
+        const shareLink = `${window.location.origin}/#/share/${utilityID}`;
         writeToClipboard(shareLink);
         dispatch(
           'app/showToast',
@@ -139,11 +139,11 @@ export const utilityModule: Module<UtilityState, RootState> = {
       state.utilities.push(utility);
     },
     [UPDATE_UTILITY](state, payload: { utility: Utility }) {
-      const utility = state.utilities.find(utility => utility._id === payload.utility._id);
+      const utility = state.utilities.find((utility) => utility._id === payload.utility._id);
       if (utility) Object.assign(utility, payload.utility);
     },
     [DELETE_UTILITY](state, utilityID: string) {
-      state.utilities = state.utilities.filter(utility => utility._id !== utilityID);
+      state.utilities = state.utilities.filter((utility) => utility._id !== utilityID);
     },
     [RESET_STATE](state) {
       Object.assign(state, utilityInitialState());

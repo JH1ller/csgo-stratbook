@@ -14,7 +14,7 @@
         }}</a>
         <a
           class="hero__button-register"
-          href="https://app.stratbook.live/register"
+          href="https://app.stratbook.live/#/register"
           >{{ $t('index.hero.btnRegister') }}</a
         >
       </div>
