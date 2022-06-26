@@ -100,7 +100,7 @@
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    background-color: rgba(white, 0.8);
+    background-color: var(--color-bg);
     padding: 12px 18px;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
@@ -108,11 +108,6 @@
     max-width: 80%;
     word-break: break-word;
     box-shadow: 0 0 8px rgba(black, 0.2);
-
-    &:hover {
-      background-color: var(--color-bg);
-      box-shadow: 0 0 8px rgba(black, 0.4);
-    }
   }
 
   &__side-wrapper {
