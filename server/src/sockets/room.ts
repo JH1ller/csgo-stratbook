@@ -46,10 +46,10 @@ export class Room {
     }, []);
   }
 
-  addClient(socketId: string, userName?: string): void {
+  addClient(socketId: string, userName?: string, color?: string): void {
     this.clients[socketId] = {
       position: { x: 0, y: 0 },
-      color: this.getColor(),
+      color: color ?? this.getColor(),
       userName: userName || Room.getRandomUsername(),
     };
   }

@@ -72,6 +72,11 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '2.1.0',
+        date: '2022-06-25',
+        changes: ['Darkmode 🎇', 'Player colors 🌈', 'New team page design'],
+      },
+      {
         version: '2.0.1',
         date: '2022-05-21',
         changes: ['Fix opening links & joining game server via desktop app'],
