@@ -82,8 +82,8 @@ export const createUtilImage = (util: UtilityTypes): HTMLImageElement => {
 
 export const createMapImage = (map: GameMap): HTMLImageElement => {
   const img = new Image();
-    img.src = `minimaps/${map.toLowerCase()}.webp`;
-    img.onerror = () => img.src = '';
+  img.src = require(`@/assets/images/drawtool/minimaps/${map.toLowerCase()}.webp`);
+  img.onerror = () => (img.src = '');
   return img;
 };
 
@@ -110,7 +110,10 @@ export const rotateVector = (vec: [x: number, y: number], angleInDeg: number): [
   const angleInRad = toRad(angleInDeg);
   const cos = Math.cos(angleInRad);
   const sin = Math.sin(angleInRad);
-  return [Math.round(10000*(vec[0] * cos - vec[1] * sin))/10000, Math.round(10000*(vec[0] * sin + vec[1] * cos))/10000];
+  return [
+    Math.round(10000 * (vec[0] * cos - vec[1] * sin)) / 10000,
+    Math.round(10000 * (vec[0] * sin + vec[1] * cos)) / 10000,
+  ];
 };
 
 export const handleDragStart = (event: DragEvent, type: UtilityTypes) => {

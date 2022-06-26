@@ -22,6 +22,6 @@ export default class MapPicker extends Vue {
   }
 
   private getMapImage(map: GameMap) {
-    return `maps/${map.toLowerCase()}.jpg`;
+    return require(`@/assets/images/maps/${map.toLowerCase()}.jpg`);
   }
 }
