@@ -5,8 +5,8 @@
       <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi" /></span>
       <span class="app__version" @click="toggleDarkMode">{{ appVersion }}</span>
     </div>
-    <DialogWrapper />
-    <ToastWrapper />
+    <DialogWrapper @click.native="closeMenu" />
+    <ToastWrapper @click.native="closeMenu" />
     <transition name="fade">
       <MainMenu v-show="!gameMode" :menuOpen="menuOpen" @toggle-menu="toggleMenu" @close-menu="closeMenu" />
     </transition>
@@ -205,7 +205,7 @@ export default class App extends Vue {
 
 .router-view {
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 
   @include viewport_mq3 {
