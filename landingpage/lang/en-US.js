@@ -72,6 +72,15 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '2.1.1',
+        date: '2022-06-27',
+        changes: [
+          'Fix main menu not closing on mobile in certain situations',
+          'Make new team page responsive',
+          'Fix editing strat content on mobile',
+        ],
+      },
+      {
         version: '2.1.0',
         date: '2022-06-25',
         changes: ['Darkmode 🎇', 'Player colors 🌈', 'New team page design'],
