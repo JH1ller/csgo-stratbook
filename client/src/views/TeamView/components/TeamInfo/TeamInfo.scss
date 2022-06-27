@@ -84,6 +84,11 @@
 
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+
+    @include viewport_mq4 {
+      align-items: flex-end;
+    }
   }
 
   &__actions-wrapper {
@@ -106,6 +111,10 @@
       width: 48px;
       justify-content: center;
     }
+
+    &:last-of-type {
+      margin-bottom: auto;
+    }
   }
 
   &__btn-label {
@@ -125,7 +134,7 @@
     align-items: flex-end;
 
     @include viewport_mq4 {
-      margin-top: auto;
+      @include spacing('margin-top', 'md');
     }
   }
 
