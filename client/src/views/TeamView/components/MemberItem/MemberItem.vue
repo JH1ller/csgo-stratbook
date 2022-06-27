@@ -9,7 +9,7 @@
         {{ member._id === teamInfo.manager ? 'Captain' : 'Member' }}
       </p>
       <p v-if="member.isOnline || member.lastOnline" class="member-item__tag" :class="{ '-online': member.isOnline }">
-        {{ member.isOnline ? 'online' : `last online ${lastOnlineString(member.lastOnline)}` }}
+        {{ member.isOnline ? 'online' : `${lastOnlineString(member.lastOnline)}` }}
       </p>
     </div>
     <div class="member-item__button-group">
@@ -17,15 +17,19 @@
         v-if="isManager && member._id !== teamInfo.manager"
         @click="() => transferManager(member._id)"
         class="member-item__btn"
+        v-tippy
+        content="Make captain"
       >
-        <fa-icon class="" icon="users" />Make captain
+        <fa-icon class="" icon="users" /><span class="member-item__btn-label">Make captain</span>
       </button>
       <button
         v-if="isManager && member._id !== profile._id"
         @click="() => kickMember(member._id)"
         class="member-item__btn"
+        v-tippy
+        content="Kick player"
       >
-        <fa-icon class="" icon="user-times" />Kick
+        <fa-icon class="" icon="user-times" /><span class="member-item__btn-label">Kick</span>
       </button>
       <v-swatches
         class="member-item__color-picker"
@@ -43,9 +47,11 @@
           slot="trigger"
           :disabled="profile._id !== teamInfo.manager && member._id !== profile._id"
           class="member-item__btn"
+          v-tippy
+          content="Set color"
         >
           <div class="member-item__color-dot" :style="{ background: member.color }" />
-          Color
+          <span class="member-item__btn-label">Color</span>
         </button>
       </v-swatches>
     </div>

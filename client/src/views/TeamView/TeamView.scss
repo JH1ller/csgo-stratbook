@@ -5,13 +5,20 @@
 
   &__content {
     @include view-content;
-    @include spacing('gap', '68px');
+    @include spacing('gap', 'sm');
 
     flex: 1;
     display: flex;
-    flex-direction: row;
+    flex-direction: column-reverse;
     max-width: 1440px;
-
     overflow-y: auto;
+
+    @include viewport_mq4 {
+      flex-direction: row;
+    }
+
+    @include viewport_mq5 {
+      @include spacing('gap', '2xl');
+    }
   }
 }

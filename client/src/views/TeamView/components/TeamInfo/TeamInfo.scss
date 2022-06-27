@@ -1,34 +1,48 @@
 .team-info {
+  @include spacing('gap', 'sm');
+
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  //align-items: center;
+
+  @include viewport_mq4 {
+    @include spacing('gap', 'md');
+
+    flex-direction: column;
+    align-items: flex-end;
+  }
 
   &__avatar {
-    width: 184px;
-    height: 184px;
-    border-radius: 27px;
+    width: 200px;
+    height: 200px;
+    border-radius: 16px;
+    flex-shrink: 0;
+    display: none;
+
+    @include viewport_mq2 {
+      display: initial;
+    }
   }
 
   &__title {
     @include typo_hl1;
-    @include spacing('margin-top', 's');
 
     font-size: 2rem;
     max-width: 280px;
     word-break: break-word;
-    text-align: right;
+
+    @include viewport_mq4 {
+      text-align: right;
+    }
   }
 
   &__website {
     @include typo_hl3(var(--color-text-secondary));
-    @include spacing('margin-top', '0.875rem');
 
     cursor: pointer;
   }
 
   &__code {
     @include typo_hl1(var(--color-blue));
-    @include spacing('margin-top', 'sm');
 
     display: flex;
     align-items: center;
@@ -65,26 +79,54 @@
     width: 1rem;
   }
 
-  &__btn-group {
-    @include spacing('gap', '2xs');
-    @include spacing('margin-top', 'md');
-    @include spacing('margin-bottom', 'md');
+  &__info-wrapper {
+    @include spacing('gap', 's');
 
     display: flex;
     flex-direction: column;
+  }
+
+  &__actions-wrapper {
+    @include spacing('gap', '2xs');
+
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+
+    @include viewport_mq4 {
+      height: 100%;
+    }
   }
 
   &__btn {
     @include icon-button;
+
+    @include viewport_range(mq1, mq3) {
+      align-self: flex-end;
+      width: 48px;
+      justify-content: center;
+    }
+  }
+
+  &__btn-label {
+    display: none;
+
+    @include viewport_mq3 {
+      display: initial;
+    }
   }
 
   &__danger-zone {
     @include spacing('gap', 'xs');
+    @include spacing('margin-top', 'xs');
 
-    margin-top: auto;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+
+    @include viewport_mq4 {
+      margin-top: auto;
+    }
   }
 
   &__text-btn {

@@ -1,16 +1,30 @@
 .member-item {
+  @include spacing('padding', '2xs xs 2xs 2xs');
+
+  @include viewport_mq2 {
+    @include spacing('padding', 's sm s s');
+  }
+
+  @include viewport_mq5 {
+    @include spacing('padding', 'sm md sm sm');
+  }
+
   background: var(--color-bg);
   border-radius: 11px;
   display: flex;
   align-items: center;
-  padding: 19px 33px 19px 19px;
   box-shadow: $shadow-subtle;
 
   &__avatar {
-    width: 62px;
-    height: 62px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     object-fit: cover;
+
+    @include viewport_mq2 {
+      width: 64px;
+      height: 64px;
+    }
 
     .-online & {
       border: 2px solid var(--color-green);
@@ -27,7 +41,11 @@
   }
 
   &__name {
-    @include typo_hl3;
+    @include typo_emphasis;
+
+    @include viewport_mq2 {
+      @include typo_hl3;
+    }
 
     color: var(--color-text);
   }
@@ -39,26 +57,39 @@
   &__tag {
     @include tag-pill;
 
+    white-space: nowrap;
+
     &.-online {
       background-color: var(--color-green);
+    }
+
+    @include viewport_mq2 {
+      &::before {
+        content: 'last online';
+      }
     }
   }
 
   &__button-group {
-    margin-left: auto;
+    @include spacing('gap', '2xs');
 
-    & > :not(:first-child) {
-      @include spacing('margin-left', '2xs');
-    }
+    display: flex;
+    margin-left: auto;
   }
 
   &__btn {
     @include icon-button;
   }
 
-  &__color-dot {
-    @include spacing('margin-right', '2xs');
+  &__btn-label {
+    display: none;
 
+    @include viewport_mq5 {
+      display: initial;
+    }
+  }
+
+  &__color-dot {
     width: 16px;
     height: 16px;
     border-radius: 50%;
