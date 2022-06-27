@@ -27,9 +27,15 @@
   &__btn {
     &.--submit {
       @include button-primary;
+      @include viewport_range(mq1, mq3) {
+        @include button-primary(true, true);
+      }
     }
     &.--cancel {
       @include button-default;
+      @include viewport_range(mq1, mq3) {
+        @include button-default(true, true);
+      }
     }
 
     &:not(:first-of-type) {

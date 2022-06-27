@@ -62,6 +62,7 @@
     opacity: 1;
     transition: opacity 0.3s ease;
     color: var(--color-text-tertiary);
+    text-align: center;
 
     &.-has-content {
       opacity: 0;

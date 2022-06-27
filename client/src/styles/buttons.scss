@@ -15,7 +15,9 @@
   overflow: hidden;
 
   @include viewport_range(mq1, mq2) {
-    padding: 5px 8px;
+    @if ($big == false) {
+      padding: 5px 8px;
+    }
   }
 
   &:hover,

@@ -58,6 +58,7 @@
 
 @mixin icon-button {
   @include typo_emphasis(var(--color-text-secondary));
+  @include spacing('gap', '2xs');
 
   padding: 9px 10px;
   border: 2px solid var(--color-border);
@@ -71,7 +72,6 @@
 
   & > svg {
     height: 16px;
-    @include spacing('margin-right', '2xs');
   }
 
   &:hover:not([disabled]) {
@@ -130,6 +130,10 @@
 
   @include viewport_mq3 {
     border-radius: 8px;
+    @include spacing('padding', sm);
+  }
+
+  @include viewport_mq5 {
     @include spacing('padding', lg);
   }
 }
