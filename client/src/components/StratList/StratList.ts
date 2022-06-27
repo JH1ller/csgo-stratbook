@@ -22,6 +22,7 @@ export default class StratList extends Vue {
   // used to force rerender of StratItem components after window resize
   // to adjust their height
   remountKey = 0;
+  prevWidth = window.innerWidth;
 
   private isCollapsed(strat: Strat) {
     return this.collapsedStrats.some((id) => id === strat._id);
@@ -29,7 +30,10 @@ export default class StratList extends Vue {
 
   @Listen('resize', { window: true })
   onResize() {
-    this.debouncedResizeHandler();
+    if (this.prevWidth !== window.innerWidth) {
+      this.prevWidth = window.innerWidth;
+      this.debouncedResizeHandler();
+    }
   }
 
   get debouncedResizeHandler(): DebouncedFunc<() => void> {
