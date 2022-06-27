@@ -49,12 +49,11 @@ img {
 }
 
 ::-webkit-scrollbar-thumb {
-  //background: rgba($color--navyblue, 0.6);
-  background: $color--darkblue;
+  background: var(--color-accent);
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba($color--darkblue, 0.5);
+  background: var(--color-accent-50);
 }
 
 .tippy-popper {
