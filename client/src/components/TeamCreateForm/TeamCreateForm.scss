@@ -36,8 +36,7 @@
   }
 
   &__submit {
-    @include button-big($color--green);
-    color: white;
+    @include button-primary(true, true);
   }
 
   &__register-text {
@@ -47,16 +46,12 @@
   &__register-link {
     font-weight: bold;
     margin-left: 4px;
-    color: $color--green;
+    color: var(--color-green);
     cursor: pointer;
   }
 
   &__error {
-    color: $color--red;
-    max-width: 300px;
-    margin-bottom: 12px;
-    padding: 8px;
-    border-radius: 6px;
-    background-color: rgba($color--red, 0.2);
+    @include error-notification;
+    @include spacing('margin-bottom', 'xs');
   }
 }

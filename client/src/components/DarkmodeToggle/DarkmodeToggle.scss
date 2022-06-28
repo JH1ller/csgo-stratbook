@@ -1,0 +1,58 @@
+.darkmode-toggle {
+  --width: 60px;
+  --height: calc(var(--width) / 2);
+  --before-padding: calc((var(--height) - (var(--width) / 3.5)) / 2);
+  width: var(--width);
+  height: var(--height);
+
+  &__inner {
+    height: 100%;
+    width: 100%;
+    background: var(--color-default);
+    border-radius: 999px;
+    padding: 10%;
+    position: relative;
+    cursor: pointer;
+    border: 1px solid var(--color-text-contrast-70);
+
+    &::before {
+      content: '';
+      height: calc(var(--width) / 3.5);
+      width: calc(var(--width) / 3.5);
+      border-radius: 999px;
+      background: var(--color-bg);
+      position: absolute;
+      z-index: 2;
+      transform: translate(0, -50%);
+      transition: transform 0.3s ease;
+      top: 50%;
+      left: var(--before-padding);
+    }
+
+    &.-dark::before {
+      transform: translate(calc(var(--width) - var(--before-padding) * 2 - (var(--width) / 3.5)), -50%);
+    }
+
+    & input {
+      position: absolute;
+      top: 0;
+      opacity: 0;
+    }
+  }
+
+  &__icon-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    margin: 0 3px;
+
+    & svg {
+      fill: var(--color-bg);
+      color: var(--color-bg);
+      height: calc(var(--width) / 4.5);
+      width: calc(var(--width) / 4.5);
+      z-index: 0;
+    }
+  }
+}

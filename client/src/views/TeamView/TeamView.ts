@@ -1,50 +1,55 @@
 import { Component, Vue } from 'vue-property-decorator';
 import MemberList from './components/MemberList/MemberList.vue';
 import TeamInfo from './components/TeamInfo/TeamInfo.vue';
-import { appModule, teamModule } from '@/store/namespaces';
+import { appModule, authModule, teamModule } from '@/store/namespaces';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { Response } from '@/store';
 import { Routes } from '@/router/router.models';
 import EditTeamForm from '@/components/EditTeamForm/EditTeamForm.vue';
 import { Team } from '@/api/models/Team';
 import { catchPromise } from '@/utils/catchPromise';
-import SmartImage from '@/components/SmartImage/SmartImage.vue';
+import { Player } from '@/api/models/Player';
 
 @Component({
   components: {
     MemberList,
     TeamInfo,
     EditTeamForm,
-    SmartImage,
   },
 })
 export default class TeamView extends Vue {
-  @teamModule.Getter private teamAvatarUrl!: string;
-  @teamModule.Getter private serverString!: string;
-  @teamModule.Getter private isManager!: boolean;
-  @teamModule.State private teamInfo!: Team;
-  @teamModule.Action private leaveTeam!: () => Promise<Response>;
-  @teamModule.Action private deleteTeam!: () => Promise<Response>;
-  @teamModule.Action private transferManager!: (memberID: string) => Promise<Response>;
-  @teamModule.Action private kickMember!: (memberID: string) => Promise<Response>;
-  @teamModule.Action private updateTeam!: (data: FormData) => Promise<Response>;
+  @teamModule.Getter serverString!: string;
+  @teamModule.Getter isManager!: boolean;
+  @teamModule.State teamInfo!: Team;
+  @teamModule.State teamMembers!: Player[];
+  @teamModule.Action leaveTeam!: () => Promise<Response>;
+  @teamModule.Action deleteTeam!: () => Promise<Response>;
+  @teamModule.Action transferManager!: (memberID: string) => Promise<Response>;
+  @teamModule.Action kickMember!: (memberID: string) => Promise<Response>;
+  @teamModule.Action updateTeam!: (data: FormData) => Promise<Response>;
+  @teamModule.Action updatePlayerColor!: (data: { _id: string; color: string }) => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
+  @authModule.Action updateProfile!: (data: FormData) => Promise<void>;
 
-  private showEditForm = false;
+  showEditForm = false;
 
-  private requestTeamLeave() {
+  requestTeamLeave() {
     catchPromise(
       this.showDialog({
         key: 'team-view/confirm-leave',
-        text: 'Are you sure you want to leave your team?',
+        text:
+          this.teamMembers.length === 1
+            ? 'Are you sure you want to leave your team?<br><bold>With no team members left, the team will be deleted.</bold>'
+            : 'Are you sure you want to leave your team?',
+        htmlMode: true,
       }),
       async () => {
         const res = await this.leaveTeam();
         if (res.success) this.$router.push(Routes.JoinTeam);
-      }
+      },
     );
   }
-  private requestTeamDelete() {
+  requestTeamDelete() {
     if (!this.isManager) return;
 
     catchPromise(
@@ -55,38 +60,38 @@ export default class TeamView extends Vue {
       async () => {
         const res = await this.deleteTeam();
         if (res.success) this.$router.push(Routes.JoinTeam);
-      }
+      },
     );
   }
 
-  private requestTransferManager(memberID: string) {
+  requestTransferManager(memberID: string) {
     catchPromise(
       this.showDialog({
         key: 'team-view/confirm-transfer',
         text: 'Are you sure you want to transfer team leadership?',
       }),
-      () => this.transferManager(memberID)
+      () => this.transferManager(memberID),
     );
   }
 
-  private requestKickMember(memberID: string) {
+  requestKickMember(memberID: string) {
     catchPromise(
       this.showDialog({
         key: 'team-view/confirm-kick',
         text: 'Are you sure you want to kick this player?',
       }),
-      () => this.kickMember(memberID)
+      () => this.kickMember(memberID),
     );
   }
 
-  private async requestTeamUpdate(formData: FormData) {
+  async requestTeamUpdate(formData: FormData) {
     const res = await this.updateTeam(formData);
     if (res.success) {
       this.toggleEditForm();
     }
   }
 
-  private toggleEditForm() {
+  toggleEditForm() {
     if (!this.isManager) return;
 
     this.showEditForm = !this.showEditForm;

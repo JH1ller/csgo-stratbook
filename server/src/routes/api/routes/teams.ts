@@ -7,6 +7,10 @@ import { verifyAuth } from '@/utils/verifyToken';
 import { teamSchema } from '@/utils/validation';
 import { uploadSingle, processImage, deleteFile } from '@/utils/fileUpload';
 import { TypedServer } from '@/sockets/interfaces';
+import { COLORS } from '@/constants';
+import { getRandomColor } from '@/utils/colors';
+import { toPlayerDto } from '@/dto/player.dto';
+import { toTeamDto } from '@/dto/team.dto';
 
 const router = Router();
 
@@ -16,24 +20,16 @@ router.get('/', verifyAuth, async (_, res) => {
   }
   const team = await TeamModel.findById(res.locals.player.team);
   if (team) {
-    return res.json(team);
+    return res.json(toTeamDto(team));
   } else {
     res.status(400).json({ message: 'Team not found.' });
   }
 });
 
 router.get('/players', verifyAuth, async (_, res) => {
-  const players = await PlayerModel.find({ team: res.locals.player.team });
-  const sanitizedPlayers = players.map((player) => ({
-    _id: player._id,
-    name: player.name,
-    createdAt: player.createdAt,
-    avatar: player.avatar,
-    team: player.team,
-    isOnline: player.isOnline,
-    lastOnline: player.lastOnline,
-  }));
-  res.json(sanitizedPlayers);
+  const members = await PlayerModel.find({ team: res.locals.player.team });
+  const memberDtos = members.map((member) => toPlayerDto(member));
+  res.json(memberDtos);
 });
 
 // * Create One
@@ -73,19 +69,12 @@ router.post('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
   }
 
   const newTeam = await team.save();
+
+  res.locals.player.color = COLORS[0];
   res.locals.player.team = newTeam._id;
   const updatedPlayer = await res.locals.player.save();
 
-  res.status(201).json({
-    _id: updatedPlayer._id,
-    name: updatedPlayer.name,
-    role: updatedPlayer.role,
-    createdAt: updatedPlayer.createdAt,
-    avatar: updatedPlayer.avatar,
-    team: updatedPlayer.team,
-    isOnline: updatedPlayer.isOnline,
-    lastOnline: updatedPlayer.lastOnline,
-  });
+  res.status(201).json(toPlayerDto(updatedPlayer));
 });
 
 // * Update One
@@ -115,7 +104,7 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
 
   const updatedTeam = await team.save();
 
-  res.json(updatedTeam);
+  res.json(toTeamDto(updatedTeam));
   (req.app.get('io') as TypedServer).to(team._id.toString()).emit('updated-team', { team: updatedTeam.toObject() });
 });
 
@@ -142,7 +131,7 @@ router.delete('/', verifyAuth, async (req, res) => {
   });
   await Promise.all(stratPromises);
 
-  res.json(res.locals.player);
+  res.json(toPlayerDto(res.locals.player));
   (req.app.get('io') as TypedServer).to(team._id.toString()).emit('deleted-team');
 });
 
@@ -153,19 +142,15 @@ router.patch('/join', verifyAuth, async (req, res) => {
   if (!team) {
     return res.status(400).json({ error: 'Wrong join code' });
   }
+  const members = await PlayerModel.find({ team: team._id });
 
+  const color = COLORS.find((color) => !members.some((member) => member.color === color)) ?? getRandomColor();
+
+  res.locals.player.color = color;
   res.locals.player.team = team._id;
+
   const updatedPlayer = await res.locals.player.save();
-  return res.json({
-    _id: updatedPlayer._id,
-    name: updatedPlayer.name,
-    createdAt: updatedPlayer.createdAt,
-    email: updatedPlayer.email,
-    avatar: updatedPlayer.avatar,
-    team: updatedPlayer.team,
-    isOnline: updatedPlayer.isOnline,
-    lastOnline: updatedPlayer.lastOnline,
-  });
+  return res.json(toPlayerDto(updatedPlayer));
 });
 
 // * Leave team
@@ -198,16 +183,7 @@ router.patch('/leave', verifyAuth, async (req, res) => {
   res.locals.player.team = undefined;
 
   const updatedPlayer = await res.locals.player.save();
-  return res.json({
-    _id: updatedPlayer._id,
-    name: updatedPlayer.name,
-    role: updatedPlayer.role,
-    createdAt: updatedPlayer.createdAt,
-    avatar: updatedPlayer.avatar,
-    team: updatedPlayer.team,
-    isOnline: updatedPlayer.isOnline,
-    lastOnline: updatedPlayer.lastOnline,
-  });
+  return res.json(toPlayerDto(updatedPlayer));
 });
 
 // * Transfer leader
@@ -227,7 +203,7 @@ router.patch('/transfer', verifyAuth, async (req, res) => {
   team.manager = req.body._id;
 
   const updatedTeam = await team.save();
-  return res.json(updatedTeam);
+  return res.json(toTeamDto(updatedTeam));
 });
 
 // * Kick member

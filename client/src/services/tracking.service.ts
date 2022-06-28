@@ -4,6 +4,7 @@ import pkg from '../../package.json';
 import { MXP_TOKEN, SPLITBEE_ID } from '@/config';
 import mixpanel from 'mixpanel-browser';
 import { Breakpoints } from './breakpoint.service';
+
 export default class TrackingService {
   private static instance: TrackingService;
   private initialized = false;

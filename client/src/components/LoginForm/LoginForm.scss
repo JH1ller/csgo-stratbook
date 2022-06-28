@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   padding: 16px;
-  background-color: $color--smoke;
+  background-color: var(--color-bg-secondary);
   box-shadow: $shadow-subtle;
   transition: height 0.3s ease;
   border-radius: 8px;
@@ -45,9 +45,8 @@
   }
 
   &__submit {
-    @include button-big($color--green);
+    @include button-primary(true, true);
 
-    color: white;
     box-shadow: $shadow-subtle;
     margin-top: 16px;
     width: 100%;
@@ -62,31 +61,26 @@
   &__register-link {
     font-weight: bold;
     margin-left: 4px;
-    color: $color--green;
+    color: var(--color-green);
     cursor: pointer;
   }
 
   &__forgot-password {
     align-self: flex-start;
     cursor: pointer;
-    color: $color--grey;
+    color: var(--color-text-secondary);
     margin-top: 4px;
     transform: translateY(4px);
     transition: color 0.3s ease;
     font-size: 0.85rem;
 
     &:hover {
-      color: darken($color--grey, 10%);
+      color: var(--color-text);
     }
   }
 
   &__error {
-    color: $color--red;
-    width: 100%;
-    text-align: center;
-    margin-bottom: 12px;
-    padding: 8px;
-    border-radius: 6px;
-    background-color: rgba($color--red, 0.2);
+    @include error-notification;
+    @include spacing('margin-bottom', 'xs');
   }
 }

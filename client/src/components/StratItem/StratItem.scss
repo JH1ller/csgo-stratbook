@@ -1,17 +1,17 @@
 .strat-item {
-  background-color: $color--smoke;
+  background-color: var(--color-bg-secondary);
   box-shadow: $shadow-subtle;
   padding: 0 12px 6px 12px;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   position: relative;
-  border: 2px solid rgba($color--navyblue, 0.5);
+  border: 2px solid var(--color-border);
   transition: height 0.3s ease-out;
   overflow: hidden;
 
   &.-inactive {
-    border: 2px dashed rgba($color--navyblue, 0.5);
+    border: 2px dashed var(--color-border);
     opacity: 0.5;
   }
 
@@ -30,7 +30,7 @@
   }
 
   &__inactive-label {
-    color: rgba($color--navyblue, 0.7);
+    color: var(--color-text-secondary);
     text-decoration: none;
     font-size: 0.9rem;
     margin-left: 6px;
@@ -42,7 +42,7 @@
     font-size: 0.8em;
     display: flex;
     align-items: center;
-    color: $color--abbey;
+    color: var(--color-text-secondary);
     opacity: 0.6;
     margin-left: 2px;
     opacity: 1;
@@ -65,7 +65,7 @@
     transition: opacity 0.3s ease;
 
     &.-blinking {
-      outline: 2px solid $color--red;
+      outline: 2px solid var(--color-red);
       animation: pulse-outline 2s infinite;
     }
 
@@ -81,19 +81,15 @@
     padding: 8px 0;
   }
 
-  &__type {
-    &:not(:first-child) {
-      margin-left: 12px;
-    }
-  }
-
   &__types-wrapper {
+    @include spacing('gap', xs);
+
     display: flex;
     margin-left: auto;
   }
 
   &__side {
-    margin-left: 12px;
+    @include spacing('margin-left', xs);
   }
 
   &__type,
@@ -111,37 +107,27 @@
   }
 
   &__btn-wrapper {
-    margin-top: 8px;
+    @include spacing('gap', '2xs');
+    @include spacing('margin-top', '2xs');
+
     display: flex;
     justify-content: flex-end;
     align-items: center;
-
-    & > :not(:first-child) {
-      margin-left: 8px;
-    }
-
-    @include viewport_mq3 {
-      right: 16px;
-    }
   }
 
   &__edit-buttons {
-    display: flex;
+    @include spacing('gap', '2xs');
 
-    & > :not(:first-child) {
-      margin-left: 8px;
-    }
+    display: flex;
   }
 
   &__action-buttons {
+    @include spacing('gap', '2xs');
+
     display: flex;
 
     padding-right: 8px;
-    border-right: 1px solid $color--grey;
-
-    & > :not(:first-child) {
-      margin-left: 8px;
-    }
+    border-right: 1px solid var(--color-text-tertiary);
 
     @include viewport_mq3 {
       padding-right: 12px;
@@ -154,16 +140,12 @@
     width: 28px;
     height: 28px;
     padding: 4px;
-    transition: color 0.3s ease;
-    background-color: rgba($color--navyblue, 0.3);
+    background-color: var(--color-bg);
     border-radius: 4px;
     display: flex;
     justify-content: center;
     align-items: center;
-
-    &:hover {
-      color: lighten($color--navyblue, 15%);
-    }
+    box-shadow: $shadow-subtle;
 
     & > svg {
       width: 18px;
@@ -187,9 +169,9 @@
     }
 
     &.-active {
-      box-shadow: 0 0 2px $color--green;
+      box-shadow: 0 0 2px var(--color-green);
       & > svg > path {
-        fill: $color--green;
+        fill: var(--color-green);
       }
     }
 

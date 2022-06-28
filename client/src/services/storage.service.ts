@@ -52,6 +52,10 @@ export default class StorageService {
     }
   }
 
+  exists(key: string): boolean {
+    return !!(this.useNativeStore ? this.store?.get(key) : localStorage.getItem(key));
+  }
+
   remove(key: string): void {
     if (this.useNativeStore) {
       this.store?.delete(key);

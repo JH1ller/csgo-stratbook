@@ -1,25 +1,16 @@
 .member-list {
-  padding: 16px;
-  border: 2px solid rgba($color--navyblue, 0.8);
-  border-radius: 8px;
-  overflow-y: scroll;
+  @include spacing('padding', xs);
+
+  border-radius: 10px;
+  background: var(--color-bg-secondary);
+  flex-grow: 1;
+  flex-basis: auto;
+  max-height: 800px;
+  overflow-y: auto;
   overflow-x: hidden;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none;
-  width: 100%;
 
   @include viewport_mq3 {
-    width: 250px;
-  }
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  &__header {
-    margin-bottom: 12px;
-    font-weight: bold;
-    font-size: 1.1rem;
+    @include spacing('padding', sm);
   }
 
   &__member {

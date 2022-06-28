@@ -6,24 +6,23 @@
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 24px;
-    background-color: white;
+    background-color: var(--color-bg);
+    box-shadow: $shadow-soft;
   }
 
   &__buttons {
+    @include spacing('gap', xs);
+
     display: flex;
     margin-top: 24px;
     justify-content: center;
-
-    & > :not(:first-child) {
-      margin-left: 12px;
-    }
   }
 
   &__text {
     line-height: 1.4;
 
     & bold {
-      font-family: $font_ubuntu-bold;
+      font-weight: 700;
     }
   }
 
@@ -31,7 +30,7 @@
     @include button-default;
 
     & > svg {
-      color: $color--green;
+      color: var(--color-green);
     }
   }
 
@@ -39,7 +38,7 @@
     @include button-default;
 
     & > svg {
-      color: $color--red;
+      color: var(--color-red);
     }
   }
 
@@ -49,6 +48,6 @@
 
   strong,
   b {
-    font-family: $font_ubuntu-bold;
+    font-weight: $weight-bold;
   }
 }

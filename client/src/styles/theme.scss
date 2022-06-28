@@ -1,0 +1,67 @@
+body {
+  // Colors
+  --color-default: #2c3e50;
+  --color-text: #333333;
+  --color-text-secondary: #686868;
+  --color-text-tertiary: #7a7a7a;
+  --color-text-contrast: #ffffff;
+  --color-text-contrast-70: rgba(255, 255, 255, 0.7);
+  --color-accent: rgb(44, 62, 80);
+  --color-accent-80: rgba(44, 62, 80, 0.65);
+  --color-accent-65: rgba(44, 62, 80, 0.65);
+  --color-accent-50: rgba(44, 62, 80, 0.5);
+  --color-accent-35: rgba(44, 62, 80, 0.35);
+  --color-accent-20: rgba(44, 62, 80, 0.2);
+
+  --color-green: hsl(153deg 48% 49%);
+  --color-green-dark: hsl(153deg 48% 40%);
+  --color-green-80: hsla(153, 48%, 49%, 0.8);
+  --color-blue: hsl(177deg 48% 49%);
+  --color-blue-10: rgba(65, 184, 178, 0.1);
+  --color-yellow: #e6b352;
+  --color-red: hsl(349deg 84% 62%);
+  --color-red-dark: hsl(349deg 60% 50%);
+  --color-red-20: hsla(349, 84%, 62%, 0.2);
+  --color-red-80: hsla(349, 84%, 62%, 0.8);
+
+  --color-app-bg: #4c4c53;
+  --color-bg: #ffffff;
+  --color-bg-20: rgba(255, 255, 255, 0.2);
+  --color-bg-secondary: #eeeeee;
+  --color-bg-tertiary: #dfdfdf;
+  --color-bg-blue: #23232e;
+  --color-bg-dark: #141418;
+  --color-bg-contrast: rgb(35, 35, 46);
+  --color-bg-contrast-50: rgba(35, 35, 46, 0.5);
+
+  --color-border: #dcdcdc;
+
+  // Fonts
+  --font-default: 'Ubuntu', sans-serif;
+
+  // Misc
+  --invert-value: invert(0);
+}
+
+body.-dark {
+  // Colors
+  --color-default: #fafafa;
+  --color-text: #f1f1f1;
+  --color-text-secondary: #7a7a7a;
+  --color-text-tertiary: #686868;
+  --color-text-contrast: #ffffff;
+
+  --color-app-bg: hsl(240deg 14% 8%);
+  --color-bg: hsl(240deg 14% 10%);
+  --color-bg-20: hsla(240, 14%, 10%, 0.2);
+  --color-bg-secondary: hsl(240deg 14% 16%);
+  --color-bg-tertiary: hsl(240deg 14% 20%);
+
+  --color-border: hsl(240deg 14% 22%);
+
+  // Fonts
+  --font-default: 'Ubuntu', sans-serif;
+
+  // Misc
+  --invert-value: invert(1);
+}

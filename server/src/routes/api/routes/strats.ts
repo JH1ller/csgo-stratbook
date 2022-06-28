@@ -27,8 +27,7 @@ router.post('/', verifyAuth, async (req, res) => {
 
   const strat = new StratModel({
     name: req.body.name,
-    // TODO: remove compatability fallback after noone is using <=1.8.8 anymore
-    types: req.body.types ?? [req.body.type],
+    types: req.body.types,
     map: req.body.map,
     side: req.body.side,
     active: req.body.active,
@@ -62,14 +61,8 @@ router.post('/share/:id', verifyAuth, async (req, res) => {
   }
 
   const stratCopy = new StratModel({
+    ...strat.toObject(),
     team: res.locals.player.team,
-    name: strat.name,
-    content: strat.content,
-    note: strat.note,
-    videoLink: strat.videoLink,
-    side: strat.side,
-    types: strat.types,
-    map: strat.map,
     createdBy: res.locals.player._id,
     createdAt: new Date(),
   });

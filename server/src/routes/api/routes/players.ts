@@ -8,40 +8,14 @@ import { verifyAuth } from '@/utils/verifyToken';
 import { sendMail, MailTemplate } from '@/utils/mailService';
 import { profileUpdateSchema } from '@/utils/validation';
 import { TypedServer } from '@/sockets/interfaces';
+import { toPlayerDto } from '@/dto/player.dto';
+import { TeamModel } from '@/models/team';
 
 const router = Router();
 
 // * Get User Profile
 router.get('/', verifyAuth, (_req, res) => {
-  const {
-    _id,
-    name,
-    role,
-    avatar,
-    team,
-    email,
-    confirmed,
-    isAdmin,
-    createdAt,
-    isOnline,
-    lastOnline,
-    completedTutorial,
-  } = res.locals.player;
-
-  res.json({
-    _id,
-    name,
-    role,
-    avatar,
-    team,
-    email,
-    confirmed,
-    isAdmin,
-    createdAt,
-    isOnline,
-    lastOnline,
-    completedTutorial,
-  });
+  return res.json(toPlayerDto(res.locals.player));
 });
 
 // * Update One
@@ -65,7 +39,7 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
     res.locals.player.avatar = fileName;
   }
 
-  if (req.body.name && req.query.updateStrats === 'true') {
+  if (req.body.name && req.query.updateStrats === 'true' && res.locals.player.team) {
     const strats = await StratModel.find({ team: res.locals.player.team });
     const promises = strats.map(async (strat) => {
       strat.content = strat.content?.replace(res.locals.player.name, req.body.name);
@@ -92,14 +66,47 @@ router.patch('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
     res.locals.player.completedTutorial = JSON.parse(req.body.completedTutorial);
   }
 
+  if (req.body.color) {
+    res.locals.player.color = req.body.color;
+  }
+
   const updatedPlayer = await res.locals.player.save();
 
-  const { email, password, deleted, modifiedAt, ...sanitizedPlayer } = updatedPlayer.toObject();
+  const updatedPlayerDto = toPlayerDto(updatedPlayer);
 
-  res.json(sanitizedPlayer);
-  (req.app.get('io') as TypedServer)
-    .to(updatedPlayer.team.toString())
-    .emit('updated-player', { player: sanitizedPlayer });
+  res.json(updatedPlayerDto);
+
+  if (updatedPlayer.team) {
+    (req.app.get('io') as TypedServer)
+      .to(updatedPlayer.team.toString())
+      .emit('updated-player', { player: updatedPlayerDto });
+  }
+});
+
+// * Update Color
+router.patch('/color', verifyAuth, async (req, res) => {
+  const team = await TeamModel.findById(res.locals.player.team);
+  if (!team) return res.status(400).json({ error: 'Could not find team with the provided ID.' });
+
+  const isSelf = res.locals.player._id.equals(req.body._id);
+  const targetMember = isSelf ? res.locals.player : await PlayerModel.findById(req.body._id);
+
+  if (!isSelf && !team.manager.equals(res.locals.player._id)) {
+    return res.status(403).json({ error: 'Only the captain can change the color of other members.' });
+  }
+
+  targetMember.color = req.body.color;
+
+  const updatedPlayer = await targetMember.save();
+  const updatedPlayerDto = toPlayerDto(updatedPlayer);
+
+  res.json(updatedPlayerDto);
+
+  if (updatedPlayer.team) {
+    (req.app.get('io') as TypedServer)
+      .to(updatedPlayer.team.toString())
+      .emit('updated-player', { player: updatedPlayerDto });
+  }
 });
 
 export default router;

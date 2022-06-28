@@ -2,11 +2,7 @@
   <div class="main-menu">
     <ul class="main-menu__list" :class="{ '-open': menuOpen }">
       <router-link to="/" class="main-menu__logo">
-        <img
-          src="@/assets/icons/logo_small.png"
-          class="main-menu__icon main-menu__logo-icon"
-          alt="Application Logo"
-        />
+        <img src="@/assets/icons/logo_small.png" class="main-menu__icon main-menu__logo-icon" alt="Application Logo" />
         <span class="main-menu__label main-menu__logo-label">{{ appName }}</span>
       </router-link>
 
@@ -14,6 +10,7 @@
         <fa-icon :icon="item.icon" class="main-menu__icon" />
         <span class="main-menu__label" :style="{ transitionDelay: '0.' + index + 's' }">{{ item.label }}</span>
       </router-link>
+      <DarkmodeToggle class="main-menu__darkmode-toggle" />
       <a class="main-menu__list-item main-menu__link --twitter" @click="openTwitter"
         ><fa-icon :icon="['fab', 'twitter']" />twitter</a
       >

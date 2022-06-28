@@ -16,7 +16,7 @@
       <li data-context-setpos>
         <a @click.prevent="copySetpos(data.utility)"><fa-icon icon="map-marker-alt" />Copy Setpos</a>
       </li>
-      <li>
+      <li disabled>
         <a @click.prevent="shareUtility(data.utility)"
           ><fa-icon icon="share-alt" />{{ data && data.utility.shared ? 'Unshare' : 'Share' }}</a
         >

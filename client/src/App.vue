@@ -3,10 +3,10 @@
     <LoadingBar />
     <div class="app__version-wrapper">
       <span class="app__latency" :content="`${latency} ms`" v-tippy><fa-icon icon="wifi" /></span>
-      <span class="app__version">{{ appVersion }}</span>
+      <span class="app__version" @click="toggleDarkMode">{{ appVersion }}</span>
     </div>
-    <DialogWrapper />
-    <ToastWrapper />
+    <DialogWrapper @click.native="closeMenu" />
+    <ToastWrapper @click.native="closeMenu" />
     <transition name="fade">
       <MainMenu v-show="!gameMode" :menuOpen="menuOpen" @toggle-menu="toggleMenu" @close-menu="closeMenu" />
     </transition>
@@ -101,7 +101,7 @@ export default class App extends Vue {
       catchPromise(
         this.showDialog({
           key: 'app/update-notice',
-          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><br>`,
+          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><br><blockquote class="twitter-tweet"><p lang="en" dir="ltr">📌v2.1.0 is live!<br>This update is all about colors!🌈<br><br>🖍️The color assigned to a player will highlight them in every strategy text.<br>🌘Upon popular request, we&#39;ve also added a Darkmode now! 🎉<br>✨Last but not least the team page got a new design.</p>&mdash; Stratbook (@csgostratbook) <a href="https://twitter.com/csgostratbook/status/1541031306997407751?ref_src=twsrc%5Etfw">June 26, 2022</a></blockquote>`,
           resolveBtn: 'OK',
           confirmOnly: true,
           htmlMode: true,
@@ -141,7 +141,9 @@ export default class App extends Vue {
   }
 
   private initTracking(disableCookie = false) {
-    this.trackingService.init(disableCookie, { breakpoint: this.breakpoint, team: this.teamInfo.name });
+    if (process.env.NODE_ENV === 'production') {
+      this.trackingService.init(disableCookie, { breakpoint: this.breakpoint, team: this.teamInfo.name });
+    }
   }
 
   private closeMenu() {
@@ -151,6 +153,10 @@ export default class App extends Vue {
   private toggleMenu() {
     this.menuOpen = !this.menuOpen;
   }
+
+  toggleDarkMode() {
+    document.body.classList.toggle('-dark');
+  }
 }
 </script>
 
@@ -159,19 +165,20 @@ export default class App extends Vue {
 @import '~vue-swatches/dist/vue-swatches.css';
 
 .app {
-  font-family: $font_ubuntu-regular;
+  font-family: var(--font-default);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: var(--color-default);
   height: 100%;
   overflow: hidden;
+  font-size: 16px;
 
   &__version-wrapper {
     position: absolute;
     font-size: 0.8rem;
     top: 1px;
     right: 13px;
-    color: $color--smoke;
+    color: var(--color-bg-secondary);
     display: flex;
     align-items: center;
   }
@@ -187,11 +194,18 @@ export default class App extends Vue {
       height: 14px;
     }
   }
+
+  &__darkmode-toggle {
+    position: absolute;
+
+    @include spacing('top', 'xs');
+    @include spacing('right', 'xs');
+  }
 }
 
 .router-view {
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 
   @include viewport_mq3 {
@@ -212,6 +226,8 @@ export default class App extends Vue {
 }
 
 .v-context {
+  background-color: var(--color-bg);
+
   & > li {
     cursor: pointer;
 
@@ -224,6 +240,12 @@ export default class App extends Vue {
       display: flex;
       align-items: center;
       width: 100%;
+      color: var(--color-text);
+
+      &:hover {
+        background-color: var(--color-bg-secondary);
+        color: var(--color-text);
+      }
 
       & > svg {
         height: 70%;

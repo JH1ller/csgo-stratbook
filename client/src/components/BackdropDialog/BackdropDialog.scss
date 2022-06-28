@@ -12,7 +12,7 @@
 
   &__content {
     padding: 16px;
-    background-color: $color--smoke;
+    background-color: var(--color-bg-secondary);
     min-width: 100%;
     height: 100%;
     overflow-y: auto;
@@ -57,7 +57,7 @@
     right: 16px;
     width: 36px;
     height: 36px;
-    color: white;
+    color: var(--color-text-contrast);
     transition: transform 0.3s ease;
     cursor: pointer;
     padding: 4px;

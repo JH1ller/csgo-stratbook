@@ -1,15 +1,13 @@
-@import 'StratEditor.legacy';
-
 .strat-editor {
   &__editor {
+    @include typo_text;
+
     user-select: text;
     transition: box-shadow 0.3s ease;
     border-radius: 6px;
-    border: 1px solid $color--light;
-    font-family: $font_ubuntu-regular;
     padding: 8px 12px;
-    color: $color--dark;
-    background-color: white;
+    color: var(--color-text);
+    background-color: var(--color-bg);
     font-size: 1.1rem;
     line-height: 1.8rem;
 
@@ -34,58 +32,39 @@
   &__tag {
     border-radius: 3px;
     padding: 3px 5px;
-    font-family: $font_ubuntu-bold;
+    font-weight: $weight-bold;
     font-size: 1rem;
-    color: $color--emperor;
+    color: var(--color-text-secondary);
     transition: background-color 0.3s ease-out;
     white-space: nowrap;
-    background-color: $color--smoke;
+    background-color: var(--color-bg-secondary);
 
-    &.--mention {
-      background-color: $color--light-purple;
-
-      &:hover {
-        background-color: darken($color--light-purple, 7%);
-      }
-
-      &.-is-user {
-        background-color: $color--aero;
-
-        &:hover {
-          background-color: darken($color--aero, 7%);
-        }
-      }
-
-      &.-is-spawn {
-        background-color: $color--sand;
-
-        &:hover {
-          background-color: darken($color--sand, 7%);
-        }
-      }
+    & &.--mention {
+      background-color: var(--color-accent);
+      color: var(--color-text-contrast);
     }
 
-    &.--utility {
-      background-color: $color--smoke;
+    &.--utility,
+    &.--weapon {
+      background-color: var(--color-accent);
+      color: var(--color-text-contrast);
 
-      &:hover {
-        background-color: darken($color--smoke, 5%);
+      // TODO: create icons in white instead
+      & > img {
+        filter: invert(1);
+        opacity: 1;
       }
     }
 
     &.--timestamp {
-      background-color: $color--puerto;
-      color: white;
+      background-color: var(--color-blue);
+      color: var(--color-text-contrast);
 
       & > img {
         width: 16px;
         height: 16px;
         transform: translateY(2px);
         margin-right: 4px;
-      }
-
-      &:hover {
-        background-color: darken($color--puerto, 5%);
       }
     }
 
@@ -96,7 +75,7 @@
 
       &.-linked {
         &::after {
-          background-color: $color--green;
+          background-color: var(--color-green);
         }
       }
 
@@ -109,7 +88,7 @@
         right: 6px;
         top: 50%;
         transform: translateY(-50%);
-        background-color: $color--orange;
+        background-color: var(--color-yellow);
       }
     }
   }
@@ -117,22 +96,23 @@
   &__tag-img {
     width: 20px;
     height: 20px;
-    opacity: 0.5;
+    opacity: 0.7;
     margin-right: 2px;
     margin-left: -1px;
     transform: translateY(4px);
   }
 
   &__mention-item {
-    font-family: $font_ubuntu-bold;
+    @include typo_emphasis;
+
     padding: 12px;
-    color: $color--dark;
+    color: var(--color-text);
     cursor: pointer;
     display: flex;
     align-items: center;
 
     &:not(:first-of-type) {
-      border-top: 1px solid darken(white, 10%);
+      border-top: 1px solid var(--color-border);
     }
     &:first-of-type {
       border-top-left-radius: 6px;
@@ -145,12 +125,12 @@
     }
 
     &.-no-match {
-      font-family: $font_ubuntu-regular;
+      font-weight: $weight-regular;
     }
   }
 
   &__mention-container {
-    background-color: whitesmoke;
+    background-color: var(--color-bg-secondary);
     box-shadow: $shadow-subtle;
     border-radius: 6px;
 
@@ -160,7 +140,7 @@
   }
 
   &__mention-selected {
-    background-color: darken(white, 10%);
+    background-color: var(--color-bg-tertiary);
   }
 
   &__mention-item-image {

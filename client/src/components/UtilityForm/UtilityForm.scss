@@ -26,10 +26,16 @@
 
   &__btn {
     &.--submit {
-      @include button-default($color--green, white);
+      @include button-primary;
+      @include viewport_range(mq1, mq3) {
+        @include button-primary(true, true);
+      }
     }
     &.--cancel {
-      @include button-default($color--red, white);
+      @include button-default;
+      @include viewport_range(mq1, mq3) {
+        @include button-default(true, true);
+      }
     }
 
     &:not(:first-of-type) {
@@ -82,13 +88,11 @@
   }
 
   &__input-wrapper {
+    @include spacing('gap', '2xs');
+
     display: flex;
     width: 100%;
     justify-content: stretch;
-
-    & > :not(:first-child) {
-      margin-left: 8px;
-    }
 
     & > .text-input {
       width: 100%;

@@ -2,12 +2,6 @@
   position: relative;
 
   &__button {
-    background-color: $color--grey;
-
-    &:hover {
-      background-color: darken($color--grey, 15%);
-    }
-
     & > svg {
       width: 24px;
       height: 24px;
@@ -19,7 +13,7 @@
     top: -6px;
     right: -6px;
     border-radius: 50%;
-    background-color: $color--orange;
+    background-color: var(--color-accent);
     width: 20px;
     height: 20px;
     font-size: 0.9rem;
@@ -27,7 +21,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: var(--color-text-contrast);
     text-shadow: $shadow-subtle;
     box-shadow: $shadow-subtle;
   }

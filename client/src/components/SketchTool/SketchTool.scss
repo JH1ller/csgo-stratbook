@@ -9,7 +9,7 @@
     @include spacing('top', sm);
 
     position: absolute;
-    color: white;
+    color: var(--color-text-contrast);
     z-index: 1;
     pointer-events: none;
   }
@@ -36,7 +36,7 @@
     //background-image: linear-gradient(60deg, #29323c 0%, #20242a 100%);
   }
   &__btn {
-    @include button-default(white, $color--navyblue, false);
+    @include button-default(false);
     @include slideFromY(10%, 10, 'tool');
 
     & > svg {
@@ -47,7 +47,7 @@
 
     &.-active {
       & > svg {
-        color: $color--green;
+        color: var(--color-green);
       }
     }
   }
@@ -76,9 +76,10 @@
   }
 
   &__toolbar {
-    @include spacing('padding', '2xs xs');
+    @include spacing('padding', '2xs s');
+    @include spacing('gap', xs);
 
-    background: rgba($color--darkblue, 0.5);
+    background: var(--color-bg-contrast-50);
     position: absolute;
     bottom: 0;
     left: 0;
@@ -89,12 +90,8 @@
     flex-wrap: wrap;
     height: 70px;
 
-    & > :not(:first-child) {
-      margin-left: 12px;
-
-      @include viewport_range(mq1, mq2) {
-        @include spacing('margin-left', '3xs');
-      }
+    @include viewport_range(mq1, mq2) {
+      @include spacing('gap', '3xs');
     }
 
     @include viewport_range(mq1, mq2) {
@@ -147,18 +144,18 @@
 
   &__textbox {
     @include spacing('padding', '3xs 2xs');
+    @include typo_text;
     position: absolute;
     display: none;
     background-color: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(white, 0.7);
-    font-family: $font_ubuntu-regular;
     white-space: nowrap;
     transform-origin: left center;
   }
 
   &__left-container {
     @include blurry-bg;
-    @include spacing('padding', 'xs');
+    @include spacing('padding', 's');
 
     position: absolute;
     top: 50%;
@@ -171,7 +168,7 @@
   }
 
   &__keymaps-bar {
-    @include spacing('gap', xs);
+    @include spacing('gap', s);
     @include spacing('margin-bottom', 'md');
 
     display: flex;
@@ -182,7 +179,7 @@
 
   &__keymap {
     @include slideFromX(-10%, 6, 'keymap');
-    @include spacing('gap', xs);
+    @include spacing('gap', s);
 
     display: flex;
     align-items: center;
@@ -197,7 +194,7 @@
   }
 
   &__keymap-label {
-    color: white;
+    color: var(--color-text-contrast);
 
     @include viewport_range(mq1, mq2) {
       font-size: 0.8rem;
@@ -212,7 +209,7 @@
     font-weight: bold;
     font-size: 0.7rem;
     line-height: 13px;
-    color: white;
+    color: var(--color-text-contrast);
     padding-left: 4px;
     padding-top: 2px;
 
@@ -256,7 +253,7 @@
   }
 
   &__clients {
-    @include spacing('gap', 'xs');
+    @include spacing('gap', 's');
 
     display: flex;
     flex-direction: column;
@@ -267,7 +264,7 @@
   &__client {
     display: flex;
     align-items: center;
-    color: white;
+    color: var(--color-text-contrast);
 
     @include viewport_range(mq1, mq2) {
       font-size: 0.8rem;
@@ -283,9 +280,9 @@
 
   &__clients-headline {
     @include typo_hl3;
-    @include spacing('margin-bottom', 'xs');
+    @include spacing('margin-bottom', 's');
 
-    color: white;
+    color: var(--color-text-contrast);
 
     @include viewport_range(mq1, mq2) {
       font-size: 0.8rem;

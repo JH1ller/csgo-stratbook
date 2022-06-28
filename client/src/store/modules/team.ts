@@ -72,7 +72,7 @@ export const teamModule: Module<TeamState, RootState> = {
             id: 'team/createTeam',
             text: 'Team successfully created. You can now visit the strats page and start creating strats!',
           },
-          { root: true }
+          { root: true },
         );
         trackingService.track('Action: Team Created', { name: formData.get('name') as string });
         return { success: true }; // TODO: probably obsolete. remove
@@ -89,8 +89,25 @@ export const teamModule: Module<TeamState, RootState> = {
             id: 'team/updateTeam',
             text: 'Team details updated.',
           },
-          { root: true }
+          { root: true },
         );
+        return { success: true };
+      } else {
+        return { error: res.error };
+      }
+    },
+    async updatePlayerColor({ dispatch }, payload: { _id: string; color: string }) {
+      const res = await api.player.updatePlayerColor(payload);
+      if (res.success) {
+        dispatch(
+          'app/showToast',
+          {
+            id: 'team/updatePlayerColor',
+            text: 'Color updated.',
+          },
+          { root: true },
+        );
+        trackingService.track('Action: Update Player Color', { color: payload.color });
         return { success: true };
       } else {
         return { error: res.error };
@@ -106,7 +123,7 @@ export const teamModule: Module<TeamState, RootState> = {
             id: 'team/createTeam',
             text: 'Successfully joined team.',
           },
-          { root: true }
+          { root: true },
         );
         trackingService.track('Action: Team Joined', { name: (rootState.team?.teamInfo as Team)?.name ?? '' });
         return { success: 'Successfully joined team.' };
@@ -125,36 +142,39 @@ export const teamModule: Module<TeamState, RootState> = {
         return { error: res.error };
       }
     },
-    async deleteTeam({ dispatch }) {
+    async deleteTeam({ dispatch, rootState }) {
       const res = await api.team.deleteTeam();
       if (res.success) {
         dispatch('auth/setProfile', res.success, { root: true });
         dispatch('resetState');
         dispatch('app/showToast', { id: 'team/deleteTeam', text: 'Team has been deleted' }, { root: true });
+        trackingService.track('Action: Team Deleted', { name: (rootState.team?.teamInfo as Team)?.name ?? '' });
         return { success: true };
       } else {
         return { error: res.error };
       }
     },
-    async transferManager({ dispatch, commit }, memberID: string) {
+    async transferManager({ dispatch, commit, rootState }, memberID: string) {
       const res = await api.team.transferManager(memberID);
       if (res.success) {
         commit(SET_TEAM_INFO, res.success);
         dispatch(
           'app/showToast',
           { id: 'team/transferManager', text: 'Leadership successfully transfered' },
-          { root: true }
+          { root: true },
         );
+        trackingService.track('Action: Captain transferred', { team: (rootState.team?.teamInfo as Team)?.name ?? '' });
         return { success: true };
       } else {
         return { error: res.error };
       }
     },
-    async kickMember({ dispatch }, memberID: string) {
+    async kickMember({ dispatch, rootState }, memberID: string) {
       const res = await api.team.kickMember(memberID);
       if (res.success) {
         dispatch('fetchTeamMembers');
         dispatch('app/showToast', { id: 'team/kickMember', text: 'Player successfully kicked' }, { root: true });
+        trackingService.track('Action: Member kicked', { team: (rootState.team?.teamInfo as Team)?.name ?? '' });
         return { success: 'Successfully kicked.' };
       } else {
         return { error: res.error };
@@ -185,11 +205,11 @@ export const teamModule: Module<TeamState, RootState> = {
       state.teamMembers = members;
     },
     [UPDATE_TEAM_MEMBER](state, player: Player) {
-      const member = state.teamMembers.find(member => member._id === player._id);
+      const member = state.teamMembers.find((member) => member._id === player._id);
       if (member) Object.assign(member, player);
     },
     [DELETE_TEAM_MEMBER](state, playerID: string) {
-      state.teamMembers = state.teamMembers.filter(member => member._id !== playerID);
+      state.teamMembers = state.teamMembers.filter((member) => member._id !== playerID);
     },
     [RESET_STATE](state) {
       Object.assign(state, teamInitialState());

@@ -1,21 +1,22 @@
 @mixin input-default($placeholder: false) {
-  font-size: 1em;
+  @include typo_text;
+
   @if ($placeholder == true) {
     padding: 22px 10px 5px 12px;
   } @else {
     padding: 8px 10px;
   }
 
-  background-color: white;
-  outline: 1px solid rgba($color--navyblue, 0.35);
+  background-color: var(--color-bg);
+  outline: 1px solid var(--color-accent-35);
   border-bottom: 2px solid transparent;
   border-radius: 4px;
   box-shadow: $shadow-subtle;
-  transition: border 0.2s ease, outline 0.2s ease;
+  transition: border 0.2s ease, outline 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 
   &:focus {
-    outline-color: rgba($color--navyblue, 0.65);
-    border-color: rgba($color--navyblue, 0.65);
+    outline-color: var(--color-accent-65);
+    border-color: var(--color-accent-65);
   }
 
   @include viewport_mq7 {
@@ -27,53 +28,25 @@
   }
 }
 
-@mixin tooltip($text: attr(data-tooltip)) {
-  position: relative;
-  &::after {
-    content: $text;
-    font-size: 16px;
-    line-height: normal;
-    position: absolute;
-    top: -33px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba($color--navyblue, 0.8);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    opacity: 0;
-    white-space: nowrap;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-    text-transform: none;
-    z-index: 10;
-  }
-  &:hover {
-    &::after {
-      opacity: 1;
-    }
-  }
-}
-
 @mixin form-header {
-  @include typo_hl2($color--abbey);
+  @include typo_hl2;
   padding-bottom: 12px;
   margin-bottom: 24px;
   border-bottom: 1px solid rgba($color--abbey, 0.4);
 }
 
 @mixin fieldset-header {
-  @include typo_hl3($color--abbey);
+  @include typo_hl3(var(--color-text-secondary));
   padding-bottom: 8px;
   margin-bottom: 12px;
-  border-bottom: 1px solid rgba($color--abbey, 0.4);
+  border-bottom: 1px solid var(--color-text-secondary);
 }
 
 @mixin fieldset {
   border-radius: 6px;
   display: flex;
   flex-direction: column;
-  background-color: $color--smoke;
+  background-color: var(--color-bg-secondary);
   padding: 12px;
   width: 100%;
 
@@ -84,40 +57,33 @@
 }
 
 @mixin icon-button {
-  padding: 6px;
-  border: 2px solid rgba($color--navyblue, 0.8);
+  @include typo_emphasis(var(--color-text-secondary));
+  @include spacing('gap', '2xs');
+
+  padding: 9px 10px;
+  border: 2px solid var(--color-border);
   border-radius: 6px;
-  color: $color--abbey;
-  box-shadow: $shadow-subtle;
-  transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, border-color 0.3s ease, background-color 0.3s ease;
-  display: flex;
+  transition: border-color 0.3s ease, color 0.3s ease;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  background-color: $color--smoke;
+  justify-content: space-between;
+  background-color: var(--color-bg);
+  color: var(--color-text-secondary);
 
   & > svg {
-    height: 100%;
+    height: 16px;
   }
 
-  &:hover:not([inactive]) {
-    border-color: $color--abbey;
-    background-color: darken($color--smoke, 10%);
+  &:hover:not([disabled]) {
     cursor: pointer;
+    border-color: var(--color-blue);
+    color: var(--color-text);
+    box-shadow: $shadow-subtle;
   }
 
-  &:active:not([inactive]) {
-    transform: translateY(2px);
-    box-shadow: none;
-  }
-
-  &[inactive] {
-    opacity: 0.3;
-  }
-
-  @include viewport_mq3 {
-    padding: 14px;
-    border-radius: 12px;
-    border-width: 3px;
+  &[disabled] {
+    opacity: 0.5;
+    pointer-events: none;
   }
 }
 
@@ -127,9 +93,9 @@
 }
 
 @mixin blurry-panel {
-  @include spacing('padding', xs);
+  @include spacing('padding', s);
 
-  background-color: rgba(white, 0.2);
+  background-color: var(--color-bg-secondary);
   backdrop-filter: blur(15px);
   border-radius: 8px;
   box-shadow: rgba(34, 35, 36, 0.2) 0px 8px 24px;
@@ -146,7 +112,7 @@
   display: flex;
   flex-direction: column;
   padding: 12px;
-  background-color: $color--smoke;
+  background-color: var(--color-bg-secondary);
   border-radius: 8px;
   box-shadow: $shadow-subtle;
   width: 100%;
@@ -158,12 +124,33 @@
 }
 
 @mixin view-content {
-  background-color: white;
+  background-color: var(--color-bg);
   box-shadow: $shadow-subtle;
   padding: 12px;
 
   @include viewport_mq3 {
     border-radius: 8px;
-    padding: 24px;
+    @include spacing('padding', sm);
   }
+
+  @include viewport_mq5 {
+    @include spacing('padding', lg);
+  }
+}
+
+@mixin tag-pill {
+  @include typo_subline(var(--color-text-contrast));
+  @include spacing('padding', '2px 2xs');
+
+  font-size: 0.75rem;
+  background-color: var(--color-blue);
+  border-radius: 999px;
+}
+
+@mixin error-notification {
+  width: 100%;
+  color: var(--color-red);
+  padding: 8px;
+  border-radius: 6px;
+  background-color: var(--color-red-20);
 }

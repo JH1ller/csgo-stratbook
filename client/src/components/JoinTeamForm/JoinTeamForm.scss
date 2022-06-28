@@ -25,24 +25,18 @@
   &__input {
     & > input {
       text-transform: uppercase;
-      font-family: $font_ubuntu-bold;
-      color: $color--abbey;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      font-weight: $weight-bold;
     }
   }
 
   &__submit {
-    @include button-big($color--green);
+    @include button-primary(true, true);
 
     margin-top: 16px;
-    color: white;
   }
 
   &__error {
-    width: 100%;
-    color: $color--red;
-    padding: 8px;
-    border-radius: 6px;
-    background-color: rgba($color--red, 0.2);
+    @include error-notification;
+    @include spacing('margin-bottom', 'xs');
   }
 }

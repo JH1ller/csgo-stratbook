@@ -14,6 +14,7 @@ export interface Player {
   lastOnline?: Date;
   isAdmin: boolean;
   completedTutorial: boolean;
+  color: string;
 }
 
 export type PlayerDocument = Player &
@@ -82,6 +83,8 @@ const playerSchema = new Schema<Player>({
     type: Boolean,
     default: false,
   },
+
+  color: String,
 });
 
 playerSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });

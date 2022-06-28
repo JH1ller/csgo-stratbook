@@ -7,8 +7,13 @@ import TrackingService from '@/services/tracking.service';
 import { catchPromise } from '@/utils/catchPromise';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { openLink } from '@/utils/openLink';
+import DarkmodeToggle from '@/components/DarkmodeToggle/DarkmodeToggle.vue';
 
-@Component({})
+@Component({
+  components: {
+    DarkmodeToggle,
+  },
+})
 export default class MainMenu extends Vue {
   private appName = 'stratbook'; // TODO: dynamic
   @Inject() private trackingService!: TrackingService;
@@ -66,7 +71,7 @@ export default class MainMenu extends Vue {
       () => {
         this.trackingService.track('Action: Download Desktop Client');
         // TODO: consider if we should just insert current version here
-        window.open('https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+2.0.1.exe');
+        window.open('https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+2.1.1.exe');
       },
     );
     this.trackingService.track('Click: Get Desktop Client');

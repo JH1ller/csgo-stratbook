@@ -14,7 +14,8 @@ body {
   overflow: overlay;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: $color--abbey;
+  background-color: var(--color-app-bg);
+  transition: background-color 0.3s ease;
   * {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
@@ -25,7 +26,7 @@ body {
 
   &::selection {
     background-color: rgba($color--navyblue, 0.8);
-    color: white;
+    color: var(--color-bg);
   }
 }
 
@@ -48,18 +49,21 @@ img {
 }
 
 ::-webkit-scrollbar-thumb {
-  //background: rgba($color--navyblue, 0.6);
-  background: $color--darkblue;
+  background: var(--color-accent);
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba($color--darkblue, 0.5);
+  background: var(--color-accent-50);
 }
 
 .tippy-popper {
-  font-family: $font_ubuntu-regular;
+  font-family: var(--font-default);
 }
 
 button {
-  font-family: $font_ubuntu-regular;
+  font-family: var(--font-default);
+}
+
+.vue-swatches__container {
+  background: var(--color-bg-secondary) !important;
 }

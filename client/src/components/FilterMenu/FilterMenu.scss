@@ -6,13 +6,13 @@
   right: 0;
   top: 0;
   bottom: 0;
-  background-color: $color--smoke;
+  background-color: var(--color-bg-secondary);
   width: 100%;
   transform: translateX(100%);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid $color--grey;
+  border-left: 1px solid var(--color-border);
 
   @include viewport_mq3 {
     width: 350px;
@@ -24,23 +24,17 @@
   }
 
   &__title {
-    font-family: $font_ubuntu-bold;
+    font-weight: $weight-bold;
     font-size: 1.3rem;
     margin-bottom: 24px;
   }
 
   &__btn {
-    @include button-default;
-    padding: 12px 6px;
+    @include button-default(true, true);
 
     &.--clear {
-      margin-top: 24px;
-      background-color: $color--green;
-      color: white;
-
-      & > svg {
-        color: white;
-      }
+      @include button-primary(true, true);
+      @include spacing('margin-top', 'sm');
     }
 
     &.--close {

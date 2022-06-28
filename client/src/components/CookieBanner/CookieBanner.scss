@@ -1,14 +1,13 @@
 .cookie-banner {
-  @include blurry-panel;
-  @include spacing('padding', xs);
+  @include spacing('padding', s);
 
   border-radius: 8px;
   position: fixed;
   bottom: 0;
   left: 0;
-  background-color: rgba(white, 0.5);
   width: 100%;
   z-index: 10;
+  background-color: var(--color-bg-secondary);
 
   @include viewport_mq3 {
     @include spacing('padding', sm);
@@ -27,7 +26,7 @@
   }
 
   &__options {
-    @include spacing('margin-top', 'xs');
+    @include spacing('margin-top', 's');
 
     display: flex;
     align-items: center;
@@ -39,37 +38,28 @@
 
   &__checkbox {
     &:not(:first-of-type) {
-      @include spacing('margin-left', 'xs');
+      @include spacing('margin-left', 's');
     }
 
     &[disabled] + label {
-      color: rgba(black, 0.5);
+      color: var(--color-text-secondary);
     }
   }
 
   &__btn-wrapper {
-    @include spacing('margin-top', 'xs');
+    @include spacing('margin-top', 's');
 
     display: flex;
   }
 
   &__btn {
+    @include button-default;
     @include spacing('padding', '2xs sm');
 
-    font-family: $font_ubuntu-bold;
-    font-size: 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    border: 2px solid $color--green;
+    font-weight: $weight-bold;
 
     &.--accept {
-      background-color: $color--green;
-      color: white;
-    }
-
-    &.--save {
-      color: $color--green;
-      background-color: rgba(white, 0.3);
+      @include button-primary;
     }
 
     &:first-of-type {

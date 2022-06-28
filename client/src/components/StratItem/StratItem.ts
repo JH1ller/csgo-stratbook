@@ -62,7 +62,9 @@ export default class StratItem extends Vue {
   }
 
   get hasDrawData(): boolean {
-    return !!this.strat.drawData && Object.values(this.strat.drawData).some(value => value.length);
+    return (
+      !!this.strat.drawData && Object.values(this.strat.drawData).some((value) => Array.isArray(value) && value.length)
+    );
   }
 
   private setComponentHeight() {

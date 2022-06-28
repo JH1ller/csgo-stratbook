@@ -138,7 +138,7 @@
 }
 
 @mixin blurry-backdrop {
-  @include spacing('padding', 'xs 2xs 2xs');
+  @include spacing('padding', 's 2xs 2xs');
 
   background-color: rgba($color--white, 0.5);
   backdrop-filter: blur(15px);

@@ -5,12 +5,12 @@
   "scripts": {
     "start": "cross-env TS_NODE_BASEURL=./dist_server node -r tsconfig-paths/register dist_server/index.js",
     "start:pm2": "tsc && cross-env TS_NODE_BASEURL=./dist_server pm2 start dist_server/index.js --node-args=\"-r tsconfig-paths/register\"",
-    "serve": "tsnd --respawn --inspect=0.0.0.0:9229 --files -r tsconfig-paths/register src/index.ts",
+    "serve": "cross-env NODE_ENV=development tsnd --respawn --inspect=0.0.0.0:9229 --files -r tsconfig-paths/register src/index.ts",
     "build": "zx scripts/build.mjs",
     "postinstall": "npm run build || echo \"build failed :(\"",
     "deploy": "zx scripts/deploy.mjs",
     "deploy:prod": "zx scripts/deploy.mjs --prod",
-    "showlogs": "heroku logs --remote heroku --tail"
+    "showlogs": "heroku logs --remote prod --tail"
   },
   "repository": {
     "type": "git",
@@ -80,6 +80,7 @@
     "@types/url-join": "^4.0.1",
     "@typescript-eslint/eslint-plugin": "^5.14.0",
     "@typescript-eslint/parser": "^5.14.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-security": "^1.4.0",
     "nodemon": "^2.0.15",
     "p-queue": "^7.2.0",

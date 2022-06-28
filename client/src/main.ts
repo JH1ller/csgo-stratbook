@@ -3,68 +3,8 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import '@/styles/core.scss';
-import { library, config } from '@fortawesome/fontawesome-svg-core';
-import {
-  faEdit,
-  faTrashAlt,
-  faBan,
-  faFilm,
-  faCheck,
-  faFilter,
-  faPlus,
-  faTools,
-  faUtensils,
-  faBoxes,
-  faUsers,
-  faChess,
-  faCopy,
-  faCrown,
-  faGamepad,
-  faBomb,
-  faSave,
-  faShareAlt,
-  faDownload,
-  faQuestionCircle,
-  faInfoCircle,
-  faTimes,
-  faComment,
-  faWifi,
-  faChevronLeft,
-  faChevronRight,
-  faMinusCircle,
-  faCheckCircle,
-  faEllipsisV,
-  faBalanceScale,
-  faMap,
-  faEraser,
-  faFont,
-  faPencilAlt,
-  faArrowsAlt,
-  faLongArrowAltRight,
-  faExclamationTriangle,
-  faSignOutAlt,
-  faCoffee,
-  faHeadset,
-  faThList,
-  faCompressAlt,
-  faExpandAlt,
-  faCrosshairs,
-  faExpand,
-  faMapMarkerAlt,
-  faPhotoVideo,
-  faSortAmountUp,
-  faSortAmountDown,
-  faAlignCenter,
-  faMousePointer,
-  faICursor,
-  faNetworkWired,
-  faCog,
-  faSignInAlt,
-} from '@fortawesome/free-solid-svg-icons';
-import { faDiscord, faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
 import VueTippy, { TippyComponent } from 'vue-tippy';
-import { faCircle } from '@fortawesome/free-regular-svg-icons';
 import { isDesktop } from './utils/isDesktop';
 import StorageService from './services/storage.service';
 import { BreakpointService } from './services/breakpoint.service';
@@ -72,6 +12,9 @@ import VueKonva from 'vue-konva';
 import * as Sentry from '@sentry/vue';
 import { BrowserTracing } from '@sentry/tracing';
 import { SENTRY_DSN } from './config';
+import loadIcons from './utils/loadIcons';
+
+loadIcons();
 
 Vue.use(VueTippy, {
   directive: 'tippy',
@@ -84,69 +27,6 @@ Vue.use(VueTippy, {
 Vue.component('tippy', TippyComponent);
 
 Vue.use(VueKonva);
-
-config.autoAddCss = false;
-library.add(
-  faEdit,
-  faTrashAlt,
-  faBan,
-  faFilm,
-  faCheck,
-  faFilter,
-  faPlus,
-  faTools,
-  faUtensils,
-  faBoxes,
-  faUsers,
-  faChess,
-  faCopy,
-  faCrown,
-  faGamepad,
-  faBomb,
-  faSave,
-  faShareAlt,
-  faTwitter,
-  faDownload,
-  faQuestionCircle,
-  faInfoCircle,
-  faTimes,
-  faComment,
-  faWifi,
-  faChevronLeft,
-  faChevronRight,
-  faMinusCircle,
-  faCheckCircle,
-  faEllipsisV,
-  faBalanceScale,
-  faMap,
-  faEraser,
-  faFont,
-  faPencilAlt,
-  faArrowsAlt,
-  faLongArrowAltRight,
-  faCircle,
-  faExclamationTriangle,
-  faSignOutAlt,
-  faCoffee,
-  faDiscord,
-  faHeadset,
-  faThList,
-  faCompressAlt,
-  faExpandAlt,
-  faCrosshairs,
-  faExpand,
-  faMapMarkerAlt,
-  faPhotoVideo,
-  faSortAmountUp,
-  faSortAmountDown,
-  faAlignCenter,
-  faMousePointer,
-  faICursor,
-  faNetworkWired,
-  faCog,
-  faGithub,
-  faSignInAlt,
-);
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -165,8 +45,6 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-Vue.component('fa-icon', FontAwesomeIcon);
-
 Vue.config.productionTip = false;
 
 window.debugMode = process.env.NODE_ENV !== 'production' || !!localStorage.getItem('debug');
@@ -174,7 +52,7 @@ window.desktopMode = isDesktop();
 
 const storageService = StorageService.getInstance();
 
-new BreakpointService(MQ => store.dispatch('app/updateBreakpoint', MQ));
+new BreakpointService((MQ) => store.dispatch('app/updateBreakpoint', MQ));
 
 const hasSession = !!storageService.get('has-session');
 
@@ -185,9 +63,14 @@ const hasSession = !!storageService.get('has-session');
     await store.dispatch('loadDataFromStorage');
   }
 
+  // fade out app loader
+  const loaderEl: HTMLDivElement = document.querySelector('.loader-wrapper')!;
+  loaderEl.style.opacity = '0';
+  loaderEl.ontransitionend = () => loaderEl.remove();
+
   new Vue({
     router,
     store,
-    render: h => h(App),
+    render: (h) => h(App),
   }).$mount('#app');
 })();

@@ -1,5 +1,6 @@
 .floating-button {
-  background-color: $color--green;
+  background-color: var(--color-accent-65);
+  backdrop-filter: blur(4px);
   border-radius: 999px; // * some high value to ensure pill shape when long, and circle when short
   width: 48px;
   height: 48px;
@@ -9,7 +10,7 @@
   align-items: center;
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.2s ease, width 0.2s ease;
-  border: 2px solid white;
+  border: 2px solid var(--color-text-contrast);
 
   @include viewport_mq4 {
     width: auto;
@@ -18,18 +19,18 @@
 
   &:hover {
     transform: scale(1.03);
-    background-color: darken($color--green, 15%);
+    background-color: var(--color-accent);
   }
 
   &__icon {
     width: 28px;
     height: 28px;
-    color: white;
+    color: var(--color-text-contrast);
   }
 
   &__label {
     display: none;
-    color: white;
+    color: var(--color-text-contrast);
     margin-left: 6px;
 
     @include viewport_mq4 {

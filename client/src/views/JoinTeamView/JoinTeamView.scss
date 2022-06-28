@@ -5,6 +5,7 @@
 
   &__content {
     @include view-content;
+    @include spacing('gap', 's');
 
     min-height: 100%;
     display: flex;
@@ -16,18 +17,11 @@
     }
 
     @include viewport_mq5 {
+      @include spacing('gap', 'sm');
+
       flex-direction: row;
       justify-content: center;
       align-items: flex-start;
-    }
-
-    > *:not(:first-child) {
-      margin-top: 16px;
-
-      @include viewport_mq5 {
-        margin-top: 0;
-        margin-left: 24px;
-      }
     }
   }
 }

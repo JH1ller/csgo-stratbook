@@ -3,12 +3,13 @@
 
   &__container {
     display: flex;
-    background: white;
+    background: var(--color-bg-secondary);
     box-shadow: $shadow-subtle;
     padding: 12px;
     border-radius: 10px;
     flex-wrap: wrap;
     justify-content: center;
+    border: 2px solid var(--color-border);
 
     @include viewport_mq3 {
       justify-content: flex-start;
@@ -27,11 +28,11 @@
     margin: 0 5px;
 
     &:hover {
-      background-color: $color--smoke;
+      background-color: var(--color-bg);
     }
 
     &.-current {
-      background-color: $color--smoke;
+      background-color: var(--color-bg);
       .map-picker__image {
         transform: scale3d(1.05, 1.05, 1.05);
       }
@@ -47,7 +48,7 @@
     height: 70px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid $color--smoke;
+    border: 3px solid var(--color-border);
     transition: all 0.3s ease;
 
     @include viewport_mq3 {
@@ -59,11 +60,11 @@
 
   &__label {
     margin-top: 10px;
-    font-family: $font_ubuntu-bold;
+    font-weight: $weight-bold;
     font-size: 0.9rem;
     border-radius: 5px;
     padding: 2px 5px;
-    background-color: $color--smoke;
+    background-color: var(--color-bg);
     transition: all 0.3s ease;
 
     @include viewport_mq3 {

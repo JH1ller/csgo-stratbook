@@ -53,6 +53,8 @@ import TrackingService from '@/services/tracking.service';
 import { APP_URL } from '@/config';
 import isMobile from 'is-mobile';
 import { Dialog } from '../DialogWrapper/DialogWrapper.models';
+import { catchPromise } from '@/utils/catchPromise';
+import { COLORS } from '@/constants/colors';
 
 @Component({
   components: {
@@ -112,6 +114,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   readonly imageSize = 50;
   readonly cursorSize = 25;
   readonly backgroundSize = 1024;
+  readonly swatches = COLORS;
 
   //* Enum redeclaration for template exposure
   UtilityTypes: typeof UtilityTypes = UtilityTypes;
@@ -187,7 +190,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       y: item.position.y + 22,
       text: item.userName,
       fontSize: 14,
-      fontFamily: 'Ubuntu-Regular',
+      fontFamily: 'Ubuntu',
       fill: 'white',
       shadowColor: 'black',
       shadowBlur: 6,
@@ -242,7 +245,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       visible: item.visible,
       draggable: this.activeTool === ToolTypes.Pointer,
       fontSize: item.fontSize,
-      fontFamily: 'Ubuntu-Regular',
+      fontFamily: 'Ubuntu',
       shadowColor: 'black',
       shadowBlur: 2,
       shadowOpacity: 0.5,
@@ -959,7 +962,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       y: 16,
       text: this.stratName ?? 'Unnamed strategy',
       fontSize: 32,
-      fontFamily: 'Ubuntu-Bold',
+      fontFamily: 'Ubuntu',
       fill: 'white',
       shadowColor: 'black',
       shadowBlur: 8,
@@ -1198,13 +1201,16 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
     this.saveStateToHistory();
 
-    if (isMobile()) {
-      this.showDialog({
-        key: 'sketch-tool/mobile-warning',
-        text: `Hi there! The tactics board is not working well on mobile devices yet. For the best experience, please use a Desktop PC or Laptop.`,
-        resolveBtn: 'OK',
-        confirmOnly: true,
-      });
+    if (isMobile() && !this.storageService.get('mobile-warning-shown')) {
+      catchPromise(
+        this.showDialog({
+          key: 'sketch-tool/mobile-warning',
+          text: `Hi there! The tactics board is not working well on mobile devices yet. For the best experience, please use a Desktop PC or Laptop.`,
+          resolveBtn: 'OK',
+          confirmOnly: true,
+        }),
+      );
+      this.storageService.set('mobile-warning-shown', true);
     }
 
     //TODO: remove, only for testing

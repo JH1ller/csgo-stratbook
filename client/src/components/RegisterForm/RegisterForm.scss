@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   padding: 16px;
-  background-color: $color--smoke;
+  background-color: var(--color-bg-secondary);
   box-shadow: $shadow-subtle;
   transition: height 0.3s ease;
   border-radius: 8px;
@@ -46,29 +46,6 @@
         margin-top: 16px;
       }
     }
-
-    &.--key {
-      position: relative;
-
-      &::after {
-        content: '?';
-        border-radius: 50%;
-        border: 1px solid $color--abbey;
-        color: $color--abbey;
-        position: absolute;
-        right: 12px;
-        top: 50%;
-        opacity: 0.4;
-        font-weight: bold;
-        width: 16px;
-        height: 16px;
-        display: flex;
-        font-size: 0.8rem;
-        justify-content: center;
-        align-items: center;
-        transform: translateY(-50%);
-      }
-    }
   }
 
   &__image-uploader {
@@ -76,9 +53,8 @@
   }
 
   &__submit {
-    @include button-big($color--green);
+    @include button-primary(true, true);
 
-    color: white;
     box-shadow: $shadow-subtle;
     margin-top: 16px;
     width: 100%;
@@ -93,16 +69,12 @@
   &__register-link {
     font-weight: bold;
     margin-left: 4px;
-    color: $color--green;
+    color: var(--color-green);
     cursor: pointer;
   }
 
   &__error {
-    color: $color--red;
-    max-width: 300px;
-    margin-bottom: 12px;
-    padding: 8px;
-    border-radius: 6px;
-    background-color: rgba($color--red, 0.2);
+    @include error-notification;
+    @include spacing('margin-bottom', 'xs');
   }
 }

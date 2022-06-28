@@ -1,40 +1,35 @@
 .edit-team-form {
   &__btn {
-    @include button-big;
+    @include button-default(true, true);
 
     flex: 1 0;
 
-    &:first-of-type {
-      margin-right: 16px;
-    }
-
     &.--save {
-      @include button-big($color--green);
-
-      color: white;
-    }
-
-    &.--cancel {
+      @include button-primary(true, true);
     }
   }
 
   &__button-wrapper {
+    @include spacing('gap', 'xs');
+    @include spacing('margin-top', 'xs');
+
     display: flex;
   }
 
   &__input {
     &:not(:first-of-type) {
-      margin-top: 24px;
+      @include spacing('margin-top', 's');
     }
   }
 
   &__label {
-    margin-top: 24px;
+    @include spacing('margin-top', 'sm');
+
     font-size: 0.9rem;
   }
 
   &__uploader {
-    margin-top: 8px;
+    @include spacing('margin-top', 'xs');
   }
 
   &__headline {

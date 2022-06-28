@@ -29,14 +29,13 @@ export default class ProfileView extends Vue {
     catchPromise(
       this.showDialog({
         key: 'profile-view/confirm-delete',
-        text:
-          'Would you like to delete your account? WARNING: This action is permanent, there is no way to retrieve a deleted account!',
-        resolveBtn: "Yes, I'm aware what I'm doing, please delete my account",
+        text: 'Would you like to delete your account? WARNING: This action is permanent, there is no way to retrieve a deleted account!',
+        resolveBtn: "Yes, I'm aware of what I'm doing, please delete my account",
       }),
       () => {
         this.deleteAccount();
         this.$router.push(Routes.Login);
-      }
+      },
     );
   }
 

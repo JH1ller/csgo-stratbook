@@ -28,7 +28,7 @@ module.exports = {
     },
   },
   parallel: 4,
-  configureWebpack: config => {
+  configureWebpack: (config) => {
     if (process.env.BUILD_TARGET === 'ELECTRON') {
       config.target = 'electron-renderer';
     }

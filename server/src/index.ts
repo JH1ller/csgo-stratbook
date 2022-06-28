@@ -68,7 +68,7 @@ app.use(
   cors({
     credentials: true,
     origin: true,
-  })
+  }),
 );
 
 app.use(helmet());
@@ -100,12 +100,6 @@ if (isDev) {
 
 app.use('/', express.static('dist_landingpage'));
 
-app.use(
-  historyFallback({
-    index: '/dist_app/index.html',
-  })
-);
-
 if (!isDev) {
   app.use(Sentry.Handlers.errorHandler());
 }
@@ -134,5 +128,5 @@ instrument(io, {
 });
 
 httpServer.listen(port, undefined, () =>
-  Log.success('httpServer::listen', `Server started on port ${port} [${green(process.env.NODE_ENV!.toUpperCase())}]`)
+  Log.success('httpServer::listen', `Server started on port ${port} [${green(process.env.NODE_ENV!.toUpperCase())}]`),
 );

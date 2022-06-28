@@ -67,7 +67,7 @@ export default class ConnectionDialog extends Mixins(CloseOnEscape) {
   }
 
   &__btn-submit {
-    @include button-default($color--green, white);
+    @include button-primary;
   }
 
   &__btn-cancel {

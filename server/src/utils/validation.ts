@@ -16,6 +16,7 @@ export const profileUpdateSchema = Joi.object({
     .min(6)
     .pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$/),
   completedTutorial: Joi.boolean(),
+  color: Joi.string().min(4).max(7),
 });
 
 export const loginSchema = Joi.object({

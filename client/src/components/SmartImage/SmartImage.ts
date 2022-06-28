@@ -28,7 +28,15 @@ export default class SmartImage extends Vue {
   }
 
   private mounted() {
+    // delay the loading spinner so it doesn't flicker when image loads instantly
     this.delayLoading();
+    // timeout loading of unavailable images after 5 seconds
+    setTimeout(() => {
+      if (!this.loaded) {
+        this.loading = false;
+        this.crashed = true;
+      }
+    }, 5000);
   }
 
   private delayLoading() {
