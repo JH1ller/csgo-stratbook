@@ -10,7 +10,7 @@
     "postinstall": "npm run build || echo \"build failed :(\"",
     "deploy": "zx scripts/deploy.mjs",
     "deploy:prod": "zx scripts/deploy.mjs --prod",
-    "showlogs": "heroku logs --remote heroku --tail"
+    "showlogs": "heroku logs --remote prod --tail"
   },
   "repository": {
     "type": "git",

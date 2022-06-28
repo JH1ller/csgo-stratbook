@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt, { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 import ms from 'ms';
 import { nanoid } from 'nanoid';
 import cookieParser from 'cookie-parser';
@@ -190,18 +190,25 @@ router.post('/forgot-password', async (req, res) => {
 });
 
 router.patch('/reset', async (req, res) => {
-  const { _id } = jwt.verify(req.body.token, process.env.EMAIL_SECRET!) as JwtPayload;
+  try {
+    const { _id } = jwt.verify(req.body.token, process.env.EMAIL_SECRET!) as JwtPayload;
 
-  const targetUser = await PlayerModel.findById(_id);
-  if (!targetUser) {
-    return res.status(401).json({ error: 'Player not found' });
+    const targetUser = await PlayerModel.findById(_id);
+    if (!targetUser) {
+      return res.status(401).json({ error: 'Player not found' });
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+    targetUser.password = hashedPassword;
+    await targetUser.save();
+    return res.json(true);
+  } catch (error) {
+    if (error instanceof TokenExpiredError) {
+      return res.status(400).json({ error: 'Reset link expired.' });
+    }
+    return res.status(400).json({ error: 'Invalid reset link' });
   }
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(req.body.password, salt);
-
-  targetUser.password = hashedPassword;
-  await targetUser.save();
-  return res.json(true);
 });
 
 export default router;
