@@ -942,7 +942,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   // TODO: this is a bit buggy when undoing a change, then creating a new one
   // and then undoing again
   saveStateToHistory(): void {
-    console.log('saveStateToHistory');
     if (this.historyPointer < this.changeHistory.length - 1) {
       this.changeHistory.splice(this.historyPointer + 1);
     }

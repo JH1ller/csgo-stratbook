@@ -102,7 +102,7 @@ export default class StratEditor extends Vue {
             `<img class="strat-editor__mention-item-image" src="${resolveStaticImageUrl(item.original.icon)}"/>${
               item.original.label
             }`,
-          noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
+          noMatchTemplate: () => '<span style="visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
           spaceSelectsMatch: true,
           menuItemLimit: 6,
@@ -151,7 +151,7 @@ export default class StratEditor extends Vue {
           selectClass: 'strat-editor__mention-selected',
           menuItemTemplate: (item: TributeItem<LinkOption>) =>
             `<img class="strat-editor__mention-item-image" src="utility/${item.original.icon}.png"/> ${item.original.label} `,
-          noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
+          noMatchTemplate: () => '<span style="visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
           spaceSelectsMatch: true,
         },
@@ -167,7 +167,7 @@ export default class StratEditor extends Vue {
           selectClass: 'strat-editor__mention-selected',
           menuItemTemplate: (item: TributeItem<LinkOption>) =>
             `<img class="strat-editor__mention-item-image" src="utility/${item.original.icon}.png"/> ${item.original.label} `,
-          noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
+          noMatchTemplate: () => '<span style="visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
           spaceSelectsMatch: true,
         },
@@ -183,7 +183,7 @@ export default class StratEditor extends Vue {
           selectClass: 'strat-editor__mention-selected',
           menuItemTemplate: (item: TributeItem<LinkOption>) =>
             `<img class="strat-editor__mention-item-image" src="utility/${item.original.icon}.png"/> ${item.original.label} `,
-          noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
+          noMatchTemplate: () => '<span style="visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
           spaceSelectsMatch: true,
         },
@@ -236,6 +236,21 @@ export default class StratEditor extends Vue {
     this.tribute.attach(this.textarea);
     new ReplaceKeywords(this.textarea, { transformations: transformMap });
     this.addClickListeners();
+    this.setupTextarea();
+  }
+
+  setupTextarea() {
+    this.textarea.addEventListener('paste', (e) => {
+      // cancel paste
+      e.preventDefault();
+
+      // get text representation of clipboard
+      const text = e.clipboardData?.getData('text/plain');
+
+      // insert text manually
+      this.textarea.focus();
+      document.execCommand('insertText', false, text);
+    });
   }
 
   private addClickListeners() {
