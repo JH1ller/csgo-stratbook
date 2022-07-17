@@ -18,4 +18,5 @@ export interface Strat extends Model {
   modifiedAt: Date;
   content: string;
   shared: boolean;
+  index: number;
 }

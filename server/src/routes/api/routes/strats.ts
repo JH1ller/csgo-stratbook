@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Strat, StratModel } from '@/models/strat';
+import { StratModel } from '@/models/strat';
 import { getStrat } from '@/utils/getters';
 import { verifyAuth } from '@/utils/verifyToken';
 import { sanitize } from '@/utils/sanitizeHtml';

@@ -10,13 +10,14 @@ import { openLink } from '@/utils/openLink';
 import { StratTypes } from '@/api/models/StratTypes';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import { titleCase } from '@/utils/titleCase';
-
+import { HandleDirective } from 'vue-slicksort';
 @Component({
   components: {
     StratEditor,
     TypeBadge,
     SideBadge,
   },
+  directives: { handle: HandleDirective },
 })
 export default class StratItem extends Vue {
   @Prop() private gameMode!: boolean;
@@ -32,7 +33,7 @@ export default class StratItem extends Vue {
   private deferredCollapsed = false;
 
   private componentEl!: HTMLElement;
-  private componentHeight: number = 0;
+  componentHeight: number = 0;
 
   private editorKey = 0;
 
@@ -67,7 +68,16 @@ export default class StratItem extends Vue {
     );
   }
 
-  private setComponentHeight() {
+  async resetComponentHeight() {
+    this.componentEl.style.height = '';
+    this.deferredCollapsed = false;
+    await this.$nextTick();
+    this.componentHeight = this.componentEl.clientHeight;
+    this.deferredCollapsed = this.collapsed;
+    this.setComponentHeight();
+  }
+
+  setComponentHeight() {
     this.componentEl.style.height = this.deferredCollapsed ? '54px' : `${this.componentHeight + 5}px`;
   }
 

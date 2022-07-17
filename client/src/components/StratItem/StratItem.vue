@@ -1,5 +1,5 @@
 <template>
-  <div class="strat-item" :class="{ '-inactive': !strat.active, '-collapsed': deferredCollapsed }">
+  <div class="strat-item" :class="{ '-inactive': !strat.active, '-collapsed': collapsed }">
     <div class="strat-item__header" @click="!editMode && toggleCollapse()">
       <div class="strat-item__title-wrapper">
         <span class="strat-item__title">
@@ -102,6 +102,7 @@
         </span>
       </transition>
     </div>
+    <fa-icon class="strat-item__drag-icon" icon="ellipsis-v" v-handle />
   </div>
 </template>
 

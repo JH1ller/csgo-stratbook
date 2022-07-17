@@ -1,23 +1,30 @@
-import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
+import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
 import StratItem from '@/components/StratItem/StratItem.vue';
+import IStratItem from '@/components/StratItem/StratItem';
 import { Strat } from '@/api/models/Strat';
 import { StratTypes } from '@/api/models/StratTypes';
 import { Sides } from '@/api/models/Sides';
 import { Listen } from '@/utils/decorators/listen.decorator';
 import { debounce, DebouncedFunc } from 'lodash-es';
+import { SlickList, SlickItem } from 'vue-slicksort';
+import { stratModule } from '@/store/namespaces';
 
 @Component({
   components: {
     StratItem,
+    SlickList,
+    SlickItem,
   },
 })
 export default class StratList extends Vue {
+  @stratModule.Action updateStratsLocally!: (strats: Strat[]) => void;
   @Prop() completedTutorial!: boolean;
   @Prop() tutorialStrat!: Strat | null;
   @Prop() strats!: Strat[];
   @Prop() collapsedStrats!: string[];
   @Prop() editedStrats!: string[];
   @Prop() gameMode!: boolean;
+  @Ref() stratItemComponents!: IStratItem[];
 
   // used to force rerender of StratItem components after window resize
   // to adjust their height
@@ -26,6 +33,15 @@ export default class StratList extends Vue {
 
   private isCollapsed(strat: Strat) {
     return this.collapsedStrats.some((id) => id === strat._id);
+  }
+
+  handleSortEnd({ newIndex, oldIndex }: any) {
+    this.stratItemComponents[newIndex].resetComponentHeight();
+    this.stratItemComponents[oldIndex].resetComponentHeight();
+  }
+
+  handleSortChange(strats: Strat[]) {
+    this.updateStratsLocally(strats.map((strat, index) => ({ ...strat, index })));
   }
 
   @Listen('resize', { window: true })

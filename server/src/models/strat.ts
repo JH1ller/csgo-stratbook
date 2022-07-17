@@ -21,6 +21,7 @@ export interface Strat {
   modifiedBy?: Types.ObjectId;
   modifiedAt?: Date;
   shared: boolean;
+  index: number;
 }
 
 export type StratDocument = Document<unknown, any, Strat>;
@@ -108,6 +109,10 @@ const stratSchema = new Schema<Strat>({
   shared: {
     type: Boolean,
     default: false,
+  },
+
+  index: {
+    type: Number,
   },
 });
 

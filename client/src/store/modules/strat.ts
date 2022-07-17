@@ -64,18 +64,17 @@ export const stratModule: Module<StratState, RootState> = {
             : true),
       );
     },
-    sortedFilteredStratsOfCurrentMap(state, getters): Strat[] {
-      return (getters.filteredStratsOfCurrentMap as Strat[])
-        .sort(state.sort === Sort.DateAddedASC ? sortDateAddedASC : sortDateAddedDESC)
-        .sort((a, b) => +b.active - +a.active);
+    sortedFilteredStratsOfCurrentMap(_, getters): Strat[] {
+      return (getters.filteredStratsOfCurrentMap as Strat[]).sort((a, b) => a.index - b.index);
     },
   },
   actions: {
     async fetchStrats({ commit }) {
       const res = await api.strat.getStrats();
       if (res.success) {
-        commit(SET_STRATS, res.success);
-        return { success: res.success };
+        const stratsWithSort = res.success.map((strat, index) => ({ ...strat, index }));
+        commit(SET_STRATS, stratsWithSort);
+        return { success: stratsWithSort };
       } else {
         return { error: res.error };
       }
@@ -105,6 +104,9 @@ export const stratModule: Module<StratState, RootState> = {
     },
     updateStrat(_, payload: Partial<Strat>) {
       api.strat.updateStrat(payload);
+    },
+    updateStratsLocally({ commit }, strats: Strat[]) {
+      commit(SET_STRATS, strats);
     },
     async shareStrat({ dispatch, state }, stratID: string) {
       const res = await api.strat.updateStrat({ _id: stratID, shared: true });

@@ -175,9 +175,6 @@
       }
     }
 
-    &.--share {
-    }
-
     &.--save,
     &.--discard {
       & > span {
@@ -194,5 +191,16 @@
         }
       }
     }
+  }
+
+  &__drag-icon {
+    padding: 16px 4px;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 56px;
+    color: var(--color-text-secondary);
+    cursor: grab;
   }
 }
