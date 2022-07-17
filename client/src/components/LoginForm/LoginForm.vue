@@ -13,6 +13,9 @@
       fieldName="password"
     />
     <button type="submit" class="login-form__submit">Sign in</button>
+    <button class="login-form__steam" @click.prevent="steamLogin">
+      <img src="@/assets/images/steam_button.png" />
+    </button>
     <span class="login-form__register-text">
       Not registered?
       <router-link :to="{ name: 'Register' }" class="login-form__register-link">Create an account</router-link>

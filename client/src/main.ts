@@ -62,6 +62,7 @@ const hasSession = !!storageService.get('has-session');
     await store.dispatch('auth/fetchProfile');
     await store.dispatch('loadDataFromStorage');
   }
+  //await store.dispatch('auth/fetchSteamUrl');
 
   // fade out app loader
   const loaderEl: HTMLDivElement = document.querySelector('.loader-wrapper')!;

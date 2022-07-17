@@ -4,8 +4,6 @@ export interface Session {
   refreshToken: string;
   player: Types.ObjectId;
   expires: Date;
-  userAgent: string;
-  ip: string;
 }
 
 export type SessionDocument = Document<unknown, any, Session>;
@@ -26,14 +24,6 @@ const sessionSchema = new Schema<Session>({
   expires: {
     type: Date,
     required: true,
-  },
-
-  userAgent: {
-    type: String,
-  },
-
-  ip: {
-    type: String,
   },
 });
 

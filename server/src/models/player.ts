@@ -15,6 +15,8 @@ export interface Player {
   isAdmin: boolean;
   completedTutorial: boolean;
   color: string;
+  steamId: string;
+  accountType: 'local' | 'steam';
 }
 
 export type PlayerDocument = Player &
@@ -30,7 +32,6 @@ const playerSchema = new Schema<Player>({
 
   email: {
     type: String,
-    required: true,
     unique: true,
     maxlength: 255,
     minlength: 6,
@@ -38,7 +39,6 @@ const playerSchema = new Schema<Player>({
 
   password: {
     type: String,
-    required: true,
     minlength: 8,
   },
 
@@ -85,6 +85,18 @@ const playerSchema = new Schema<Player>({
   },
 
   color: String,
+
+  steamId: {
+    type: String,
+    required: false,
+  },
+
+  accountType: {
+    type: String,
+    enum: ['local', 'steam'],
+    default: 'local',
+    required: true,
+  },
 });
 
 playerSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });

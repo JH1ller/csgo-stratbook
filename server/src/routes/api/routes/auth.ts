@@ -10,11 +10,19 @@ import { SessionModel } from '@/models/session';
 import { registerSchema } from '@/utils/validation';
 import { sendMail, MailTemplate } from '@/utils/mailService';
 import { uploadSingle, processImage, deleteFile } from '@/utils/fileUpload';
-import { APP_URL } from '@/config';
+import { APP_URL, API_URL } from '@/config';
 import { verifyAuth } from '@/utils/verifyToken';
 import UserNotFoundError from '@/utils/errors/UserNotFoundError';
+import SteamAuth from 'node-steam-openid';
+import { Log } from '@/utils/logger';
 
 const router = Router();
+
+const steam = new SteamAuth({
+  realm: API_URL,
+  returnUrl: urljoin(API_URL, '/auth/steam/authenticate'),
+  apiKey: process.env.STEAM_API_KEY!,
+});
 
 router.post('/register', uploadSingle('avatar'), async (req, res) => {
   const { error } = registerSchema.validate(req.body);
@@ -57,7 +65,8 @@ router.post('/login', async (req, res) => {
 
   if (!validPassword) return res.status(400).json({ error: 'Email or password is invalid.' });
 
-  if (!targetUser.confirmed) return res.status(401).send({ error: 'Please confirm your email to log in.' });
+  if (targetUser.accountType === 'local' && !targetUser.confirmed)
+    return res.status(401).send({ error: 'Please confirm your email to log in.' });
 
   const refreshToken = nanoid(64);
   const refreshTokenExpiration = new Date(Date.now() + ms(process.env.REFRESH_TOKEN_TTL ?? '180d'));
@@ -112,7 +121,6 @@ router.post('/refresh', cookieParser(), async (req, res) => {
 
   session.refreshToken = refreshToken;
   session.expires = refreshTokenExpiration;
-  session.userAgent = req.cookies.userAgent;
 
   await session.save();
 
@@ -208,6 +216,62 @@ router.patch('/reset', async (req, res) => {
       return res.status(400).json({ error: 'Reset link expired.' });
     }
     return res.status(400).json({ error: 'Invalid reset link' });
+  }
+});
+
+router.get('/steam', async (_req, res) => {
+  const redirectUrl = await steam.getRedirectUrl();
+  return res.send(redirectUrl);
+});
+
+router.get('/steam/authenticate', async (req, res) => {
+  try {
+    const steamUser = await steam.authenticate(req);
+    let user = await PlayerModel.findOne({ steamId: steamUser.steamid });
+
+    if (!user) {
+      user = new PlayerModel({
+        name: steamUser.username,
+        avatar: steamUser.avatar.large,
+        steamId: steamUser.steamid,
+        accountType: 'steam',
+      });
+
+      await user.save();
+    }
+
+    const refreshToken = nanoid(64);
+    const refreshTokenExpiration = new Date(Date.now() + ms(process.env.REFRESH_TOKEN_TTL ?? '180d'));
+
+    // TODO: implement for this request to make Desktop App Signin work
+    const jsonMode = !!req.body.jsonMode;
+
+    const session = new SessionModel({
+      refreshToken,
+      player: user._id,
+      expires: refreshTokenExpiration,
+    });
+
+    await session.save();
+
+    const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET!, {
+      expiresIn: process.env.JWT_TOKEN_TTL,
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      maxAge: ms(process.env.REFRESH_TOKEN_TTL!),
+      sameSite: 'lax',
+    });
+
+    res.set('Access-Control-Expose-Headers', 'Set-Cookie');
+    res.set('Access-Control-Allow-Headers', 'Set-Cookie');
+    res.cookie('stratbook_jwt', token);
+
+    return res.redirect(APP_URL);
+  } catch (error) {
+    Log.error('auth/steam/authenticate', error.message);
+    return res.status(500).json({ error: 'test' });
   }
 });
 

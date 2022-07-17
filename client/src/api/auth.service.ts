@@ -11,6 +11,7 @@ export enum Actions {
   Register = 'register',
   ForgotPassword = 'forgot-password',
   Reset = 'reset',
+  SteamLogin = 'steam',
 }
 
 interface Authorization {
@@ -36,8 +37,13 @@ export default class AuthService {
   async login(email: string, password: string): Promise<APIResponse<Authorization>> {
     const target = urljoin(API_URL, this.endpoint, Actions.Login);
     return ApiService.makeRequest<{ token: string }>(
-      axios.post(target, { email, password, jsonMode: window.desktopMode }, { withCredentials: true })
+      axios.post(target, { email, password, jsonMode: window.desktopMode }, { withCredentials: true }),
     );
+  }
+
+  async fetchSteamUrl(): Promise<APIResponse<string>> {
+    const target = urljoin(API_URL, this.endpoint, Actions.SteamLogin);
+    return ApiService.makeRequest(axios.get(target, { withCredentials: true }));
   }
 
   async logout(): Promise<APIResponse<string>> {
@@ -48,7 +54,7 @@ export default class AuthService {
   async refresh(refreshToken?: string): Promise<APIResponse<Authorization>> {
     const target = urljoin(API_URL, this.endpoint, Actions.Refresh);
     return ApiService.makeRequest<Authorization>(
-      axios.post(target, { jsonMode: window.desktopMode, refreshToken }, { withCredentials: true })
+      axios.post(target, { jsonMode: window.desktopMode, refreshToken }, { withCredentials: true }),
     );
   }
 

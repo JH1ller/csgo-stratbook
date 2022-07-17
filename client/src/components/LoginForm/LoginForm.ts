@@ -34,6 +34,11 @@ export default class LoginForm extends Vue {
   }
 
   @Emit()
+  private steamLogin() {
+    return;
+  }
+
+  @Emit()
   private updateFormError(text: string) {
     return text;
   }

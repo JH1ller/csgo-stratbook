@@ -1,6 +1,11 @@
 <template>
   <div class="login-view">
-    <LoginForm @submit="loginRequest" @update-form-error="updateFormError" :formError="formError" />
+    <LoginForm
+      @submit="loginRequest"
+      @update-form-error="updateFormError"
+      @steam-login="loginWithSteam"
+      :formError="formError"
+    />
   </div>
 </template>
 

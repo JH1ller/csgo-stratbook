@@ -11,6 +11,7 @@ import { Routes } from '@/router/router.models';
 })
 export default class LoginView extends Vue {
   @authModule.Action login!: (credentials: { email: string; password: string }) => Promise<Response>;
+  @authModule.Action fetchSteamUrl!: () => Promise<Response>;
   private formError: string = '';
 
   private async loginRequest(payload: any) {
@@ -22,11 +23,16 @@ export default class LoginView extends Vue {
       this.updateFormError(res.error);
     } else if (res.success) {
       this.updateFormError('');
-      this.$router.push(Routes.JoinTeam).catch(error => console.warn(error.message));
+      this.$router.push(Routes.JoinTeam).catch((error) => console.warn(error.message));
     }
   }
 
   private updateFormError(text: string): void {
     this.formError = text;
+  }
+
+  async loginWithSteam() {
+    const { success } = await this.fetchSteamUrl();
+    window.location.href = success as string;
   }
 }

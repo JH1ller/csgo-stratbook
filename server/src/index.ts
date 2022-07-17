@@ -1,4 +1,7 @@
 require('dotenv').config();
+import { validateEnvironment } from './utils/validateEnvironment';
+if (!validateEnvironment()) process.exit(1);
+
 import express, { Request, Response, NextFunction, RequestHandler } from 'express';
 import 'express-async-errors';
 import rateLimit from 'express-rate-limit';
