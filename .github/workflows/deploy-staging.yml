@@ -14,13 +14,15 @@ jobs:
         node-version: [14.18.x]
     steps:
       - uses: actions/checkout@v3
-      - name: Build application using node.js ${{ matrix.node-version }}
+      - name: Using node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-        run: |
-          npm ci
-          npm run build:staging --if-present
+      - name: Installing dependencies
+        run: npm ci
+        working-directory: client
+      - name: Building application
+        run: npm run build:staging --if-present
         working-directory: client
       - name: Add heroku remote origin
         run: git remote add heroku-staging https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/csstrats-app.git
