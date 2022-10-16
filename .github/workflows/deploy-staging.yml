@@ -26,6 +26,8 @@ jobs:
         working-directory: client
       - name: Add heroku remote origin
         run: git remote add heroku-staging https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/csstrats-app.git
+      - run: git config user.email "justin@hiller-family.com"
+      - run: git config user.name "JH1ller"
       - run: git add -A && git commit -m "Updated code"
       - name: Deploy to Heroku staging
         run: git push heroku-staging `git subtree split --prefix server master`:master --force
