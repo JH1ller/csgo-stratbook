@@ -30,4 +30,4 @@ jobs:
       - run: git config user.name "JH1ller"
       - run: git add -A && git commit -m "Updated code"
       - name: Deploy to Heroku staging
-        run: git push heroku-staging `git subtree split --prefix server ${GITHUB_REF_NAME}`:master --force
+        run: git push heroku-staging `git subtree split --prefix server ${GITHUB_REF}`:master --force
