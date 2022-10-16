@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Free CSGO strats & nades management tool and collaborative tactics board. Also has a desktop app and works great on mobile."
+    />
+    <meta name="author" content="Justin Hiller" />
+    <meta
+      name="keywords"
+      content="stratbook, strategies, strategy, esport, csgo, counter-strike, counterstrike, global offensive, cs:go, tactics board, drawboard, collaborative, webapp, vue, free, database, manage"
+    />
+    <title>Stratbook App</title>
+    <link rel="icon" href="/app/favicon.png" />
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap"
+      rel="preload"
+      as="style"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      html,
+      body {
+        background-color: #4c4c53;
+      }
+
+      .loader-wrapper {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+        transition: opacity 0.3s ease-out;
+      }
+
+      .loading-track {
+        --bar-width: 200px;
+        --indicator-width: 25px;
+        height: 5px;
+        width: var(--bar-width);
+        border-radius: 999px;
+        background: #333333;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .loading-indicator {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: var(--indicator-width);
+        height: 5px;
+        background: white;
+        border-radius: 999px;
+        animation: bounce 1.75s linear infinite;
+      }
+
+      .loader-title {
+        color: white;
+        font-size: 1.5rem;
+        font-family: 'Ubuntu', sans-serif;
+        font-weight: 500;
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+
+      @keyframes bounce {
+        0% {
+          transform: translateX(calc(-1 * var(--bar-width)));
+        }
+        100% {
+          transform: translateX(calc(var(--bar-width) + var(--indicator-width)));
+        }
+      }
+    </style>
+  <link href="/app/js/0.js" rel="prefetch"><link href="/app/js/1.js" rel="prefetch"><link href="/app/js/10.js" rel="prefetch"><link href="/app/js/2.js" rel="prefetch"><link href="/app/js/3.js" rel="prefetch"><link href="/app/js/4.js" rel="prefetch"><link href="/app/js/5.js" rel="prefetch"><link href="/app/js/6.js" rel="prefetch"><link href="/app/js/7.js" rel="prefetch"><link href="/app/js/8.js" rel="prefetch"><link href="/app/js/9.js" rel="prefetch"><link href="/app/js/chunk-common.js" rel="preload" as="script"><link href="/app/js/chunk-vendors.js" rel="preload" as="script"><link href="/app/js/index.js" rel="preload" as="script"></head>
+  <body>
+    <noscript>
+      <strong
+        >We're sorry but csgo-stratbook doesn't work properly without JavaScript enabled. Please
+        enable it to continue.</strong
+      >
+    </noscript>
+    <div class="loader-wrapper">
+      <p class="loader-title">stratbook</p>
+      <div class="loading-track">
+        <div class="loading-indicator"></div>
+      </div>
+    </div>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  <script type="text/javascript" src="/app/js/chunk-vendors.js"></script><script type="text/javascript" src="/app/js/chunk-common.js"></script><script type="text/javascript" src="/app/js/index.js"></script></body>
+</html>
