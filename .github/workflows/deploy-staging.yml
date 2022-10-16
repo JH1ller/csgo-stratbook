@@ -28,7 +28,9 @@ jobs:
         id: gitignore-parser
         uses: dkershner6/gitignore-parser@v1
         with:
-            must_accept: 'server/dist_server,server/dist_landingpage,server/dist_app'
+            must_accept: 'server/dist_server,,server/dist_app'
+            must_accept: 'server/dist_landingpage'
+            must_accept: 'server/dist_app'
       - name: Add heroku remote origin
         run: git remote add heroku-staging https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/csstrats-app.git
       - run: git config user.email "justin@hiller-family.com"
