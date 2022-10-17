@@ -135,6 +135,20 @@ export class Validators {
     };
   }
 
+  static isYoutubeLink(): ValidatorFunction {
+    const errorMessage = `Currently only youtube is supported.`;
+    return (data) => {
+      const expressionResult = data.value.match(this.youtubeRegex)?.[7]?.length === 11;
+      const result = data.required ? expressionResult : data.value.length ? expressionResult : true;
+      if (!result) {
+        data.errors.push(errorMessage);
+      } else {
+        data.errors = data.errors.filter((msg) => msg !== errorMessage);
+      }
+      return result;
+    };
+  }
+
   static isNumber(): ValidatorFunction {
     const errorMessage = `Must be a number.`;
     return (data) => {
@@ -162,17 +176,6 @@ export class Validators {
         data.errors = data.errors.filter((msg) => msg !== errorMessage);
       }
       return result;
-    };
-  }
-
-  static passAtLeastOne(validators: ValidatorFunction[]): ValidatorFunction {
-    return (data) => {
-      for (const validator of validators) {
-        if (validator(data)) {
-          return true;
-        }
-      }
-      return false;
     };
   }
 

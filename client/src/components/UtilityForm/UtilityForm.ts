@@ -38,7 +38,7 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
   private formFields: Record<string, FormField> = {
     name: new FormField('Name', true, [Validators.notEmpty(), Validators.maxLength(50)]),
     description: new FormField('Description', false, [Validators.maxLength(200)]),
-    videoLink: new FormField('Video Link', false, [Validators.isURL()]),
+    videoLink: new FormField('Video Link', false, [Validators.isYoutubeLink()]),
     setpos: new FormField('Setpos Command', false, [Validators.maxLength(200)]),
   };
 
@@ -75,8 +75,8 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
 
     const filesToDelete: string[] = [];
 
-    this.utility?.images.forEach((image) => {
-      if (!this.files.find((file) => file === image)) {
+    this.utility?.images.forEach(image => {
+      if (!this.files.find(file => file === image)) {
         filesToDelete.push(image);
       }
     });
@@ -85,7 +85,7 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
       requestFormData.append('delete', JSON.stringify(filesToDelete));
     }
 
-    this.files.forEach((file) => {
+    this.files.forEach(file => {
       if (typeof file !== 'string') {
         requestFormData.append('images', file, file.name);
       }
