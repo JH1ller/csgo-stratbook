@@ -2,8 +2,11 @@
   @include spacing('gap', 's');
 
   padding-bottom: 72px;
+  padding-right: 24px;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
 
   .strat-item {
     animation: simple-stagger 0.5s ease both;

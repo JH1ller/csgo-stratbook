@@ -200,7 +200,7 @@ export default class App extends Vue {
 
 .router-view {
   height: 100%;
-  overflow-y: auto;
+  overflow-y: hidden;
   overflow-x: hidden;
 
   @include viewport_mq3 {
