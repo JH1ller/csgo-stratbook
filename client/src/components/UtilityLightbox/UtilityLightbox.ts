@@ -33,6 +33,7 @@ export default class UtilityLightbox extends Mixins(CloseOnEscape) {
   @Prop() private utility!: Utility;
   private showCrosshair = false;
   private currentMediaIndex = 0;
+  private imageRatioStretched = false;
 
   private UtilityMovement: typeof UtilityMovement = UtilityMovement;
   private Sides: typeof Sides = Sides;

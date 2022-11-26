@@ -8,6 +8,10 @@
   &__media {
     width: 100%;
     height: 100%;
+
+    &:not(.-stretched) > img {
+      object-fit: contain;
+    }
   }
 
   &__crosshair-wrapper {

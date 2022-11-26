@@ -7,6 +7,7 @@ export enum GameMap {
   Inferno = 'INFERNO',
   Train = 'TRAIN',
   Ancient = 'ANCIENT',
+  Anubis = 'ANUBIS',
 }
 
 export const gameMapTable: Record<GameMap, string> = {
@@ -18,4 +19,5 @@ export const gameMapTable: Record<GameMap, string> = {
   [GameMap.Inferno]: 'Inferno',
   [GameMap.Train]: 'Train',
   [GameMap.Ancient]: 'Ancient',
+  [GameMap.Anubis]: 'Anubis',
 };
