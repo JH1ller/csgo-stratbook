@@ -13,6 +13,7 @@
         v-else-if="currentMedia"
         :src="resolveImage(currentMedia.src)"
         class="utility-lightbox__media"
+        :class="{ '-stretched': imageRatioStretched }"
         alt="Utility image"
       />
       <div v-else class="utility-lightbox__fallback">
@@ -68,6 +69,14 @@
         content="Copy Setpos Command"
       >
         <fa-icon icon="map-marker-alt" class="utility-lightbox__badge-icon" />
+      </div>
+      <div
+        class="utility-lightbox__badge"
+        @click="imageRatioStretched = !imageRatioStretched"
+        v-tippy
+        content="Toggle Image Ratio"
+      >
+        <fa-icon icon="expand-alt" class="utility-lightbox__badge-icon" />
       </div>
     </div>
     <span class="utility-lightbox__description" v-if="utility.description">{{ utility.description }}</span>

@@ -78,7 +78,7 @@ export default class MapView extends Vue {
   }
 
   get mapImage() {
-    return require(`@/assets/images/maps/${this.map.toLowerCase()}.jpg`);
+    return require(`@/assets/images/maps/${this.map.toLowerCase()}.webp`);
   }
 
   get mapLabel() {
