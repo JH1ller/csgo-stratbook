@@ -72,6 +72,14 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '2.1.2',
+        date: '2022-11-26',
+        changes: [
+          'Added Anubis to the map pool',
+          'Utility screenshots are displayed in their original ratio by default',
+        ],
+      },
+      {
         version: '2.1.1',
         date: '2022-06-27',
         changes: [
