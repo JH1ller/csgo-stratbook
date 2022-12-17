@@ -72,6 +72,15 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '2.1.3',
+        date: '2022-12-17',
+        changes: [
+          'Updated ancient minimap',
+          'Fixed issues on mirage minimap',
+          'Fixed "last online" label for online players on team page',
+        ],
+      },
+      {
         version: '2.1.2',
         date: '2022-11-26',
         changes: [
