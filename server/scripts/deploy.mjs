@@ -8,6 +8,10 @@ if (argv.prod) {
   await $`npm run build:staging`;
 }
 
+cd('../landingpage');
+
+await $`npm run generate`;
+
 cd('..');
 
 await $`git add .`;
