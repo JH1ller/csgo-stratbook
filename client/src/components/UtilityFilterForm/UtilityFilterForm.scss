@@ -1,4 +1,6 @@
 .utility-filter-form {
+  @include spacing('margin-bottom', 'sm');
+
   display: flex;
   flex-direction: column;
 
@@ -11,13 +13,14 @@
     margin-bottom: 8px;
 
     &:not(:first-of-type) {
-      margin-top: 24px;
-      padding-top: 24px;
-      border-top: 1px solid $color--grey;
+      @include spacing('margin-top', 'sm');
+      @include spacing('padding-top', 'sm');
+
+      border-top: 2px solid var(--color-border);
     }
   }
 
   &__picker {
-    margin-top: 8px;
+    @include spacing('margin-top', '2xs');
   }
 }
