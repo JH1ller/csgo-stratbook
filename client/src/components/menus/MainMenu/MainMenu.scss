@@ -148,14 +148,13 @@
     white-space: nowrap;
     margin-left: 1.5rem;
     opacity: 0;
-    overflow: hidden;
     color: var(--color-text-contrast-70);
     transform: translateX(-20px);
     transition: opacity 0.5s ease-out, color 0.3s ease, transform 0.5s ease-out;
   }
 
   &__logo {
-    padding-left: 16px;
+    padding: 16px;
     background: var(--color-bg-dark);
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -167,10 +166,11 @@
   }
 
   &__logo-label {
-    width: 100px;
-    min-width: 100px;
+    color: var(--color-green);
+    font-weight: $weight-bold;
+    transform: translateX(0);
+    font-size: 1.2rem;
     margin-left: 16px;
-    overflow: hidden;
   }
 
   &__link {

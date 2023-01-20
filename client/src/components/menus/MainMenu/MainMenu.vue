@@ -7,11 +7,7 @@
           class="main-menu__icon main-menu__logo-icon"
           alt="Application Logo"
         />
-        <img
-          src="@/assets/images/stratbook_label.svg"
-          class="main-menu__label main-menu__logo-label"
-          alt="Application Logo Label"
-        />
+        <span class="main-menu__label main-menu__logo-label">{{ appName }}</span>
       </router-link>
 
       <router-link v-for="(item, index) in menuItems" :to="item.link" class="main-menu__list-item" :key="item.label">
