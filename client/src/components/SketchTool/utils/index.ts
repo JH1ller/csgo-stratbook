@@ -2,7 +2,7 @@ import { UtilityTypes } from '@/api/models/UtilityTypes';
 import { Line } from 'konva/lib/shapes/Line';
 import { Node as KonvaNode } from 'konva/lib/Node';
 import { Vector2d } from 'konva/lib/types';
-import CursorIcon from '!!raw-loader!../../../assets/icons/cursor.svg';
+import CursorIcon from '!!raw-loader!@/assets/icons/cursor.svg';
 import { LineItem } from '../types';
 import { GameMap } from '@/api/models/GameMap';
 

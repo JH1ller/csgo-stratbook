@@ -4,9 +4,12 @@ import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import TextInput from '@/components/TextInput/TextInput.vue';
 import { Validators } from '@/utils/validation';
 import FormField from '@/utils/FormField';
+import Logo from '!!raw-loader!@/assets/icons/cursor.svg';
+
 @Component({
   components: {
     TextInput,
+    Logo,
   },
 })
 export default class LoginForm extends Vue {

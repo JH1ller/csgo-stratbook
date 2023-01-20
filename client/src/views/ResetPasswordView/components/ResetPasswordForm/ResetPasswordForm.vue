@@ -1,6 +1,6 @@
 <template>
   <form class="reset-password-form" @submit.prevent="submitClicked" novalidate>
-    <img src="@/assets/images/new_logo_a.png" class="reset-password-form__logo" alt="Application Logo" />
+    <img src="@/assets/images/stratbook_alt.svg" class="reset-password-form__logo" alt="Application Logo" />
     <transition name="fade">
       <span class="reset-password-form__error" v-if="formError">{{ formError }}</span>
     </transition>

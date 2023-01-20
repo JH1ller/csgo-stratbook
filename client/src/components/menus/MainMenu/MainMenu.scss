@@ -1,8 +1,6 @@
 @import 'Burger.scss';
 
 .main-menu {
-  z-index: 10;
-
   &__list {
     background: var(--color-bg-blue);
     flex-direction: column;
@@ -15,7 +13,7 @@
     top: 0;
     bottom: 0;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    z-index: 10;
+    z-index: 11;
     pointer-events: none;
     display: flex;
 
@@ -144,7 +142,6 @@
   &__logo-icon {
     width: 40px;
     height: 40px;
-    object-fit: contain;
   }
 
   &__label {
@@ -162,6 +159,7 @@
     background: var(--color-bg-dark);
     opacity: 0;
     transition: opacity 0.3s ease;
+    overflow: hidden;
 
     @include viewport_mq3 {
       opacity: 1;
@@ -169,11 +167,10 @@
   }
 
   &__logo-label {
-    color: var(--color-yellow);
-    font-weight: $weight-bold;
-    transform: translateX(0);
+    width: 100px;
+    min-width: 100px;
     margin-left: 16px;
-    font-size: 1.1rem;
+    overflow: hidden;
   }
 
   &__link {

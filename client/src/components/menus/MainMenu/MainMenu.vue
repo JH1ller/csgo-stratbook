@@ -2,8 +2,16 @@
   <div class="main-menu">
     <ul class="main-menu__list" :class="{ '-open': menuOpen }">
       <router-link to="/" class="main-menu__logo">
-        <img src="@/assets/icons/logo_small.png" class="main-menu__icon main-menu__logo-icon" alt="Application Logo" />
-        <span class="main-menu__label main-menu__logo-label">{{ appName }}</span>
+        <img
+          src="@/assets/images/stratbook_icon_colored.svg"
+          class="main-menu__icon main-menu__logo-icon"
+          alt="Application Logo"
+        />
+        <img
+          src="@/assets/images/stratbook_label.svg"
+          class="main-menu__label main-menu__logo-label"
+          alt="Application Logo Label"
+        />
       </router-link>
 
       <router-link v-for="(item, index) in menuItems" :to="item.link" class="main-menu__list-item" :key="item.label">
@@ -23,16 +31,8 @@
       <a v-if="!isDesktop" class="main-menu__list-item main-menu__link --download" @click="downloadDesktopClient"
         ><fa-icon icon="download" />Get desktop app</a
       >
-      <!-- Removed for now because it's not working anymore -->
-      <!-- <a
-        class="main-menu__list-item main-menu__link --feedback"
-        data-feedback-fish
-        :data-feedback-fish-userid="profile.email"
-      >
-        <fa-icon icon="comment" />Feedback
-      </a> -->
       <a class="main-menu__list-item main-menu__link --kofi" @click="openDonationLink()">
-        <fa-icon icon="coffee" />Buy me a coffee
+        <fa-icon icon="coffee" />Support us
       </a>
       <router-link to="/profile" class="main-menu__profile" v-if="profile._id">
         <img :src="avatarUrl" class="main-menu__avatar" alt="User Avatar" />

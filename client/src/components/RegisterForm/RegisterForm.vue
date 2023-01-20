@@ -1,6 +1,6 @@
 <template>
   <form class="register-form" @submit.prevent="handleSubmit" novalidate>
-    <img src="@/assets/images/new_logo_a.png" class="register-form__logo" alt="Application Logo" />
+    <img src="@/assets/images/stratbook_alt.svg" class="register-form__logo" alt="Application Logo" />
     <transition name="fade">
       <span class="register-form__error" v-if="formError">{{ formError }}</span>
     </transition>
