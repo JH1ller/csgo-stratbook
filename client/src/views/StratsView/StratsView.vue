@@ -9,6 +9,7 @@
         @type-filter-change="updateStratTypeFilter"
         @side-filter-change="updateStratSideFilter"
         @name-filter-change="updateStratNameFilter"
+        @inactive-filter-change="updateStratInactiveFilter"
         :filters="stratFilters"
       />
     </FilterMenu>
