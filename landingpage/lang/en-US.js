@@ -75,8 +75,9 @@ export default {
         version: '2.2.0',
         date: '2023-01-20',
         changes: [
-          'Fixed issue with emails not being case insensitive',
           'Added a filter to hide inactive strats',
+          'Fixed issue with emails not being case insensitive',
+          'Fixed issue where unsaved strat content changes are lost when window is resized while editing',
         ],
       },
       {
