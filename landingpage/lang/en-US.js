@@ -11,8 +11,7 @@ export default {
     hero: {
       tagline: 'Free & Open-Source Platform',
       headline: 'The best place to manage your strats and nades.',
-      subline:
-        "Stratbook won't make you win every game.\n But at least it will keep your strats and nades organized.",
+      subline: 'Find out why more than 1200 teams are already using stratbook.',
       btnOpenApp: 'Open App',
       btnRegister: 'Register',
     },
@@ -258,6 +257,41 @@ export default {
           'Authorization system rework with httpOnly refreshToken cookies',
           'Sanitization on server side',
         ],
+      },
+    ],
+  },
+  features: {
+    headline: 'Features',
+    items: [
+      {
+        title: 'Productivity',
+        descriptionHighlight: 'Accelerate your teamplay',
+        description: 'by keeping your strats and nades organized.',
+        image: 'strats_overview',
+        icon: 'running',
+      },
+      {
+        title: 'Keep Focus',
+        descriptionHighlight: 'Powerful filters',
+        description:
+          'and a focus mode allow you to fully concentrate on what matters most.',
+        image: 'utility_filters',
+        icon: 'crosshairs',
+      },
+      {
+        title: 'Collaboration',
+        descriptionHighlight: 'Live drawing',
+        description:
+          'on the included tactics board or uploading new grenades - your teammates are always up to date.',
+        image: 'map_tool',
+        icon: 'users',
+      },
+      {
+        title: 'Security',
+        descriptionHighlight: 'No access to your strats',
+        description: 'for anyone outside of your team.',
+        image: 'team_page',
+        icon: 'shield-alt',
       },
     ],
   },

@@ -20,21 +20,21 @@ export default {
         hid: 'description',
         name: 'description',
         content:
-          'Free web app to manage csgo strats and nades for your team. Always synced with your teammates, and works great on mobile.',
+          'Free csgo strats and nades management tool and collaborative tactics board.',
       },
       { hid: 'author', name: 'author', content: 'Justin Hiller' },
       {
         hid: 'keywords',
         name: 'keywords',
         content:
-          'stratbook, strategies, strategy, esport, csgo, counter-strike, counterstrike, global offensive, cs:go, webapp, vue, free, database, manage',
+          'stratbook, strategies, strats, strategy, tactics, board, esport, csgo, counter-strike, counterstrike, global offensive, cs:go, webapp, vue, free, database, manage',
       },
     ],
     link: [
       {
         rel: 'icon',
-        type: 'image/png',
-        href: '/favicon.png',
+        type: 'image/svg+xml',
+        href: '/favicon.svg',
       },
       {
         rel: 'preconnect',
@@ -42,8 +42,7 @@ export default {
       },
       {
         rel: 'stylesheet',
-        href:
-          'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Ubuntu:wght@300;400;500;700&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Ubuntu:wght@300;400;500;700&display=swap',
       },
       {
         rel: 'canonical',
@@ -73,10 +72,18 @@ export default {
         suffix: false,
         icons: {
           brands: ['faTwitter', 'faGithub', 'faDiscord'],
-          solid: ['faAngleDown', 'faTimes'],
+          solid: [
+            'faAngleDown',
+            'faTimes',
+            'faUsers',
+            'faShieldAlt',
+            'faCrosshairs',
+            'faRunning',
+          ],
         },
       },
     ],
+    '@nuxtjs/svg',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules

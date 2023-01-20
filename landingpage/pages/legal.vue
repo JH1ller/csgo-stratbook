@@ -116,16 +116,16 @@ export default class Legal extends Vue {}
   }
 
   &__headline {
-    @include typo_hl3($color--shark);
+    @include typo_hl3(var(--color-bg-dark));
     @include spacing('margin-bottom', md);
 
     @include viewport_mq3 {
-      @include typo_hl2($color--shark);
+      @include typo_hl2(var(--color-bg-dark));
       @include spacing('margin-bottom', lg);
     }
 
     @include viewport_mq6 {
-      @include typo_hl1($color--shark);
+      @include typo_hl1(var(--color-bg-dark));
     }
   }
 
@@ -133,7 +133,7 @@ export default class Legal extends Vue {}
     @include spacing('padding', xs);
     @include typo_text;
 
-    background-color: $color--white;
+    background-color: var(--color-text);
     border-radius: 8px;
 
     @include viewport_mq3 {

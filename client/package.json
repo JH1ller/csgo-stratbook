@@ -39,7 +39,7 @@
     "jwt-decode": "^2.2.0",
     "konva": "^8.3.2",
     "lodash-es": "^4.17.21",
-    "mixpanel-browser": "^2.41.0",
+    "mixpanel-browser": "^2.45.0",
     "nanoid": "^3.1.31",
     "replace-keywords": "0.0.3",
     "s-ago": "^2.2.0",

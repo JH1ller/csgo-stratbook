@@ -49,16 +49,15 @@ export default class Changelog extends Vue {}
   }
 
   &__headline {
-    @include typo_hl3($color--shark);
-    @include spacing('margin-bottom', md);
+    @include page-headline;
 
     @include viewport_mq3 {
-      @include typo_hl2($color--shark);
+      @include typo_hl2(var(--color-text-contrast-70));
       @include spacing('margin-bottom', lg);
     }
 
     @include viewport_mq6 {
-      @include typo_hl1($color--shark);
+      @include typo_hl1(var(--color-text-contrast-70));
     }
   }
 
@@ -79,7 +78,7 @@ export default class Changelog extends Vue {}
       left: -32px;
       height: 100%;
       width: 1px;
-      background-color: $color--abbey;
+      background-color: var(--color-green);
     }
 
     &:first-of-type {
@@ -91,8 +90,8 @@ export default class Changelog extends Vue {}
         height: 16px;
         width: 16px;
         border-radius: 50%;
-        //border: 2px solid $color--abbey;
-        background-color: $color--abbey;
+        //border: 2px solid var(--color-text);
+        background-color: var(--color-green);
       }
 
       &:before {
@@ -109,8 +108,8 @@ export default class Changelog extends Vue {}
         height: 24px;
         width: 24px;
         border-radius: 50%;
-        //border: 2px solid $color--abbey;
-        background-color: $color--abbey;
+        //border: 2px solid var(--color-text);
+        background-color: var(--color-green);
       }
     }
   }
@@ -131,12 +130,16 @@ export default class Changelog extends Vue {}
   }
 
   &__change-version {
-    @include typo_hl4($color--white);
+    @include typo_hl4(var(--color-text));
     @include spacing('padding', '3xs 2xs');
     @include spacing('margin-bottom', '2xs');
 
     font-size: 1.35rem;
-    background-color: $color--green;
+    background: linear-gradient(
+      90deg,
+      var(--color-green) 0%,
+      var(--color-blue) 100%
+    );
     border-radius: 6px;
     align-self: flex-start;
     width: 80px;
@@ -151,7 +154,7 @@ export default class Changelog extends Vue {}
   }
 
   &__change-date {
-    @include typo_link;
+    @include typo_link(var(--color-text-contrast-70));
 
     font-size: 1.1rem;
 
@@ -161,7 +164,7 @@ export default class Changelog extends Vue {}
   }
 
   &__change-text {
-    @include typo_text;
+    @include typo_text(var(--color-text-contrast-70));
 
     &:before {
       content: '•';

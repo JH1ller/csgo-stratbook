@@ -61,7 +61,7 @@ export default class TrackingService {
     });
   }
 
-  identify(id: string, name: string, data?: Record<string, unknown>) {
+  identify(id: string, name: string, data?: Record<string, string>) {
     if (!this.initialized) return;
 
     Log.info('tracking:identify', data);
@@ -76,5 +76,9 @@ export default class TrackingService {
     });
 
     mixpanel.identify(id);
+    
+    if (data?.team) {
+      mixpanel.add_group('team', data.team)
+    }
   }
 }

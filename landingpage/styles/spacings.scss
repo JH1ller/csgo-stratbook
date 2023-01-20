@@ -8,6 +8,7 @@ $spacing-lg: 40px;
 $spacing-xl: 56px;
 $spacing-2xl: 72px;
 $spacing-3xl: 96px;
+$spacing-4xl: 128px;
 
 $spacings: (
   '3xs': $spacing-3xs,
@@ -20,6 +21,7 @@ $spacings: (
   'xl': $spacing-xl,
   '2xl': $spacing-2xl,
   '3xl': $spacing-3xl,
+  '4xl': $spacing-4xl,
 );
 
 @mixin spacing($property, $value) {

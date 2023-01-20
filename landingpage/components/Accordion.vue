@@ -34,15 +34,15 @@ export default class Accordion extends Vue {
   cursor: pointer;
   width: 100%;
   border-radius: 8px;
-  background-color: $color--white;
-  box-shadow: 3px 3px 6px rgba($color--black, 0.4);
+  background-color: var(--color-bg);
+  box-shadow: 3px 3px 6px rgba(black, 0.4);
 
   @include viewport_mq3 {
     @include spacing('padding', md);
   }
 
   &__header {
-    @include typo_hl4($color--shark);
+    @include typo_hl4(var(--color-text));
 
     font-size: 1.2rem;
     display: flex;
@@ -55,7 +55,7 @@ export default class Accordion extends Vue {
   }
 
   &__content {
-    @include typo_text($color--shark);
+    @include typo_text(var(--color-text));
     @include spacing('padding-top', xs);
 
     line-height: 1.4;

@@ -11,8 +11,7 @@ export default {
     hero: {
       tagline: 'Free & Open-Source Platform',
       headline: 'The best place to manage your strats and nades.',
-      subline:
-        "Stratbook won't make you win every game.\n But at least it will keep your strats and nades organized.",
+      subline: 'Find out why more than 1200 teams are already using stratbook.',
       btnOpenApp: 'Open App',
       btnRegister: 'Register',
     },
@@ -258,6 +257,16 @@ export default {
           'Authorization system rework with httpOnly refreshToken cookies',
           'Sanitization on server side',
         ],
+      },
+    ],
+  },
+  features: {
+    headline: 'Features',
+    items: [
+      {
+        title: 'Keep your strategies in place',
+        description: 'xyz',
+        image: 'strats_overview',
       },
     ],
   },

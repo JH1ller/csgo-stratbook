@@ -20,7 +20,7 @@ body {
 }
 
 body {
-  background-color: $color--abbey;
+  background-color: var(--color-bg-dark);
 }
 
 * {

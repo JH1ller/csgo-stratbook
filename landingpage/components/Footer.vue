@@ -47,7 +47,7 @@ export default {};
   @include spacing('padding-top', 'md');
   @include spacing('padding-bottom', 'xs');
 
-  background-color: $color--abbey;
+  background-color: var(--color-bg-dark);
 
   @include viewport_mq2 {
     @include spacing('padding-top', 'md');
@@ -80,7 +80,7 @@ export default {};
   }
 
   &__label {
-    @include typo_logo($color--white);
+    @include typo_logo(var(--color-text-contrast));
 
     font-size: 1.5rem;
   }
@@ -90,8 +90,6 @@ export default {};
 
     display: flex;
     flex-direction: column;
-
-    color: $color--white;
 
     @include viewport_mq3 {
       @include grid-column(9, 4);
@@ -107,7 +105,7 @@ export default {};
   }
 
   &__link {
-    @include typo_link($color--white);
+    @include typo_link(var(--color-text-contrast));
     @include spacing('margin-bottom', 'xs');
 
     font-size: 1.1rem;

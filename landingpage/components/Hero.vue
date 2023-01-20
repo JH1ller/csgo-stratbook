@@ -24,21 +24,39 @@
         src="@/assets/images/webp/screen.webp"
         alt="App screenshot"
         class="hero__screenshot --desktop"
+        ref="screenshotEls"
+        @load="animateImage"
       />
       <img
         src="@/assets/images/webp/screen_m.webp"
         alt="App mobile screenshot"
         class="hero__screenshot --mobile"
+        ref="screenshotEls"
+        @load="animateImage"
       />
+      <!-- <Logo class="hero__logo" /> -->
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Ref, Vue } from 'vue-property-decorator';
+import Logo from '@/assets/images/stratbook_icon.svg?inline';
 
-@Component({})
-export default class Hero extends Vue {}
+@Component({
+  components: {
+    Logo,
+  },
+})
+export default class Hero extends Vue {
+  @Ref() screenshotEls!: HTMLImageElement;
+
+  animateImage(e: Event) {
+    console.log(e);
+  }
+
+  mounted() {}
+}
 </script>
 
 <style lang="scss">
@@ -67,18 +85,34 @@ export default class Hero extends Vue {}
     transform: rotateX(40deg) rotateZ(36deg);
     transform-style: preserve-3d;
     border-radius: 16px;
-    box-shadow: 1px 1px 0 1px #f9f9fb, -1px 0 28px 0 rgba(34, 33, 81, 0.01),
-      28px 28px 28px 0 rgba(34, 33, 81, 0.25);
+    box-shadow: 1px 1px 0 1px #f9f9fb, -1px 0 28px 0 rgba(33, 81, 61, 0.01),
+      28px 28px 28px 0 rgba(33, 81, 57, 0.25);
     transition: 0.4s ease-in-out transform, 0.4s ease-in-out box-shadow;
 
     &:hover {
       transform: translate3d(0px, -16px, 0px) rotateX(40deg) rotateZ(36deg);
-      box-shadow: 1px 1px 0 1px #f9f9fb, -1px 0 28px 0 rgba(34, 33, 81, 0.01),
-        54px 54px 28px -10px rgba(34, 33, 81, 0.15);
+      box-shadow: 1px 1px 0 1px #f9f9fb, -1px 0 28px 0 rgba(33, 81, 61, 0.01),
+        54px 54px 28px -10px rgba(33, 81, 57, 0.15);
+    }
+
+    animation: ease 2.5s slideIn forwards;
+    position: absolute;
+    left: 0;
+
+    @keyframes slideIn {
+      0% {
+        left: 50px;
+        opacity: 0;
+      }
+      100% {
+        left: 0%;
+        opacity: 1;
+      }
     }
 
     &.--desktop {
       width: 400px;
+      top: 0;
 
       @include viewport_mq2 {
         width: 500px;
@@ -119,6 +153,12 @@ export default class Hero extends Vue {}
     }
   }
 
+  &__logo {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
   &__text-wrapper {
     @include grid-column(12, 1);
     @include spacing('margin-top', sm);
@@ -135,28 +175,27 @@ export default class Hero extends Vue {}
   }
 
   &__tagline {
-    @include typo_tagline(lighten($color--shark, 15%));
+    @include typo_tagline(var(--color-bg-dark));
     @include spacing('margin-bottom', '2xs');
   }
 
   &__headline {
-    @include typo_hl3($color--shark);
+    @include typo_hl3(var(--color-bg-dark));
 
     @include viewport_mq3 {
-      @include typo_hl2($color--shark);
+      @include typo_hl2(var(--color-bg-dark));
     }
 
     @include viewport_mq6 {
-      @include typo_hl1($color--shark);
+      @include typo_hl1(var(--color-bg-dark));
     }
   }
 
   &__subline {
     @include spacing('margin-top', xs);
-    @include typo_subline(lighten($color--shark, 15%));
+    @include typo_subline(var(--color-bg-dark));
 
     line-height: 1.4;
-    text-shadow: 1px 1px 1px rgba($color--peach, 0.3);
 
     @include viewport_mq3 {
       max-width: 80%;

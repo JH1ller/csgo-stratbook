@@ -1,10 +1,6 @@
 <template>
   <div class="app">
-    <img
-      class="app__wave-bg"
-      src="@/assets/background.svg"
-      alt="app background"
-    />
+    <BackgroundWave class="app__wave-bg" alt="app background" />
     <Navbar class="app__navbar" />
     <Nuxt class="app__content" />
     <Footer class="app__footer" />
@@ -19,14 +15,19 @@ import { Component, Vue } from 'vue-property-decorator';
 import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
 import CookieBanner from '@/components/CookieBanner.vue';
+import BackgroundWave from '@/assets/background.svg?inline';
 import splitbee from '@splitbee/web';
+import mixpanel from 'mixpanel-browser';
+
+const MXP_TOKEN = '626f6b394032519f813a44d8de173ee3';
 
 @Component({
   components: {
     Navbar,
     Footer,
-    CookieBanner
-  }
+    CookieBanner,
+    BackgroundWave,
+  },
 })
 export default class Default extends Vue {
   private showCookieBanner = false;
@@ -34,11 +35,7 @@ export default class Default extends Vue {
   private getCookie(name: string) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2)
-      return parts
-        ?.pop()
-        ?.split(';')
-        .shift();
+    if (parts.length === 2) return parts?.pop()?.split(';').shift();
   }
 
   private handleClose() {
@@ -61,7 +58,13 @@ export default class Default extends Vue {
 
   private initTracking(disableCookie: boolean) {
     splitbee.init({
-      disableCookie
+      disableCookie,
+    });
+
+    mixpanel.init(MXP_TOKEN, {
+      debug: process.env.NODE_ENV !== 'production',
+      disable_cookie: disableCookie,
+      disable_persistence: disableCookie,
     });
   }
 }
@@ -95,6 +98,7 @@ export default class Default extends Vue {
     width: 200%;
     height: 770px;
     z-index: -1;
+    color: var(--color-green-80);
 
     @include viewport_mq4 {
       width: 100%;

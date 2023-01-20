@@ -107,7 +107,7 @@ export default class CookieBanner extends Vue {
     }
 
     &[disabled] + label {
-      color: rgba($color--black, 0.5);
+      color: rgba(black, 0.5);
     }
   }
 
@@ -124,16 +124,16 @@ export default class CookieBanner extends Vue {
     font-size: 1rem;
     border-radius: 6px;
     cursor: pointer;
-    border: 2px solid $color--green;
+    border: 2px solid var(--color-green);
 
     &.--accept {
-      background-color: $color--green;
-      color: $color--white;
+      background-color: var(--color-green);
+      color: var(--color-text);
     }
 
     &.--save {
-      color: $color--green;
-      background-color: rgba($color--white, 0.3);
+      color: var(--color-green);
+      background-color: rgba(var(--color-text), 0.3);
     }
 
     &:first-of-type {

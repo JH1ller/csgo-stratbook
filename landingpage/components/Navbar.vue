@@ -1,12 +1,7 @@
 <template>
   <nav class="navbar">
     <NuxtLink :to="localePath('index')" class="navbar__logo-wrapper">
-      <img
-        src="@/assets/images/logo_small.png"
-        alt="App Logo"
-        class="navbar__logo"
-      />
-      <span class="navbar__label">stratbook</span>
+      <Logo />
     </NuxtLink>
     <button class="navbar__burger-btn" @click="menuOpen = !menuOpen">
       <div
@@ -107,8 +102,13 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import Logo from '@/assets/images/stratbook_logo.svg?inline';
 
-@Component({})
+@Component({
+  components: {
+    Logo,
+  },
+})
 export default class Navbar extends Vue {
   private menuOpen = false;
 }
@@ -120,11 +120,11 @@ export default class Navbar extends Vue {
 
   align-items: center;
   height: 60px;
-  background-color: $color--shark;
+  background-color: var(--color-bg-dark);
   z-index: 9;
 
   @include viewport_mq6 {
-    height: 100px;
+    height: 80px;
   }
 
   &__logo-wrapper {
@@ -182,7 +182,7 @@ export default class Navbar extends Vue {
 
   &__mobile-menu {
     z-index: 2;
-    background-color: $color--charade;
+    background-color: var(--color-bg-dark);
     position: fixed;
     top: 0;
     left: 0;
@@ -212,7 +212,7 @@ export default class Navbar extends Vue {
   }
 
   &__mobile-link {
-    @include typo_link($color--white);
+    @include typo_link(var(--color-text-contrast-70));
     @include spacing('margin-bottom', md);
 
     font-size: 1.5rem;
@@ -235,7 +235,6 @@ export default class Navbar extends Vue {
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      color: $color--white;
     }
 
     @include viewport_mq5 {
@@ -244,7 +243,7 @@ export default class Navbar extends Vue {
   }
 
   &__link {
-    @include typo_link($color--white);
+    @include typo_link(var(--color-text-contrast));
     @include spacing('margin-left', '2xs');
 
     border-radius: 8px;
@@ -253,7 +252,7 @@ export default class Navbar extends Vue {
     transition: background-color 0.2s ease;
 
     &:hover {
-      background-color: lighten($color--shark, 10%);
+      background-color: var(--color-bg-contrast);
     }
     position: relative;
 
@@ -264,7 +263,7 @@ export default class Navbar extends Vue {
       left: 16px;
       width: 0;
       height: 2px;
-      background-color: $color--white;
+      background-color: var(--color-text-contrast);
       transition: width 0.2s ease-in-out;
     }
 
