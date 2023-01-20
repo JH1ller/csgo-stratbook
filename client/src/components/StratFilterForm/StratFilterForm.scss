@@ -1,4 +1,6 @@
 .strat-filter-form {
+  @include spacing('margin-bottom', 'sm');
+
   display: flex;
   flex-direction: column;
 
@@ -15,7 +17,7 @@
       @include spacing('margin-top', 'sm');
       @include spacing('padding-top', 'sm');
 
-      border-top: 1px solid $color--grey;
+      border-top: 2px solid var(--color-border);
     }
   }
 
@@ -24,6 +26,9 @@
   }
 
   &__checkbox {
-    @include spacing('margin-top', 's');
+    @include spacing('margin-top', 'sm');
+    @include spacing('padding-top', 'sm');
+
+    border-top: 2px solid var(--color-border);
   }
 }

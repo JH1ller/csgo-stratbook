@@ -34,7 +34,7 @@ body {
   --color-bg-contrast: rgb(35, 35, 46);
   --color-bg-contrast-50: rgba(35, 35, 46, 0.5);
 
-  --color-border: #dcdcdc;
+  --color-border: hsl(0, 0%, 80%);
 
   // Fonts
   --font-default: 'Ubuntu', sans-serif;
@@ -57,7 +57,7 @@ body.-dark {
   --color-bg-secondary: hsl(240deg 14% 16%);
   --color-bg-tertiary: hsl(240deg 14% 20%);
 
-  --color-border: hsl(240deg 14% 22%);
+  --color-border: hsl(240deg 14% 25%);
 
   // Fonts
   --font-default: 'Ubuntu', sans-serif;
