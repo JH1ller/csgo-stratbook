@@ -1,5 +1,6 @@
-import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
+import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
 import StratItem from '@/components/StratItem/StratItem.vue';
+import type IStratItem from '@/components/StratItem/StratItem';
 import { Strat } from '@/api/models/Strat';
 import { StratTypes } from '@/api/models/StratTypes';
 import { Sides } from '@/api/models/Sides';
@@ -18,10 +19,8 @@ export default class StratList extends Vue {
   @Prop() collapsedStrats!: string[];
   @Prop() editedStrats!: string[];
   @Prop() gameMode!: boolean;
+  @Ref() stratItems!: IStratItem[];
 
-  // used to force rerender of StratItem components after window resize
-  // to adjust their height
-  remountKey = 0;
   prevWidth = window.innerWidth;
 
   private isCollapsed(strat: Strat) {
@@ -37,7 +36,7 @@ export default class StratList extends Vue {
   }
 
   get debouncedResizeHandler(): DebouncedFunc<() => void> {
-    return debounce(() => this.remountKey++, 100);
+    return debounce(() => this.stratItems.forEach((i) => i.resetHeight()), 50);
   }
 
   private isEdited(strat: Strat) {
