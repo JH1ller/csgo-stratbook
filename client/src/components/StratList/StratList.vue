@@ -2,7 +2,8 @@
   <div class="strat-list">
     <strat-item
       v-for="(strat, index) in strats"
-      :key="strat._id + remountKey"
+      ref="stratItems"
+      :key="strat._id"
       :strat="strat"
       :completedTutorial="completedTutorial"
       :isTutorial="strat._id === (tutorialStrat && tutorialStrat._id)"

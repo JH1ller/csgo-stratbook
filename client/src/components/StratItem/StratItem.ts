@@ -43,6 +43,14 @@ export default class StratItem extends Vue {
     this.setComponentHeight();
   }
 
+  resetHeight() {
+    this.deferredCollapsed = false;
+    this.componentEl.style.height = '';
+    this.componentHeight = this.componentEl.clientHeight;
+    this.deferredCollapsed = this.collapsed;
+    this.setComponentHeight();
+  }
+
   // TODO: handle window resize
   @Watch('collapsed')
   private async collapsedChanged(to: boolean) {
