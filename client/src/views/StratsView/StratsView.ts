@@ -55,6 +55,7 @@ export default class StratsView extends Vue {
   @filterModule.Action updateStratTypeFilter!: (types: StratTypes[]) => Promise<void>;
   @filterModule.Action updateStratNameFilter!: (name: string) => Promise<void>;
   @filterModule.Action updateStratSideFilter!: (side: Sides | null) => Promise<void>;
+  @filterModule.Action updateStratInactiveFilter!: (value: boolean) => Promise<void>;
   @filterModule.Action clearStratFilters!: () => Promise<void>;
 
   @authModule.Action updateProfile!: (formData: FormData) => Promise<void>;

@@ -8,6 +8,12 @@
     <TypePicker class="strats-filter-form__picker" v-model="typeFilters" :allowNone="true" />
     <label class="strat-filter-form__label" for="name">Strat content</label>
     <input type="text" class="strat-filter-form__input" v-model="contentFilter" />
+    <Checkbox
+      class="strat-filter-form__checkbox"
+      name="inactiveToggle"
+      v-model="inactiveFilter"
+      label="hide inactive strats"
+    />
   </div>
 </template>
 

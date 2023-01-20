@@ -1,6 +1,7 @@
-import { Component, Vue, Prop, Emit } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import SidePicker from '@/components/SidePicker/SidePicker.vue';
 import TypePicker from '@/components/TypePicker/TypePicker.vue';
+import Checkbox from '@/components/Checkbox/Checkbox.vue';
 import { StratFilters } from '@/store/modules/filter';
 import { Sides } from '@/api/models/Sides';
 import { StratTypes } from '@/api/models/StratTypes';
@@ -9,6 +10,7 @@ import { StratTypes } from '@/api/models/StratTypes';
   components: {
     SidePicker,
     TypePicker,
+    Checkbox,
   },
 })
 export default class StratFilterForm extends Vue {
@@ -38,9 +40,12 @@ export default class StratFilterForm extends Vue {
     this.$emit('type-filter-change', value);
   }
 
-  @Emit()
-  private typeFilterChange(type: StratTypes) {
-    return type;
+  private get inactiveFilter() {
+    return this.filters.inactive;
+  }
+
+  private set inactiveFilter(value: boolean) {
+    this.$emit('inactive-filter-change', value);
   }
 
   private get sideFilter() {
