@@ -22,7 +22,10 @@ router.post('/register', uploadSingle('avatar'), async (req, res) => {
     return res.status(400).json({ error: error.details[0].message });
   }
 
-  const emailExists = await PlayerModel.findOne({ email: req.body.email });
+  const normalizedEmail = req.body.email.toLowerCase();
+
+  // TODO: run script to make all existing account emails lowercase and avoid regex query
+  const emailExists = await PlayerModel.findOne({ email: new RegExp(normalizedEmail, 'i') });
 
   if (emailExists) return res.status(400).json({ error: 'Email already exists.' });
 
@@ -31,7 +34,7 @@ router.post('/register', uploadSingle('avatar'), async (req, res) => {
 
   const user = new PlayerModel({
     name: req.body.name,
-    email: req.body.email,
+    email: normalizedEmail,
     password: hashedPassword,
   });
 
@@ -49,7 +52,8 @@ router.post('/register', uploadSingle('avatar'), async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  const targetUser = await PlayerModel.findOne({ email: req.body.email });
+  const normalizedEmail = req.body.email.toLowerCase();
+  const targetUser = await PlayerModel.findOne({ email: new RegExp(normalizedEmail, 'i') });
 
   if (!targetUser) return res.status(400).json({ error: 'Email or password is invalid.' });
 
