@@ -7,17 +7,23 @@
   }
 
   &__label {
+    @include spacing('margin-bottom', '2xs');
+
     font-size: 1.1rem;
-    margin-bottom: 8px;
 
     &:not(:first-of-type) {
-      margin-top: 24px;
-      padding-top: 24px;
+      @include spacing('margin-top', 'sm');
+      @include spacing('padding-top', 'sm');
+
       border-top: 1px solid $color--grey;
     }
   }
 
   &__picker {
-    margin-top: 8px;
+    @include spacing('margin-top', '2xs');
+  }
+
+  &__checkbox {
+    @include spacing('margin-top', 's');
   }
 }

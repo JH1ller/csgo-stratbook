@@ -101,7 +101,7 @@ export default class App extends Vue {
       catchPromise(
         this.showDialog({
           key: 'app/update-notice',
-          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><br><blockquote class="twitter-tweet"><p lang="en" dir="ltr">📌v2.1.0 is live!<br>This update is all about colors!🌈<br><br>🖍️The color assigned to a player will highlight them in every strategy text.<br>🌘Upon popular request, we&#39;ve also added a Darkmode now! 🎉<br>✨Last but not least the team page got a new design.</p>&mdash; Stratbook (@csgostratbook) <a href="https://twitter.com/csgostratbook/status/1541031306997407751?ref_src=twsrc%5Etfw">June 26, 2022</a></blockquote>`,
+          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1>`,
           resolveBtn: 'OK',
           confirmOnly: true,
           htmlMode: true,
