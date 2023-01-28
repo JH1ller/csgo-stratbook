@@ -1,10 +1,13 @@
 import { Router } from 'express';
-import { Strat, StratModel } from '@/models/strat';
+import { StratModel } from '@/models/strat';
 import { getStrat } from '@/utils/getters';
 import { verifyAuth } from '@/utils/verifyToken';
 import { sanitize } from '@/utils/sanitizeHtml';
 import { minifyHtml } from '@/utils/minifyHtml';
 import { TypedServer } from '@/sockets/interfaces';
+import { writeFile, mkdir, unlink } from 'fs/promises';
+import path from 'path';
+import { nanoid } from 'nanoid';
 
 const router = Router();
 
@@ -119,6 +122,28 @@ router.delete('/:strat_id', verifyAuth, getStrat, async (req, res) => {
   (req.app.get('io') as TypedServer)
     .to(res.locals.strat.team.toString())
     .emit('deleted-strat', { stratId: res.locals.strat._id });
+});
+
+// * Export to JSON
+router.get('/export', verifyAuth, async (req, res) => {
+  if (!res.locals.player.team) {
+    return res.status(400).json({ error: "Authenticated user doesn't have a team" });
+  }
+  const strats = req.query.map
+    ? await StratModel.find({ map: req.query.map, team: res.locals.player.team })
+    : await StratModel.find({ team: res.locals.player.team });
+
+  const stratsJson = JSON.stringify(strats, null, 2);
+
+  console.log(process.cwd());
+
+  await mkdir('temp', { recursive: true });
+
+  const fileName = path.join(process.cwd(), 'temp', `JSON_export-${nanoid(5)}`);
+
+  await writeFile(fileName, stratsJson);
+
+  res.download(fileName, 'export.json', () => unlink(fileName));
 });
 
 export default router;
