@@ -153,6 +153,26 @@
   &__arrow {
     color: $color--emperor;
   }
+
+  &__link {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-secondary);
+    border-radius: 4px;
+    padding: 2px 6px;
+    display: inline-flex;
+    align-items: center;
+    line-height: normal;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: var(--color-text);
+    }
+
+    & svg {
+      height: 1rem;
+      margin-left: 8px;
+    }
+  }
 }
 
 [placeholder]:empty::before {
