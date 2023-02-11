@@ -13,6 +13,7 @@ import * as Sentry from '@sentry/vue';
 import { BrowserTracing } from '@sentry/tracing';
 import { SENTRY_DSN } from './config';
 import loadIcons from './utils/loadIcons';
+import SvgIcon from './components/SvgIcon/SvgIcon.vue';
 
 loadIcons();
 
@@ -25,6 +26,7 @@ Vue.use(VueTippy, {
   animation: 'scale',
 });
 Vue.component('tippy', TippyComponent);
+Vue.component('SvgIcon', SvgIcon);
 
 Vue.use(VueKonva);
 
@@ -62,6 +64,7 @@ const hasSession = !!storageService.get('has-session');
     await store.dispatch('auth/fetchProfile');
     await store.dispatch('loadDataFromStorage');
   }
+  (window as any).intervalActive = false;
 
   // fade out app loader
   const loaderEl: HTMLDivElement = document.querySelector('.loader-wrapper')!;

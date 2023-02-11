@@ -34,18 +34,22 @@
     padding: 3px 5px;
     font-weight: $weight-bold;
     font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    line-height: normal;
     color: var(--color-text-secondary);
     transition: background-color 0.3s ease-out;
     white-space: nowrap;
     background-color: var(--color-bg-secondary);
 
-    & &.--mention {
+    &.--mention {
       background-color: var(--color-accent);
       color: var(--color-text-contrast);
     }
 
     &.--utility,
-    &.--weapon {
+    &.--weapon,
+    &.--equipment {
       background-color: var(--color-accent);
       color: var(--color-text-contrast);
 
@@ -59,12 +63,9 @@
     &.--timestamp {
       background-color: var(--color-blue);
       color: var(--color-text-contrast);
-
       & > img {
-        width: 16px;
-        height: 16px;
-        transform: translateY(2px);
-        margin-right: 4px;
+        filter: invert(1);
+        opacity: 1;
       }
     }
 
@@ -94,12 +95,20 @@
   }
 
   &__tag-img {
-    width: 20px;
-    height: 20px;
-    opacity: 0.7;
-    margin-right: 2px;
-    margin-left: -1px;
-    transform: translateY(4px);
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+
+    &[data-clock] {
+      mask: url('~@/assets/icons/clock.svg') no-repeat center / contain;
+      background: white;
+    }
+
+    &[data-link] {
+      mask: url('~@/assets/icons/open-external.svg') no-repeat center / contain;
+      background: var(--color-text-secondary);
+      transition: background 0.3s ease;
+    }
   }
 
   &__mention-item {
@@ -166,11 +175,10 @@
 
     &:hover {
       color: var(--color-text);
-    }
 
-    & svg {
-      height: 1rem;
-      margin-left: 8px;
+      & .strat-editor__tag-icon {
+        background: var(--color-text);
+      }
     }
   }
 }

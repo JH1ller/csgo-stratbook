@@ -19,9 +19,6 @@
     }
 
     @include grid();
-
-    @include viewport_mq3 {
-    }
   }
 
   &__detail {
@@ -30,7 +27,6 @@
     width: unset;
     order: 2;
 
-    // width: 100%;
     @include grid-cell(12, 1);
 
     @include viewport_range(mq1, mq3) {
@@ -62,11 +58,6 @@
       order: 2;
       max-width: 100%;
     }
-
-    @include viewport_mq4 {
-      // width: 200px;
-      // height: 200px;
-    }
   }
 
   &__btn-wrapper {
@@ -77,10 +68,11 @@
     gap: 8px;
     flex-wrap: wrap;
     justify-content: flex-end;
+    flex-grow: 0;
+    margin-top: auto;
+
     @include viewport_mq3 {
-      right: 24px;
-      bottom: 24px;
-      gap: 16px;
+      gap: 12px;
     }
   }
 

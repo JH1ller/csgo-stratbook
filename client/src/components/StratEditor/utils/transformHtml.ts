@@ -7,17 +7,13 @@ export const transformMap: Transformation[] = [
   },
   {
     query: /\b((?:0|1):[0-4]\d)\b/g,
-    value: (word) => `<span contenteditable="false" class="strat-editor__tag --timestamp"><img 
-    class="strat-editor__tag-img" src="icons/clock.svg" />${word}</span>`,
+    value: (word) =>
+      `<span contenteditable="false" class="strat-editor__tag --timestamp"><span contenteditable="false" class="strat-editor__tag-img" data-clock></span>${word}</span>`,
   },
   {
     query: /^(https?:\/\/)(?:www\.)?([a-zA-Z0-9-]+\.[a-zA-Z]{2,})(\/.*)?$/,
     value: (word, _, matches) => {
-      console.log(matches);
-      console.log(require(`!!raw-loader!@/assets/icons/external-link.svg`));
-      return `<a contenteditable="false" class="strat-editor__link" href="${word}" target="_blank">${matches?.[2]}${
-        require(`!!raw-loader!@/assets/icons/external-link.svg`).default
-      }</a>`;
+      return `<a contenteditable="false" class="strat-editor__tag" href="${word}" target="_blank"><span contenteditable="false" class="strat-editor__tag-img" data-link></span>${matches?.[2]}</a>`;
     },
   },
 ];

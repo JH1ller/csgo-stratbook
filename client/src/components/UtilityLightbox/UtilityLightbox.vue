@@ -83,48 +83,12 @@
     <span class="utility-lightbox__info">
       <span class="utility-lightbox__name">{{ utility.name }}</span>
       <div class="utility-lightbox__icon-wrapper">
-        <MouseButtonDisplay class="utility-lightbox__mouse-button" :mouseButtons="utility.mouseButton" />
-        <div class="utility-lightbox__pose-wrapper">
-          <img
-            v-if="utility.crouch"
-            src="@/assets/icons/pose-crouch.png"
-            class="utility-lightbox__pose"
-            v-tippy
-            content="Crouch"
-          />
-          <img v-else src="@/assets/icons/pose-stand.png" class="utility-lightbox__pose --default" />
-        </div>
-        <div class="utility-lightbox__pose-wrapper">
-          <img
-            v-if="utility.movement === UtilityMovement.STILL"
-            src="@/assets/icons/pose-still.png"
-            class="utility-lightbox__pose --default"
-          />
-          <img
-            v-if="utility.movement === UtilityMovement.RUN"
-            v-tippy
-            content="Run"
-            src="@/assets/icons/pose-run.png"
-            class="utility-lightbox__pose"
-          />
-          <img
-            v-if="utility.movement === UtilityMovement.WALK"
-            v-tippy
-            content="Walk"
-            src="@/assets/icons/pose-walk.png"
-            class="utility-lightbox__pose"
-          />
-        </div>
-        <div class="utility-lightbox__pose-wrapper">
-          <img
-            v-if="utility.jump"
-            src="@/assets/icons/pose-jump.png"
-            class="utility-lightbox__pose"
-            v-tippy
-            content="Jump"
-          />
-          <img v-else src="@/assets/icons/pose-walk.png" class="utility-lightbox__pose --default" />
-        </div>
+        <MouseButtonPicker
+          class="utility-lightbox__mouse-button"
+          :mouseButtons="utility.mouseButton"
+          :readonly="true"
+        />
+        <PosePicker :readonly="true" :crouch="utility.crouch" :jump="utility.jump" :movement="utility.movement" />
       </div>
     </span>
   </BackdropDialog>

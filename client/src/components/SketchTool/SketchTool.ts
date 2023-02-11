@@ -317,7 +317,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   };
 
   getUtilityIcon(type: UtilityTypes) {
-    return require(`@/assets/icons/${type.toLowerCase()}.png`);
+    return require(`@/assets/icons/${type.toLowerCase()}.svg`);
   }
 
   getAllNodes(): KonvaNode[] {

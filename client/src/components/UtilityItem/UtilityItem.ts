@@ -3,14 +3,12 @@ import { Utility } from '@/api/models/Utility';
 import { UtilityMovement } from '@/api/models/UtilityMovement';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
-import MouseButtonDisplay from '@/components/MouseButtonDisplay/MouseButtonDisplay.vue';
 import UtilityTypeDisplay from '@/components/UtilityTypeDisplay/UtilityTypeDisplay.vue';
 import { extractVideoId, getThumbnailURL } from '@/utils/youtubeUtils';
 import SmartImage from '@/components/SmartImage/SmartImage.vue';
 
 @Component({
   components: {
-    MouseButtonDisplay,
     UtilityTypeDisplay,
     SmartImage,
   },

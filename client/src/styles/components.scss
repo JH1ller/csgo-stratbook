@@ -136,7 +136,7 @@
   }
 
   @include viewport_mq5 {
-    @include spacing('padding', lg);
+    @include spacing('padding', md);
   }
 }
 

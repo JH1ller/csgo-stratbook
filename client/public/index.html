@@ -37,6 +37,9 @@
         transform: translate(-50%, -50%);
         opacity: 1;
         transition: opacity 0.3s ease-out;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
 
       .loading-track {
@@ -70,6 +73,19 @@
         margin-bottom: 1.5rem;
       }
 
+      .loader-img {
+        height: 76px;
+        margin-bottom: 2rem;
+      }
+
+      .loader-message {
+        font-size: 1rem;
+        font-family: 'Ubuntu', sans-serif;
+        color: white;
+        text-align: center;
+        margin-top: 1.5rem;
+      }
+
       @keyframes bounce {
         0% {
           transform: translateX(calc(-1 * var(--bar-width)));
@@ -88,12 +104,46 @@
       >
     </noscript>
     <div class="loader-wrapper">
-      <p class="loader-title">stratbook</p>
+      <!-- <p class="loader-title">stratbook</p> -->
+      <img class="loader-img" src="/stratbook.svg" />
       <div class="loading-track">
         <div class="loading-indicator"></div>
       </div>
+      <p class="loader-message"></p>
     </div>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+
+    <script>
+      function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      const messages = [
+        'Preparing for B rush...',
+        'Warming up tactics board...',
+        'Collecting your strats...',
+        'Checking for updates...',
+        'Loading filters...',
+      ];
+      const msgElement = document.querySelector('.loader-message');
+
+      msgElement.innerText = messages[getRandomInt(0, messages.length - 1)];
+
+      window.intervalActive = true;
+
+      let interval = getRandomInt(800, 2300);
+
+      function updateMessage() {
+        msgElement.innerText = messages.filter((i) => i !== msgElement.innerText)[getRandomInt(0, messages.length - 2)];
+        interval = getRandomInt(800, 2300);
+
+        if (window.intervalActive) setTimeout(updateMessage, interval);
+      }
+
+      setTimeout(updateMessage, interval);
+    </script>
   </body>
 </html>
