@@ -84,6 +84,7 @@ const routes = [
     path: '/profile',
     name: RouteNames.Profile,
     component: () => import('@/views/ProfileView/ProfileView.vue'),
+    beforeEnter: teamResolver,
   },
   {
     path: '/share/:id',

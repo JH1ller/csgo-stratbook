@@ -1,27 +1,23 @@
 .utility-form {
   display: flex;
   flex-direction: column;
+  gap: 8px;
   height: 100%;
 
   @include viewport_mq3 {
-    width: 360px;
+    width: 400px;
   }
 
   @include viewport_mq7 {
     width: 450px;
+    gap: 12px;
   }
 
   &__btn-wrapper {
     margin-top: auto;
-    padding-top: 6px;
     display: flex;
     justify-content: flex-end;
-
-    @include viewport_mq3 {
-      transform: translateY(10px);
-      margin-top: 6px;
-      padding-top: 0;
-    }
+    gap: 8px;
   }
 
   &__btn {
@@ -36,10 +32,6 @@
       @include viewport_range(mq1, mq3) {
         @include button-default(true, true);
       }
-    }
-
-    &:not(:first-of-type) {
-      margin-left: 6px;
     }
   }
 
@@ -60,11 +52,11 @@
 
   &__horizontal-wrapper {
     display: flex;
+    flex-wrap: wrap;
+    gap: inherit;
 
-    & > :not(:first-of-type) {
-      margin-left: 12px;
-      padding-left: 12px;
-      border-left: 1px solid $color--grey;
+    & > * {
+      flex-grow: 1;
     }
   }
 
@@ -72,19 +64,15 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    gap: 16px;
   }
 
   &__vertical-wrapper {
-    display: flex;
-    flex-direction: column;
+    flex-grow: 1;
   }
 
   &__pose-picker {
     height: 50px;
-  }
-
-  &__mouse-button-picker {
-    margin-right: 12px;
   }
 
   &__input-wrapper {

@@ -124,7 +124,7 @@ export const handleDragStart = (event: DragEvent, type: UtilityTypes) => {
   // create wrapper for image element, because otherwise we can't style it.
   const wrapper = document.createElement('div');
   const image = document.createElement('img');
-  image.src = require(`@/assets/icons/${type.toLowerCase()}.png`);
+  image.src = require(`@/assets/icons/${type.toLowerCase()}.svg`);
   wrapper.id = 'drag-ghost';
   wrapper.style.position = 'absolute';
   wrapper.style.top = '-1000px';

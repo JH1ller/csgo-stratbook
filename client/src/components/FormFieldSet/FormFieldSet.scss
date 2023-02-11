@@ -5,6 +5,7 @@
   border-radius: 8px;
   display: flex;
   flex-direction: column;
+  gap: 12px;
 
   @include viewport_mq3 {
     padding: 12px;
@@ -12,13 +13,5 @@
 
   @include viewport_mq7 {
     padding: 16px;
-  }
-
-  &:not(:first-of-type) {
-    margin-top: 12px;
-  }
-
-  & > :not(:last-of-type) {
-    margin-bottom: 10px;
   }
 }
