@@ -26,7 +26,7 @@
       :content="readonly ? 'Jump' : 'Toggle Jump'"
     >
       <svg-icon name="pose_jump" v-if="jump" class="pose-picker__image" />
-      <svg-icon name="pose_walk" v-else class="pose-picker__image" />
+      <svg-icon name="pose_still" v-else class="pose-picker__image" />
     </div>
   </div>
 </template>
