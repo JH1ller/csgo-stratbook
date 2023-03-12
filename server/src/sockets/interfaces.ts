@@ -7,7 +7,7 @@ import { GameMap } from '@/types/enums';
 import { Server, Socket } from 'socket.io';
 
 interface ServerToClientEvents {
-  pong: (ms: number) => void;
+  pong: () => void;
   // draw board events
   'draw-room-joined': (payload: {
     map: GameMap;
@@ -46,6 +46,7 @@ interface ClientToServerEvents {
   'update-username': (userName: string) => void;
   'update-stratname': (stratName: string) => void;
   'update-map': (map: GameMap) => void;
+  ping: () => void;
 }
 
 interface InterServerEvents {
