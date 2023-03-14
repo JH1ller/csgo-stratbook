@@ -17,7 +17,7 @@ export interface JoinedRoomResponse {
 }
 
 export interface ServerToClientEvents {
-  pong: (ms: number) => void;
+  pong: () => void;
   // draw board events
   'draw-room-joined': (payload: JoinedRoomResponse) => void;
   'client-joined': (payload: Omit<RemoteClient, 'image' | 'timeout'>) => void;
@@ -43,6 +43,7 @@ export interface ServerToClientEvents {
 export interface ClientToServerEvents {
   'join-draw-room': (payload: { targetRoomId?: string; userName?: string; stratId?: string; map: GameMap }) => void;
   'leave-draw-room': () => void;
+  ping: () => void;
   'pointer-position': (payload: { x: number; y: number }) => void;
   'update-data': (payload: StageState) => void;
   'update-username': (userName: string) => void;

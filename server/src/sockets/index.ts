@@ -26,7 +26,7 @@ const handleConnection = async (io: TypedServer, socket: TypedSocket) => {
       Log.error(
         'sockets::handleConnection',
         `Error while saving isOnline status for player: ${player.name} (#${player._id})\n`,
-        error.message
+        error.message,
       );
     }
   }
@@ -59,10 +59,14 @@ export const initialize = (io: TypedServer) => {
 
     handleConnection(io, socket);
 
+    socket.on('ping', () => {
+      io.to(socket.id).emit('pong');
+    });
+
     socket.on('disconnecting', async (reason) => {
       Log.info(
         'sockets::ondisconnect',
-        `User '${socket.id}' disconnected. Active connections: ${io.sockets.sockets.size}. Disconnect reason: ${reason}`
+        `User '${socket.id}' disconnected. Active connections: ${io.sockets.sockets.size}. Disconnect reason: ${reason}`,
       );
       const player = socket.data.player;
 

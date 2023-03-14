@@ -36,7 +36,7 @@ export default class StratList extends Vue {
   }
 
   get debouncedResizeHandler(): DebouncedFunc<() => void> {
-    return debounce(() => this.stratItems.forEach((i) => i.resetHeight()), 50);
+    return debounce(() => this.stratItems?.forEach((i) => i.resetHeight()), 50);
   }
 
   private isEdited(strat: Strat) {

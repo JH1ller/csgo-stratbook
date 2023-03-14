@@ -124,7 +124,7 @@ class WebSocketService {
         reject('Could not join room');
       }, this.socketTimeout);
 
-      this.socket.once('draw-room-joined', data => {
+      this.socket.once('draw-room-joined', (data) => {
         Log.info('ws::drawroom-joined', `Joined room ${data.roomId} as client ${this.socket.id}`);
         store.dispatch('app/removeRequest');
         clearTimeout(timeout);
@@ -136,7 +136,15 @@ class WebSocketService {
   private setupListeners() {
     Log.info('WebSocketService::setupListeners()');
 
-    this.socket.on('pong', (ms: number) => store.dispatch('app/updateLatency', ms));
+    setInterval(() => {
+      const start = Date.now();
+
+      this.socket.emit('ping');
+      this.socket.once('pong', () => {
+        const duration = Date.now() - start;
+        store.dispatch('app/updateLatency', duration);
+      });
+    }, 5000);
 
     this.socket.on('disconnect', () => {
       Log.info('ws::disconnect', 'Websocket connection lost or disconnected');
