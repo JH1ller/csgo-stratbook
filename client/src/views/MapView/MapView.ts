@@ -9,7 +9,7 @@ import VueContext from 'vue-context';
 import { GameMap, gameMapTable } from '@/api/models/GameMap';
 import SmartImage from '@/components/SmartImage/SmartImage.vue';
 import { Log } from '@/utils/logger';
-import { StoredStageState } from '@/components/SketchTool/types';
+import { StoredItemState } from '@/components/SketchTool/types';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import TrackingService from '@/services/tracking.service';
 
@@ -112,7 +112,7 @@ export default class MapView extends Vue {
       this.sketchTool.connectToRoomId(storageRoomId);
       this.trackJoin();
     } else {
-      const previousData = this.storageService.get<StoredStageState>('draw-data');
+      const previousData = this.storageService.get<StoredItemState>('draw-data');
       const previousMap = this.storageService.get<GameMap>('draw-map');
       if (previousMap) this.map = previousMap;
       if (previousData?.[this.map]) this.sketchTool.applyStageData(previousData[this.map]);

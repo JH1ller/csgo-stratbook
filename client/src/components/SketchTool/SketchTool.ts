@@ -1,6 +1,6 @@
 import { Component, Mixins, Prop, Ref, Inject, Emit } from 'vue-property-decorator';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
-import { appModule } from '@/store/namespaces';
+import { appModule, teamModule } from '@/store/namespaces';
 import { Stage, StageConfig } from 'konva/lib/Stage';
 import { UtilityTypes } from '@/api/models/UtilityTypes';
 import { nanoid } from 'nanoid';
@@ -21,7 +21,6 @@ import {
   createUtilImage,
   fadeIn,
   fadeOut,
-  handleDragEnd,
   handleDragOver,
   handleDragStart,
   optimizeLine,
@@ -32,16 +31,7 @@ import { timeout } from '@/utils/timeout';
 import { Vector2d } from 'konva/lib/types';
 import { Log } from '@/utils/logger';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
-import {
-  KonvaRef,
-  ImageItem,
-  LineItem,
-  TextItem,
-  ToolTypes,
-  StageState,
-  RemoteClient,
-  StoredStageState,
-} from './types';
+import { KonvaRef, ImageItem, LineItem, TextItem, ToolTypes, ItemState, RemoteClient, StoredItemState } from './types';
 import urljoin from 'url-join';
 import StorageService from '@/services/storage.service';
 import { writeToClipboard } from '@/utils/writeToClipboard';
@@ -55,10 +45,13 @@ import isMobile from 'is-mobile';
 import { Dialog } from '../DialogWrapper/DialogWrapper.models';
 import { catchPromise } from '@/utils/catchPromise';
 import { COLORS } from '@/constants/colors';
+import { Player } from '@/api/models/Player';
+import VueContext from 'vue-context';
 
 @Component({
   components: {
     VSwatches,
+    VueContext,
   },
 })
 export default class SketchTool extends Mixins(CloseOnEscape) {
@@ -66,6 +59,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   @appModule.Action private showToast!: (toast: Toast) => void;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
+  @teamModule.State teamMembers!: Player[];
 
   @Ref() stageRef!: KonvaRef<Stage>;
   @Ref() stageContainer!: HTMLDivElement;
@@ -73,6 +67,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   @Ref() selectionRectRef!: KonvaRef<Rect>;
   @Ref() pointerRef!: KonvaRef<Circle>;
   @Ref() textbox!: HTMLInputElement;
+  @Ref() playerPicker!: Vue & any;
 
   @Prop() map!: GameMap;
   @Prop() userName!: string;
@@ -86,9 +81,12 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   mapImages!: Record<GameMap, HTMLImageElement>;
 
   //* Item State
-  imageItems: ImageItem[] = [];
-  lineItems: LineItem[] = [];
-  textItems: TextItem[] = [];
+  itemState: ItemState = {
+    images: [],
+    lines: [],
+    texts: [],
+    players: [],
+  };
 
   //* Tool State
   activeTool: ToolTypes = ToolTypes.Pointer;
@@ -98,7 +96,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   currentLine!: Line | null;
   currentText!: Text | null;
   scale = 1;
-  changeHistory: StageState[] = [];
+  changeHistory: ItemState[] = [];
   historyPointer = -1;
   currentColor = '#ffffff'; //'#1fbc9c';
 
@@ -123,6 +121,10 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   //* Services
   wsService = WebSocketService.getInstance();
   trackingService = TrackingService.getInstance();
+
+  get flatItemState() {
+    return Object.values(this.itemState).flat();
+  }
 
   undo(): void {
     if (this.historyPointer > 0) {
@@ -316,10 +318,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     strokeWidth: 1,
   };
 
-  getUtilityIcon(type: UtilityTypes) {
-    return require(`@/assets/icons/${type.toLowerCase()}.svg`);
-  }
-
   getAllNodes(): KonvaNode[] {
     return this.stage.getLayers()[1].children ?? [];
   }
@@ -400,7 +398,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   handleDragOver = handleDragOver;
 
-  handleDragEnd = handleDragEnd;
+  async showPlayerPicker() {}
 
   async handleDrop(event: DragEvent) {
     if (!event.dataTransfer) return;
@@ -412,7 +410,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     const pos = this.getScaledPointerPosition();
     const newId = nanoid(10);
 
-    this.imageItems.push({
+    this.itemState.images.push({
       id: newId,
       x: pos!.x - this.imageSize / 2,
       y: pos!.y - this.imageSize / 2,
@@ -427,22 +425,20 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   created() {
     // cache available utility icons
-    this.utilImages = Object.values(UtilityTypes).reduce<Record<any, HTMLImageElement>>((acc, type) => {
+    this.utilImages = Object.values(UtilityTypes).reduce<Record<string, HTMLImageElement>>((acc, type) => {
       acc[type] = createUtilImage(type);
       return acc;
     }, {});
 
     // cache available map images
-    this.mapImages = Object.values(GameMap).reduce<Record<any, HTMLImageElement>>((acc, map) => {
+    this.mapImages = Object.values(GameMap).reduce<Record<string, HTMLImageElement>>((acc, map) => {
       acc[map] = createMapImage(map);
       return acc;
     }, {});
   }
 
   clearStage(): void {
-    this.imageItems = [];
-    this.lineItems = [];
-    this.textItems = [];
+    Object.keys(this.itemState).forEach((key) => (this.itemState[key] = []));
     this.setActiveItems([]);
     this.saveStateToHistory();
     this.handleDataChange();
@@ -527,16 +523,12 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   removeActiveItems(): void {
-    console.info('removeActiveitems');
     if (!this.activeItems.length) return;
-    this.lineItems = this.lineItems.filter(
-      (item) => !this.activeItems.some((activeItem) => activeItem.attrs.id === item.id),
-    );
-    this.imageItems = this.imageItems.filter(
-      (item) => !this.activeItems.some((activeItem) => activeItem.attrs.id === item.id),
-    );
-    this.textItems = this.textItems.filter(
-      (item) => !this.activeItems.some((activeItem) => activeItem.attrs.id === item.id),
+    Object.keys(this.itemState).forEach(
+      (key) =>
+        (this.itemState[key] = this.itemState[key].filter(
+          (item) => !this.activeItems.some((activeItem) => activeItem.attrs.id === item.id),
+        )),
     );
     this.setActiveItems([]);
     this.saveStateToHistory();
@@ -574,7 +566,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     const id = nanoid(10);
     switch (this.activeTool) {
       case ToolTypes.Brush:
-        this.lineItems.push({
+        this.itemState.lines.push({
           id,
           points: [pos.x, pos.y, pos.x, pos.y],
           color: this.currentColor,
@@ -614,7 +606,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
           this.showTextbox();
         } else if (!this.currentText) {
           this.submitText();
-          this.textItems.push({
+          this.itemState.texts.push({
             id,
             text: 'Add your text here',
             x: pos.x,
@@ -750,7 +742,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       case ToolTypes.Brush:
         if (this.isDrawing) {
           this.isDrawing = false;
-          const lineItem = this.lineItems.find((i) => i.id === this.currentLine?.attrs.id);
+          const lineItem = this.itemState.lines.find((i) => i.id === this.currentLine?.attrs.id);
           optimizeLine(lineItem!, this.optimizeThreshold);
           this.saveStateToHistory();
           this.handleDataChange();
@@ -840,7 +832,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   get updateItem() {
     return throttle((id: string, attributes: Partial<ImageItem | LineItem | TextItem>) => {
-      const target = [...this.imageItems, ...this.lineItems, ...this.textItems].find((item) => item.id === id);
+      const target = this.flatItemState.find((item) => item.id === id);
       if (!target) {
         console.warn(`Stage item with id: ${id} not found`);
         return;
@@ -850,7 +842,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   updateLine(id: string, attributes: Partial<LineItem>): void {
-    const target = this.lineItems.find((item) => item.id === id);
+    const target = this.itemState.lines.find((item) => item.id === id);
     if (!target) {
       console.warn(`Line item with id: ${id} not found`);
       return;
@@ -882,7 +874,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       const items = this.transformer.nodes();
       for (const item of items) {
         const { id, rotation, scaleX, scaleY, skewX, skewY, x, y } = item.attrs;
-        console.log({ id, rotation, scaleX, scaleY, skewX, skewY, x, y });
         this.updateItem(id, { rotation, scaleX, scaleY, skewX, skewY, x, y });
       }
       this.handleDataChange();
@@ -909,11 +900,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   get handleDataChange(): DebouncedFunc<(serialize?: boolean) => void> {
     return throttle((serialize = true) => {
       if (this.wsService.connected) {
-        this.wsService.emit('update-data', {
-          images: this.imageItems,
-          lines: this.lineItems,
-          texts: this.textItems,
-        });
+        this.wsService.emit('update-data', this.itemState);
       } else if (serialize) {
         this.serializeAndStore();
       }
@@ -921,21 +908,17 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   serializeAndStore(): void {
-    const existingData = this.storageService.get<StoredStageState>('draw-data');
+    const existingData = this.storageService.get<StoredItemState>('draw-data');
 
     const json = JSON.stringify({
       ...existingData,
-      [this.map]: {
-        images: this.imageItems,
-        lines: this.lineItems,
-        texts: this.textItems,
-      },
+      [this.map]: this.itemState,
     });
     this.storageService.set('draw-data', json);
   }
 
   loadFromStorage(): void {
-    const data = this.storageService.get<StoredStageState>('draw-data');
+    const data = this.storageService.get<StoredItemState>('draw-data');
     this.applyStageData(data?.[this.map] ?? {});
   }
 
@@ -945,11 +928,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     if (this.historyPointer < this.changeHistory.length - 1) {
       this.changeHistory.splice(this.historyPointer + 1);
     }
-    this.changeHistory.push({
-      images: cloneDeep(this.imageItems),
-      lines: cloneDeep(this.lineItems),
-      texts: cloneDeep(this.textItems),
-    });
+    this.changeHistory.push(cloneDeep(this.itemState));
     this.historyPointer++;
   }
 
@@ -1089,10 +1068,10 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     }
   }
 
-  applyStageData({ images, lines, texts }: Partial<StageState>) {
-    this.imageItems = images ?? [];
-    this.lineItems = lines ?? [];
-    this.textItems = texts ?? [];
+  applyStageData(itemState: Partial<ItemState>) {
+    Object.entries(itemState).forEach(([key, value]) => {
+      this.itemState[key] = value ?? [];
+    });
   }
 
   copyRoomLink() {
@@ -1137,7 +1116,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     });
 
     this.wsService.socket.on('data-updated', (data) => {
-      // console.log('data-updated', { images, lines, texts, id });
       if (data.id === this.wsService.socket.id) return;
       this.applyStageData(data);
     });
@@ -1147,7 +1125,6 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       const remoteClient = this.remoteClients.find((i) => i.id === id);
       if (remoteClient) {
         remoteClient.userName = userName;
-        console.log('remote pointer updated');
       }
     });
 
@@ -1218,7 +1195,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     (window as any).loadjson = this.loadFromStorage;
     (window as any).dialog = this.showConnectionDialog;
     (window as any).optimize = () => {
-      this.lineItems.forEach((item) => {
+      this.itemState.lines.forEach((item) => {
         const line = this.stage.findOne('#' + item.id);
         optimizeLine(line as Line);
       });

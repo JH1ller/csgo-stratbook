@@ -30,10 +30,10 @@
         </v-layer>
         <!-- Main content layer -->
         <v-layer>
-          <v-image v-for="item in imageItems" :key="item.id" :config="getImageItemConfig(item)" />
-          <v-line v-for="item in lineItems" :key="item.id" :config="getLineItemConfig(item)" />
+          <v-image v-for="item in itemState.images" :key="item.id" :config="getImageItemConfig(item)" />
+          <v-line v-for="item in itemState.lines" :key="item.id" :config="getLineItemConfig(item)" />
           <v-text
-            v-for="item in textItems"
+            v-for="item in itemState.texts"
             :key="item.id"
             :config="getTextItemConfig(item)"
             @dblclick="handleTextDblClick"
@@ -133,14 +133,22 @@
     <div class="sketch-tool__draggables-bar">
       <div
         class="sketch-tool__draggable -anim"
+        :data-type="item.toLowerCase()"
         v-for="item in UtilityTypes"
         :key="item"
         draggable="true"
         @dragstart="handleDragStart($event, item)"
-        @dragend="handleDragEnd"
         @animationend="(e) => e.target.classList.remove('-anim')"
       >
-        <img :src="getUtilityIcon(item)" />
+        <svg-icon :name="item.toLowerCase()" />
+      </div>
+      <div
+        class="sketch-tool__draggable"
+        data-type="player"
+        draggable="true"
+        @dragstart="handleDragStart($event, 'player')"
+      >
+        <svg-icon name="player" />
       </div>
     </div>
     <div class="sketch-tool__left-container">
@@ -189,6 +197,13 @@
         </span>
       </transition-group>
     </div>
+    <vue-context ref="playerPicker" v-slot="{ data }">
+      <li v-for="player in teamMembers" :key="player._id" class="map-view__context-link">
+        <a @click="() => console.log(data)">
+          {{ player.name }}
+        </a>
+      </li>
+    </vue-context>
   </div>
 </template>
 

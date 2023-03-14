@@ -29,6 +29,22 @@ export interface TextItem extends Partial<TextConfig> {
   fill: string;
 }
 
+export interface PlayerItem extends Partial<ImageConfig> {
+  id: string;
+  playerId: string;
+  x: number;
+  y: number;
+  name: string;
+  color: string;
+}
+
+export interface ItemState extends Record<string, (ImageItem | LineItem | TextItem | PlayerItem)[]> {
+  images: ImageItem[];
+  lines: LineItem[];
+  texts: TextItem[];
+  players: PlayerItem[];
+}
+
 export interface RemoteClient {
   userName?: string;
   id: string;
@@ -49,10 +65,4 @@ export enum ToolTypes {
   Text = 'TEXT',
 }
 
-export interface StageState {
-  images: ImageItem[];
-  lines: LineItem[];
-  texts: TextItem[];
-}
-
-export type StoredStageState = Record<GameMap, StageState>;
+export type StoredItemState = Record<GameMap, ItemState>;

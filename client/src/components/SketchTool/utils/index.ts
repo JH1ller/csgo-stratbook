@@ -116,25 +116,14 @@ export const rotateVector = (vec: [x: number, y: number], angleInDeg: number): [
   ];
 };
 
-export const handleDragStart = (event: DragEvent, type: UtilityTypes) => {
+export const handleDragStart = (event: DragEvent, type: string) => {
   if (!event.dataTransfer) return;
 
   event.dataTransfer.setData('text/plain', type);
 
-  // create wrapper for image element, because otherwise we can't style it.
-  const wrapper = document.createElement('div');
-  const image = document.createElement('img');
-  image.src = require(`@/assets/icons/${type.toLowerCase()}.svg`);
-  wrapper.id = 'drag-ghost';
-  wrapper.style.position = 'absolute';
-  wrapper.style.top = '-1000px';
-  image.style.filter = 'invert(1)';
-  image.style.width = '42px';
-  image.style.height = '42px';
-  wrapper.appendChild(image);
-  document.body.appendChild(wrapper);
+  const img = document.querySelector(`.sketch-tool__draggable[data-type='${type.toLowerCase()}'] svg`);
 
-  event.dataTransfer.setDragImage(wrapper, 24, 24);
+  event.dataTransfer.setDragImage(img!, 24, 24);
   event.dataTransfer.dropEffect = 'copy';
 };
 
@@ -143,14 +132,6 @@ export const handleDragOver = (event: DragEvent) => {
   event.preventDefault();
 
   event.dataTransfer.dropEffect = 'copy';
-};
-
-export const handleDragEnd = () => {
-  // Drag was finished or cancelled, remove ghost element that follows cursor
-  const dragGhost = document.querySelector('#drag-ghost');
-  if (dragGhost?.parentNode) {
-    dragGhost.parentNode.removeChild(dragGhost);
-  }
 };
 
 export const fadeIn = (node: KonvaNode) => node.to({ opacity: 1, duration: 0.2 });

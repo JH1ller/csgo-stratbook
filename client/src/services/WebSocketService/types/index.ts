@@ -3,14 +3,14 @@ import { Player } from '@/api/models/Player';
 import { Strat } from '@/api/models/Strat';
 import { Team } from '@/api/models/Team';
 import { Utility } from '@/api/models/Utility';
-import { RemoteClient, StageState } from '@/components/SketchTool/types';
+import { RemoteClient, ItemState } from '@/components/SketchTool/types';
 import { Socket } from 'socket.io-client';
 
 export interface JoinedRoomResponse {
   map: GameMap;
   roomId: string;
   stratName: string;
-  drawData: StageState;
+  drawData: ItemState;
   clients: Omit<RemoteClient, 'image' | 'timeout'>[];
   userName: string;
   color: string;
@@ -23,10 +23,10 @@ export interface ServerToClientEvents {
   'client-joined': (payload: Omit<RemoteClient, 'image' | 'timeout'>) => void;
   'client-left': (payload: { clientId: string }) => void;
   'pointer-data': (payload: { x: number; y: number; id: string; userName?: string }) => void;
-  'data-updated': (payload: StageState & { id: string }) => void;
+  'data-updated': (payload: ItemState & { id: string }) => void;
   'username-updated': (payload: { userName: string; id: string }) => void;
   'stratname-updated': (payload: { stratName: string; id: string }) => void;
-  'map-updated': (payload: { map: GameMap; stratName?: string; drawData: StageState; id: string }) => void;
+  'map-updated': (payload: { map: GameMap; stratName?: string; drawData: ItemState; id: string }) => void;
   // other data update events
   'created-strat': (payload: { strat: Strat }) => void;
   'updated-strat': (payload: { strat: Strat }) => void;
@@ -44,7 +44,7 @@ export interface ClientToServerEvents {
   'join-draw-room': (payload: { targetRoomId?: string; userName?: string; stratId?: string; map: GameMap }) => void;
   'leave-draw-room': () => void;
   'pointer-position': (payload: { x: number; y: number }) => void;
-  'update-data': (payload: StageState) => void;
+  'update-data': (payload: ItemState) => void;
   'update-username': (userName: string) => void;
   'update-stratname': (stratName: string) => void;
   'update-map': (map: GameMap) => void;
