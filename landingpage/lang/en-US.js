@@ -72,6 +72,14 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '2.2.1',
+        date: '2023-03-27',
+        changes: [
+          'Handle links in strat content',
+          'Fixed issue with sharing strats',
+        ],
+      },
+      {
         version: '2.2.0',
         date: '2023-01-20',
         changes: [
