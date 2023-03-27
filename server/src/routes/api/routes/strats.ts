@@ -64,7 +64,16 @@ router.post('/share/:id', verifyAuth, async (req, res) => {
   }
 
   const stratCopy = new StratModel({
-    ...strat.toObject(),
+    ...strat.toObject({
+      transform: (_doc, ret) => {
+        delete ret._id;
+        delete ret.team;
+        delete ret.modifiedBy;
+        delete ret.modifiedAt;
+        delete ret.shared;
+        return ret;
+      },
+    }),
     team: res.locals.player.team,
     createdBy: res.locals.player._id,
     createdAt: new Date(),
