@@ -38,6 +38,7 @@
             :config="getTextItemConfig(item)"
             @dblclick="handleTextDblClick"
           />
+          <v-image v-for="item in itemState.players" :key="item.id" :config="getPlayerItemConfig(item)" />
         </v-layer>
         <!-- Overlayed utility layer -->
         <v-layer>
@@ -146,7 +147,7 @@
         class="sketch-tool__draggable"
         data-type="player"
         draggable="true"
-        @dragstart="handleDragStart($event, 'player')"
+        @dragstart="handleDragStart($event, 'PLAYER')"
       >
         <svg-icon name="player" />
       </div>
@@ -197,9 +198,9 @@
         </span>
       </transition-group>
     </div>
-    <vue-context ref="playerPicker" v-slot="{ data }">
+    <vue-context ref="playerPicker" v-slot="{ data }" @close="rejectPlayerPicker">
       <li v-for="player in teamMembers" :key="player._id" class="map-view__context-link">
-        <a @click="() => console.log(data)">
+        <a @click="() => data.callback(player)">
           {{ player.name }}
         </a>
       </li>

@@ -3,6 +3,7 @@ import { Line } from 'konva/lib/shapes/Line';
 import { Node as KonvaNode } from 'konva/lib/Node';
 import { Vector2d } from 'konva/lib/types';
 import CursorIcon from '!!raw-loader!../../../assets/icons/cursor.svg';
+import PlayerIcon from '!!raw-loader!../../../assets/icons/player.svg';
 import { LineItem } from '../types';
 import { GameMap } from '@/api/models/GameMap';
 
@@ -88,12 +89,27 @@ export const createMapImage = (map: GameMap): HTMLImageElement => {
 };
 
 export const createPointerImage = (color: string): HTMLImageElement => {
-  //const colors = ['#1EBC9C', '#3298DB', '#F2C512', '#A463BF', '#E84B3C', '#DDE6E8'];
   const img = new Image();
   const tempEl = document.createElement('div');
   try {
     tempEl.innerHTML = CursorIcon;
-    tempEl.querySelector('path')!.style.fill = color; // colors[Math.min(colorIndex, colors.length - 1)];
+    tempEl.querySelector('path')!.style.fill = color;
+    const base64string = btoa(tempEl.innerHTML);
+    img.src = 'data:image/svg+xml;base64,' + base64string;
+  } catch (error) {
+    console.log(error);
+  }
+  return img;
+};
+
+export const createPlayerImage = (color: string): HTMLImageElement => {
+  const img = new Image();
+  const tempEl = document.createElement('div');
+  try {
+    tempEl.innerHTML = PlayerIcon;
+    tempEl.querySelector('path')!.style.fill = color;
+    tempEl.querySelector('circle')!.style.fill = color;
+    tempEl.querySelector('svg')!.style.transform = 'rotate(45deg) scale(0.7)';
     const base64string = btoa(tempEl.innerHTML);
     img.src = 'data:image/svg+xml;base64,' + base64string;
   } catch (error) {

@@ -11,12 +11,13 @@ import { Rect, RectConfig } from 'konva/lib/shapes/Rect';
 import { Transformer, TransformerConfig } from 'konva/lib/shapes/Transformer';
 import { KonvaEventObject, Node as KonvaNode } from 'konva/lib/Node';
 import { Util } from 'konva/lib/Util';
-import { DebouncedFunc, throttle, cloneDeep } from 'lodash-es';
+import { DebouncedFunc, throttle, cloneDeep, reject } from 'lodash-es';
 import { downloadURI } from '@/utils/downloadUri';
 import { Listen } from '@/utils/decorators/listen.decorator';
 import {
   clamp,
   createMapImage,
+  createPlayerImage,
   createPointerImage,
   createUtilImage,
   fadeIn,
@@ -47,6 +48,7 @@ import { catchPromise } from '@/utils/catchPromise';
 import { COLORS } from '@/constants/colors';
 import { Player } from '@/api/models/Player';
 import VueContext from 'vue-context';
+import { PlayerItem } from './types';
 
 @Component({
   components: {
@@ -99,6 +101,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   changeHistory: ItemState[] = [];
   historyPointer = -1;
   currentColor = '#ffffff'; //'#1fbc9c';
+  rejectPromise!: () => any;
 
   //* Online State
   remoteClients: RemoteClient[] = [];
@@ -163,6 +166,24 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       strokeWidth: 1,
       draggable: this.activeTool === ToolTypes.Pointer,
       image: this.utilImages[item.type],
+      rotation: item.rotation,
+      scaleX: item.scaleX,
+      scaleY: item.scaleY,
+      skewX: item.skewX,
+      skewY: item.skewY,
+    };
+  }
+
+  getPlayerItemConfig(item: PlayerItem): ImageConfig {
+    return {
+      id: item.id,
+      x: item.x,
+      y: item.y,
+      width: this.imageSize,
+      height: this.imageSize,
+      strokeWidth: 1,
+      draggable: this.activeTool === ToolTypes.Pointer,
+      image: item.image,
       rotation: item.rotation,
       scaleX: item.scaleX,
       scaleY: item.scaleY,
@@ -398,24 +419,55 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   handleDragOver = handleDragOver;
 
-  async showPlayerPicker() {}
+  // displays context menu and returns promise with selected player
+  showPlayerPicker(e: Event): Promise<Player> {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    return new Promise((resolve, reject) => {
+      this.rejectPromise = reject;
+      this.playerPicker.open(e, { callback: resolve });
+    });
+  }
+
+  rejectPlayerPicker() {
+    if (this.rejectPromise) this.rejectPromise();
+  }
 
   async handleDrop(event: DragEvent) {
     if (!event.dataTransfer) return;
     event.preventDefault();
 
     const type = event.dataTransfer.getData('text/plain');
+
     this.stage.setPointersPositions(event);
 
     const pos = this.getScaledPointerPosition();
     const newId = nanoid(10);
 
-    this.itemState.images.push({
-      id: newId,
-      x: pos!.x - this.imageSize / 2,
-      y: pos!.y - this.imageSize / 2,
-      type: type as UtilityTypes,
-    });
+    if (type === 'PLAYER') {
+      try {
+        const player = await this.showPlayerPicker(event);
+        this.itemState.players.push({
+          id: newId,
+          x: pos!.x - this.imageSize / 2,
+          y: pos!.y - this.imageSize / 2,
+          name: player.name,
+          playerId: player._id,
+          color: player.color,
+          image: await createPlayerImage(player.color),
+        });
+      } catch (_) {
+        return;
+      }
+    } else {
+      this.itemState.images.push({
+        id: newId,
+        x: pos!.x - this.imageSize / 2,
+        y: pos!.y - this.imageSize / 2,
+        type: type as UtilityTypes,
+      });
+    }
+
     this.saveStateToHistory();
     this.handleDataChange();
     this.setActiveTool(ToolTypes.Pointer);
