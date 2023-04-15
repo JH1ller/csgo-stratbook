@@ -11,6 +11,7 @@ import { utilityResolver } from '@/views/UtilityView/UtilityView.resolver';
 import LoginView from '@/views/LoginView/LoginView.vue';
 import StratsView from '@/views/StratsView/StratsView.vue';
 import StorageService from '@/services/storage.service';
+import { mapResolver } from '@/views/MapView/MapView.resolver';
 
 Vue.use(VueRouter);
 
@@ -54,6 +55,7 @@ const routes = [
     path: '/map/:roomId?',
     name: RouteNames.Map,
     component: () => import('@/views/MapView/MapView.vue'),
+    beforeEnter: mapResolver,
     meta: {
       fullscreen: true,
     },
