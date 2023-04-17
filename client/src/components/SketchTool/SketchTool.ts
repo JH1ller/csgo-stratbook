@@ -308,6 +308,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       scaleY: item.scaleY,
       skewX: item.skewX,
       skewY: item.skewY,
+      type: 'text',
     };
   }
 
@@ -338,10 +339,15 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     return {
       keepRatio: true,
       //centeredScaling: true,
-      rotateEnabled: this.activeItems.length === 1 && this.activeItems[0].attrs.type === 'player',
+      rotateEnabled:
+        this.activeItems.length === 1 &&
+        (this.activeItems[0].attrs.type === 'player' || this.activeItems[0].attrs.type === 'text'),
       //* shouldOverdrawWholeArea property has a bug in konva and doesn't fire dblclick events
       //shouldOverdrawWholeArea: true,
-      enabledAnchors: [],
+      enabledAnchors:
+        this.activeItems.length === 1 && this.activeItems[0].attrs.type === 'text'
+          ? ['top-left', 'top-right', 'bottom-left', 'bottom-right']
+          : [],
       flipEnabled: false,
       rotateAnchorOffset: 30,
       padding: 5,
@@ -350,7 +356,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       anchorStroke: 'rgb(65, 184, 131)',
       borderDash: [6],
       borderStroke: 'rgb(65, 184, 131)',
-      resizeEnabled: false,
+      resizeEnabled: this.activeItems.length === 1 && this.activeItems[0].attrs.type === 'text',
     };
   }
 
