@@ -191,6 +191,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       skewX: item.skewX,
       skewY: item.skewY,
       type: 'player',
+      offset: { x: 25, y: 25 },
     };
   }
 
@@ -199,8 +200,12 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       id: 'text_' + item.id,
       text: item.name,
       fill: item.color,
-      x: item.x - 10,
-      y: item.y + 60,
+      x: item.x,
+      y: item.y + 40,
+      width: 150,
+      align: 'center',
+      verticalAlign: 'center',
+      ellipsis: true,
       visible: true,
       draggable: false,
       fontSize: 18,
@@ -212,6 +217,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       shadowOffset: { x: 1, y: 1 },
       type: 'player-text',
       class: 'static',
+      offset: { x: 75, y: 9 },
     };
   }
 
