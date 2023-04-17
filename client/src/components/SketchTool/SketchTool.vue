@@ -39,6 +39,7 @@
             @dblclick="handleTextDblClick"
           />
           <v-image v-for="item in itemState.players" :key="item.id" :config="getPlayerItemConfig(item)" />
+          <v-text v-for="item in itemState.players" :key="item.id + 'text'" :config="getPlayerTextItemConfig(item)" />
         </v-layer>
         <!-- Overlayed utility layer -->
         <v-layer>

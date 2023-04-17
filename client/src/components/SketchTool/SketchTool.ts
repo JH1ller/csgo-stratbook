@@ -11,7 +11,7 @@ import { Rect, RectConfig } from 'konva/lib/shapes/Rect';
 import { Transformer, TransformerConfig } from 'konva/lib/shapes/Transformer';
 import { KonvaEventObject, Node as KonvaNode } from 'konva/lib/Node';
 import { Util } from 'konva/lib/Util';
-import { DebouncedFunc, throttle, cloneDeep, reject } from 'lodash-es';
+import { DebouncedFunc, throttle, cloneDeep } from 'lodash-es';
 import { downloadURI } from '@/utils/downloadUri';
 import { Listen } from '@/utils/decorators/listen.decorator';
 import {
@@ -101,6 +101,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   changeHistory: ItemState[] = [];
   historyPointer = -1;
   currentColor = '#ffffff'; //'#1fbc9c';
+  // reject function of promise created by player icon context menu
   rejectPromise!: () => any;
 
   //* Online State
@@ -189,6 +190,28 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       scaleY: item.scaleY,
       skewX: item.skewX,
       skewY: item.skewY,
+      type: 'player',
+    };
+  }
+
+  getPlayerTextItemConfig(item: PlayerItem): TextConfig {
+    return {
+      id: 'text_' + item.id,
+      text: item.name,
+      fill: item.color,
+      x: item.x - 10,
+      y: item.y + 60,
+      visible: true,
+      draggable: false,
+      fontSize: 18,
+      fontFamily: 'Ubuntu',
+      shadowColor: 'black',
+      shadowBlur: 2,
+      shadowOpacity: 0.5,
+      shadowForStrokeEnabled: true,
+      shadowOffset: { x: 1, y: 1 },
+      type: 'player-text',
+      class: 'static',
     };
   }
 
@@ -305,21 +328,25 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     visible: false,
   };
 
-  transformerConfig: TransformerConfig = {
-    keepRatio: true,
-    centeredScaling: true,
-    //* shouldOverdrawWholeArea property has a bug in konva and doesn't fire dblclick events
-    //shouldOverdrawWholeArea: true,
-    enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
-    flipEnabled: false,
-    rotateAnchorOffset: 30,
-    padding: 5,
-    anchorCornerRadius: 5,
-    anchorFill: 'rgba(65, 184, 131, 0.6)',
-    anchorStroke: 'rgb(65, 184, 131)',
-    borderDash: [6],
-    borderStroke: 'rgb(65, 184, 131)',
-  };
+  get transformerConfig(): TransformerConfig {
+    return {
+      keepRatio: true,
+      //centeredScaling: true,
+      rotateEnabled: this.activeItems.length === 1 && this.activeItems[0].attrs.type === 'player',
+      //* shouldOverdrawWholeArea property has a bug in konva and doesn't fire dblclick events
+      //shouldOverdrawWholeArea: true,
+      enabledAnchors: [],
+      flipEnabled: false,
+      rotateAnchorOffset: 30,
+      padding: 5,
+      anchorCornerRadius: 5,
+      anchorFill: 'rgba(65, 184, 131, 0.6)',
+      anchorStroke: 'rgb(65, 184, 131)',
+      borderDash: [6],
+      borderStroke: 'rgb(65, 184, 131)',
+      resizeEnabled: false,
+    };
+  }
 
   selectionRectState = {
     x1: -1,
@@ -454,7 +481,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
           name: player.name,
           playerId: player._id,
           color: player.color,
-          image: await createPlayerImage(player.color),
+          image: createPlayerImage(player.color),
         });
       } catch (_) {
         return;
@@ -752,7 +779,9 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
           this.selectionRectConfig.width = Math.abs(x2 - x1);
           this.selectionRectConfig.height = Math.abs(y2 - y1);
           const box = this.selectionRectRef.getNode().getClientRect();
-          const selectedNodes = this.getAllNodes().filter((node) => Util.haveIntersection(box, node.getClientRect()));
+          const selectedNodes = this.getAllNodes().filter(
+            (node) => Util.haveIntersection(box, node.getClientRect()) && node.attrs.type !== 'player-text',
+          );
           this.setActiveItems(selectedNodes);
         }
     }
@@ -912,6 +941,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   handleTransform({ target }: KonvaEventObject<MouseEvent>) {
     if (target instanceof KonvaImage || target instanceof Text || target instanceof Line) {
       const items = this.transformer.nodes();
+
       for (const item of items) {
         const { id, rotation, scaleX, scaleY, skewX, skewY, x, y } = item.attrs;
         this.updateItem(id, { rotation, scaleX, scaleY, skewX, skewY, x, y });
