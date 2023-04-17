@@ -184,7 +184,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       height: this.imageSize,
       strokeWidth: 1,
       draggable: this.activeTool === ToolTypes.Pointer,
-      image: item.image,
+      //! potential memory leak
+      image: createPlayerImage(item.color),
       rotation: item.rotation,
       scaleX: item.scaleX,
       scaleY: item.scaleY,
@@ -1163,8 +1164,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   applyStageData(itemState: Partial<ItemState>) {
-    Object.entries(itemState).forEach(([key, value]) => {
-      this.itemState[key] = value ?? [];
+    Object.entries(this.itemState).forEach(([key]) => {
+      this.itemState[key] = itemState[key] ?? [];
     });
   }
 

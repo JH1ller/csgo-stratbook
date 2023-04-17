@@ -29,6 +29,7 @@ const drawBoardStateSchema = new Schema<DrawBoardState>({
   images: [Object],
   lines: [Object],
   texts: [Object],
+  players: [Object],
 });
 
 const stratSchema = new Schema<Strat>({

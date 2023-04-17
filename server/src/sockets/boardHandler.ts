@@ -8,9 +8,6 @@ import { TypedSocket, TypedServer } from './interfaces';
 
 const boards: Boards = {};
 
-// for debugging
-(global as any).boards = boards;
-
 export const registerBoardHandler = (io: TypedServer, socket: TypedSocket) => {
   socket.on('join-draw-room', async ({ targetRoomId, userName, stratId, map }) => {
     if (targetRoomId && typeof targetRoomId !== 'string') return;
@@ -61,15 +58,15 @@ export const registerBoardHandler = (io: TypedServer, socket: TypedSocket) => {
     });
   });
 
-  socket.on('update-data', ({ images, lines, texts }) => {
+  socket.on('update-data', ({ images, lines, texts, players }) => {
     const roomId = socket.data.drawRoomId;
 
     if (!roomId || !boards[roomId]) return;
-    boards[roomId].mapData.data = { images, lines, texts };
+    boards[roomId].mapData.data = { images, lines, texts, players };
 
     //Log.info('sockets::update-data', `Updated data of room ${roomId}`);
 
-    io.to(roomId).emit('data-updated', { images, lines, texts, id: socket.id });
+    io.to(roomId).emit('data-updated', { images, lines, texts, players, id: socket.id });
   });
 
   socket.on('update-username', (userName) => {
