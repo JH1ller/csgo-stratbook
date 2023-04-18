@@ -23,4 +23,14 @@ export interface DrawBoardState {
   images: unknown[];
   lines: unknown[];
   texts: unknown[];
+  players: unknown[];
+}
+
+export interface PlayerItem {
+  id: string;
+  playerId?: string;
+  x: number;
+  y: number;
+  name?: string;
+  color: string;
 }

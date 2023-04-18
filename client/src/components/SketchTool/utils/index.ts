@@ -3,6 +3,7 @@ import { Line } from 'konva/lib/shapes/Line';
 import { Node as KonvaNode } from 'konva/lib/Node';
 import { Vector2d } from 'konva/lib/types';
 import CursorIcon from '!!raw-loader!../../../assets/icons/cursor.svg';
+import PlayerIcon from '!!raw-loader!../../../assets/icons/player.svg';
 import { LineItem } from '../types';
 import { GameMap } from '@/api/models/GameMap';
 
@@ -88,12 +89,27 @@ export const createMapImage = (map: GameMap): HTMLImageElement => {
 };
 
 export const createPointerImage = (color: string): HTMLImageElement => {
-  //const colors = ['#1EBC9C', '#3298DB', '#F2C512', '#A463BF', '#E84B3C', '#DDE6E8'];
   const img = new Image();
   const tempEl = document.createElement('div');
   try {
     tempEl.innerHTML = CursorIcon;
-    tempEl.querySelector('path')!.style.fill = color; // colors[Math.min(colorIndex, colors.length - 1)];
+    tempEl.querySelector('path')!.style.fill = color;
+    const base64string = btoa(tempEl.innerHTML);
+    img.src = 'data:image/svg+xml;base64,' + base64string;
+  } catch (error) {
+    console.log(error);
+  }
+  return img;
+};
+
+export const createPlayerImage = (color: string): HTMLImageElement => {
+  const img = new Image();
+  const tempEl = document.createElement('div');
+  try {
+    tempEl.innerHTML = PlayerIcon;
+    tempEl.querySelector('path')!.style.fill = color;
+    tempEl.querySelector('circle')!.style.fill = color;
+    tempEl.querySelector('svg')!.style.transform = 'rotate(45deg) scale(0.7)';
     const base64string = btoa(tempEl.innerHTML);
     img.src = 'data:image/svg+xml;base64,' + base64string;
   } catch (error) {
@@ -116,25 +132,14 @@ export const rotateVector = (vec: [x: number, y: number], angleInDeg: number): [
   ];
 };
 
-export const handleDragStart = (event: DragEvent, type: UtilityTypes) => {
+export const handleDragStart = (event: DragEvent, type: string) => {
   if (!event.dataTransfer) return;
 
   event.dataTransfer.setData('text/plain', type);
 
-  // create wrapper for image element, because otherwise we can't style it.
-  const wrapper = document.createElement('div');
-  const image = document.createElement('img');
-  image.src = require(`@/assets/icons/${type.toLowerCase()}.svg`);
-  wrapper.id = 'drag-ghost';
-  wrapper.style.position = 'absolute';
-  wrapper.style.top = '-1000px';
-  image.style.filter = 'invert(1)';
-  image.style.width = '42px';
-  image.style.height = '42px';
-  wrapper.appendChild(image);
-  document.body.appendChild(wrapper);
+  const img = document.querySelector(`.sketch-tool__draggable[data-type='${type.toLowerCase()}'] svg`);
 
-  event.dataTransfer.setDragImage(wrapper, 24, 24);
+  event.dataTransfer.setDragImage(img!, 24, 24);
   event.dataTransfer.dropEffect = 'copy';
 };
 
@@ -143,14 +148,6 @@ export const handleDragOver = (event: DragEvent) => {
   event.preventDefault();
 
   event.dataTransfer.dropEffect = 'copy';
-};
-
-export const handleDragEnd = () => {
-  // Drag was finished or cancelled, remove ghost element that follows cursor
-  const dragGhost = document.querySelector('#drag-ghost');
-  if (dragGhost?.parentNode) {
-    dragGhost.parentNode.removeChild(dragGhost);
-  }
 };
 
 export const fadeIn = (node: KonvaNode) => node.to({ opacity: 1, duration: 0.2 });
