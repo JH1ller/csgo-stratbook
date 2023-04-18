@@ -58,15 +58,15 @@ export const registerBoardHandler = (io: TypedServer, socket: TypedSocket) => {
     });
   });
 
-  socket.on('update-data', ({ images, lines, texts, players }) => {
+  socket.on('update-data', (boardData) => {
     const roomId = socket.data.drawRoomId;
 
     if (!roomId || !boards[roomId]) return;
-    boards[roomId].mapData.data = { images, lines, texts, players };
+    boards[roomId].mapData.data = boardData;
 
     //Log.info('sockets::update-data', `Updated data of room ${roomId}`);
 
-    io.to(roomId).emit('data-updated', { images, lines, texts, players, id: socket.id });
+    io.to(roomId).emit('data-updated', { ...boardData, id: socket.id });
   });
 
   socket.on('update-username', (userName) => {

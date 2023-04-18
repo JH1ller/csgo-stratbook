@@ -192,7 +192,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       skewX: item.skewX,
       skewY: item.skewY,
       type: 'player',
-      offset: { x: 25, y: 25 },
+      offset: { x: this.imageSize / 2, y: this.imageSize / 2 },
     };
   }
 
@@ -578,8 +578,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   }
 
   @Listen('keydown')
-  keydownHandler({ key }: KeyboardEvent) {
-    if (this.currentText || isInputFocussed()) return;
+  keydownHandler({ key, ctrlKey }: KeyboardEvent) {
+    if (this.currentText || isInputFocussed() || ctrlKey) return;
     switch (key) {
       case ' ':
         if (this.activeTool === ToolTypes.Pan) return;
