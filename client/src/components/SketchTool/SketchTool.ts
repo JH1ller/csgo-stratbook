@@ -486,7 +486,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
     if (type === 'PLAYER') {
       try {
-        const player = await this.showPlayerPicker(event);
+        const player = this.teamMembers.length ? await this.showPlayerPicker(event) : null;
         // if player is undefined, the user selected "selected color" in the context menu
         this.itemState.players.push({
           id: newId,
