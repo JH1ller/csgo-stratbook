@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
-import { Server, Socket } from 'socket.io';
 import { StratModel } from '@/models/strat';
-import { Boards } from '../types';
+import { PlayerModel } from '@/models/player';
+import { Boards, PlayerItem } from '../types';
 import { Log } from '@/utils/logger';
 import { Room } from './room';
 import { TypedSocket, TypedServer } from './interfaces';
@@ -22,7 +22,23 @@ export const registerBoardHandler = (io: TypedServer, socket: TypedSocket) => {
     if (stratId && Object.keys(boards[roomId].clients).length === 1) {
       const strat = await StratModel.findById(stratId);
       if (strat?.drawData) {
+        // update playeritem color incase it was changed
+        for (const playerItem of (strat.drawData.players as PlayerItem[]) ?? []) {
+          if (playerItem.playerId) {
+            const player = await PlayerModel.findById(playerItem.playerId);
+            if (!player || !player.team?.equals(strat.team)) continue;
+            playerItem.color = player.color;
+          }
+        }
         boards[roomId].updateData(map, strat.drawData);
+      }
+    }
+
+    // update color data of joining player
+    if (socket.data.player) {
+      const updatedPlayerDoc = await PlayerModel.findById(socket.data.player._id);
+      if (updatedPlayerDoc) {
+        boards[roomId].clients[socket.id].color = updatedPlayerDoc?.color;
       }
     }
 

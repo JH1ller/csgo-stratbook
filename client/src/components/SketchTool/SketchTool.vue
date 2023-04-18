@@ -200,9 +200,14 @@
       </transition-group>
     </div>
     <vue-context ref="playerPicker" v-slot="{ data }" @close="rejectPlayerPicker">
-      <li v-for="player in teamMembers" :key="player._id" class="map-view__context-link">
+      <li v-for="player in teamMembers" :key="player._id">
         <a @click="() => data.callback(player)">
           {{ player.name }}
+        </a>
+      </li>
+      <li key="default">
+        <a @click="() => data.callback()">
+          <span class="sketch-tool__context-dot" :style="`--color: ${currentColor}`" /> Selected color
         </a>
       </li>
     </vue-context>

@@ -31,10 +31,10 @@ export interface TextItem extends Partial<TextConfig> {
 
 export interface PlayerItem extends Partial<ImageConfig> {
   id: string;
-  playerId: string;
+  playerId?: string;
   x: number;
   y: number;
-  name: string;
+  name?: string;
   color: string;
 }
 

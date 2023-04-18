@@ -487,14 +487,15 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     if (type === 'PLAYER') {
       try {
         const player = await this.showPlayerPicker(event);
+        // if player is undefined, the user selected "selected color" in the context menu
         this.itemState.players.push({
           id: newId,
-          x: pos!.x - this.imageSize / 2,
-          y: pos!.y - this.imageSize / 2,
-          name: player.name,
-          playerId: player._id,
-          color: player.color,
-          image: createPlayerImage(player.color),
+          x: pos!.x,
+          y: pos!.y,
+          ...(player && { name: player.name }),
+          ...(player && { playerId: player._id }),
+          color: player ? player.color : this.currentColor,
+          image: createPlayerImage(player ? player.color : this.currentColor),
         });
       } catch (_) {
         return;
