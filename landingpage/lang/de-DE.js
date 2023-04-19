@@ -72,6 +72,15 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '2.3.0',
+        date: '2023-04-19',
+        changes: [
+          'Player icons on tactics board',
+          'Fixed minor issues with loading indicator',
+          'Fixed player color not being updated correctly on tactics board',
+        ],
+      },
+      {
         version: '2.2.1',
         date: '2023-03-27',
         changes: [
