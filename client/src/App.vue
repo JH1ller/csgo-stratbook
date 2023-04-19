@@ -101,7 +101,7 @@ export default class App extends Vue {
       catchPromise(
         this.showDialog({
           key: 'app/update-notice',
-          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1>`,
+          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><div style="margin-top: 24px;">- added player icons to tactics board</div><img src="/player_icons.png" style="width: 320px; margin-top: 24px; border-radius: 8px" />`,
           resolveBtn: 'OK',
           confirmOnly: true,
           htmlMode: true,
@@ -116,6 +116,7 @@ export default class App extends Vue {
 
     ipcRenderer.on('update-downloaded', (_event, version: string) => {
       ipcRenderer.removeAllListeners('update-downloaded');
+      // TODO: check if we can remove this, since manual updates are not used anymore
       catchPromise(
         this.showDialog({
           key: 'app/update-downloaded',
