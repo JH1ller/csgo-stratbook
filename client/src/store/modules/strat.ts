@@ -7,6 +7,8 @@ import { extractTextFromHTML } from '@/utils/extractTextFromHTML';
 import StorageService from '@/services/storage.service';
 import { sortDateAddedASC, sortDateAddedDESC } from '@/utils/sortFunctions';
 import { writeToClipboard } from '@/utils/writeToClipboard';
+import { getFormattedDate } from '@/utils/getFormattedDate';
+import { downloadFile } from '@/utils/downloadFile';
 
 const SET_STRATS = 'SET_STRATS';
 
@@ -49,19 +51,15 @@ export const stratModule: Module<StratState, RootState> = {
       return state.strats.filter((strat) => strat.map === rootState.map.currentMap);
     },
     filteredStratsOfCurrentMap(_state, getters, rootState): Strat[] {
+      const { side, types, name, content, inactive } = rootState.filter.stratFilters;
+
       return (getters.stratsOfCurrentMap as Strat[]).filter(
         (strat) =>
-          (!rootState.filter.stratFilters.side || rootState.filter.stratFilters.side === strat.side) &&
-          (!rootState.filter.stratFilters.types.length ||
-            rootState.filter.stratFilters.types.some((typeFilter) => strat.types.includes(typeFilter))) &&
-          (rootState.filter.stratFilters.name
-            ? strat.name.toLowerCase().includes(rootState.filter.stratFilters.name.toLowerCase())
-            : true) &&
-          (rootState.filter.stratFilters.content
-            ? extractTextFromHTML(strat.content)
-                .toLowerCase()
-                .includes(rootState.filter.stratFilters.content.toLowerCase())
-            : true),
+          (!side || side === strat.side) &&
+          (!types.length || types.some((typeFilter) => strat.types.includes(typeFilter))) &&
+          (name ? strat.name.toLowerCase().includes(name.toLowerCase()) : true) &&
+          (content ? extractTextFromHTML(strat.content).toLowerCase().includes(content.toLowerCase()) : true) &&
+          (inactive ? strat.active : true),
       );
     },
     sortedFilteredStratsOfCurrentMap(_, getters): Strat[] {
@@ -136,6 +134,19 @@ export const stratModule: Module<StratState, RootState> = {
         trackingService.track('Action: Add Shared Strat', {
           name: state.strats.find((strat) => strat._id === stratID)?.name as string,
         });
+      }
+    },
+    async getStratExport({ dispatch, rootState }) {
+      const res = await api.strat.getStratExport();
+      if (res.success) {
+        trackingService.track('Action: Export Strats');
+
+        await downloadFile(
+          new Blob([res.success]),
+          `strats-${rootState.team.teamInfo.name}-${getFormattedDate()}.json`,
+          ['application/json', '.json'],
+        );
+        dispatch('app/showToast', { id: 'strat/exportedStrats', text: 'Downloading strat export...' }, { root: true });
       }
     },
     addStratLocally({ commit }, payload: { strat: Strat }) {

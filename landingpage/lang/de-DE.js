@@ -72,6 +72,58 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '2.3.1',
+        date: '2023-04-24',
+        changes: [
+          'Decreased size of player icons on tactics board',
+          'Youtube Shorts links can now be added to utilities',
+          'Upgrade desktop app to latest chromium version',
+        ],
+      },
+      {
+        version: '2.3.0',
+        date: '2023-04-19',
+        changes: [
+          'Player icons on tactics board',
+          'Fixed minor issues with loading indicator',
+          'Fixed player color not being updated correctly on tactics board',
+        ],
+      },
+      {
+        version: '2.2.1',
+        date: '2023-03-27',
+        changes: [
+          'Handle links in strat content',
+          'Fixed issue with sharing strats',
+        ],
+      },
+      {
+        version: '2.2.0',
+        date: '2023-01-20',
+        changes: [
+          'Added a filter to hide inactive strats',
+          'Fixed issue with emails not being case insensitive',
+          'Fixed issue where unsaved strat content changes are lost when window is resized while editing',
+        ],
+      },
+      {
+        version: '2.1.3',
+        date: '2022-12-17',
+        changes: [
+          'Updated ancient minimap',
+          'Fixed issues on mirage minimap',
+          'Fixed "last online" label for online players on team page',
+        ],
+      },
+      {
+        version: '2.1.2',
+        date: '2022-11-26',
+        changes: [
+          'Added Anubis to the map pool',
+          'Utility screenshots are displayed in their original ratio by default',
+        ],
+      },
+      {
         version: '2.1.1',
         date: '2022-06-27',
         changes: [

@@ -61,6 +61,8 @@ import {
   faCaretDown,
   faMoon,
   faSun,
+  faCloudDownloadAlt,
+  faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import { faDiscord, faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
@@ -134,6 +136,8 @@ export default function loadIcons() {
     faCaretDown,
     faMoon,
     faSun,
+    faCloudDownloadAlt,
+    faUser,
   );
 
   Vue.component('fa-icon', FontAwesomeIcon);

@@ -8,6 +8,10 @@
   &__media {
     width: 100%;
     height: 100%;
+
+    &:not(.-stretched) > img {
+      object-fit: contain;
+    }
   }
 
   &__crosshair-wrapper {
@@ -45,7 +49,6 @@
     bottom: 0;
     height: 30px;
     width: 100%;
-    // background-color: var(--color-bg);
     display: flex;
     align-items: center;
     padding: 4px;
@@ -89,10 +92,7 @@
     top: 50%;
     right: 12px;
     transform: translateY(-50%);
-
-    & > :not(:first-of-type) {
-      margin-top: 16px;
-    }
+    gap: 16px;
   }
 
   &__description {
@@ -141,10 +141,6 @@
     height: 100%;
   }
 
-  &__mouse-button {
-    opacity: 0.9;
-  }
-
   &__badge {
     width: 60px;
     height: 60px;
@@ -169,6 +165,7 @@
   &__badge-icon {
     width: 60%;
     height: 60%;
+    color: white;
   }
 
   &__navigation {
@@ -247,8 +244,12 @@
     right: 0;
     border-top-left-radius: 6px;
     padding: 12px;
-    width: 190px;
     box-shadow: $shadow-subtle;
+    gap: 12px;
+
+    & > * {
+      height: 100%;
+    }
   }
 
   &__fallback {

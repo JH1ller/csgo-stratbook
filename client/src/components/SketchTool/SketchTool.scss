@@ -108,32 +108,34 @@
   }
 
   &__draggable {
-    @include spacing('padding', '2xs 2xs');
+    @include spacing('padding', 'xs xs');
+
     &.-anim {
       @include slideFromX(10%, 6, 'draggable');
     }
 
-    filter: invert(1) drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.6));
+    filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.6));
     transition: 0.3s transform ease, 0.3s filter ease;
     cursor: grab;
+    color: white;
 
     &:hover {
       transform: scale(1.1) translateX(-8px) rotate(-10deg);
-      filter: invert(1) drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.6));
+      filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.6));
     }
 
-    & > img {
-      width: 42px;
-      height: 42px;
+    & svg {
+      width: 24px;
+      height: 24px;
 
-      @include viewport_range(mq1, mq2) {
+      @include viewport_mq3 {
         width: 36px;
         height: 36px;
       }
 
       @include viewport_mq6 {
-        width: 48px;
-        height: 48px;
+        width: 42px;
+        height: 42px;
       }
     }
 
@@ -271,11 +273,16 @@
     }
   }
 
-  &__client-dot {
+  &__client-dot,
+  &__context-dot {
     width: 12px;
     height: 12px;
     border-radius: 50%;
     margin-right: 12px;
+  }
+
+  &__context-dot {
+    background: var(--color);
   }
 
   &__clients-headline {

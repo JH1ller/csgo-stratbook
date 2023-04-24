@@ -45,23 +45,25 @@ const transform = (input) => {
 (async () => {
   await mongoose.connect(process.env.DATABASE_URL);
 
-  const allStrats = await StratModel.find();
+  const allStrats = await StratModel.find({ drawData: new RegExp('version', 'i') });
   let counter = 0;
   let skipped = 0;
+
+  console.log('Found: ', allStrats.length);
   await Promise.all(
     allStrats.map(async (strat) => {
-      if (strat.drawData && typeof strat.drawData === 'string') {
-        const transformed = transform(strat.drawData);
-        if (!transformed?.lines.length) return;
-        strat.drawData = transformed;
+      if (typeof strat.drawData === 'string' && strat.drawData.includes('3.4.0')) {
+        //const transformed = transform(strat.drawData);
+        //if (!transformed?.lines.length) return;
+        console.log(`found - "${strat.name}" - "${strat.drawData}"`);
+        strat.drawData = null;
         await queue.add(() => strat.save());
-        console.log(`migrated - "${strat.name}"`);
         counter++;
       } else {
         skipped++;
         console.log(`skipped - "${strat.name}"`);
       }
-    })
+    }),
   );
   console.log(`\nSuccessfully migrated ${counter} strats. Skipped ${skipped} strats.`);
   process.exit();

@@ -19,6 +19,7 @@ body {
   --color-blue: hsl(177deg 48% 49%);
   --color-blue-10: rgba(65, 184, 178, 0.1);
   --color-yellow: #e6b352;
+  --color-yellow-dark: hsl(39, 75%, 45%);
   --color-red: hsl(349deg 84% 62%);
   --color-red-dark: hsl(349deg 60% 50%);
   --color-red-20: hsla(349, 84%, 62%, 0.2);
@@ -34,7 +35,7 @@ body {
   --color-bg-contrast: rgb(35, 35, 46);
   --color-bg-contrast-50: rgba(35, 35, 46, 0.5);
 
-  --color-border: #dcdcdc;
+  --color-border: hsl(0, 0%, 80%);
 
   // Fonts
   --font-default: 'Ubuntu', sans-serif;
@@ -57,7 +58,7 @@ body.-dark {
   --color-bg-secondary: hsl(240deg 14% 16%);
   --color-bg-tertiary: hsl(240deg 14% 20%);
 
-  --color-border: hsl(240deg 14% 22%);
+  --color-border: hsl(240deg 14% 25%);
 
   // Fonts
   --font-default: 'Ubuntu', sans-serif;

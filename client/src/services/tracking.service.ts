@@ -62,9 +62,8 @@ export default class TrackingService {
   }
 
   identify(id: string, name: string, data?: Record<string, unknown>) {
-    if (!this.initialized) return;
-
     Log.info('tracking:identify', data);
+    if (!this.initialized) return;
 
     window.splitbee?.user.set({
       name,
@@ -76,5 +75,9 @@ export default class TrackingService {
     });
 
     mixpanel.identify(id);
+  }
+
+  setTeam(name: string) {
+    this.team = name;
   }
 }

@@ -70,8 +70,7 @@ export default class MainMenu extends Vue {
       }),
       () => {
         this.trackingService.track('Action: Download Desktop Client');
-        // TODO: consider if we should just insert current version here
-        window.open('https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+2.1.1.exe');
+        window.open(`https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+${window.appVersion}.exe`);
       },
     );
     this.trackingService.track('Click: Get Desktop Client');

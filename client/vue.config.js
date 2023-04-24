@@ -33,8 +33,25 @@ module.exports = {
       config.target = 'electron-renderer';
     }
     config.devtool = process.env.NODE_ENV !== 'production' ? 'eval-source-map' : false;
+    config.resolve = {
+      ...config.resolve,
+      fallback: {
+        fs: false,
+        tls: false,
+        net: false,
+        path: false,
+        zlib: false,
+        http: false,
+        https: false,
+        stream: false,
+        crypto: false,
+        os: false,
+        util: false,
+        assert: false,
+      },
+    };
   },
-  transpileDependencies: [],
+  transpileDependencies: ['replace-keywords'],
   pluginOptions: {
     electronBuilder: {
       nodeIntegration: true,

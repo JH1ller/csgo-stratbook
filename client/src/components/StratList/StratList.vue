@@ -17,7 +17,7 @@
         :collapsed="isCollapsed(strat)"
         :editMode="isEdited(strat)"
         :gameMode="gameMode"
-        :key="remountKey"
+        :key="strat._id"
         ref="stratItemComponents"
         @delete-strat="deleteStrat"
         @toggle-active="toggleActive"

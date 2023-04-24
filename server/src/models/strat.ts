@@ -30,6 +30,7 @@ const drawBoardStateSchema = new Schema<DrawBoardState>({
   images: [Object],
   lines: [Object],
   texts: [Object],
+  players: [Object],
 });
 
 const stratSchema = new Schema<Strat>({
@@ -41,7 +42,7 @@ const stratSchema = new Schema<Strat>({
 
   map: {
     type: String,
-    enum: ['DUST_2', 'MIRAGE', 'OVERPASS', 'NUKE', 'VERTIGO', 'INFERNO', 'TRAIN', 'ANCIENT'],
+    enum: ['DUST_2', 'MIRAGE', 'OVERPASS', 'NUKE', 'VERTIGO', 'INFERNO', 'TRAIN', 'ANCIENT', 'ANUBIS'],
     required: true,
   },
 

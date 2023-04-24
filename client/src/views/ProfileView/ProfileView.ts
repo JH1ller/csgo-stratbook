@@ -1,12 +1,14 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { Routes } from '@/router/router.models';
-import { appModule, authModule } from '@/store/namespaces';
+import { appModule, authModule, stratModule } from '@/store/namespaces';
 import { Player } from '@/api/models/Player';
 import ProfileForm from './components/ProfileForm/ProfileForm.vue';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { catchPromise } from '@/utils/catchPromise';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
+import { Response } from '@/store';
+
 @Component({
   components: {
     ProfileForm,
@@ -19,6 +21,7 @@ export default class ProfileView extends Vue {
   @authModule.Action private logout!: () => Promise<void>;
   @authModule.Action private updateProfile!: (data: FormData) => Promise<void>;
   @authModule.Action private deleteAccount!: () => Promise<void>;
+  @stratModule.Action private getStratExport!: () => Promise<Response>;
 
   private async logoutRequest() {
     await this.logout();

@@ -9,29 +9,27 @@
           <TextInput v-model="formFields.setpos.value" :field="formFields.setpos" fieldName="setpos" />
         </div>
       </FormFieldSet>
-      <FormFieldSet>
-        <div class="utility-form__horizontal-wrapper">
-          <div class="utility-form__vertical-wrapper">
-            <label class="utility-form__label">Side</label>
-            <SidePicker v-model="side" />
+      <div class="utility-form__horizontal-wrapper">
+        <FormFieldSet>
+          <label class="utility-form__label">Side</label>
+          <SidePicker v-model="side" />
+        </FormFieldSet>
+        <FormFieldSet>
+          <label class="utility-form__label">Throw settings</label>
+          <div class="utility-form__config-wrapper">
+            <MouseButtonPicker class="utility-form__mouse-button-picker" v-model="mouseButton" />
+            <PosePicker
+              class="utility-form__pose-picker"
+              :crouch="crouch"
+              :jump="jump"
+              :movement="movement"
+              @toggle-crouch="toggleCrouch"
+              @toggle-jump="toggleJump"
+              @toggle-movement="toggleMovement"
+            />
           </div>
-          <div class="utility-form__vertical-wrapper">
-            <label class="utility-form__label">Throw settings</label>
-            <div class="utility-form__config-wrapper">
-              <MouseButtonPicker class="utility-form__mouse-button-picker" v-model="mouseButton" />
-              <PosePicker
-                class="utility-form__pose-picker"
-                :crouch="crouch"
-                :jump="jump"
-                :movement="movement"
-                @toggle-crouch="toggleCrouch"
-                @toggle-jump="toggleJump"
-                @toggle-movement="toggleMovement"
-              />
-            </div>
-          </div>
-        </div>
-      </FormFieldSet>
+        </FormFieldSet>
+      </div>
       <FormFieldSet>
         <label class="utility-form__label" for="type">Type</label>
         <UtilityPicker v-model="type" />

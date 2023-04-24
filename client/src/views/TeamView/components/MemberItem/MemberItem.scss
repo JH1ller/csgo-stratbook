@@ -64,7 +64,7 @@
     }
 
     @include viewport_mq2 {
-      &::before {
+      &:not(.-online)::before {
         content: 'last online';
       }
     }

@@ -7,6 +7,7 @@ export enum GameMap {
   'INFERNO' = 'INFERNO',
   'TRAIN' = 'TRAIN',
   'ANCIENT' = 'ANCIENT',
+  'ANUBIS' = 'ANUBIS',
 }
 
 export enum UtilityType {

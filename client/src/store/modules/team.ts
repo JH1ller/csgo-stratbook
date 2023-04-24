@@ -46,6 +46,7 @@ export const teamModule: Module<TeamState, RootState> = {
       const res = await api.team.getTeam();
       if (res.success) {
         commit(SET_TEAM_INFO, res.success);
+        trackingService.setTeam(state.teamInfo.name);
         trackingService.identify(rootState.auth.profile._id, rootState.auth.profile.name, {
           team: state.teamInfo.name,
         });

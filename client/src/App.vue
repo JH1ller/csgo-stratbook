@@ -79,7 +79,6 @@ export default class App extends Vue {
 
   private mounted() {
     if (this.isDesktop) {
-      this.initAutoUpdate();
       this.initTracking();
     } else {
       this.checkCookies();
@@ -90,6 +89,7 @@ export default class App extends Vue {
     window.onbeforeunload = () => {
       this.wsService.disconnect();
     };
+    window.appVersion = this.appVersion;
   }
 
   private checkVersion() {
@@ -101,7 +101,7 @@ export default class App extends Vue {
       catchPromise(
         this.showDialog({
           key: 'app/update-notice',
-          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><br><blockquote class="twitter-tweet"><p lang="en" dir="ltr">📌v2.1.0 is live!<br>This update is all about colors!🌈<br><br>🖍️The color assigned to a player will highlight them in every strategy text.<br>🌘Upon popular request, we&#39;ve also added a Darkmode now! 🎉<br>✨Last but not least the team page got a new design.</p>&mdash; Stratbook (@csgostratbook) <a href="https://twitter.com/csgostratbook/status/1541031306997407751?ref_src=twsrc%5Etfw">June 26, 2022</a></blockquote>`,
+          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><div style="margin-top: 24px;">- added player icons to tactics board</div><img src="/player_icons.png" style="width: 320px; margin-top: 24px; border-radius: 8px" />`,
           resolveBtn: 'OK',
           confirmOnly: true,
           htmlMode: true,
@@ -109,26 +109,6 @@ export default class App extends Vue {
       );
     }
     this.storageService.set('version', this.appVersion);
-  }
-
-  private async initAutoUpdate() {
-    const { ipcRenderer } = await import('electron');
-
-    ipcRenderer.on('update-downloaded', (_event, version: string) => {
-      ipcRenderer.removeAllListeners('update-downloaded');
-      catchPromise(
-        this.showDialog({
-          key: 'app/update-downloaded',
-          text: `A new update has been downloaded. (${this.appVersion} -> ${version})<br>An app restart is required for the update to take effect. Restart now?`,
-          resolveBtn: 'Restart',
-          htmlMode: true,
-        }),
-        () => ipcRenderer.send('restart-app'),
-      );
-    });
-
-    ipcRenderer.send('app-ready');
-    ipcRenderer.send('start-game-mode');
   }
 
   private checkCookies() {

@@ -1,0 +1,7 @@
+.svg-icon {
+  display: inline-block;
+
+  & > svg {
+    fill: currentColor;
+  }
+}

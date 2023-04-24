@@ -25,10 +25,13 @@ export default class ApiService {
 
   static async makeRequest<T = any>(request: Promise<AxiosResponse<T>>): Promise<APIResponse<T>> {
     try {
+      store.commit('app/ADD_ACTIVE_REQUEST');
       const { data } = await request;
       return { success: data };
     } catch (error) {
       return { error: isAxiosError(error) ? error.response?.data?.error : (error as Error).message };
+    } finally {
+      store.commit('app/REMOVE_ACTIVE_REQUEST');
     }
   }
 
@@ -66,28 +69,25 @@ export default class ApiService {
     });
 
     axiosInstance.interceptors.request.use(
-      config => {
+      (config) => {
         if (store.state.auth.token) {
           config.headers['Authorization'] = store.state.auth.token;
-          store.commit('app/ADD_ACTIVE_REQUEST');
           return config;
         } else {
           Log.error('axios::interceptor', 'User not authenticated. Request cancelled.');
           throw new axios.Cancel('User not authenticated. Request cancelled.');
         }
       },
-      error => {
+      (error) => {
         Log.error('axios::interceptor', 'User not authenticated. Request cancelled.');
         return Promise.reject(error);
       },
     );
     axiosInstance.interceptors.response.use(
-      response => {
-        store.commit('app/REMOVE_ACTIVE_REQUEST');
+      (response) => {
         return response;
       },
-      error => {
-        store.commit('app/REMOVE_ACTIVE_REQUEST');
+      (error) => {
         Log.error('axios::interceptor', error.response.data.error);
         if (error.response.status === 401) {
           if (router.currentRoute.name !== RouteNames.Login) router.push(Routes.Login);

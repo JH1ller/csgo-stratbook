@@ -3,8 +3,9 @@ import { Sides } from '@/api/models/Sides';
 import { Utility } from '@/api/models/Utility';
 import { UtilityMovement } from '@/api/models/UtilityMovement';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
-import MouseButtonDisplay from '@/components/MouseButtonDisplay/MouseButtonDisplay.vue';
+import MouseButtonPicker from '@/components/MouseButtonPicker/MouseButtonPicker.vue';
 import UtilityTypeDisplay from '@/components/UtilityTypeDisplay/UtilityTypeDisplay.vue';
+import PosePicker from '@/components/PosePicker/PosePicker.vue';
 import SmartImage from '@/components/SmartImage/SmartImage.vue';
 import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
 import isMobile from 'is-mobile';
@@ -22,10 +23,11 @@ interface LightboxMedia {
 
 @Component({
   components: {
-    MouseButtonDisplay,
+    MouseButtonPicker,
     UtilityTypeDisplay,
     SmartImage,
     BackdropDialog,
+    PosePicker,
   },
 })
 export default class UtilityLightbox extends Mixins(CloseOnEscape) {
@@ -33,6 +35,7 @@ export default class UtilityLightbox extends Mixins(CloseOnEscape) {
   @Prop() private utility!: Utility;
   private showCrosshair = false;
   private currentMediaIndex = 0;
+  private imageRatioStretched = false;
 
   private UtilityMovement: typeof UtilityMovement = UtilityMovement;
   private Sides: typeof Sides = Sides;
