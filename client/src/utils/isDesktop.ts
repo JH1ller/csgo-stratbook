@@ -1,1 +1,5 @@
-export const isDesktop = (): boolean => navigator.userAgent.includes('Electron');
+export const isDesktop = () => navigator.userAgent.includes('Electron');
+
+export function isElectron() {
+  return process.env.BUILD_TARGET === 'ELECTRON';
+}

@@ -17,10 +17,13 @@
     "useUnknownInCatchVariables": false,
     "types": ["webpack-env", "@types/wicg-file-system-access"],
     "paths": {
+      "src/*": ["src/*"],
+      "src-electron/*": ["src-electron/*"],
+
       "@/*": ["src/*"]
     },
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*.ts", "tests/**/*.tsx"],
+
   "exclude": ["node_modules"]
 }

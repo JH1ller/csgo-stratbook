@@ -13,6 +13,21 @@ function getPublishConfig() {
       };
 }
 
+/**
+ *
+ * @param {import('webpack-chain')} config
+ */
+function clientChain(config) {
+  config.resolve.alias.set('src', path.resolve(__dirname, './src'));
+
+  config.target(process.env.BUILD_TARGET === 'ELECTRON' ? 'electron-renderer' : 'web');
+  config.stats('verbose');
+  config.devtool(process.env.NODE_ENV === 'production' ? 'source-map' : 'eval');
+}
+
+/**
+ * @type {import('@vue/cli-service').ProjectOptions}
+ */
 module.exports = {
   publicPath: process.env.NODE_ENV === 'staging' ? '/app/' : '/',
   outputDir: path.resolve(__dirname, '../server/dist_app'),
@@ -51,16 +66,46 @@ module.exports = {
       },
     };
   },
+  chainWebpack: clientChain,
   transpileDependencies: ['replace-keywords'],
   pluginOptions: {
     electronBuilder: {
       nodeIntegration: true,
+
+      preload: path.join(__dirname, 'src-electron/main-process/electron-preload.ts'),
+
+      mainProcessFile:
+        process.env.NODE_ENV !== 'production'
+          ? 'src-electron/main-process/electron-main.dev.ts'
+          : 'src-electron/main-process/electron-main.ts',
+
+      rendererProcessFile: 'src/main.ts',
+
+      /**
+       *
+       * @param {import('webpack-chain')} config
+       */
+      chainWebpackMainProcess: (config) => {
+        config.resolve.alias
+          .set('src', path.resolve(__dirname, './src'))
+          .set('src-electron', path.resolve(__dirname, './src-electron'));
+
+        // config.plugin('ts-checker').use(ForkTsCheckerWebpackPlugin, [
+        //   {
+        //     eslint: true,
+        //     reportFiles: './src-electron/**/*.{ts,tsx,js}',
+        //   },
+        // ]);
+      },
+
+      chainWebpackRendererProcess: clientChain,
+
       builderOptions: {
         productName: 'Stratbook',
         appId: 'live.stratbook',
         win: {
           target: 'nsis',
-          //publisherName: 'Hiller',
+          // publisherName: 'Hiller',
           icon: './icon.png',
           // publish: {
           //   provider: 'github',

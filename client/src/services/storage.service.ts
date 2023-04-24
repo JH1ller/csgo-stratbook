@@ -1,20 +1,10 @@
 import { isDesktop } from '@/utils/isDesktop';
 import { Log } from '@/utils/logger';
-import ElectronStore from 'electron-store';
 
 export default class StorageService {
   private static instance: StorageService;
 
-  private useNativeStore: boolean;
-  private store: ElectronStore | undefined;
-
-  private constructor() {
-    this.useNativeStore = (window.desktopMode ?? isDesktop()) && process.env.NODE_ENV === 'production';
-    if (this.useNativeStore) {
-      const ElectronStore = require('electron-store');
-      this.store = new ElectronStore();
-    }
-  }
+  private constructor() {}
 
   static getInstance(): StorageService {
     if (!StorageService.instance) {
@@ -23,54 +13,56 @@ export default class StorageService {
     return StorageService.instance;
   }
 
-  get<T = any>(key: string): T | undefined | null {
-    let value = this.useNativeStore ? this.store?.get(key) : localStorage.getItem(key);
-    if (value == null) {
-      Log.warn(`StorageService (${this.useNativeStore ? 'native' : 'browser'})`, `No value found for '${key}'.`);
-    } else if (!this.useNativeStore) {
-      try {
-        const parsed = JSON.parse(value as string);
-        value = parsed;
-      } catch (error) {
-        //
+  async get<T = any>(key: string): Promise<T | undefined | null> {
+    if (isDesktop()) {
+      const value = await window.ipcService.configGetValue<T>(key);
+
+      if (!value) {
+        Log.warn(`StorageService ('electron')`, `No value found for '${key}'.`);
+      }
+
+      return value;
+    } else {
+      const localValue = localStorage.getItem(key);
+      if (!localValue) {
+        Log.warn(`StorageService ('browser')`, `No value found for '${key}'.`);
+      } else {
+        return JSON.parse(localValue as string) as T | undefined | null;
       }
     }
 
-    return value as T | undefined | null;
+    return null;
   }
 
   set(key: string, value: unknown): void {
-    try {
-      if (this.useNativeStore) {
-        this.store?.set(key, value);
-      } else {
-        localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
-      }
-      Log.info(`StorageService (${this.useNativeStore ? 'native' : 'browser'})`, `Saved value to key '${key}'`);
-    } catch (error) {
-      Log.error(`StorageService (${this.useNativeStore ? 'native' : 'browser'})`, error);
+    if (isDesktop()) {
+      window.ipcService.configSetValue(key, value);
+    } else {
+      localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
     }
+
+    Log.info(`StorageService (${isDesktop() ? 'native' : 'browser'})`, `Saved value to key '${key}':`, value);
   }
 
   exists(key: string): boolean {
-    return !!(this.useNativeStore ? this.store?.get(key) : localStorage.getItem(key));
+    return !!this.get(key);
   }
 
   remove(key: string): void {
-    if (this.useNativeStore) {
-      this.store?.delete(key);
+    if (isDesktop()) {
+      window.ipcService.configRemoveKey(key);
     } else {
       localStorage.removeItem(key);
     }
-    Log.info(`StorageService (${this.useNativeStore ? 'native' : 'browser'})`, `Removed value for '${key}'.`);
+    Log.info(`StorageService (${isDesktop() ? 'native' : 'browser'})`, `Removed value for '${key}'.`);
   }
 
   clear(): void {
-    if (this.useNativeStore) {
-      this.store?.clear();
+    if (isDesktop()) {
+      window.ipcService.configClear();
     } else {
       localStorage.clear();
     }
-    Log.info(`StorageService (${this.useNativeStore ? 'native' : 'browser'})`, 'Store cleared.');
+    Log.info(`StorageService (${isDesktop() ? 'native' : 'browser'})`, 'Store cleared.');
   }
 }

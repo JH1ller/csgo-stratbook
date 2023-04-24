@@ -91,7 +91,7 @@ export default class App extends Vue {
     };
   }
 
-  private checkVersion() {
+  private async checkVersion() {
     const currentVersion = this.storageService.get<string>('version');
     if (
       currentVersion &&
@@ -104,7 +104,7 @@ export default class App extends Vue {
           resolveBtn: 'OK',
           confirmOnly: true,
           htmlMode: true,
-        }),
+        })
       );
     }
     this.storageService.set('version', this.appVersion);
