@@ -46,6 +46,8 @@ module.exports = {
         stream: false,
         crypto: false,
         os: false,
+        util: false,
+        assert: false,
       },
     };
   },
