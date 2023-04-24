@@ -1,7 +1,5 @@
 'use strict';
-import { app, protocol, BrowserWindow, ipcMain, session, shell } from 'electron';
-import os from 'os';
-import path from 'path';
+import { app, protocol, BrowserWindow, ipcMain, shell, screen } from 'electron';
 import {
   createProtocol,
   /* installVueDevtools */
@@ -14,7 +12,9 @@ import ElectronStore from 'electron-store';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
-const store = new ElectronStore();
+const store = new ElectronStore<{
+  'window-config'?: Electron.Rectangle & { maximized: boolean };
+}>();
 // const isDebug = !!store.get('debug') || false;
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -28,16 +28,20 @@ let win: BrowserWindow | null;
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
 
-const getWindowBounds = () => {
-  const storedBounds = store.get('window-config') as Electron.Rectangle;
+const getWindowBounds = (): Electron.BrowserWindowConstructorOptions => {
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { width: displayWidth, height: displayHeight } = primaryDisplay.workArea;
+
+  const storedBounds = store.get('window-config');
+
+  const computedWidth = storedBounds?.width ? Math.min(storedBounds.width, displayWidth) : 1280;
+  const computedHeight = storedBounds?.height ? Math.min(storedBounds.height, displayHeight) : 720;
 
   return {
-    width: storedBounds?.width ?? 1280,
-    height: storedBounds?.height ?? 720,
+    width: computedWidth,
+    height: computedHeight,
     minWidth: 360,
     minHeight: 590,
-    x: storedBounds?.x,
-    y: storedBounds?.y,
   };
 };
 
@@ -79,22 +83,11 @@ const createWindow = (options: Electron.BrowserWindowConstructorOptions, devPath
       nodeIntegration: true,
       contextIsolation: false,
     },
+    center: true,
     ...options,
   });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
-    try {
-      // * Attempt to load locally installed Vue Dev Tools extension
-      session.defaultSession.loadExtension(
-        path.join(
-          os.homedir(),
-          '/AppData/Local/Google/Chrome/User Data/Default/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/5.3.4_0',
-        ),
-      );
-    } catch (error) {
-      console.log(error.message);
-    }
-
     // Load the url of the dev server if in development mode
     window.loadURL(process.env.WEBPACK_DEV_SERVER_URL + devPath);
     if (!process.env.IS_TEST) window.webContents.openDevTools();
@@ -114,8 +107,18 @@ const showMainWindow = () => {
     win = null;
   });
 
+  if (store.get('window-config')?.maximized) {
+    win.maximize();
+  }
+
   win.on('close', () => {
-    store.set('window-config', win?.getBounds());
+    const { width, height } = win!.getBounds();
+    // for some reason getBounds() doesn't report the correct window bounds (on Win11 at least), so they have to be adjusted.
+    store.set('window-config', {
+      width: width - 16,
+      height: height - 16,
+      maximized: win?.isMaximized(),
+    });
   });
 
   win.webContents.setWindowOpenHandler(({ url }) => {
@@ -128,7 +131,6 @@ const showLoader = () => {
   win = createWindow({ width: 300, height: 150, frame: false }, 'loader', 'loader.html');
 };
 
-app.allowRendererProcessReuse = true;
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
@@ -152,15 +154,6 @@ app.on('activate', () => {
 app.on('ready', async () => {
   init();
 });
-
-// ipcMain.on('start-game-mode', () => {
-//   gsiServer = new GSIServer();
-//   gsiServer.init();
-// });
-
-// ipcMain.on('exit-game-mode', () => {
-//   gsiServer?.stopServer();
-// });
 
 ipcMain.on('restart-app', () => {
   autoUpdater.quitAndInstall();
