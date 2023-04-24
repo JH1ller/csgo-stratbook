@@ -3,7 +3,7 @@ export const getEmbedURL = (videoId: string, timestamp = '0'): string => {
 };
 
 export const extractVideoId = (videoURL: string): string | undefined => {
-  const regExp = /^.*youtu\.?be.*(\/|\?v=|shorts\/)([a-zA-Z0-9]{11})/;
+  const regExp = /^.*youtu\.?be.*(\/|\?v=|shorts\/)([\w]{11})/;
   const match = videoURL.match(regExp);
   if (match) return match.at(-1);
 };
