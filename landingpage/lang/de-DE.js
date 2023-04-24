@@ -72,6 +72,15 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '2.3.1',
+        date: '2023-04-24',
+        changes: [
+          'Decreased size of player icons on tactics board',
+          'Youtube Shorts links can now be added to utilities',
+          'Upgrade desktop app to latest chromium version',
+        ],
+      },
+      {
         version: '2.3.0',
         date: '2023-04-19',
         changes: [

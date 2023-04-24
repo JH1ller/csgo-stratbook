@@ -9,5 +9,6 @@ declare global {
         load: () => void;
       };
     };
+    appVersion: string;
   }
 }

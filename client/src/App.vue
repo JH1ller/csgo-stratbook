@@ -89,6 +89,7 @@ export default class App extends Vue {
     window.onbeforeunload = () => {
       this.wsService.disconnect();
     };
+    window.appVersion = this.appVersion;
   }
 
   private checkVersion() {
