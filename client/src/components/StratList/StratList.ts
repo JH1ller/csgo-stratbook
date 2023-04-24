@@ -33,8 +33,8 @@ export default class StratList extends Vue {
   }
 
   handleSortEnd({ newIndex, oldIndex }: any) {
-    this.stratItemComponents[newIndex].resetComponentHeight();
-    this.stratItemComponents[oldIndex].resetComponentHeight();
+    this.stratItemComponents[newIndex].resetHeight();
+    this.stratItemComponents[oldIndex].resetHeight();
   }
 
   handleSortChange(strats: Strat[]) {
