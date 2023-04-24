@@ -79,7 +79,6 @@ export default class App extends Vue {
 
   private mounted() {
     if (this.isDesktop) {
-      this.initAutoUpdate();
       this.initTracking();
     } else {
       this.checkCookies();
@@ -109,27 +108,6 @@ export default class App extends Vue {
       );
     }
     this.storageService.set('version', this.appVersion);
-  }
-
-  private async initAutoUpdate() {
-    const { ipcRenderer } = await import('electron');
-
-    ipcRenderer.on('update-downloaded', (_event, version: string) => {
-      ipcRenderer.removeAllListeners('update-downloaded');
-      // TODO: check if we can remove this, since manual updates are not used anymore
-      catchPromise(
-        this.showDialog({
-          key: 'app/update-downloaded',
-          text: `A new update has been downloaded. (${this.appVersion} -> ${version})<br>An app restart is required for the update to take effect. Restart now?`,
-          resolveBtn: 'Restart',
-          htmlMode: true,
-        }),
-        () => ipcRenderer.send('restart-app'),
-      );
-    });
-
-    ipcRenderer.send('app-ready');
-    ipcRenderer.send('start-game-mode');
   }
 
   private checkCookies() {

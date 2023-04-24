@@ -1,4 +1,5 @@
 import FormField, { FormFieldData } from './FormField';
+import { extractVideoId } from './youtubeUtils';
 
 export const validateForm = (formData: Record<string, FormField>): boolean => {
   for (const field of Object.values(formData)) {
@@ -18,7 +19,6 @@ export class Validators {
   static pwRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$/;
   static numberRegex = /^\d+$/;
   static urlRegex = /(https?:\/\/)?([\w-])+\.{1}([a-zA-Z]{2,63})([/\w-]*)*\/?\??([^#\n\r]*)?#?([^\n\r]*)/;
-  static youtubeRegex = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
 
   static notEmpty(): ValidatorFunction {
     const errorMessage = 'Field cannot be empty.';
@@ -138,7 +138,7 @@ export class Validators {
   static isYoutubeLink(): ValidatorFunction {
     const errorMessage = `Currently only youtube is supported.`;
     return (data) => {
-      const expressionResult = data.value.match(this.youtubeRegex)?.[7]?.length === 11;
+      const expressionResult = !!extractVideoId(data.value);
       const result = data.required ? expressionResult : data.value.length ? expressionResult : true;
       if (!result) {
         data.errors.push(errorMessage);

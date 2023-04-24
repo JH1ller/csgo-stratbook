@@ -130,11 +130,7 @@ export default class MapView extends Vue {
       this.showToast({ id: 'SketchTool::joinWithLinkOrRoomId', text: 'Please enter a room ID to join.' });
       return;
     }
-    const targetRoomId = this.inputRoomId.includes('/')
-      ? // can't use .at(-1) because Vetur doesn't support TS 4.6
-        // and Volar doesn't support Vue 2 Class Components :(
-        this.inputRoomId.split('/')[this.inputRoomId.split('/').length - 1]
-      : this.inputRoomId;
+    const targetRoomId = this.inputRoomId.includes('/') ? this.inputRoomId.split('/').at(-1) : this.inputRoomId;
     this.sketchTool.connect(targetRoomId);
     this.trackJoin();
   }

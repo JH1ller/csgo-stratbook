@@ -180,8 +180,8 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       id: item.id,
       x: item.x,
       y: item.y,
-      width: this.imageSize,
-      height: this.imageSize,
+      width: 35,
+      height: 35,
       strokeWidth: 1,
       draggable: this.activeTool === ToolTypes.Pointer,
       //! potential memory leak
@@ -192,7 +192,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       skewX: item.skewX,
       skewY: item.skewY,
       type: 'player',
-      offset: { x: this.imageSize / 2, y: this.imageSize / 2 },
+      offset: { x: 35 / 2, y: 35 / 2 },
     };
   }
 
