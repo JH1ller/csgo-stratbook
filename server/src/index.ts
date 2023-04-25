@@ -7,7 +7,6 @@ import compression from 'compression';
 import { createServer, IncomingMessage } from 'http';
 import { Server } from 'socket.io';
 import mongoose from 'mongoose';
-import historyFallback from 'connect-history-api-fallback';
 import cors from 'cors';
 import subdomain from 'express-subdomain';
 import { initialize } from './sockets';
@@ -41,6 +40,8 @@ const io = new Server(httpServer, {
 const port = process.env.PORT || 3000;
 
 const isDev = process.env.NODE_ENV === 'development';
+
+mongoose.set('strictQuery', false);
 
 mongoose.connect(isDev ? process.env.DATABASE_URL_DEV! : process.env.DATABASE_URL!);
 

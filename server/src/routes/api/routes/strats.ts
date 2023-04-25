@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { StratModel } from '@/models/strat';
+import { Strat, StratModel } from '@/models/strat';
 import { getStrat } from '@/utils/getters';
 import { verifyAuth } from '@/utils/verifyToken';
 import { sanitize } from '@/utils/sanitizeHtml';
@@ -64,7 +64,7 @@ router.post('/share/:id', verifyAuth, async (req, res) => {
   }
 
   const stratCopy = new StratModel({
-    ...strat.toObject({
+    ...strat.toObject<Strat>({
       transform: (_doc, ret) => {
         delete ret._id;
         delete ret.team;
