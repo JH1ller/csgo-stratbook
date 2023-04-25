@@ -45,7 +45,7 @@ router.post('/', verifyAuth, uploadMultiple('images'), async (req, res) => {
     const fileNames = await Promise.all(
       req.files.map(async (file) => {
         return await processImage(file, 1920, 1080);
-      })
+      }),
     );
     utility.images.push(...fileNames);
   }
@@ -86,7 +86,7 @@ router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, 
     const fileNames = await Promise.all(
       req.files.map(async (file) => {
         return await processImage(file, 1920, 1080);
-      })
+      }),
     );
     res.locals.utility.images.push(...fileNames);
   }
@@ -97,7 +97,7 @@ router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, 
     await Promise.all(
       imagesToDelete.map(async (image: string) => {
         await deleteFile(image);
-      })
+      }),
     );
   }
 
@@ -112,6 +112,13 @@ router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, 
 router.delete('/:utility_id', verifyAuth, getUtility, async (req, res) => {
   if (!res.locals.player.team.equals(res.locals.utility.team)) {
     return res.status(400).json({ error: 'Cannot delete a utility of another team.' });
+  }
+  if (res.locals.utility.images.length) {
+    await Promise.all(
+      res.locals.utility.images.map(async (image: string) => {
+        await deleteFile(image);
+      }),
+    );
   }
   await res.locals.utility.delete();
   res.json({ message: 'Deleted utility successfully' });
