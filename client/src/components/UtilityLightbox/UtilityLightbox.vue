@@ -6,7 +6,7 @@
         class="utility-lightbox__media"
         id="ytplayer"
         type="text/html"
-        :src="getEmbedURL(extractVideoId(currentMedia.src) || '', extractTimestamp(currentMedia.src))"
+        :src="getEmbedURL(currentMedia.src)"
         frameborder="0"
       />
       <SmartImage
@@ -34,7 +34,7 @@
       <SmartImage
         v-for="(item, index) in mediaList"
         :key="item.src"
-        :src="item.type === 'image' ? resolveImage(item.src) : getThumbnailURL(extractVideoId(item.src) || '')"
+        :src="item.type === 'image' ? resolveImage(item.src) : getThumbnailURL(item.src)"
         class="utility-lightbox__preview"
         @click.native="goToIndex(index)"
         :class="{ '-active': index === currentMediaIndex }"
