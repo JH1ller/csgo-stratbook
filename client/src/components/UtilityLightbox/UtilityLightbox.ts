@@ -9,7 +9,7 @@ import PosePicker from '@/components/PosePicker/PosePicker.vue';
 import SmartImage from '@/components/SmartImage/SmartImage.vue';
 import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
 import isMobile from 'is-mobile';
-import { extractTimestamp, extractVideoId, getEmbedURL, getThumbnailURL } from '@/utils/youtubeUtils';
+import { parseYoutubeUrl, getEmbedURL, getThumbnailURL } from '@/utils/youtubeUtils';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import { appModule } from '@/store/namespaces';
@@ -40,12 +40,6 @@ export default class UtilityLightbox extends Mixins(CloseOnEscape) {
   private UtilityMovement: typeof UtilityMovement = UtilityMovement;
   private Sides: typeof Sides = Sides;
 
-  // * declare imported util functions
-  private getEmbedURL: typeof getEmbedURL = getEmbedURL;
-  private getThumbnailURL: typeof getThumbnailURL = getThumbnailURL;
-  private extractVideoId: typeof extractVideoId = extractVideoId;
-  private extractTimestamp: typeof extractTimestamp = extractTimestamp;
-
   private trackingService = TrackingService.getInstance();
 
   private get currentMedia(): LightboxMedia | undefined {
@@ -61,6 +55,16 @@ export default class UtilityLightbox extends Mixins(CloseOnEscape) {
 
   private resolveImage(fileURL: string) {
     return resolveStaticImageUrl(fileURL);
+  }
+
+  private getEmbedURL(url: string): string {
+    const { id, timestamp } = parseYoutubeUrl(url)!;
+    return getEmbedURL(id, timestamp);
+  }
+
+  private getThumbnailURL(url: string): string {
+    const { id } = parseYoutubeUrl(url)!;
+    return getThumbnailURL(id);
   }
 
   private mounted() {
