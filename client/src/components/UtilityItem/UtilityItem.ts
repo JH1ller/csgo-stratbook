@@ -19,9 +19,6 @@ export default class UtilityItem extends Vue {
   private UtilityMovement: typeof UtilityMovement = UtilityMovement;
   private Sides: typeof Sides = Sides;
 
-  private getThumbnailURL: typeof getThumbnailURL = getThumbnailURL;
-  private parseYoutubeUrl: typeof parseYoutubeUrl = parseYoutubeUrl;
-
   private get utilityImage(): string | undefined {
     if (this.utility.images.length) {
       return resolveStaticImageUrl(this.utility.images[0]);
