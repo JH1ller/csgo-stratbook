@@ -1,5 +1,5 @@
 import FormField, { FormFieldData } from './FormField';
-import { extractVideoId } from './youtubeUtils';
+import { parseYoutubeUrl } from './youtubeUtils';
 
 export const validateForm = (formData: Record<string, FormField>): boolean => {
   for (const field of Object.values(formData)) {
@@ -138,7 +138,7 @@ export class Validators {
   static isYoutubeLink(): ValidatorFunction {
     const errorMessage = `Currently only youtube is supported.`;
     return (data) => {
-      const expressionResult = !!extractVideoId(data.value);
+      const expressionResult = !!parseYoutubeUrl(data.value);
       const result = data.required ? expressionResult : data.value.length ? expressionResult : true;
       if (!result) {
         data.errors.push(errorMessage);

@@ -4,7 +4,7 @@ import { UtilityMovement } from '@/api/models/UtilityMovement';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 import UtilityTypeDisplay from '@/components/UtilityTypeDisplay/UtilityTypeDisplay.vue';
-import { extractVideoId, getThumbnailURL } from '@/utils/youtubeUtils';
+import { parseYoutubeUrl, getThumbnailURL } from '@/utils/youtubeUtils';
 import SmartImage from '@/components/SmartImage/SmartImage.vue';
 
 @Component({
@@ -19,16 +19,13 @@ export default class UtilityItem extends Vue {
   private UtilityMovement: typeof UtilityMovement = UtilityMovement;
   private Sides: typeof Sides = Sides;
 
-  private getThumbnailURL: typeof getThumbnailURL = getThumbnailURL;
-  private extractVideoId: typeof extractVideoId = extractVideoId;
-
   private get utilityImage(): string | undefined {
     if (this.utility.images.length) {
       return resolveStaticImageUrl(this.utility.images[0]);
     }
 
     if (this.utility.videoLink) {
-      return getThumbnailURL(extractVideoId(this.utility.videoLink)!);
+      return getThumbnailURL(parseYoutubeUrl(this.utility.videoLink)!.id);
     }
   }
 

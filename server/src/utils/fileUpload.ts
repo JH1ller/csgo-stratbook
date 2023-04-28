@@ -3,14 +3,20 @@ import path from 'path';
 import crypto from 'crypto';
 import sharp from 'sharp';
 import { unlinkSync, renameSync, readFileSync, mkdirSync, existsSync } from 'fs';
-import AWS from 'aws-sdk';
+import { Upload } from '@aws-sdk/lib-storage';
+import AWS_S3, { S3 } from '@aws-sdk/client-s3';
 import { Request, RequestHandler } from 'express';
 import ImageProcessError from './errors/ImageProcessError';
 import { Log } from './logger';
 
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+const s3 = new S3({
+  //accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  //secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
+  region: 'eu-central-1',
 });
 
 const fileStorage = multer.diskStorage({
@@ -108,15 +114,18 @@ export const processImage = async (file: Express.Multer.File, targetWidth: numbe
 export const uploadFile = async (filepath: string, filename: string) => {
   try {
     const fileContent = readFileSync(filepath);
-    const params: AWS.S3.PutObjectRequest = {
+    const params: AWS_S3.PutObjectCommandInput = {
       Bucket: process.env.S3_BUCKET_NAME!,
       Key: filename, // filename on S3
       Body: fileContent,
     };
-    const data = await s3.upload(params).promise();
-    Log.success('fileUpload::uploadFile', `File uploaded successfully. ${data.Location}`);
+    const data: AWS_S3.CompleteMultipartUploadOutput = await new Upload({
+      client: s3,
+      params,
+    }).done();
+    Log.success('fileUpload::uploadFile', `File uploaded successfully. Key: ${data.Location}`);
 
-    return data.Location;
+    return data;
   } catch (error) {
     Log.error('fileUpload::uploadFile', error.message);
     throw error;
@@ -125,14 +134,14 @@ export const uploadFile = async (filepath: string, filename: string) => {
 
 export const deleteFile = async (filename: string): Promise<void> => {
   try {
-    const params: AWS.S3.DeleteObjectRequest = {
+    const params: AWS_S3.DeleteObjectCommandInput = {
       Bucket: process.env.S3_BUCKET_NAME!,
       Key: filename, // filename on S3
     };
 
-    const data = await s3.deleteObject(params).promise();
+    const data = await s3.deleteObject(params);
 
-    Log.success('fileUpload::deleteFile', `File deleted successfully. ${data.$response.data}`);
+    Log.success('fileUpload::deleteFile', `File deleted successfully. Key: ${filename}`);
     return;
   } catch (error) {
     throw new Error((error as Error).message);
