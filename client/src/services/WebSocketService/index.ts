@@ -155,7 +155,7 @@ class WebSocketService {
       store.dispatch('strat/addStratLocally', data);
     });
 
-    this.socket.on('updated-strat', (data: { strat: Strat }) => {
+    this.socket.on('updated-strats', (data) => {
       Log.info('ws::updated', data);
       store.dispatch('strat/updateStratLocally', data);
     });

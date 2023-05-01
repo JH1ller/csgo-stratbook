@@ -6,6 +6,7 @@ import { DrawBoardState } from '@/types';
 const arrNotEmpty = (value: unknown[]) => !!value.length;
 
 export interface Strat {
+  _id: string;
   name: string;
   map: GameMap;
   team: Types.ObjectId;
@@ -24,7 +25,7 @@ export interface Strat {
   index: number;
 }
 
-export type StratDocument = Document<unknown, any, Strat>;
+export type StratDocument = Document<Types.ObjectId, any, Strat>;
 
 const drawBoardStateSchema = new Schema<DrawBoardState>({
   images: [Object],

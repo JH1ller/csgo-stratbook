@@ -36,8 +36,8 @@ export class StratService {
     return ApiService.makeRequest<Strat>(ApiService.http.post(this.endpoint, strat));
   }
 
-  async updateStrat(payload: Partial<Strat>): Promise<APIResponse<Strat>> {
-    return ApiService.makeRequest<Strat>(ApiService.http.patch(this.endpoint, payload));
+  async updateStrats(payload: Partial<Strat>[]): Promise<APIResponse<Strat[]>> {
+    return ApiService.makeRequest<Strat[]>(ApiService.http.patch(this.endpoint, payload));
   }
 
   async addSharedStrat(stratID: string): Promise<APIResponse<Strat>> {

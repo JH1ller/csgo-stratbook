@@ -70,9 +70,9 @@ export const stratModule: Module<StratState, RootState> = {
     async fetchStrats({ commit }) {
       const res = await api.strat.getStrats();
       if (res.success) {
-        const stratsWithSort = res.success.map((strat, index) => ({ ...strat, index }));
-        commit(SET_STRATS, stratsWithSort);
-        return { success: stratsWithSort };
+        //const stratsWithSort = res.success.map((strat, index) => ({ ...strat, index }));
+        commit(SET_STRATS, res.success);
+        return { success: res.success };
       } else {
         return { error: res.error };
       }
@@ -100,14 +100,14 @@ export const stratModule: Module<StratState, RootState> = {
         return res.success;
       }
     },
-    updateStrat(_, payload: Partial<Strat>) {
-      api.strat.updateStrat(payload);
+    updateStrats(_, payload: Partial<Strat>[]) {
+      api.strat.updateStrats(payload);
     },
     updateStratsLocally({ commit }, strats: Strat[]) {
       commit(SET_STRATS, strats);
     },
     async shareStrat({ dispatch, state }, stratID: string) {
-      const res = await api.strat.updateStrat({ _id: stratID, shared: true });
+      const res = await api.strat.updateStrats([{ _id: stratID, shared: true }]);
       if (res.success) {
         const shareLink = `${window.location.origin}/#/share/${stratID}`;
         writeToClipboard(shareLink);
@@ -118,7 +118,7 @@ export const stratModule: Module<StratState, RootState> = {
       }
     },
     async unshareStrat({ dispatch }, stratID: string) {
-      const res = await api.strat.updateStrat({ _id: stratID, shared: false });
+      const res = await api.strat.updateStrats([{ _id: stratID, shared: false }]);
       if (res.success) {
         dispatch('app/showToast', { id: 'strat/unshareStrat', text: 'Strat is no longer shared.' }, { root: true });
       }

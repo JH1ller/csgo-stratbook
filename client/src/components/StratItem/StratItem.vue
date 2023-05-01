@@ -3,7 +3,7 @@
     <div class="strat-item__header" @click="!editMode && toggleCollapse()">
       <div class="strat-item__title-wrapper">
         <span class="strat-item__title">
-          {{ strat.name }}
+          {{ strat.index + ' | ' + strat.name }}
           <span v-if="!strat.active" class="strat-item__inactive-label">(inactive)</span>
         </span>
         <p class="strat-item__note" v-if="strat.note">

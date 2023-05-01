@@ -27,7 +27,7 @@ interface ServerToClientEvents {
   'map-updated': (payload: { map: GameMap; stratName?: string; drawData: DrawBoardState; id: string }) => void;
   // other data update events
   'created-strat': (payload: { strat: Strat }) => void;
-  'updated-strat': (payload: { strat: Strat }) => void;
+  'updated-strats': (payload: { strats: Strat[] }) => void;
   'deleted-strat': (payload: { stratId: string }) => void;
   'created-utility': (payload: { utility: Utility }) => void;
   'updated-utility': (payload: { utility: Utility }) => void;

@@ -3,7 +3,6 @@
     class="strat-list"
     lockAxis="y"
     @input="handleSortChange"
-    @sort-end="handleSortEnd"
     :value="strats"
     tag="div"
     :lockToContainerEdges="true"
