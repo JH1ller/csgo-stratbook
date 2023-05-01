@@ -22,11 +22,15 @@
   &__title {
     font-size: 1.2em;
     font-weight: bold;
-    display: inline;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__title-wrapper {
     margin-top: 6px;
+    flex: 1;
+    min-width: 0;
   }
 
   &__inactive-label {
@@ -199,7 +203,7 @@
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    height: 56px;
+    height: 48px;
     color: var(--color-text-secondary);
     cursor: grab;
   }

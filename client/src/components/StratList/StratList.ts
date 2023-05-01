@@ -1,8 +1,8 @@
-import { Component, Prop, Vue, Emit, Ref, Watch } from 'vue-property-decorator';
+import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
 import StratItem from '@/components/StratItem/StratItem.vue';
 import type IStratItem from '@/components/StratItem/StratItem';
-import { Strat } from '@/api/models/Strat';
-import { StratTypes } from '@/api/models/StratTypes';
+import type { Strat } from '@/api/models/Strat';
+import type { StratTypes } from '@/api/models/StratTypes';
 import { Sides } from '@/api/models/Sides';
 import { Listen } from '@/utils/decorators/listen.decorator';
 import { debounce, DebouncedFunc } from 'lodash-es';
@@ -17,9 +17,8 @@ import { stratModule } from '@/store/namespaces';
   },
 })
 export default class StratList extends Vue {
-  @stratModule.Action updateStratsLocally!: (strats: Strat[]) => Promise<void>;
   @stratModule.Action updateStrats!: (payload: Partial<Strat>[]) => Promise<void>;
-  @stratModule.Action fetchStrats!: () => Promise<void>;
+  @stratModule.Action updateMultipleStratLocally!: (payload: { strats: Strat[] }) => Promise<void>;
   @Prop() completedTutorial!: boolean;
   @Prop() tutorialStrat!: Strat | null;
   @Prop() strats!: Strat[];
@@ -35,24 +34,13 @@ export default class StratList extends Vue {
   }
 
   async handleSortChange(strats: Strat[]) {
-    console.log(strats.map((s) => s.name + ' i = ' + s.index));
-    // await Promise.all(
-    //   strats.map(async (strat, i) => {
-    //     if (this.strats[i]._id !== strat._id) {
-    //       console.log('update strat ', strat.name, 'index old: ', strat.index, 'index new: ', i);
-    //       await this.updateStrats({ _id: strat._id, index: i });
-    //     }
-    //   }),
-    // );
-    const mappedStrats = strats.map((strat, i) => ({ _id: strat._id, index: i }));
-    console.log('mappedStrats', mappedStrats);
+    const mappedStrats = strats.map((strat, i) => ({ ...strat, index: i }));
     const stratsToUpdate = mappedStrats.filter(
       (strat) => this.strats.find((s) => s._id === strat._id)!.index !== strat.index,
     );
-    console.log('stratsToUpdate', stratsToUpdate);
+    if (!stratsToUpdate.length) return;
+    this.updateMultipleStratLocally({ strats: stratsToUpdate });
     await this.updateStrats(stratsToUpdate);
-    //this.fetchStrats();
-    //await this.updateStratsLocally(strats.map((strat, index) => ({ ...strat, index })));
   }
 
   @Listen('resize', { window: true })
@@ -61,12 +49,6 @@ export default class StratList extends Vue {
       this.prevWidth = window.innerWidth;
       this.debouncedResizeHandler();
     }
-  }
-
-  @Watch('strats')
-  stratsChanged(from: Strat[], to: Strat[]) {
-    console.log('stratsChanged');
-    console.log(from, to);
   }
 
   get debouncedResizeHandler(): DebouncedFunc<() => void> {

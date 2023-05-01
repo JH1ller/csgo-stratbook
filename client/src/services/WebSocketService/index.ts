@@ -155,9 +155,14 @@ class WebSocketService {
       store.dispatch('strat/addStratLocally', data);
     });
 
-    this.socket.on('updated-strats', (data) => {
+    this.socket.on('updated-strat', (data) => {
       Log.info('ws::updated', data);
       store.dispatch('strat/updateStratLocally', data);
+    });
+
+    this.socket.on('updated-strats', (data) => {
+      Log.info('ws::updated', data);
+      store.dispatch('strat/updateMultipleStratLocally', data);
     });
 
     this.socket.on('deleted-strat', (data: { stratId: string }) => {

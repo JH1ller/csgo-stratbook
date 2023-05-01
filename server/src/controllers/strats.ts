@@ -1,7 +1,7 @@
-import type { Strat, StratDocument } from '@/models/strat';
+import type { Strat } from '@/models/strat';
 import { minifyHtml } from '@/utils/minifyHtml';
 import { sanitize } from '@/utils/sanitizeHtml';
-import type { Document } from 'mongoose';
+import type { Document, Types } from 'mongoose';
 
 const updatableFields: (keyof Strat)[] = [
   'name',
@@ -21,24 +21,28 @@ type StratDoc = Document<unknown, any, Strat> &
   Omit<
     Strat &
       Required<{
-        _id: string;
+        _id: Types.ObjectId;
       }>,
     never
-  >;
+  > & {
+    [key: string]: any;
+  };
 
-export const updateStrats = async (strats: StratDoc[], stratUpdates: Partial<StratDoc>[]) => {
-  const stratUpdatePromises = strats.map(async (strat, i) => {
-    Object.entries(stratUpdates[i]).forEach(([key, value]) => {
+export const updateStrats = async (strats: StratDoc[], stratPatches: Partial<StratDoc>[]) => {
+  const stratUpdatePromises = strats.map(async (strat) => {
+    const patch = stratPatches.find((p) => strat._id.equals(p._id!));
+    if (!patch) throw new Error('Strat update _id mismatch');
+    Object.entries(patch).forEach(([key, value]) => {
       // check for undefined / null, but accept empty string ''
       if (value != null && updatableFields.includes(key as keyof Strat)) {
         if (key === 'content') {
-          strat[key] = minifyHtml(sanitize(value as string));
+          strat[key.toString()] = minifyHtml(sanitize(value as string));
         } else {
-          //@ts-ignore
-          strat[key] = value;
+          strat[key.toString()] = value;
         }
       }
     });
+
     return await strat.save();
   });
   return await Promise.all(stratUpdatePromises);

@@ -88,7 +88,20 @@ router.post('/share/:id', verifyAuth, async (req, res) => {
 });
 
 // * Update One
-router.patch('/', verifyAuth, getStrats, async (req, res) => {
+router.patch('/', verifyAuth, getStrat, async (req, res) => {
+  if (!res.locals.player.team.equals(res.locals.strat.team)) {
+    return res.status(400).json({ error: 'Cannot update a strat of another team.' });
+  }
+
+  const updatedStrats = await updateStrats([res.locals.strat], [req.body]);
+  res.json(updatedStrats[0]);
+  (req.app.get('io') as TypedServer)
+    .to(updatedStrats[0].team.toString())
+    .emit('updated-strat', { strat: updatedStrats[0].toObject() });
+});
+
+// * Update Multiple
+router.patch('/batch', verifyAuth, getStrats, async (req, res) => {
   if (res.locals.strats.some((strat: Strat) => !res.locals.player.team.equals(strat.team))) {
     return res.status(400).json({ error: 'Cannot update a strat of another team.' });
   }

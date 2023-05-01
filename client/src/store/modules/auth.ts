@@ -60,17 +60,15 @@ export const authModule: Module<AuthState, RootState> = {
             'app/showDialog',
             {
               key: 'auth/updateProfile',
-              text:
-                'Would you like to replace your name in all strat mentions? This will do a simple find/replace and may lead to errors in the strat.',
+              text: 'Would you like to replace your name in all strat mentions? This will do a simple find/replace and may lead to errors in the strat.',
               resolveBtn: 'Yes',
               rejectBtn: 'No',
             },
             { root: true },
           );
           updateStrats = true;
-        } catch (error) {
-          updateStrats = false; // * not needed, but to prevent empty block statement
-        }
+          // eslint-disable-next-line no-empty
+        } catch (error) {}
       }
 
       const res = await api.player.updatePlayer(data, updateStrats);

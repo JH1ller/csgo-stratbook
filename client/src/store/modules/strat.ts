@@ -14,6 +14,7 @@ const SET_STRATS = 'SET_STRATS';
 
 const ADD_STRAT = 'ADD_STRAT';
 const UPDATE_STRAT = 'UPDATE_STRAT';
+const UPDATE_STRATS = 'UPDATE_STRATS';
 const DELETE_STRAT = 'DELETE_STRAT';
 const SET_COLLAPSED = 'SET_COLLAPSED';
 const SET_EDITED = 'SET_EDITED';
@@ -100,11 +101,11 @@ export const stratModule: Module<StratState, RootState> = {
         return res.success;
       }
     },
-    updateStrats(_, payload: Partial<Strat>[]) {
-      api.strat.updateStrats(payload);
+    updateStrat(_, payload: Partial<Strat>) {
+      api.strat.updateStrat(payload);
     },
-    updateStratsLocally({ commit }, strats: Strat[]) {
-      commit(SET_STRATS, strats);
+    async updateStrats(_, payload: Partial<Strat>[]) {
+      api.strat.updateStrats(payload);
     },
     async shareStrat({ dispatch, state }, stratID: string) {
       const res = await api.strat.updateStrats([{ _id: stratID, shared: true }]);
@@ -153,7 +154,10 @@ export const stratModule: Module<StratState, RootState> = {
       commit(ADD_STRAT, payload.strat);
     },
     updateStratLocally({ commit }, payload: { strat: Strat }) {
-      commit(UPDATE_STRAT, payload);
+      commit(UPDATE_STRAT, payload.strat);
+    },
+    updateMultipleStratLocally({ commit }, payload: { strats: Strat[] }) {
+      commit(UPDATE_STRATS, payload.strats);
     },
     deleteStratLocally({ commit }, payload: { stratId: string }) {
       commit(DELETE_STRAT, payload.stratId);
@@ -213,9 +217,19 @@ export const stratModule: Module<StratState, RootState> = {
     [ADD_STRAT](state, strat: Strat) {
       state.strats.push(strat);
     },
-    [UPDATE_STRAT](state, payload: { strat: Strat }) {
-      const strat = state.strats.find((strat) => strat._id === payload.strat._id);
-      if (strat) Object.assign(strat, payload.strat);
+    [UPDATE_STRAT](state, strat: Strat) {
+      const targetStrat = state.strats.find((stateStrat) => stateStrat._id === strat._id);
+      if (targetStrat) Object.assign(targetStrat, strat);
+    },
+    [UPDATE_STRATS](state, strats: Strat[]) {
+      // strats.forEach((updatedStrat) => {
+      //   const index = state.strats.findIndex((strat) => strat._id === updatedStrat._id);
+      //   if (index !== -1) {
+      //     // Replace the existing strat with the updated strat
+      //     state.strats.splice(index, 1, updatedStrat);
+      //   }
+      // });
+      state.strats = [...state.strats.filter((stateStrat) => !strats.some((s) => s._id === stateStrat._id)), ...strats];
     },
     [DELETE_STRAT](state, stratID: string) {
       state.strats = state.strats.filter((strat) => strat._id !== stratID);

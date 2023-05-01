@@ -6,6 +6,7 @@ import { APIResponse, Endpoints, Message } from './types';
 export enum Actions {
   Share = 'share',
   Export = 'export',
+  Batch = 'batch',
 }
 
 export class StratService {
@@ -36,8 +37,13 @@ export class StratService {
     return ApiService.makeRequest<Strat>(ApiService.http.post(this.endpoint, strat));
   }
 
+  async updateStrat(payload: Partial<Strat>): Promise<APIResponse<Strat>> {
+    return ApiService.makeRequest<Strat>(ApiService.http.patch(this.endpoint, payload));
+  }
+
   async updateStrats(payload: Partial<Strat>[]): Promise<APIResponse<Strat[]>> {
-    return ApiService.makeRequest<Strat[]>(ApiService.http.patch(this.endpoint, payload));
+    const target = urljoin(this.endpoint, Actions.Batch);
+    return ApiService.makeRequest<Strat[]>(ApiService.http.patch(target, payload));
   }
 
   async addSharedStrat(stratID: string): Promise<APIResponse<Strat>> {
