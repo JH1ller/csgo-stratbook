@@ -19,5 +19,6 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     'no-case-declarations': 'off',
     'no-debugger': 'off',
+    'vue/multi-word-component-names': 'off',
   },
 };
