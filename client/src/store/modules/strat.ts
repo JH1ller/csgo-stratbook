@@ -1,11 +1,11 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
-import { Strat } from '@/api/models/Strat';
+import type { Strat } from '@/api/models/Strat';
 import api from '@/api/base';
 import TrackingService from '@/services/tracking.service';
 import { extractTextFromHTML } from '@/utils/extractTextFromHTML';
 import StorageService from '@/services/storage.service';
-import { sortDateAddedASC, sortDateAddedDESC } from '@/utils/sortFunctions';
+import { sortFunctions, Sort } from '@/utils/sortFunctions';
 import { writeToClipboard } from '@/utils/writeToClipboard';
 import { getFormattedDate } from '@/utils/getFormattedDate';
 import { downloadFile } from '@/utils/downloadFile';
@@ -21,11 +21,6 @@ const SET_EDITED = 'SET_EDITED';
 const SET_SORT = 'SET_SORT';
 
 const RESET_STATE = 'RESET_STATE';
-
-export enum Sort {
-  DateAddedASC,
-  DateAddedDESC,
-}
 
 export interface StratState {
   strats: Strat[];
@@ -63,8 +58,8 @@ export const stratModule: Module<StratState, RootState> = {
           (inactive ? strat.active : true),
       );
     },
-    sortedFilteredStratsOfCurrentMap(_, getters): Strat[] {
-      return (getters.filteredStratsOfCurrentMap as Strat[]).sort((a, b) => a.index - b.index);
+    sortedFilteredStratsOfCurrentMap(state, getters): Strat[] {
+      return (getters.filteredStratsOfCurrentMap as Strat[]).sort(sortFunctions[state.sort]);
     },
   },
   actions: {
@@ -196,11 +191,22 @@ export const stratModule: Module<StratState, RootState> = {
     },
     updateSort({ commit, dispatch }, sort: Sort) {
       commit(SET_SORT, sort);
+      let toastMsg: string;
+      switch (sort) {
+        case Sort.DateAddedASC:
+          toastMsg = 'Sorting by: newest 🠖 oldest';
+          break;
+        case Sort.DateAddedDESC:
+          toastMsg = 'Sorting by: oldest 🠖 newest';
+          break;
+        case Sort.Manual:
+          toastMsg = 'Manual sorting';
+      }
       dispatch(
         'app/showToast',
         {
           id: 'strat/updateSort',
-          text: sort === Sort.DateAddedASC ? 'Sorting by: newest 🠖 oldest' : 'Sorting by: oldest 🠖 newest',
+          text: toastMsg,
           allowMultiple: true,
         },
         { root: true },

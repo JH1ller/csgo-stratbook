@@ -49,7 +49,7 @@
         />
         <FloatingButton
           class="strats-view__floating-sort"
-          :icon="sort === Sort.DateAddedASC ? 'sort-amount-down' : 'sort-amount-up'"
+          :icon="sortBtnIcon"
           label="Sort"
           @click="toggleSort"
           v-tippy

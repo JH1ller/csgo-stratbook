@@ -10,18 +10,18 @@ import SketchTool from '@/components/SketchTool/SketchTool.vue';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { appModule, mapModule, stratModule, filterModule, teamModule, authModule } from '@/store/namespaces';
 import { StratFilters } from '@/store/modules/filter';
-import { Strat } from '@/api/models/Strat';
-import { Player } from '@/api/models/Player';
+import type { Strat } from '@/api/models/Strat';
+import type { Player } from '@/api/models/Player';
 import { StratTypes } from '@/api/models/StratTypes';
 import { Sides } from '@/api/models/Sides';
 import UtilityLightbox from '@/components/UtilityLightbox/UtilityLightbox.vue';
-import { Utility } from '@/api/models/Utility';
+import type { Utility } from '@/api/models/Utility';
 import { catchPromise } from '@/utils/catchPromise';
 import ShortcutService from '@/services/shortcut.service';
-import { Sort } from '@/store/modules/strat';
 import TrackingService from '@/services/tracking.service';
 import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
 import { GameMap } from '@/api/models/GameMap';
+import { Sort } from '@/utils/sortFunctions';
 
 @Component({
   components: {
@@ -227,12 +227,34 @@ export default class StratsView extends Vue {
     this.trackingService.track('Action: Toggle GameMode', { value: this.gameMode });
   }
 
+  private get sortBtnIcon() {
+    switch (this.sort) {
+      case Sort.DateAddedASC:
+        return 'sort-numeric-up-alt';
+      case Sort.DateAddedDESC:
+        return 'sort-numeric-down';
+      case Sort.Manual:
+        return 'sort';
+    }
+  }
+
   private async toggleSort() {
-    await this.updateSort(this.sort === Sort.DateAddedASC ? Sort.DateAddedDESC : Sort.DateAddedASC);
+    let newSort: Sort;
+    switch (this.sort) {
+      case Sort.DateAddedASC:
+        newSort = Sort.DateAddedDESC;
+        break;
+      case Sort.DateAddedDESC:
+        newSort = Sort.Manual;
+        break;
+      case Sort.Manual:
+        newSort = Sort.DateAddedASC;
+    }
+    await this.updateSort(newSort);
     // TODO: find better way
     this.stratList.$forceUpdate();
     this.trackingService.track('Action: Change Sort Direction', {
-      direction: this.sort === Sort.DateAddedASC ? 'Date Added ASC' : 'Date Added DESC',
+      direction: newSort,
     });
   }
 
