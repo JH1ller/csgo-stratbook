@@ -1,4 +1,6 @@
 .strats-view {
+  overflow-y: hidden;
+
   &__fab-group {
     display: flex;
     position: fixed;

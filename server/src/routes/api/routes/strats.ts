@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { Strat, StratModel } from '@/models/strat';
-import { getStrat } from '@/utils/getters';
+import { Strat, StratDocument, StratModel } from '@/models/strat';
+import { getStrat, getStrats } from '@/utils/getters';
 import { verifyAuth } from '@/utils/verifyToken';
 import { sanitize } from '@/utils/sanitizeHtml';
 import { minifyHtml } from '@/utils/minifyHtml';
@@ -8,6 +8,7 @@ import { TypedServer } from '@/sockets/interfaces';
 import { writeFile, mkdir, unlink } from 'fs/promises';
 import path from 'path';
 import { nanoid } from 'nanoid';
+import { updateStrats } from '@/controllers/strats';
 
 const router = Router();
 
@@ -91,34 +92,25 @@ router.patch('/', verifyAuth, getStrat, async (req, res) => {
   if (!res.locals.player.team.equals(res.locals.strat.team)) {
     return res.status(400).json({ error: 'Cannot update a strat of another team.' });
   }
-  const updatableFields = [
-    'name',
-    'map',
-    'side',
-    'types',
-    'active',
-    'videoLink',
-    'note',
-    'content',
-    'shared',
-    // TODO: probably remove this key because it's only updated on socket disconnect.
-    'drawData',
-  ];
-  Object.entries(req.body).forEach(([key, value]) => {
-    // check for undefined / null, but accept empty string ''
-    if (value != null && updatableFields.includes(key)) {
-      if (key === 'content') {
-        res.locals.strat[key.toString()] = minifyHtml(sanitize(value as string));
-      } else {
-        res.locals.strat[key.toString()] = value;
-      }
-    }
-  });
-  const updatedStrat = await res.locals.strat.save();
-  res.json(updatedStrat);
+
+  const updatedStrats = await updateStrats([res.locals.strat], [req.body]);
+  res.json(updatedStrats[0]);
   (req.app.get('io') as TypedServer)
-    .to(updatedStrat.team.toString())
-    .emit('updated-strat', { strat: updatedStrat.toObject() });
+    .to(updatedStrats[0].team.toString())
+    .emit('updated-strat', { strat: updatedStrats[0].toObject() });
+});
+
+// * Update Multiple
+router.patch('/batch', verifyAuth, getStrats, async (req, res) => {
+  if (res.locals.strats.some((strat: Strat) => !res.locals.player.team.equals(strat.team))) {
+    return res.status(400).json({ error: 'Cannot update a strat of another team.' });
+  }
+
+  const updatedStrats = await updateStrats(res.locals.strats, req.body);
+  res.json(updatedStrats);
+  (req.app.get('io') as TypedServer)
+    .to(updatedStrats[0].team.toString())
+    .emit('updated-strats', { strats: updatedStrats.map((strat) => strat.toObject()) });
 });
 
 // * Delete One

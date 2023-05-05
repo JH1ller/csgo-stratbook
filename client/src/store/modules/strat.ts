@@ -1,11 +1,11 @@
 import { Module } from 'vuex';
 import { RootState } from '..';
-import { Strat } from '@/api/models/Strat';
+import type { Strat } from '@/api/models/Strat';
 import api from '@/api/base';
 import TrackingService from '@/services/tracking.service';
 import { extractTextFromHTML } from '@/utils/extractTextFromHTML';
 import StorageService from '@/services/storage.service';
-import { sortDateAddedASC, sortDateAddedDESC } from '@/utils/sortFunctions';
+import { sortFunctions, Sort } from '@/utils/sortFunctions';
 import { writeToClipboard } from '@/utils/writeToClipboard';
 import { getFormattedDate } from '@/utils/getFormattedDate';
 import { downloadFile } from '@/utils/downloadFile';
@@ -14,17 +14,13 @@ const SET_STRATS = 'SET_STRATS';
 
 const ADD_STRAT = 'ADD_STRAT';
 const UPDATE_STRAT = 'UPDATE_STRAT';
+const UPDATE_STRATS = 'UPDATE_STRATS';
 const DELETE_STRAT = 'DELETE_STRAT';
 const SET_COLLAPSED = 'SET_COLLAPSED';
 const SET_EDITED = 'SET_EDITED';
 const SET_SORT = 'SET_SORT';
 
 const RESET_STATE = 'RESET_STATE';
-
-export enum Sort {
-  DateAddedASC,
-  DateAddedDESC,
-}
 
 export interface StratState {
   strats: Strat[];
@@ -63,15 +59,14 @@ export const stratModule: Module<StratState, RootState> = {
       );
     },
     sortedFilteredStratsOfCurrentMap(state, getters): Strat[] {
-      return (getters.filteredStratsOfCurrentMap as Strat[])
-        .sort(state.sort === Sort.DateAddedASC ? sortDateAddedASC : sortDateAddedDESC)
-        .sort((a, b) => +b.active - +a.active);
+      return (getters.filteredStratsOfCurrentMap as Strat[]).sort(sortFunctions[state.sort]);
     },
   },
   actions: {
     async fetchStrats({ commit }) {
       const res = await api.strat.getStrats();
       if (res.success) {
+        //const stratsWithSort = res.success.map((strat, index) => ({ ...strat, index }));
         commit(SET_STRATS, res.success);
         return { success: res.success };
       } else {
@@ -104,8 +99,11 @@ export const stratModule: Module<StratState, RootState> = {
     updateStrat(_, payload: Partial<Strat>) {
       api.strat.updateStrat(payload);
     },
+    async updateStrats(_, payload: Partial<Strat>[]) {
+      api.strat.updateStrats(payload);
+    },
     async shareStrat({ dispatch, state }, stratID: string) {
-      const res = await api.strat.updateStrat({ _id: stratID, shared: true });
+      const res = await api.strat.updateStrats([{ _id: stratID, shared: true }]);
       if (res.success) {
         const shareLink = `${window.location.origin}/#/share/${stratID}`;
         writeToClipboard(shareLink);
@@ -116,7 +114,7 @@ export const stratModule: Module<StratState, RootState> = {
       }
     },
     async unshareStrat({ dispatch }, stratID: string) {
-      const res = await api.strat.updateStrat({ _id: stratID, shared: false });
+      const res = await api.strat.updateStrats([{ _id: stratID, shared: false }]);
       if (res.success) {
         dispatch('app/showToast', { id: 'strat/unshareStrat', text: 'Strat is no longer shared.' }, { root: true });
       }
@@ -151,7 +149,10 @@ export const stratModule: Module<StratState, RootState> = {
       commit(ADD_STRAT, payload.strat);
     },
     updateStratLocally({ commit }, payload: { strat: Strat }) {
-      commit(UPDATE_STRAT, payload);
+      commit(UPDATE_STRAT, payload.strat);
+    },
+    updateMultipleStratLocally({ commit }, payload: { strats: Strat[] }) {
+      commit(UPDATE_STRATS, payload.strats);
     },
     deleteStratLocally({ commit }, payload: { stratId: string }) {
       commit(DELETE_STRAT, payload.stratId);
@@ -188,13 +189,31 @@ export const stratModule: Module<StratState, RootState> = {
         commit(SET_COLLAPSED, collapsed);
       }
     },
-    updateSort({ commit, dispatch }, sort: Sort) {
+    loadSortFromStorage({ commit }) {
+      const sort = storageService.get<Sort>('sort');
+      if (sort) {
+        commit(SET_SORT, sort);
+      }
+    },
+    updateSort({ state, commit, dispatch }, sort: Sort) {
       commit(SET_SORT, sort);
+      let toastMsg: string;
+      switch (sort) {
+        case Sort.DateAddedASC:
+          toastMsg = 'Sorting by: newest 🠖 oldest';
+          break;
+        case Sort.DateAddedDESC:
+          toastMsg = 'Sorting by: oldest 🠖 newest';
+          break;
+        case Sort.Manual:
+          toastMsg = 'Manual sorting';
+      }
+      storageService.set('sort', state.sort);
       dispatch(
         'app/showToast',
         {
           id: 'strat/updateSort',
-          text: sort === Sort.DateAddedASC ? 'Sorting by: newest 🠖 oldest' : 'Sorting by: oldest 🠖 newest',
+          text: toastMsg,
           allowMultiple: true,
         },
         { root: true },
@@ -211,9 +230,12 @@ export const stratModule: Module<StratState, RootState> = {
     [ADD_STRAT](state, strat: Strat) {
       state.strats.push(strat);
     },
-    [UPDATE_STRAT](state, payload: { strat: Strat }) {
-      const strat = state.strats.find((strat) => strat._id === payload.strat._id);
-      if (strat) Object.assign(strat, payload.strat);
+    [UPDATE_STRAT](state, strat: Strat) {
+      const targetStrat = state.strats.find((stateStrat) => stateStrat._id === strat._id);
+      if (targetStrat) Object.assign(targetStrat, strat);
+    },
+    [UPDATE_STRATS](state, strats: Strat[]) {
+      state.strats = [...state.strats.filter((stateStrat) => !strats.some((s) => s._id === stateStrat._id)), ...strats];
     },
     [DELETE_STRAT](state, stratID: string) {
       state.strats = state.strats.filter((strat) => strat._id !== stratID);

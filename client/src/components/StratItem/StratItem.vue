@@ -1,11 +1,11 @@
 <template>
-  <div class="strat-item" :class="{ '-inactive': !strat.active, '-collapsed': deferredCollapsed }">
+  <div class="strat-item" :class="{ '-inactive': !strat.active, '-collapsed': collapsed }">
     <div class="strat-item__header" @click="!editMode && toggleCollapse()">
       <div class="strat-item__title-wrapper">
-        <span class="strat-item__title">
+        <h3 class="strat-item__title">
           {{ strat.name }}
           <span v-if="!strat.active" class="strat-item__inactive-label">(inactive)</span>
-        </span>
+        </h3>
         <p class="strat-item__note" v-if="strat.note">
           <fa-icon icon="info-circle" />
           {{ strat.note }}
@@ -102,6 +102,7 @@
         </span>
       </transition>
     </div>
+    <fa-icon class="strat-item__drag-icon" icon="ellipsis-v" v-handle />
   </div>
 </template>
 

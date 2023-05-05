@@ -10,6 +10,7 @@ import { openLink } from '@/utils/openLink';
 import { StratTypes } from '@/api/models/StratTypes';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import { titleCase } from '@/utils/titleCase';
+import { HandleDirective } from 'vue-slicksort';
 
 @Component({
   components: {
@@ -17,6 +18,7 @@ import { titleCase } from '@/utils/titleCase';
     TypeBadge,
     SideBadge,
   },
+  directives: { handle: HandleDirective },
 })
 export default class StratItem extends Vue {
   @Prop() private gameMode!: boolean;
@@ -32,7 +34,7 @@ export default class StratItem extends Vue {
   private deferredCollapsed = false;
 
   private componentEl!: HTMLElement;
-  private componentHeight: number = 0;
+  componentHeight: number = 0;
 
   private editorKey = 0;
 
@@ -43,9 +45,10 @@ export default class StratItem extends Vue {
     this.setComponentHeight();
   }
 
-  resetHeight() {
-    this.deferredCollapsed = false;
+  async resetHeight() {
     this.componentEl.style.height = '';
+    this.deferredCollapsed = false;
+    await this.$nextTick();
     this.componentHeight = this.componentEl.clientHeight;
     this.deferredCollapsed = this.collapsed;
     this.setComponentHeight();
@@ -56,6 +59,11 @@ export default class StratItem extends Vue {
   private async collapsedChanged(to: boolean) {
     this.deferredCollapsed = to;
     this.setComponentHeight();
+  }
+
+  @Watch('strat', { deep: true })
+  private async stratChanged() {
+    this.resetHeight();
   }
 
   @Watch('editMode')
@@ -75,7 +83,7 @@ export default class StratItem extends Vue {
     );
   }
 
-  private setComponentHeight() {
+  setComponentHeight() {
     this.componentEl.style.height = this.deferredCollapsed ? '54px' : `${this.componentHeight + 5}px`;
   }
 

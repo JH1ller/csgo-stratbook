@@ -1,4 +1,5 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 import express, { Request, Response, NextFunction, RequestHandler } from 'express';
 import 'express-async-errors';
 import rateLimit from 'express-rate-limit';

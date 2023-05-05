@@ -153,7 +153,8 @@ export const leaveDrawRoomHandler = async (io: TypedServer, socket: TypedSocket)
     try {
       strat.drawData = boards[roomId].mapData.data;
       const updatedStrat = await strat.save();
-      io.to(player.team.toString()).emit('updated-strat', { strat: updatedStrat.toObject() });
+      // TODO: currently only updates correctly on the client when we use the batch event instead of 'update-strat'
+      io.to(player.team.toString()).emit('updated-strats', { strats: [updatedStrat.toObject()] });
       Log.debug('sockets::leave-draw-room', `Drawdata saved.`);
     } catch (error) {
       Log.error('sockets::leave-draw-room', error.message);

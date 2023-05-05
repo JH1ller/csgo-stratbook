@@ -14,6 +14,8 @@ module.exports = {
     ecmaVersion: 2020,
     sourceType: 'module',
   },
-  rules: {},
+  rules: {
+    '@typescript-eslint/no-non-null-assertion': 'off',
+  },
   plugins: ['prettier', '@typescript-eslint', 'security'],
 };

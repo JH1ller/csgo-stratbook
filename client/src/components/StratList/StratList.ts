@@ -1,30 +1,46 @@
 import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
 import StratItem from '@/components/StratItem/StratItem.vue';
 import type IStratItem from '@/components/StratItem/StratItem';
-import { Strat } from '@/api/models/Strat';
-import { StratTypes } from '@/api/models/StratTypes';
+import type { Strat } from '@/api/models/Strat';
+import type { StratTypes } from '@/api/models/StratTypes';
 import { Sides } from '@/api/models/Sides';
 import { Listen } from '@/utils/decorators/listen.decorator';
 import { debounce, DebouncedFunc } from 'lodash-es';
+import { SlickList, SlickItem } from 'vue-slicksort';
+import { stratModule } from '@/store/namespaces';
 
 @Component({
   components: {
     StratItem,
+    SlickList,
+    SlickItem,
   },
 })
 export default class StratList extends Vue {
+  @stratModule.Action updateStrats!: (payload: Partial<Strat>[]) => Promise<void>;
+  @stratModule.Action updateMultipleStratLocally!: (payload: { strats: Strat[] }) => Promise<void>;
   @Prop() completedTutorial!: boolean;
   @Prop() tutorialStrat!: Strat | null;
   @Prop() strats!: Strat[];
   @Prop() collapsedStrats!: string[];
   @Prop() editedStrats!: string[];
   @Prop() gameMode!: boolean;
-  @Ref() stratItems!: IStratItem[];
+  @Ref() stratItemComponents!: IStratItem[];
 
   prevWidth = window.innerWidth;
 
   private isCollapsed(strat: Strat) {
     return this.collapsedStrats.some((id) => id === strat._id);
+  }
+
+  async handleSortChange(strats: Strat[]) {
+    const mappedStrats = strats.map((strat, i) => ({ ...strat, index: i }));
+    const stratsToUpdate = mappedStrats.filter(
+      (strat) => this.strats.find((s) => s._id === strat._id)!.index !== strat.index,
+    );
+    if (!stratsToUpdate.length) return;
+    this.updateMultipleStratLocally({ strats: stratsToUpdate });
+    await this.updateStrats(stratsToUpdate);
   }
 
   @Listen('resize', { window: true })
@@ -36,7 +52,7 @@ export default class StratList extends Vue {
   }
 
   get debouncedResizeHandler(): DebouncedFunc<() => void> {
-    return debounce(() => this.stratItems?.forEach((i) => i.resetHeight()), 50);
+    return debounce(() => this.stratItemComponents?.forEach((i) => i.resetHeight()), 50);
   }
 
   private isEdited(strat: Strat) {

@@ -20,7 +20,7 @@
         v-tippy
         content="Make captain"
       >
-        <fa-icon class="" icon="users" /><span class="member-item__btn-label">Make captain</span>
+        <fa-icon class="" icon="crown" /><span class="member-item__btn-label">Make captain</span>
       </button>
       <button
         v-if="isManager && member._id !== profile._id"
