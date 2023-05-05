@@ -3,16 +3,27 @@
   box-shadow: $shadow-subtle;
   padding: 0 12px 6px 12px;
   border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  position: relative;
+
   border: 2px solid var(--color-border);
-  transition: height 0.3s ease-out;
-  overflow: hidden;
+  transition: grid-template-rows 0.3s ease-out;
+  display: grid;
+  grid-template-rows: 1fr;
 
   &.-inactive {
     border: 2px dashed var(--color-border);
     opacity: 0.5;
+  }
+
+  &.-collapsed {
+    grid-template-rows: 0fr;
+  }
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    min-height: 45px;
   }
 
   @include viewport_mq3 {
@@ -28,7 +39,6 @@
   }
 
   &__title-wrapper {
-    margin-top: 6px;
     flex: 1;
     min-width: 0;
   }
@@ -81,7 +91,7 @@
   &__header {
     cursor: pointer;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     padding: 8px 0;
   }
 

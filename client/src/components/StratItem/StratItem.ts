@@ -1,4 +1,4 @@
-import { Component, Prop, Vue, Emit, Ref, Watch } from 'vue-property-decorator';
+import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
 import StratEditor from '@/components/StratEditor/StratEditor.vue';
 import IStratEditor from '@/components/StratEditor/StratEditor';
 import TypeBadge from '@/components/TypeBadge/TypeBadge.vue';
@@ -32,65 +32,16 @@ export default class StratItem extends Vue {
   @appModule.Action private showToast!: (toast: Toast) => Promise<void>;
   @stratModule.State private sort!: Sort;
 
-  //* defer initial collapsed state to get max item height first
-  private deferredCollapsed = false;
-
-  private componentEl!: HTMLElement;
-  componentHeight: number = 0;
-
   private editorKey = 0;
-
-  private mounted() {
-    this.componentEl = this.$el as HTMLElement;
-    this.componentHeight = this.componentEl.clientHeight;
-    this.deferredCollapsed = this.collapsed;
-    this.setComponentHeight();
-  }
 
   private get isManualSort() {
     return this.sort === Sort.Manual;
-  }
-
-  async resetHeight() {
-    this.componentEl.style.height = '';
-    this.deferredCollapsed = false;
-    await this.$nextTick();
-    this.componentHeight = this.componentEl.clientHeight;
-    this.deferredCollapsed = this.collapsed;
-    this.setComponentHeight();
-  }
-
-  // TODO: handle window resize
-  @Watch('collapsed')
-  private async collapsedChanged(to: boolean) {
-    this.deferredCollapsed = to;
-    this.setComponentHeight();
-  }
-
-  @Watch('strat', { deep: true })
-  private async stratChanged() {
-    this.resetHeight();
-  }
-
-  @Watch('editMode')
-  private async editModeChanged(to: boolean) {
-    await this.$nextTick();
-    if (to) {
-      this.componentEl.style.height = '';
-    } else {
-      this.componentHeight = this.componentEl.clientHeight;
-      this.setComponentHeight();
-    }
   }
 
   get hasDrawData(): boolean {
     return (
       !!this.strat.drawData && Object.values(this.strat.drawData).some((value) => Array.isArray(value) && value.length)
     );
-  }
-
-  setComponentHeight() {
-    this.componentEl.style.height = this.deferredCollapsed ? '54px' : `${this.componentHeight + 5}px`;
   }
 
   private get isCtSide(): boolean {
