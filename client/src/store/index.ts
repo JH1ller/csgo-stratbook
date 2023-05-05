@@ -45,12 +45,13 @@ export default new Vuex.Store({
   mutations: {},
   actions: {
     resetState({ dispatch, state }) {
-      Object.keys(state).forEach(module => dispatch(`${module}/resetState`));
+      Object.keys(state).forEach((module) => dispatch(`${module}/resetState`));
       storageService.clear(); // TODO: only clear user related stuff, not 'version' for example
     },
     loadDataFromStorage({ dispatch }) {
       dispatch('map/loadCurrentMapFromStorage');
       dispatch('strat/loadCollapsedStratsFromStorage');
+      dispatch('strat/loadSortFromStorage');
       dispatch('filter/loadFiltersFromStorage');
     },
   },

@@ -11,6 +11,7 @@ import { StratTypes } from '@/api/models/StratTypes';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import { titleCase } from '@/utils/titleCase';
 import { HandleDirective } from 'vue-slicksort';
+
 @Component({
   components: {
     StratEditor,
@@ -44,9 +45,10 @@ export default class StratItem extends Vue {
     this.setComponentHeight();
   }
 
-  resetHeight() {
-    this.deferredCollapsed = false;
+  async resetHeight() {
     this.componentEl.style.height = '';
+    this.deferredCollapsed = false;
+    await this.$nextTick();
     this.componentHeight = this.componentEl.clientHeight;
     this.deferredCollapsed = this.collapsed;
     this.setComponentHeight();
@@ -57,6 +59,11 @@ export default class StratItem extends Vue {
   private async collapsedChanged(to: boolean) {
     this.deferredCollapsed = to;
     this.setComponentHeight();
+  }
+
+  @Watch('strat', { deep: true })
+  private async stratChanged() {
+    this.resetHeight();
   }
 
   @Watch('editMode')
@@ -74,15 +81,6 @@ export default class StratItem extends Vue {
     return (
       !!this.strat.drawData && Object.values(this.strat.drawData).some((value) => Array.isArray(value) && value.length)
     );
-  }
-
-  async resetComponentHeight() {
-    this.componentEl.style.height = '';
-    this.deferredCollapsed = false;
-    await this.$nextTick();
-    this.componentHeight = this.componentEl.clientHeight;
-    this.deferredCollapsed = this.collapsed;
-    this.setComponentHeight();
   }
 
   setComponentHeight() {

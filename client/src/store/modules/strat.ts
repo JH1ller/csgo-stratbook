@@ -189,7 +189,13 @@ export const stratModule: Module<StratState, RootState> = {
         commit(SET_COLLAPSED, collapsed);
       }
     },
-    updateSort({ commit, dispatch }, sort: Sort) {
+    loadSortFromStorage({ commit }) {
+      const sort = storageService.get<Sort>('sort');
+      if (sort) {
+        commit(SET_SORT, sort);
+      }
+    },
+    updateSort({ state, commit, dispatch }, sort: Sort) {
       commit(SET_SORT, sort);
       let toastMsg: string;
       switch (sort) {
@@ -202,6 +208,7 @@ export const stratModule: Module<StratState, RootState> = {
         case Sort.Manual:
           toastMsg = 'Manual sorting';
       }
+      storageService.set('sort', state.sort);
       dispatch(
         'app/showToast',
         {
