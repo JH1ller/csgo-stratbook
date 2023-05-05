@@ -235,13 +235,6 @@ export const stratModule: Module<StratState, RootState> = {
       if (targetStrat) Object.assign(targetStrat, strat);
     },
     [UPDATE_STRATS](state, strats: Strat[]) {
-      // strats.forEach((updatedStrat) => {
-      //   const index = state.strats.findIndex((strat) => strat._id === updatedStrat._id);
-      //   if (index !== -1) {
-      //     // Replace the existing strat with the updated strat
-      //     state.strats.splice(index, 1, updatedStrat);
-      //   }
-      // });
       state.strats = [...state.strats.filter((stateStrat) => !strats.some((s) => s._id === stateStrat._id)), ...strats];
     },
     [DELETE_STRAT](state, stratID: string) {
