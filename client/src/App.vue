@@ -101,7 +101,7 @@ export default class App extends Vue {
       catchPromise(
         this.showDialog({
           key: 'app/update-notice',
-          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><div style="margin-top: 24px;">- added player icons to tactics board</div><img src="/player_icons.png" style="width: 320px; margin-top: 24px; border-radius: 8px" />`,
+          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><div style="margin-top: 24px;">- added manual sorting option</div><video playsinline autoplay muted loop style="width: 100%; margin-top: 24px; border-radius: 8px"><source src="/update/sorting.mp4" type="video/mp4"></video>`,
           resolveBtn: 'OK',
           confirmOnly: true,
           htmlMode: true,
