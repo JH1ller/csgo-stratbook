@@ -3,7 +3,7 @@ import StratEditor from '@/components/StratEditor/StratEditor.vue';
 import IStratEditor from '@/components/StratEditor/StratEditor';
 import TypeBadge from '@/components/TypeBadge/TypeBadge.vue';
 import SideBadge from '@/components/SideBadge/SideBadge.vue';
-import { appModule } from '@/store/namespaces';
+import { appModule, stratModule } from '@/store/namespaces';
 import { Strat } from '@/api/models/Strat';
 import { Sides } from '@/api/models/Sides';
 import { openLink } from '@/utils/openLink';
@@ -11,6 +11,7 @@ import { StratTypes } from '@/api/models/StratTypes';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import { titleCase } from '@/utils/titleCase';
 import { HandleDirective } from 'vue-slicksort';
+import { Sort } from '@/utils/sortFunctions';
 
 @Component({
   components: {
@@ -29,6 +30,7 @@ export default class StratItem extends Vue {
   @Prop() private editMode!: boolean;
   @Ref() private editor!: IStratEditor;
   @appModule.Action private showToast!: (toast: Toast) => Promise<void>;
+  @stratModule.State private sort!: Sort;
 
   //* defer initial collapsed state to get max item height first
   private deferredCollapsed = false;
@@ -43,6 +45,10 @@ export default class StratItem extends Vue {
     this.componentHeight = this.componentEl.clientHeight;
     this.deferredCollapsed = this.collapsed;
     this.setComponentHeight();
+  }
+
+  private get isManualSort() {
+    return this.sort === Sort.Manual;
   }
 
   async resetHeight() {

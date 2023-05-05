@@ -102,7 +102,7 @@
         </span>
       </transition>
     </div>
-    <fa-icon class="strat-item__drag-icon" icon="ellipsis-v" v-handle />
+    <fa-icon v-if="isManualSort" class="strat-item__drag-icon" icon="ellipsis-v" v-handle />
   </div>
 </template>
 
