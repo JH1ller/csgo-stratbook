@@ -4,8 +4,6 @@ import type IStratItem from '@/components/StratItem/StratItem';
 import type { Strat } from '@/api/models/Strat';
 import type { StratTypes } from '@/api/models/StratTypes';
 import { Sides } from '@/api/models/Sides';
-import { Listen } from '@/utils/decorators/listen.decorator';
-import { debounce, DebouncedFunc } from 'lodash-es';
 import { SlickList, SlickItem } from 'vue-slicksort';
 import { stratModule } from '@/store/namespaces';
 
@@ -27,8 +25,6 @@ export default class StratList extends Vue {
   @Prop() gameMode!: boolean;
   @Ref() stratItemComponents!: IStratItem[];
 
-  prevWidth = window.innerWidth;
-
   private isCollapsed(strat: Strat) {
     return this.collapsedStrats.some((id) => id === strat._id);
   }
@@ -41,18 +37,6 @@ export default class StratList extends Vue {
     if (!stratsToUpdate.length) return;
     this.updateMultipleStratLocally({ strats: stratsToUpdate });
     await this.updateStrats(stratsToUpdate);
-  }
-
-  @Listen('resize', { window: true })
-  onResize() {
-    if (this.prevWidth !== window.innerWidth) {
-      this.prevWidth = window.innerWidth;
-      this.debouncedResizeHandler();
-    }
-  }
-
-  get debouncedResizeHandler(): DebouncedFunc<() => void> {
-    return debounce(() => this.stratItemComponents?.forEach((i) => i.resetHeight()), 50);
   }
 
   private isEdited(strat: Strat) {
