@@ -51,7 +51,8 @@
   }
 
   &__note {
-    margin-top: 6px;
+    margin-top: -6px;
+    margin-bottom: 8px;
     font-style: italic;
     font-size: 0.8em;
     display: flex;

@@ -7,10 +7,6 @@
             {{ strat.name }}
             <span v-if="!strat.active" class="strat-item__inactive-label">(inactive)</span>
           </h3>
-          <p class="strat-item__note" v-if="strat.note">
-            <fa-icon icon="info-circle" />
-            {{ strat.note }}
-          </p>
         </div>
         <div class="strat-item__types-wrapper">
           <TypeBadge
@@ -31,6 +27,10 @@
           v-tippy
         />
       </div>
+      <p class="strat-item__note" v-if="strat.note">
+        <fa-icon icon="info-circle" />
+        {{ strat.note }}
+      </p>
       <StratEditor
         :key="editorKey"
         class="strat-item__editor"
