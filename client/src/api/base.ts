@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import store from '@/store';
 import router from '@/router';
 import { Routes, RouteNames } from '@/router/router.models';
@@ -11,10 +11,6 @@ import { PlayerService } from './player.service';
 import { TeamService } from './team.service';
 import { StratService } from './strat.service';
 import { UtilityService } from './utility.service';
-
-const isAxiosError = (error: any): error is AxiosError => {
-  return !!error.response?.data?.error;
-};
 
 export default class ApiService {
   private static axiosInstance: AxiosInstance = ApiService.setupAxios();
@@ -29,7 +25,7 @@ export default class ApiService {
       const { data } = await request;
       return { success: data };
     } catch (error) {
-      return { error: isAxiosError(error) ? error.response?.data?.error : (error as Error).message };
+      return { error: error.message };
     } finally {
       store.commit('app/REMOVE_ACTIVE_REQUEST');
     }

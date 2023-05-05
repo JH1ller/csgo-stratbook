@@ -72,6 +72,14 @@ export default {
     headline: 'Changelog',
     changes: [
       {
+        version: '2.4.0',
+        date: '2023-05-05',
+        changes: [
+          'Manual sorting of strats via drag & drop',
+          'Various small fixes',
+        ],
+      },
+      {
         version: '2.3.1',
         date: '2023-04-24',
         changes: [

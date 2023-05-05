@@ -15,6 +15,7 @@ import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import { appModule } from '@/store/namespaces';
 import TrackingService from '@/services/tracking.service';
 import { writeToClipboard } from '@/utils/writeToClipboard';
+import { panic } from '@/utils/panic';
 
 interface LightboxMedia {
   type: 'image' | 'video';
@@ -63,7 +64,7 @@ export default class UtilityLightbox extends Mixins(CloseOnEscape) {
   }
 
   private getThumbnailURL(url: string): string {
-    const { id } = parseYoutubeUrl(url)!;
+    const { id } = parseYoutubeUrl(url) ?? panic('Could not parse youtube url');
     return getThumbnailURL(id);
   }
 
