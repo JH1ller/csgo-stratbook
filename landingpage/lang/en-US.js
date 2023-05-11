@@ -5,14 +5,14 @@ export default {
     register: 'Register',
   },
   footer: {
-    legalNotice: 'Legal Notice',
+    legalNotice: 'Imprint',
   },
   index: {
     hero: {
       tagline: 'Free & Open-Source Platform',
       headline: 'The best place to manage your strats and nades.',
       subline:
-        "Stratbook won't make you win every game.\n But at least it will keep your strats and nades organized.",
+        'Plan out your strategies with our collaborative tactics board and keep your strategies and nades organized in one place.',
       btnOpenApp: 'Open App',
       btnRegister: 'Register',
     },
@@ -25,7 +25,7 @@ export default {
         questionText:
           "I'm thinking about maintaining all my strats in stratbook, but I'm worried that the service won't be up for long?",
         answerText:
-          'I can guarantee you, that stratbook will be a long term project that will get long term updates and support.',
+          "Stratbook is a long term project that is continuously updated and improved. We've been up for over 3 years now with thousands of active users and aren't going anywhere :)",
       },
       {
         id: 'feature-requests',
@@ -43,13 +43,7 @@ export default {
         id: 'costs',
         questionText: 'Are there any costs or prices?',
         answerText:
-          'Stratbook is so called "Free and Open Source Software". Using the code and hosting the service yourself will always be free.<br>The prehosted service at "app.stratbook.live" is also currently free. I\'m not planning to make a profit from this, so there only might be a light monetization at a later stage to cover hosting and domain costs.',
-      },
-      {
-        id: 'server-down',
-        questionText: 'What if Stratbook servers are down?',
-        answerText:
-          "Stratbook is hosted on Amazon Web Services, so downtimes are extremely unlikely. I'm working on implementing PWA (Progressive Web App) Support, which allows you to install Stratbook locally and even use it offline without internet. Strats and nades are then updated once you have a connection again.",
+          'Stratbook is so called "Free and Open Source Software". Using the code and hosting the service yourself will always be free.<br>The prehosted service at "app.stratbook.live" is also currently free. If you wish to support the development and the hosting of Stratbook there is a donation button at the bottom of the page.',
       },
       {
         id: 'self-host',
@@ -61,7 +55,7 @@ export default {
         id: 'whos-behind',
         questionText: 'Who is behind this project?',
         answerText:
-          "Hi there! I'm Justin, a 25 year old web engineer & esports enthusiast based in Stuttgart, Germany. I played CSGO in the german amateur scene for a few years and started developing Stratbook in my freetime during Covid-19.<br>Since the start of 2021, my friend and fellow developer Clemens has also joined the project and has already made great efforts with rethinking our architecture.<br>But you, too, could be behind this project! Drop me a message if you're interested in collaborating or helping out.",
+          "Hi there! I'm Justin, a 26 year old web engineer & esports enthusiast based in Hamburg, Germany. I played CSGO in the german amateur scene for a few years and started developing Stratbook in my freetime during Covid-19.<br>But you, too, could be behind this project! Drop me a message if you're interested in collaborating or helping out.",
       },
     ],
   },
