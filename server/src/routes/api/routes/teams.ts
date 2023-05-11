@@ -11,8 +11,10 @@ import { COLORS } from '@/constants';
 import { getRandomColor } from '@/utils/colors';
 import { toPlayerDto } from '@/dto/player.dto';
 import { toTeamDto } from '@/dto/team.dto';
+import { TelegramService } from '@/services/telegram.service';
 
 const router = Router();
+const telegramService = TelegramService.getInstance();
 
 router.get('/', verifyAuth, async (_, res) => {
   if (!res.locals.player.team) {
@@ -73,6 +75,8 @@ router.post('/', verifyAuth, uploadSingle('avatar'), async (req, res) => {
   res.locals.player.color = COLORS[0];
   res.locals.player.team = newTeam._id;
   const updatedPlayer = await res.locals.player.save();
+
+  telegramService.send(`Team ${newTeam.name} created.`);
 
   res.status(201).json(toPlayerDto(updatedPlayer));
 });

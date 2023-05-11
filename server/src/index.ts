@@ -19,6 +19,7 @@ import { green } from 'colors';
 import { Log } from './utils/logger';
 import { instrument } from '@socket.io/admin-ui';
 import { hashSync } from 'bcryptjs';
+import { TelegramService } from './services/telegram.service';
 
 const app = express();
 const httpServer = createServer(app);
@@ -119,6 +120,8 @@ app.use((error: unknown, _: Request, res: Response, next: NextFunction) => {
 app.set('io', io);
 
 initialize(io);
+
+TelegramService.getInstance().init(process.env.TELEGRAM_TOKEN!, process.env.TELEGRAM_USER!);
 
 //* setup connection to socket.io admin UI
 instrument(io, {

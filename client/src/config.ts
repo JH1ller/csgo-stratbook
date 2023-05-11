@@ -1,39 +1,31 @@
+// TODO: refactor this whole file for different domains
 const env = process.env.NODE_ENV as Environment;
+
+const domain = window.location.hostname.split('.').slice(-2).join('.');
 
 enum Environment {
   Development = 'development',
-  Staging = 'staging',
   Production = 'production',
 }
 
-const hostNames: Record<Environment, string> = {
-  development: 'localhost',
-  staging: 'csstrats-app.herokuapp.com',
-  production: 'stratbook.live',
-};
-
-export const HOST_NAME = hostNames[env];
-
 const wsUrls: Record<Environment, string> = {
-  development: `http://${window.location.hostname}:3000/`,
-  staging: 'https://csstrats-app.herokuapp.com/',
-  production: 'https://stratbook.live/',
+  development: `http://${domain}:3000/`,
+  production: `https://${domain}/`,
 };
 
 export const WS_URL = wsUrls[env];
+console.log(WS_URL);
 
 const apiUrls: Record<Environment, string> = {
-  development: `http://${window.location.hostname}:3000/api/`,
-  staging: 'https://csstrats-app.herokuapp.com/api/',
-  production: 'https://api.stratbook.live/',
+  development: `http://${domain}:3000/api/`,
+  production: `https://api.${domain}/`,
 };
 
 export const API_URL = apiUrls[env];
 
 const appUrls: Record<Environment, string> = {
-  development: `http://${window.location.hostname}:8080/`,
-  staging: 'https://csstrats-app.herokuapp.com/app/',
-  production: 'https://app.stratbook.live/',
+  development: `http://${domain}:8080/`,
+  production: window.location.origin,
 };
 
 export const APP_URL = appUrls[env];

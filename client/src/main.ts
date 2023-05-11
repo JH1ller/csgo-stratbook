@@ -37,7 +37,7 @@ if (process.env.NODE_ENV === 'production') {
     integrations: [
       new BrowserTracing({
         routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-        tracingOrigins: ['localhost', 'stratbook.live', /^\//],
+        tracingOrigins: ['localhost', 'stratbook.live', 'stratbook.app', 'stratbook.pro', /^\//],
       }),
       new Sentry.Replay(),
     ],

@@ -33,7 +33,7 @@ const stratInitialState = (): StratState => ({
   strats: [],
   collapsedStrats: [],
   editedStrats: [],
-  sort: Sort.DateAddedASC,
+  sort: Sort.Manual,
 });
 
 const trackingService = TrackingService.getInstance();

@@ -114,7 +114,7 @@ export default class Hero extends Vue {}
       @include viewport_mq7 {
         width: 200px;
         left: 32px;
-        bottom: 72px;
+        top: 100px;
       }
     }
   }
@@ -172,16 +172,11 @@ export default class Hero extends Vue {}
   }
 
   &__button-wrapper {
-    @include spacing('margin-top', xs);
+    @include spacing('margin-top', 'xl');
+    @include spacing('gap', 'xs');
 
-    & > :not(:first-of-type) {
-      @include spacing('margin-top', '2xs');
-
-      @include viewport_mq2 {
-        @include spacing('margin-left', '2xs');
-        margin-top: 0;
-      }
-    }
+    display: flex;
+    flex-wrap: wrap;
   }
 
   &__button-app,

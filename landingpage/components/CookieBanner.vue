@@ -42,7 +42,9 @@ export default class CookieBanner extends Vue {
 
   private setCookie(key: string, value: string) {
     document.cookie = `${key}=${value}; domain=${
-      process.env.NODE_ENV === 'development' ? 'localhost' : 'stratbook.live'
+      process.env.NODE_ENV === 'development'
+        ? 'localhost'
+        : window.location.hostname
     }; max-age=31536000; path=/`;
   }
 
