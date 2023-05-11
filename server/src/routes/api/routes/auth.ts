@@ -13,8 +13,10 @@ import { uploadSingle, processImage, deleteFile } from '@/utils/fileUpload';
 import { APP_URL } from '@/config';
 import { verifyAuth } from '@/utils/verifyToken';
 import UserNotFoundError from '@/utils/errors/UserNotFoundError';
+import { TelegramService } from '@/services/telegram.service';
 
 const router = Router();
+const telegramService = TelegramService.getInstance();
 
 router.post('/register', uploadSingle('avatar'), async (req, res) => {
   const { error } = registerSchema.validate(req.body);
@@ -48,6 +50,7 @@ router.post('/register', uploadSingle('avatar'), async (req, res) => {
   await user.save();
   await sendMail(user.email, token, user.name, MailTemplate.VERIFY_NEW);
 
+  telegramService.send(`User ${user.name} registered.`);
   res.json({ _id: user._id, email: user.email });
 });
 
