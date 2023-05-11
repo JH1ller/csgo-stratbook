@@ -56,20 +56,31 @@ export default class Accordion extends Vue {
 
   &__content {
     @include typo_text($color--shark);
-    @include spacing('padding-top', xs);
 
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease-out;
     line-height: 1.4;
-    display: none;
     overflow: hidden;
+    padding: 0;
+    opacity: 0;
 
     #{$root}.-open & {
-      display: block;
+      @include spacing('padding-top', xs);
+      grid-template-rows: 1fr;
+      opacity: 1;
+
+      @include viewport_mq3 {
+        @include spacing('padding-top', md);
+      }
     }
 
     @include viewport_mq3 {
-      @include spacing('padding-top', md);
-
       font-size: 1.2rem;
+    }
+
+    & > div {
+      overflow: hidden;
     }
   }
 

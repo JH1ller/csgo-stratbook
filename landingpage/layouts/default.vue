@@ -16,17 +16,17 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import splitbee from '@splitbee/web';
 import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
 import CookieBanner from '@/components/CookieBanner.vue';
-import splitbee from '@splitbee/web';
 
 @Component({
   components: {
     Navbar,
     Footer,
-    CookieBanner
-  }
+    CookieBanner,
+  },
 })
 export default class Default extends Vue {
   private showCookieBanner = false;
@@ -34,11 +34,7 @@ export default class Default extends Vue {
   private getCookie(name: string) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2)
-      return parts
-        ?.pop()
-        ?.split(';')
-        .shift();
+    if (parts.length === 2) return parts?.pop()?.split(';').shift();
   }
 
   private handleClose() {
@@ -61,7 +57,7 @@ export default class Default extends Vue {
 
   private initTracking(disableCookie: boolean) {
     splitbee.init({
-      disableCookie
+      disableCookie,
     });
   }
 }
@@ -71,10 +67,16 @@ export default class Default extends Vue {
 .app {
   overflow-x: hidden;
   min-height: 100vh;
+  min-height: 100dvh;
   position: relative;
   font-family: $font_inter;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  display: grid;
+  grid-template-rows:
+    1fr
+    auto;
 
   &__content {
     margin-top: 100px;
@@ -110,20 +112,16 @@ export default class Default extends Vue {
     top: 0;
     left: 0;
     width: 100%;
+
+    @include viewport_mq3 {
+      position: absolute;
+    }
   }
 
   &__footer {
     @include spacing('margin-top', xl);
 
     width: 100%;
-
-    @include viewport_mq3 {
-      @include spacing('margin-top', xl);
-    }
-
-    @include viewport_mq6 {
-      @include spacing('margin-top', '3xl');
-    }
   }
 }
 </style>
