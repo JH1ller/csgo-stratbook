@@ -9,7 +9,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'CS:GO Stratbook',
+    title: 'Stratbook',
     htmlAttrs: {
       lang: 'en',
     },
@@ -20,14 +20,14 @@ export default {
         hid: 'description',
         name: 'description',
         content:
-          'Free web app to manage csgo strats and nades for your team. Always synced with your teammates, and works great on mobile.',
+          'Free web app to manage counterstrike strats and nades for your team. Always synced with your teammates, and works great on mobile.',
       },
       { hid: 'author', name: 'author', content: 'Justin Hiller' },
       {
         hid: 'keywords',
         name: 'keywords',
         content:
-          'stratbook, strategies, strategy, esport, csgo, counter-strike, counterstrike, global offensive, cs:go, webapp, vue, free, database, manage',
+          'stratbook, strategies, strategy, tactics, playbook, tool, esport, csgo, counter-strike, counterstrike, global offensive, cs:go, free, database, manage',
       },
     ],
     link: [
@@ -42,13 +42,12 @@ export default {
       },
       {
         rel: 'stylesheet',
-        href:
-          'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Ubuntu:wght@300;400;500;700&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Ubuntu:wght@300;400;500;700&display=swap',
       },
-      {
-        rel: 'canonical',
-        href: 'https://stratbook.live/',
-      },
+      // {
+      //   rel: 'canonical',
+      //   href: 'https://stratbook.live/',
+      // },
     ],
   },
 
@@ -98,7 +97,6 @@ export default {
     seo: true,
     lazy: true,
     langDir: 'lang/',
-    baseUrl: 'https://stratbook.live',
     defaultLocale: 'en',
     locales: [
       {
