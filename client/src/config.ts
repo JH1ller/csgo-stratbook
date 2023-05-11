@@ -1,12 +1,18 @@
-// TODO: refactor this whole file for different domains
-const env = process.env.NODE_ENV as Environment;
-
-const domain = window.location.hostname.split('.').slice(-2).join('.');
+import { isDesktop } from './utils/isDesktop';
 
 enum Environment {
   Development = 'development',
   Production = 'production',
 }
+
+// TODO: refactor this whole file for different domains
+const env = process.env.NODE_ENV as Environment;
+
+// TODO: find generic solution for Electron
+const domain =
+  isDesktop() && env === Environment.Production
+    ? 'stratbook.live'
+    : window.location.hostname.split('.').slice(-2).join('.');
 
 const wsUrls: Record<Environment, string> = {
   development: `http://${domain}:3000/`,
@@ -14,7 +20,6 @@ const wsUrls: Record<Environment, string> = {
 };
 
 export const WS_URL = wsUrls[env];
-console.log(WS_URL);
 
 const apiUrls: Record<Environment, string> = {
   development: `http://${domain}:3000/api/`,
