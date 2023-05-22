@@ -43,7 +43,7 @@ export default {
         id: 'costs',
         questionText: 'Are there any costs or prices?',
         answerText:
-          'Stratbook is so called "Free and Open Source Software". Using the code and hosting the service yourself will always be free.<br>The prehosted service at "app.stratbook.live" is also currently free. If you wish to support the development and the hosting of Stratbook there is a donation button at the bottom of the page.',
+          'Stratbook is so called "Free and Open Source Software". Using the code and hosting the service yourself will always be free.<br>The prehosted service at "app.stratbook.pro" is also currently free. If you wish to support the development and the hosting of Stratbook there is a donation button at the bottom of the page.',
       },
       {
         id: 'self-host',

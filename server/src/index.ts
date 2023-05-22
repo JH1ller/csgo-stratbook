@@ -28,8 +28,10 @@ const io = new Server(httpServer, {
   cors: {
     origin: [
       'https://stratbook.live',
+      'https://stratbook.pro',
       'app://.',
       'https://app.stratbook.live',
+      'https://app.stratbook.pro',
       'http://localhost:8080',
       'http://192.168.0.11:8080',
       'http://csstrats-app.herokuapp.com/',
@@ -82,13 +84,29 @@ app.use(logger);
 
 const mapRedirect: RequestHandler = (req, res, next) => {
   const host = req.get('Host');
-  if (host === 'map.stratbook.live' || host === 'map.csstrats.app') {
-    return res.redirect(301, 'https://app.stratbook.live/#/map');
+  if (host === 'map.stratbook.pro') {
+    return res.redirect('https://app.stratbook.pro/#/map');
   }
   return next();
 };
 
+const domainRedirect: RequestHandler = (req, res, next) => {
+  const redirectTlds = ['.live', '.app'];
+
+  const matchingTld = redirectTlds.find((tld) => req.headers.host?.endsWith(tld));
+  if (!matchingTld) return next();
+
+  const [host] = req.headers.host!.split(matchingTld);
+
+  const targetUrl = 'https://' + host + '.pro' + req.url;
+
+  console.log(targetUrl);
+
+  return res.redirect(301, targetUrl);
+};
+
 app.use(mapRedirect);
+app.use(domainRedirect);
 
 if (isDev) {
   app.use('/app', express.static('dist_app'));
@@ -121,7 +139,7 @@ app.set('io', io);
 
 initialize(io);
 
-TelegramService.getInstance().init(process.env.TELEGRAM_TOKEN!, process.env.TELEGRAM_USER!);
+if (!isDev) TelegramService.getInstance().init(process.env.TELEGRAM_TOKEN!, process.env.TELEGRAM_USER!);
 
 //* setup connection to socket.io admin UI
 instrument(io, {
