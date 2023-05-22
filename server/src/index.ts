@@ -100,8 +100,6 @@ const domainRedirect: RequestHandler = (req, res, next) => {
 
   const targetUrl = 'https://' + host + '.pro' + req.url;
 
-  console.log(targetUrl);
-
   return res.redirect(301, targetUrl);
 };
 
