@@ -5,7 +5,7 @@
 
 __Web & Desktop application to collaboratively manage strategies & utilities in Valve's popular competitive FPS Counterstrike: Global Offensive__
 
-__Live Version [here!](https://stratbook.live)__
+__Live Version [here!](https://stratbook.pro)__
 
 ## Features
 

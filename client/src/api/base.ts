@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import store from '@/store';
 import router from '@/router';
 import { Routes, RouteNames } from '@/router/router.models';
@@ -25,6 +25,7 @@ export default class ApiService {
       const { data } = await request;
       return { success: data };
     } catch (error) {
+      if (error instanceof AxiosError) return { error: error.response?.data.error };
       return { error: error.message };
     } finally {
       store.commit('app/REMOVE_ACTIVE_REQUEST');

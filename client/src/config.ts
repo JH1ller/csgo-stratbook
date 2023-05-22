@@ -11,7 +11,7 @@ const env = process.env.NODE_ENV as Environment;
 // TODO: find generic solution for Electron
 const domain =
   isDesktop() && env === Environment.Production
-    ? 'stratbook.live'
+    ? 'stratbook.pro'
     : window.location.hostname.split('.').slice(-2).join('.');
 
 const wsUrls: Record<Environment, string> = {
