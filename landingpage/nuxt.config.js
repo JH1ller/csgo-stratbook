@@ -20,7 +20,7 @@ export default {
         hid: 'description',
         name: 'description',
         content:
-          'Free web app to manage counterstrike strats and nades for your team. Always synced with your teammates, and works great on mobile.',
+          'Free counterstrike strategy & nade management tool and realtime tactics board. Keep your playbook organized with Stratbook.',
       },
       { hid: 'author', name: 'author', content: 'Justin Hiller' },
       {
@@ -47,6 +47,16 @@ export default {
       {
         rel: 'canonical',
         href: 'https://stratbook.pro/',
+      },
+      {
+        rel: 'alternate',
+        hreflang: 'en',
+        href: 'https://stratbook.pro/',
+      },
+      {
+        rel: 'alternate',
+        hreflang: 'de',
+        href: 'https://stratbook.pro/de',
       },
     ],
   },
@@ -81,7 +91,6 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
     '@nuxtjs/style-resources',
     'nuxt-i18n',
   ],

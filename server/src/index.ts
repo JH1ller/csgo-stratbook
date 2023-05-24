@@ -82,29 +82,32 @@ app.use(compression());
 
 app.use(logger);
 
-const mapRedirect: RequestHandler = (req, res, next) => {
-  const host = req.get('Host');
+const hostRedirect: RequestHandler = (req, res, next) => {
+  const host = req.headers.host;
+  // shouldn't happen, but still check to prevent DOS
+  if (!host) return next();
+
   if (host === 'map.stratbook.pro') {
     return res.redirect('https://app.stratbook.pro/#/map');
   }
-  return next();
-};
 
-const domainRedirect: RequestHandler = (req, res, next) => {
+  if (host.startsWith('www.')) {
+    return res.redirect(301, 'https://stratbook.pro');
+  }
+
   const redirectTlds = ['.live', '.app'];
 
   const matchingTld = redirectTlds.find((tld) => req.headers.host?.endsWith(tld));
   if (!matchingTld) return next();
 
-  const [host] = req.headers.host!.split(matchingTld);
+  const [hostWithoutTld] = host.split(matchingTld);
 
-  const targetUrl = 'https://' + host + '.pro' + req.url;
+  const targetUrl = 'https://' + hostWithoutTld + '.pro' + req.url;
 
   return res.redirect(301, targetUrl);
 };
 
-app.use(mapRedirect);
-app.use(domainRedirect);
+app.use(hostRedirect);
 
 if (isDev) {
   app.use('/app', express.static('dist_app'));
