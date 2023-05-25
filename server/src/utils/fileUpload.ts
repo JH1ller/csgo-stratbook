@@ -33,7 +33,7 @@ const fileLimits = {
 };
 
 const fileFilter = (_req: Request, file: Express.Multer.File, next: FileFilterCallback) => {
-  const allowedFileTypes = ['.jpg', '.jpeg', '.png', '.webp'];
+  const allowedFileTypes = ['.jpg', '.jpeg', '.png', '.webp', '.svg'];
 
   if (allowedFileTypes.includes(path.extname(file.originalname))) {
     next(null, true);
