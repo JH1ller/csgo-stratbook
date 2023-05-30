@@ -135,10 +135,12 @@ export class Validators {
     };
   }
 
-  static isYoutubeLink(): ValidatorFunction {
-    const errorMessage = `Currently only youtube is supported.`;
+  static isYoutubeOrGfycatLink(): ValidatorFunction {
+    const errorMessage = `Currently only youtube and Gfycat links are supported.`;
     return (data) => {
-      const expressionResult = !!parseYoutubeUrl(data.value);
+      const isYoutubeLink = !!parseYoutubeUrl(data.value);
+      const isGfycatLink = !!parseGfycatUrl(data.value);
+      const expressionResult = isYoutubeLink || isGfycatLink;
       const result = data.required ? expressionResult : data.value.length ? expressionResult : true;
       if (!result) {
         data.errors.push(errorMessage);

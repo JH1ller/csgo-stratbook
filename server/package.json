@@ -46,6 +46,7 @@
     "joi": "^17.6.0",
     "jsonwebtoken": "^9.0.0",
     "minimist": "^1.2.6",
+    "minio": "^7.1.1",
     "mongodb": "^3.7.3",
     "mongoose": "^6.10.5",
     "mongoose-delete": "^0.5.4",
