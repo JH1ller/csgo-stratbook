@@ -1,7 +1,7 @@
 const youtubeRegexp =
   /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]{11})(?:(?:\?t|&start)=(\d+))?.*/;
 
-export const getEmbedURL = (videoId: string, timestamp = '0'): string => {
+export const getYoutubeEmbedURL = (videoId: string, timestamp = '0'): string => {
   return `https://www.youtube.com/embed/${videoId}?&controls=2&origin=${window.location.origin}&disablekb=1&start=${timestamp}`;
 };
 
@@ -12,6 +12,11 @@ export const parseYoutubeUrl = (videoURL: string): { id: string; timestamp?: str
   return { id, timestamp };
 };
 
-export const getThumbnailURL = (videoId: string, size: '0' | '1' | '2' | '3' = '0'): string => {
+export const getYoutubeThumbnailURL = (videoId: string, size: '0' | '1' | '2' | '3' = '0'): string => {
   return `https://img.youtube.com/vi/${videoId}/${size}.jpg`;
+};
+
+// Checks if a URL is a YouTube URL
+export const isYoutubeUrl = (url: string): boolean => {
+  return !!parseYoutubeUrl(url);
 };

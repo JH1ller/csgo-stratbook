@@ -2,22 +2,13 @@ import multer, { FileFilterCallback } from 'multer';
 import path from 'path';
 import crypto from 'crypto';
 import sharp from 'sharp';
-import { unlinkSync, renameSync, readFileSync, mkdirSync, existsSync } from 'fs';
-import { Upload } from '@aws-sdk/lib-storage';
-import AWS_S3, { S3 } from '@aws-sdk/client-s3';
+import { existsSync, mkdirSync, renameSync, unlinkSync } from 'fs';
 import { Request, RequestHandler } from 'express';
 import ImageProcessError from './errors/ImageProcessError';
 import { Log } from './logger';
+import { createStorageClient } from '@/storage/StorageClientFactory';
 
-const s3 = new S3({
-  //accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  //secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  },
-  region: 'eu-central-1',
-});
+const storageClient = createStorageClient();
 
 const fileStorage = multer.diskStorage({
   destination: function (_req, _file, next) {
@@ -112,38 +103,11 @@ export const processImage = async (file: Express.Multer.File, targetWidth: numbe
 };
 
 export const uploadFile = async (filepath: string, filename: string) => {
-  try {
-    const fileContent = readFileSync(filepath);
-    const params: AWS_S3.PutObjectCommandInput = {
-      Bucket: process.env.S3_BUCKET_NAME!,
-      Key: filename, // filename on S3
-      Body: fileContent,
-    };
-    const data: AWS_S3.CompleteMultipartUploadOutput = await new Upload({
-      client: s3,
-      params,
-    }).done();
-    Log.success('fileUpload::uploadFile', `File uploaded successfully. Key: ${data.Location}`);
-
-    return data;
-  } catch (error) {
-    Log.error('fileUpload::uploadFile', error.message);
-    throw error;
-  }
+  await storageClient.uploadFile(filepath, filename);
+  return;
 };
 
 export const deleteFile = async (filename: string): Promise<void> => {
-  try {
-    const params: AWS_S3.DeleteObjectCommandInput = {
-      Bucket: process.env.S3_BUCKET_NAME!,
-      Key: filename, // filename on S3
-    };
-
-    const data = await s3.deleteObject(params);
-
-    Log.success('fileUpload::deleteFile', `File deleted successfully. Key: ${filename}`);
-    return;
-  } catch (error) {
-    throw new Error((error as Error).message);
-  }
+  await storageClient.deleteFile(filename);
+  return;
 };
