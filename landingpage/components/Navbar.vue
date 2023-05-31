@@ -2,7 +2,7 @@
   <nav class="navbar">
     <NuxtLink :to="localePath('index')" class="navbar__logo-wrapper">
       <img
-        src="@/assets/images/logo_small.png"
+        src="@/assets/images/webp/logo_small.webp"
         alt="App Logo"
         class="navbar__logo"
       />
