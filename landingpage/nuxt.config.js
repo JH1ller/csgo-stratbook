@@ -29,6 +29,10 @@ export default {
         content:
           'stratbook, strategies, strategy, tactics, playbook, tool, esport, csgo, counter-strike, counterstrike, global offensive, cs:go, free, database, manage',
       },
+      {
+        name: 'thumbnail',
+        content: '/screen.webp',
+      },
     ],
     link: [
       {
