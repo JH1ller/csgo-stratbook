@@ -142,6 +142,8 @@
     background-color: var(--color-bg-secondary);
     box-shadow: $shadow-subtle;
     border-radius: 6px;
+    max-height: 300px;
+    overflow-y: auto;
 
     & li:not([data-index]) {
       display: none;
