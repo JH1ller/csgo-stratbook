@@ -105,7 +105,6 @@ export default class StratEditor extends Vue {
           noMatchTemplate: () => '<span style="visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
           spaceSelectsMatch: true,
-          menuItemLimit: 6,
         },
         {
           values: this.utilityOptionList,
@@ -126,7 +125,6 @@ export default class StratEditor extends Vue {
           noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
           spaceSelectsMatch: true,
-          menuItemLimit: 6,
         },
         {
           values: [
