@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/JH1ller/csgo-stratbook#readme",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.347.1",
+    "@aws-sdk/client-s3": "^3.369.0",
     "@aws-sdk/lib-storage": "^3.319.0",
     "@sentry/node": "^7.50.0",
     "@socket.io/admin-ui": "^0.2.0",
