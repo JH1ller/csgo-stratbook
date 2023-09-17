@@ -152,6 +152,7 @@ export const leaveDrawRoomHandler = async (io: TypedServer, socket: TypedSocket)
     }
     try {
       strat.drawData = boards[roomId].mapData.data;
+      // TODO: only update strat when last user leaves sketchtool
       const updatedStrat = await strat.save();
       // TODO: currently only updates correctly on the client when we use the batch event instead of 'update-strat'
       io.to(player.team.toString()).emit('updated-strats', { strats: [updatedStrat.toObject()] });

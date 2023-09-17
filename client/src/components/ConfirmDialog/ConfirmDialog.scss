@@ -51,4 +51,14 @@
   b {
     font-weight: $weight-bold;
   }
+
+  ul {
+    margin-top: 12px;
+    background: var(--color-bg-secondary);
+    padding: 8px 8px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
 }

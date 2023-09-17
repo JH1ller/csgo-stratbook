@@ -3,7 +3,6 @@ import RegisterForm from '@/components/RegisterForm/RegisterForm.vue';
 import { Routes } from '@/router/router.models';
 import { appModule, authModule } from '@/store/namespaces';
 import { Response } from '@/store';
-import { catchPromise } from '@/utils/catchPromise';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 
 @Component({
@@ -13,7 +12,7 @@ import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 })
 export default class RegisterView extends Vue {
   @authModule.Action private register!: (formData: FormData) => Promise<Response>;
-  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
+  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
   private formError = '';
 
   // TODO: remove when key system is removed
@@ -36,15 +35,13 @@ export default class RegisterView extends Vue {
       // * checks if registered email is microsoft email
       const email = formData.get('email') as string;
       if (['@hotmail', '@live', '@outlook'].some((suffix) => email.includes(suffix))) {
-        catchPromise(
-          this.showDialog({
-            key: 'register-view/hotmail-warning',
-            text: `Hey there, glad to have you on board!<br>It seems like you registered with a Microsoft email.<br>The confirmation mail might land in your spam folder or not arrive at all.<br>If that's the case, please contact me via our Discord, or at support@stratbook.live`,
-            resolveBtn: 'OK',
-            htmlMode: true,
-            confirmOnly: true,
-          }),
-        );
+        this.showDialog({
+          key: 'register-view/hotmail-warning',
+          text: `Hey there, glad to have you on board!<br>It seems like you registered with a Microsoft email.<br>The confirmation mail might land in your spam folder or not arrive at all.<br>If that's the case, please contact me via our Discord, or at support@stratbook.live`,
+          resolveBtn: 'OK',
+          htmlMode: true,
+          confirmOnly: true,
+        });
       }
     }
   }

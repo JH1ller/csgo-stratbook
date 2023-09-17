@@ -34,7 +34,6 @@ import pkg from '../package.json';
 import { appModule, teamModule } from './store/namespaces';
 import TrackingService from '@/services/tracking.service';
 import { Dialog } from './components/DialogWrapper/DialogWrapper.models';
-import { catchPromise } from './utils/catchPromise';
 import StorageService from './services/storage.service';
 import { gt, major, minor } from 'semver';
 import { Breakpoints } from './services/breakpoint.service';
@@ -59,7 +58,7 @@ export default class App extends Vue {
   @appModule.State gameMode!: boolean;
   @appModule.State breakpoint!: Breakpoints;
   @teamModule.State teamInfo!: Team;
-  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
+  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
 
   private menuOpen: boolean = false;
   private appVersion: string = pkg.version;
@@ -98,15 +97,21 @@ export default class App extends Vue {
       currentVersion &&
       gt(`${major(this.appVersion)}.${minor(this.appVersion)}.0`, `${major(currentVersion)}.${minor(currentVersion)}.0`)
     ) {
-      catchPromise(
-        this.showDialog({
-          key: 'app/update-notice',
-          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><div style="margin-top: 24px;">- added manual sorting option</div><video playsinline autoplay muted loop style="width: 100%; margin-top: 24px; border-radius: 8px"><source src="/update/sorting.mp4" type="video/mp4"></video>`,
-          resolveBtn: 'OK',
-          confirmOnly: true,
-          htmlMode: true,
-        }),
-      );
+      this.showDialog({
+        key: 'app/update-notice',
+        text: `
+        <h1>Stratbook has been updated to v${this.appVersion}.</h1>
+          <ul">
+            <li>- Strats can be saved from map view when a name is added.</li>
+            <li>- Added deeplinks to strat drawing board, e.g. https://app.stratbook.pro/#/strats/[strat-id]</li>
+            <li>- minor bug fixes</li>
+            <li>- more to come soon!</li>
+          </ul>
+          `,
+        resolveBtn: 'OK',
+        confirmOnly: true,
+        htmlMode: true,
+      });
     }
     this.storageService.set('version', this.appVersion);
   }

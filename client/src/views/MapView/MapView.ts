@@ -3,7 +3,7 @@ import SketchTool from '@/components/SketchTool/SketchTool.vue';
 import ISketchTool from '@/components/SketchTool/SketchTool';
 import ConnectionDialog from './components/ConnectionDialog.vue';
 import StorageService from '@/services/storage.service';
-import { appModule, authModule } from '@/store/namespaces';
+import { appModule, authModule, stratModule } from '@/store/namespaces';
 import { Player } from '@/api/models/Player';
 import VueContext from 'vue-context';
 import { GameMap, gameMapTable } from '@/api/models/GameMap';
@@ -12,6 +12,10 @@ import { Log } from '@/utils/logger';
 import { StoredItemState } from '@/components/SketchTool/types';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import TrackingService from '@/services/tracking.service';
+import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
+import { Strat } from '@/api/models/Strat';
+import { Sides } from '@/api/models/Sides';
+import { StratTypes } from '@/api/models/StratTypes';
 
 @Component({
   components: {
@@ -25,6 +29,8 @@ export default class MapView extends Vue {
   @Inject() storageService!: StorageService;
   @authModule.State profile!: Player;
   @appModule.Action private showToast!: (toast: Toast) => void;
+  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
+  @stratModule.Action createStrat!: (payload: Partial<Strat>) => Promise<Strat>;
   @Ref() mapPicker!: Vue & any;
   @Ref() sketchTool!: ISketchTool;
   GameMap = GameMap;
@@ -35,13 +41,36 @@ export default class MapView extends Vue {
   stratName = '';
   roomId = '';
   inputRoomId = '';
+  stratId: string | null = null;
   showConnectionDialog = false;
 
   trackingService = TrackingService.getInstance();
 
-  handleSubmit({ userName, stratName }: { userName: string; stratName: string }) {
+  async handleSubmit({ userName, stratName }: { userName: string; stratName: string }) {
     this.userName = userName;
     this.sketchTool.submitUserName(userName);
+
+    if (!this.stratName && stratName && this.profile) {
+      const dialogResult = await this.showDialog({
+        key: 'map-view/submit-name',
+        text: `You added a name to your strat. Would you like to save it to your stratbook? This will also redirect you to the strats page.`,
+        resolveBtn: 'OK',
+        rejectBtn: 'Cancel',
+      });
+
+      if (dialogResult) {
+        const result = await this.createStrat({
+          name: stratName,
+          map: this.map,
+          side: Sides.T,
+          types: [StratTypes.PISTOL, StratTypes.BUYROUND, StratTypes.FORCE],
+          drawData: this.sketchTool.itemState,
+        });
+        console.log(result);
+        this.$router.push({ path: `/strats/${result._id}` });
+      }
+    }
+
     if (stratName) {
       this.stratName = stratName;
       this.sketchTool.submitStratName(stratName);

@@ -3,6 +3,13 @@ import { Model } from './Model';
 import { Sides } from './Sides';
 import { StratTypes } from './StratTypes';
 
+export interface DrawBoardState {
+  images: unknown[];
+  lines: unknown[];
+  texts: unknown[];
+  players: unknown[];
+}
+
 export interface Strat extends Model {
   name: string;
   types: StratTypes[];
@@ -11,7 +18,7 @@ export interface Strat extends Model {
   active: boolean;
   videoLink?: string;
   note?: string;
-  drawData?: string;
+  drawData?: DrawBoardState;
   createdBy: string;
   createdAt: Date;
   modifiedBy: string;

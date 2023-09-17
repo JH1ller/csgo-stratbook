@@ -7,6 +7,7 @@
       :stratName="stratName"
       :roomId="roomId"
       :isMapView="true"
+      :stratId="stratId"
       @show-connection-dialog="showConnectionDialog = true"
       @update-room-id="handleRoomIdChange"
       @update-strat-name="handleStratNameChange"
