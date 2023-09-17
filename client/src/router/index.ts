@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import VueRouter, { Route } from 'vue-router';
+import VueRouter, { NavigationGuard, Route } from 'vue-router';
 import { RouteNames, Routes } from './router.models';
 import { stratsResolver } from '@/views/StratsView/StratsView.resolver';
 import { teamResolver } from '@/views/TeamView/TeamView.resolver';
@@ -12,6 +12,7 @@ import LoginView from '@/views/LoginView/LoginView.vue';
 import StratsView from '@/views/StratsView/StratsView.vue';
 import StorageService from '@/services/storage.service';
 import { mapResolver } from '@/views/MapView/MapView.resolver';
+import { authGuard } from '@/guards/auth.guard';
 
 Vue.use(VueRouter);
 
@@ -86,7 +87,11 @@ const routes = [
     path: '/profile',
     name: RouteNames.Profile,
     component: () => import('@/views/ProfileView/ProfileView.vue'),
-    beforeEnter: teamResolver,
+    beforeEnter: ((to, from, next) => {
+      const authGuardResult = authGuard(to, from, next);
+      if (!authGuardResult) return;
+      next();
+    }) as NavigationGuard,
   },
   {
     path: '/share/:id',
