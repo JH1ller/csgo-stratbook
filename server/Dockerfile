@@ -1,4 +1,4 @@
-FROM node:14.16
+FROM node:18.16
 
 WORKDIR /usr/src/app/server
 
@@ -8,4 +8,4 @@ RUN npm install
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "serve"]
