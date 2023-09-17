@@ -83,11 +83,7 @@
     <span class="utility-lightbox__info">
       <span class="utility-lightbox__name">{{ utility.name }}</span>
       <div class="utility-lightbox__icon-wrapper">
-        <MouseButtonPicker
-          class="utility-lightbox__mouse-button"
-          :mouseButtons="utility.mouseButton"
-          :readonly="true"
-        />
+        <MouseButtonPicker class="utility-lightbox__mouse-button" :value="utility.mouseButton" :readonly="true" />
         <PosePicker :readonly="true" :crouch="utility.crouch" :jump="utility.jump" :movement="utility.movement" />
       </div>
     </span>
