@@ -12,7 +12,7 @@
         v-model="formFields.stratName.value"
       />
       <div class="connection-dialog__actions">
-        <button class="connection-dialog__btn-submit" type="submit" @click="handleSubmitAttempt">Submit</button>
+        <button class="connection-dialog__btn-submit" type="submit">Submit</button>
         <button class="connection-dialog__btn-cancel" type="button" @click="close">Cancel</button>
       </div>
     </form>

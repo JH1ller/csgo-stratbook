@@ -13,7 +13,6 @@ import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { UtilityTypes } from '@/api/models/UtilityTypes';
 import { Sides } from '@/api/models/Sides';
 import { UtilityFilters } from '@/store/modules/filter';
-import { catchPromise } from '@/utils/catchPromise';
 import ShortcutService from '@/services/shortcut.service';
 import { GameMap } from '@/api/models/GameMap';
 
@@ -33,7 +32,7 @@ export default class UtilityView extends Vue {
   @mapModule.State currentMap!: GameMap;
   @utilityModule.Getter sortedFilteredUtilitiesOfCurrentMap!: Utility[];
   @mapModule.Action updateCurrentMap!: (mapID: GameMap) => Promise<void>;
-  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
+  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
 
   @filterModule.State utilityFilters!: UtilityFilters;
   @filterModule.Getter activeUtilityFilterCount!: number;
@@ -90,24 +89,24 @@ export default class UtilityView extends Vue {
     this.hideUtilityForm();
   }
 
-  private requestDeleteUtility(utility: Utility) {
-    catchPromise(
-      this.showDialog({
-        key: 'utility-view/confirm-delete',
-        text: 'Are you sure you want to delete this utility?',
-      }),
-      () => this.deleteUtility(utility._id),
-    );
+  private async requestDeleteUtility(utility: Utility) {
+    const dialogResult = await this.showDialog({
+      key: 'utility-view/confirm-delete',
+      text: 'Are you sure you want to delete this utility?',
+    });
+    if (dialogResult) {
+      () => this.deleteUtility(utility._id);
+    }
   }
 
-  private requestShareUtility(utility: Utility) {
-    catchPromise(
-      this.showDialog({
-        key: 'utility-view/confirm-share',
-        text: 'Do you want to create a share-link to let other teams add this utility to their stratbook?',
-      }),
-      () => this.shareUtility(utility._id),
-    );
+  private async requestShareUtility(utility: Utility) {
+    const dialogResult = await this.showDialog({
+      key: 'utility-view/confirm-share',
+      text: 'Do you want to create a share-link to let other teams add this utility to their stratbook?',
+    });
+    if (dialogResult) {
+      () => this.shareUtility(utility._id);
+    }
   }
 
   private showUtilityForm(utility?: Utility) {

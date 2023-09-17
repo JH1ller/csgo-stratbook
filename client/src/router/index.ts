@@ -31,7 +31,7 @@ const routes = [
     },
   },
   {
-    path: '/strats',
+    path: '/strats/:stratId?',
     name: RouteNames.Strats,
     component: StratsView,
     beforeEnter: stratsResolver,

@@ -55,7 +55,7 @@ export default {
         id: 'whos-behind',
         questionText: 'Who is behind this project?',
         answerText:
-          "Hi there! I'm Justin, a 26 year old web engineer & esports enthusiast based in Hamburg, Germany. I played CSGO in the german amateur scene for a few years and started developing Stratbook in my freetime during Covid-19.<br>But you, too, could be behind this project! Drop me a message if you're interested in collaborating or helping out.",
+          "Hi there! I'm Justin, a 27 year old software engineer & esports enthusiast based in Hamburg, Germany. I played CSGO in the german amateur scene for a few years and started developing Stratbook in my freetime during Covid-19.<br>But you, too, could be behind this project! Drop me a message if you're interested in collaborating or helping out.",
       },
     ],
   },
@@ -65,6 +65,15 @@ export default {
   changelog: {
     headline: 'Changelog',
     changes: [
+      {
+        version: '2.5.0',
+        date: '2023-09-17',
+        changes: [
+          'Strats can be saved from map view when a name is added.',
+          'Added deeplinks to strat drawing board',
+          'minor bug fixes',
+        ],
+      },
       {
         version: '2.4.0',
         date: '2023-05-05',

@@ -44,7 +44,6 @@ import TrackingService from '@/services/tracking.service';
 import { APP_URL } from '@/config';
 import isMobile from 'is-mobile';
 import { Dialog } from '../DialogWrapper/DialogWrapper.models';
-import { catchPromise } from '@/utils/catchPromise';
 import { COLORS } from '@/constants/colors';
 import { Player } from '@/api/models/Player';
 import VueContext from 'vue-context';
@@ -60,7 +59,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   @Inject() storageService!: StorageService;
 
   @appModule.Action private showToast!: (toast: Toast) => void;
-  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
+  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
   @teamModule.State teamMembers!: Player[];
 
   @Ref() stageRef!: KonvaRef<Stage>;
@@ -543,6 +542,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.storageService.remove('draw-room-id');
     this.storageService.remove('draw-data');
     this.updateRoomId('');
+    this.updateStratName('');
     this.remoteClients = [];
     this.clearStage();
     this.showToast({
@@ -1274,27 +1274,13 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     this.saveStateToHistory();
 
     if (isMobile() && !this.storageService.get('mobile-warning-shown')) {
-      catchPromise(
-        this.showDialog({
-          key: 'sketch-tool/mobile-warning',
-          text: `Hi there! The tactics board is not working well on mobile devices yet. For the best experience, please use a Desktop PC or Laptop.`,
-          resolveBtn: 'OK',
-          confirmOnly: true,
-        }),
-      );
-      this.storageService.set('mobile-warning-shown', true);
+      this.showDialog({
+        key: 'sketch-tool/mobile-warning',
+        text: `Hi there! The tactics board is not working well on mobile devices yet. For the best experience, please use a Desktop PC or Laptop.`,
+        resolveBtn: 'OK',
+        confirmOnly: true,
+      }),
+        this.storageService.set('mobile-warning-shown', true);
     }
-
-    //TODO: remove, only for testing
-    (window as any).konva = this.stage;
-    (window as any).saveToFile = this.saveToFile;
-    (window as any).loadjson = this.loadFromStorage;
-    (window as any).dialog = this.showConnectionDialog;
-    (window as any).optimize = () => {
-      this.itemState.lines.forEach((item) => {
-        const line = this.stage.findOne('#' + item.id);
-        optimizeLine(line as Line);
-      });
-    };
   }
 }

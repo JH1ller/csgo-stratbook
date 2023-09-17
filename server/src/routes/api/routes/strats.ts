@@ -1,9 +1,7 @@
 import { Router } from 'express';
-import { Strat, StratDocument, StratModel } from '@/models/strat';
+import { Strat, StratModel } from '@/models/strat';
 import { getStrat, getStrats } from '@/utils/getters';
 import { verifyAuth } from '@/utils/verifyToken';
-import { sanitize } from '@/utils/sanitizeHtml';
-import { minifyHtml } from '@/utils/minifyHtml';
 import { TypedServer } from '@/sockets/interfaces';
 import { writeFile, mkdir, unlink } from 'fs/promises';
 import path from 'path';
@@ -37,6 +35,7 @@ router.post('/', verifyAuth, async (req, res) => {
     active: req.body.active,
     videoLink: req.body.videoLink,
     note: req.body.note,
+    drawData: req.body.drawData,
     team: res.locals.player.team,
     createdBy: res.locals.player._id,
     createdAt: new Date(),
