@@ -101,7 +101,7 @@ export default class App extends Vue {
         key: 'app/update-notice',
         text: `
         <h1>Stratbook has been updated to v${this.appVersion}.</h1>
-          <ul">
+          <ul>
             <li>- Strats can be saved from map view when a name is added.</li>
             <li>- Added deeplinks to strat drawing board, e.g. https://app.stratbook.pro/#/strats/[strat-id]</li>
             <li>- minor bug fixes</li>

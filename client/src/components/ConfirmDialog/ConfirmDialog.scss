@@ -43,16 +43,16 @@
     }
   }
 
-  h1 {
+  & h1 {
     font-size: 1.15rem;
   }
 
-  strong,
-  b {
+  & strong,
+  & b {
     font-weight: $weight-bold;
   }
 
-  ul {
+  & ul {
     margin-top: 12px;
     background: var(--color-bg-secondary);
     padding: 8px 8px;
