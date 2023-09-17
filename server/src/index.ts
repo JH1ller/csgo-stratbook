@@ -20,6 +20,16 @@ import { Log } from './utils/logger';
 import { instrument } from '@socket.io/admin-ui';
 import { hashSync } from 'bcryptjs';
 import { TelegramService } from './services/telegram.service';
+import { dotEnvSchema } from './utils/validation';
+
+const { error } = dotEnvSchema.validate(process.env, { abortEarly: false, allowUnknown: true });
+if (error) {
+  console.error('Error validating .env file:');
+  for (const err of error.details) {
+    console.error(err.message);
+  }
+  process.exit(1);
+}
 
 const app = express();
 const httpServer = createServer(app);
@@ -59,7 +69,7 @@ const limiter = rateLimit({
 });
 
 if (!isDev) {
-  Sentry.init({ dsn: process.env.SENTRY_DSN });
+  if (process.env.SENTRY_DSN) Sentry.init({ dsn: process.env.SENTRY_DSN });
   app.use(Sentry.Handlers.requestHandler());
 
   app.use(limiter);
@@ -140,16 +150,19 @@ app.set('io', io);
 
 initialize(io);
 
-if (!isDev) TelegramService.getInstance().init(process.env.TELEGRAM_TOKEN!, process.env.TELEGRAM_USER!);
+if (!isDev && process.env.TELEGRAM_TOKEN)
+  TelegramService.getInstance().init(process.env.TELEGRAM_TOKEN!, process.env.TELEGRAM_USER!);
 
 //* setup connection to socket.io admin UI
-instrument(io, {
-  auth: {
-    type: 'basic',
-    username: 'admin',
-    password: hashSync(process.env.SOCKET_ADMIN_UI_PW!, 10),
-  },
-});
+if (process.env.SOCKET_ADMIN_UI_PW) {
+  instrument(io, {
+    auth: {
+      type: 'basic',
+      username: 'admin',
+      password: hashSync(process.env.SOCKET_ADMIN_UI_PW!, 10),
+    },
+  });
+}
 
 httpServer.listen(port, undefined, () =>
   Log.success('httpServer::listen', `Server started on port ${port} [${green(process.env.NODE_ENV!.toUpperCase())}]`),
