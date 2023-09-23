@@ -94,7 +94,6 @@ export default class UtilityView extends Vue {
       key: 'utility-view/confirm-delete',
       text: 'Are you sure you want to delete this utility?',
     });
-    console.log(dialogResult);
     if (dialogResult) {
       this.deleteUtility(utility._id);
     }

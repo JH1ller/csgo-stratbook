@@ -39,7 +39,7 @@ export const dotEnvSchema = Joi.object({
     .required()
     .pattern(/mongodb(\+srv)?:\/\/.*/),
   DATABASE_URL_DEV: Joi.string()
-    .required()
+    .optional()
     .pattern(/mongodb(\+srv)?:\/\/.*/),
   EMAIL_SECRET: Joi.string().required().min(32),
   TOKEN_SECRET: Joi.string().required().min(32),
