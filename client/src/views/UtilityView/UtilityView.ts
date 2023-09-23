@@ -94,8 +94,9 @@ export default class UtilityView extends Vue {
       key: 'utility-view/confirm-delete',
       text: 'Are you sure you want to delete this utility?',
     });
+    console.log(dialogResult);
     if (dialogResult) {
-      () => this.deleteUtility(utility._id);
+      this.deleteUtility(utility._id);
     }
   }
 
@@ -105,7 +106,7 @@ export default class UtilityView extends Vue {
       text: 'Do you want to create a share-link to let other teams add this utility to their stratbook?',
     });
     if (dialogResult) {
-      () => this.shareUtility(utility._id);
+      this.shareUtility(utility._id);
     }
   }
 
