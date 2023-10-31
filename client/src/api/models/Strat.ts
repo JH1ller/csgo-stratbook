@@ -13,6 +13,7 @@ export interface DrawBoardState {
 export interface Strat extends Model {
   name: string;
   types: StratTypes[];
+  labels: string[];
   map: GameMap;
   side: Sides;
   active: boolean;

@@ -19,9 +19,9 @@
         :key="strat._id"
         ref="stratItemComponents"
         @delete-strat="deleteStrat"
-        @toggle-active="toggleActive"
+        @toggle-active="updateStrat"
         @edit-strat="editStrat"
-        @update-content="updateContent"
+        @update-content="updateStrat"
         @share-strat="shareStrat"
         @unshare-strat="unshareStrat"
         @toggle-collapse="toggleCollapse"
@@ -31,6 +31,7 @@
         @editor-blurred="editorBlurred"
         @filter-type="filterType"
         @filter-side="filterSide"
+        @add-label="updateStrat"
         :style="{ 'animation-delay': 0.05 * index + 's' }"
       />
     </SlickItem>

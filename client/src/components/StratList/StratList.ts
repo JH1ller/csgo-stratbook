@@ -61,17 +61,12 @@ export default class StratList extends Vue {
   }
 
   @Emit()
-  private toggleActive(payload: Partial<Strat>) {
-    return payload;
-  }
-
-  @Emit()
   private editStrat(strat: Strat) {
     return strat;
   }
 
   @Emit()
-  private updateContent(payload: Partial<Strat>) {
+  private updateStrat(payload: Partial<Strat>) {
     return payload;
   }
 

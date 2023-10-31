@@ -18,7 +18,21 @@ router.get('/', verifyAuth, async (req, res) => {
     ? await StratModel.find({ map: req.query.map, team: res.locals.player.team })
     : await StratModel.find({ team: res.locals.player.team });
 
-  res.json(strats);
+  const labelSet = strats.reduce<Set<string>>((acc, curr) => {
+    for (const label of curr.labels) {
+      acc.add(label);
+    }
+    return acc;
+  }, new Set());
+
+  const labelArr = [...labelSet];
+
+  // res.json({
+  //   strats,
+  //   labels: labelArr,
+  // });
+
+  return res.json(strats);
 });
 
 // * Create One

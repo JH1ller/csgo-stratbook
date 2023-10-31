@@ -182,10 +182,6 @@ export default class StratsView extends Vue {
     this.stratFormOpen = false;
   }
 
-  private toggleStratActive(data: Partial<Strat>) {
-    this.updateStrat(data);
-  }
-
   private async requestDeleteStrat(stratID: string) {
     const dialogResult = await this.showDialog({
       key: 'strats-view/confirm-delete',
@@ -204,10 +200,6 @@ export default class StratsView extends Vue {
     if (dialogResult) {
       this.shareStrat(stratID);
     }
-  }
-
-  private updateContent(payload: Partial<Strat>) {
-    this.updateStrat(payload);
   }
 
   private showLightbox(utility: Utility) {

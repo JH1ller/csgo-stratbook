@@ -46,6 +46,19 @@
         <div class="strat-item__btn --insert" @click="insertPlayerRows" content="Insert line for each player" v-tippy>
           <fa-icon icon="th-list" />
         </div>
+        <div class="strat-item__labels">
+          <div class="strat-item__label" v-for="label in strat.labels" :key="label">{{ label }}</div>
+          <button class="strat-item__label --add" v-if="!labelAddMode" @click="handleLabelAddClicked">
+            Add <fa-icon icon="plus" />
+          </button>
+          <input
+            type="text"
+            ref="labelAddInput"
+            class="strat-item__label --input"
+            v-if="labelAddMode"
+            @keydown="handleLabelSubmit"
+          />
+        </div>
         <transition name="fade">
           <div class="strat-item__action-buttons" v-if="editMode">
             <div class="strat-item__btn --save" @click="updateContent" content="Save strat changes" v-tippy>

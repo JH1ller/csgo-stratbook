@@ -29,8 +29,11 @@ export default class StratItem extends Vue {
   @Prop() private collapsed!: boolean;
   @Prop() private editMode!: boolean;
   @Ref() private editor!: IStratEditor;
+  @Ref() private labelAddInput!: HTMLInputElement;
   @appModule.Action private showToast!: (toast: Toast) => Promise<void>;
   @stratModule.State private sort!: Sort;
+
+  private labelAddMode = false;
 
   private editorKey = 0;
 
@@ -54,6 +57,26 @@ export default class StratItem extends Vue {
 
   private openVideo() {
     openLink(this.strat.videoLink as string);
+  }
+
+  private async handleLabelAddClicked() {
+    this.labelAddMode = true;
+    await this.$nextTick();
+    this.labelAddInput.focus();
+  }
+
+  private handleLabelSubmit(e: KeyboardEvent) {
+    if (e.key === 'Enter') {
+      const value = (e.target as HTMLInputElement).value;
+      if (value) {
+        this.addLabel(value);
+        this.labelAddMode = false;
+      }
+    }
+
+    if (e.key === 'Escape') {
+      this.labelAddMode = false;
+    }
   }
 
   @Emit()
@@ -116,6 +139,11 @@ export default class StratItem extends Vue {
   @Emit()
   private editorBlurred() {
     return;
+  }
+
+  @Emit()
+  private addLabel(value: string) {
+    return value;
   }
 
   @Emit()
