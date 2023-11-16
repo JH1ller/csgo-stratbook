@@ -56,7 +56,7 @@
     "nodemailer": "^6.7.2",
     "pug": "^3.0.2",
     "sanitize-html": "^2.7.0",
-    "sharp": "^0.32.1",
+    "sharp": "^0.32.6",
     "socket.io": "^4.6.1",
     "tsconfig-paths": "^3.14.0",
     "url-join": "^4.0.1"
