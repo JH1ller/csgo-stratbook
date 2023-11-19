@@ -37,7 +37,7 @@ export default class RegisterView extends Vue {
       if (['@hotmail', '@live', '@outlook'].some((suffix) => email.includes(suffix))) {
         this.showDialog({
           key: 'register-view/hotmail-warning',
-          text: `Hey there, glad to have you on board!<br>It seems like you registered with a Microsoft email.<br>The confirmation mail might land in your spam folder or not arrive at all.<br>If that's the case, please contact me via our Discord, or at support@stratbook.live`,
+          text: `Hey there, glad to have you on board!<br>It seems like you registered with a Microsoft email.<br>The confirmation mail might land in your spam folder or not arrive at all.<br>If that's the case, please contact me via our Discord, or at support@stratbook.pro`,
           resolveBtn: 'OK',
           htmlMode: true,
           confirmOnly: true,
