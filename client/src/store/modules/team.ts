@@ -6,6 +6,7 @@ import { Player } from '@/api/models/Player';
 import { Status } from './auth';
 import api from '@/api/base';
 import TrackingService from '@/services/tracking.service';
+import { AccessRole } from '@/api/models/AccessRoles';
 
 const SET_TEAM_INFO = 'SET_TEAM_INFO';
 const SET_TEAM_MEMBERS = 'SET_TEAM_MEMBERS';
@@ -109,6 +110,23 @@ export const teamModule: Module<TeamState, RootState> = {
           { root: true },
         );
         trackingService.track('Action: Update Player Color', { color: payload.color });
+        return { success: true };
+      } else {
+        return { error: res.error };
+      }
+    },
+    async updatePlayerRole({ dispatch }, payload: { _id: string; role: AccessRole }) {
+      const res = await api.player.updatePlayerRole(payload);
+      if (res.success) {
+        dispatch(
+          'app/showToast',
+          {
+            id: 'team/updatePlayerRole',
+            text: 'Role updated.',
+          },
+          { root: true },
+        );
+        trackingService.track('Action: Update Player Role', { role: payload.role });
         return { success: true };
       } else {
         return { error: res.error };

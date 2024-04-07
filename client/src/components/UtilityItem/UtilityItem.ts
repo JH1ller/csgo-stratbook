@@ -14,12 +14,13 @@ import SmartImage from '@/components/SmartImage/SmartImage.vue';
   },
 })
 export default class UtilityItem extends Vue {
-  @Prop() private utility!: Utility;
+  @Prop() utility!: Utility;
+  @Prop() readOnly!: boolean;
 
-  private UtilityMovement: typeof UtilityMovement = UtilityMovement;
-  private Sides: typeof Sides = Sides;
+  UtilityMovement: typeof UtilityMovement = UtilityMovement;
+  Sides: typeof Sides = Sides;
 
-  private get utilityImage(): string | undefined {
+  get utilityImage(): string | undefined {
     if (this.utility.images.length) {
       return resolveStaticImageUrl(this.utility.images[0]);
     }
@@ -30,12 +31,12 @@ export default class UtilityItem extends Vue {
   }
 
   @Emit()
-  private openInLightbox() {
+  openInLightbox() {
     return this.utility;
   }
 
   @Emit()
-  private openMenu(e: Event) {
+  openMenu(e: Event) {
     return e;
   }
 }

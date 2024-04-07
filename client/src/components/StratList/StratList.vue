@@ -15,7 +15,7 @@
         :isTutorial="strat._id === (tutorialStrat && tutorialStrat._id)"
         :collapsed="isCollapsed(strat)"
         :editMode="isEdited(strat)"
-        :gameMode="gameMode"
+        :readOnly="readOnly"
         :key="strat._id"
         ref="stratItemComponents"
         @delete-strat="deleteStrat"

@@ -12,6 +12,7 @@ export const toPlayerDto = (player: PlayerDocument): PlayerDto => {
     avatar: player.avatar,
     team: player.team,
     color: player.color,
+    role: player.role,
     isOnline: player.isOnline,
     lastOnline: player.lastOnline,
   };

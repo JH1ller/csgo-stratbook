@@ -1,3 +1,4 @@
+import { AccessRole } from '@/types/enums';
 import { Types, Schema, model, Document } from 'mongoose';
 import mongooseDelete from 'mongoose-delete';
 
@@ -15,6 +16,7 @@ export interface Player {
   isAdmin: boolean;
   completedTutorial: boolean;
   color: string;
+  role: AccessRole;
 }
 
 export type PlayerDocument = Player &
@@ -85,6 +87,12 @@ const playerSchema = new Schema<Player>({
   },
 
   color: String,
+
+  role: {
+    type: String,
+    enum: Object.values(AccessRole),
+    default: AccessRole.EDITOR,
+  },
 });
 
 playerSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });

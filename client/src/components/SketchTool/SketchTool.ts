@@ -1,6 +1,6 @@
 import { Component, Mixins, Prop, Ref, Inject, Emit } from 'vue-property-decorator';
 import CloseOnEscape from '@/mixins/CloseOnEscape';
-import { appModule, teamModule } from '@/store/namespaces';
+import { appModule, authModule, teamModule } from '@/store/namespaces';
 import { Stage, StageConfig } from 'konva/lib/Stage';
 import { UtilityTypes } from '@/api/models/UtilityTypes';
 import { nanoid } from 'nanoid';
@@ -48,6 +48,7 @@ import { COLORS } from '@/constants/colors';
 import { Player } from '@/api/models/Player';
 import VueContext from 'vue-context';
 import { PlayerItem } from './types';
+import { AccessRole } from '@/api/models/AccessRoles';
 
 @Component({
   components: {
@@ -61,6 +62,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   @appModule.Action private showToast!: (toast: Toast) => void;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
   @teamModule.State teamMembers!: Player[];
+  @authModule.State profile!: Player;
 
   @Ref() stageRef!: KonvaRef<Stage>;
   @Ref() stageContainer!: HTMLDivElement;
@@ -129,6 +131,10 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
     return Object.values(this.itemState).flat();
   }
 
+  get readOnly() {
+    return !!this.stratId && this.profile?.role !== AccessRole.EDITOR;
+  }
+
   undo(): void {
     if (this.historyPointer > 0) {
       this.historyPointer--;
@@ -164,7 +170,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       width: this.imageSize,
       height: this.imageSize,
       strokeWidth: 1,
-      draggable: this.activeTool === ToolTypes.Pointer,
+      draggable: this.activeTool === ToolTypes.Pointer && !this.readOnly,
       image: this.utilImages[item.type],
       rotation: item.rotation,
       scaleX: item.scaleX,
@@ -182,7 +188,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       width: 35,
       height: 35,
       strokeWidth: 1,
-      draggable: this.activeTool === ToolTypes.Pointer,
+      draggable: this.activeTool === ToolTypes.Pointer && !this.readOnly,
       //! potential memory leak
       image: createPlayerImage(item.color),
       rotation: item.rotation,
@@ -268,7 +274,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       y: item.y,
       stroke: item.color,
       strokeWidth: 6,
-      draggable: this.activeTool === ToolTypes.Pointer,
+      draggable: this.activeTool === ToolTypes.Pointer && !this.readOnly,
       lineCap: 'round',
       points: item.points,
       tension: 0.5,
@@ -295,7 +301,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
       x: item.x,
       y: item.y,
       visible: item.visible,
-      draggable: this.activeTool === ToolTypes.Pointer,
+      draggable: this.activeTool === ToolTypes.Pointer && !this.readOnly,
       fontSize: item.fontSize,
       fontFamily: 'Ubuntu',
       shadowColor: 'black',
@@ -591,26 +597,27 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
         this.setActiveTool(ToolTypes.Pointer);
         break;
       case 'b':
+        if (this.readOnly) break;
         this.setActiveTool(ToolTypes.Brush);
         this.pointerRef.getNode().position(this.getScaledPointerPosition());
         break;
       case 't':
-        this.setActiveTool(ToolTypes.Text);
+        if (!this.readOnly) this.setActiveTool(ToolTypes.Text);
         break;
       case 'r':
-        this.clearStage();
+        if (!this.readOnly) this.clearStage();
         break;
       case 'z':
-        this.undo();
+        if (!this.readOnly) this.undo();
         break;
       case 'y':
-        this.redo();
+        if (!this.readOnly) this.redo();
         break;
       case 'c':
         this.setResponsiveStageSize();
         break;
       case 'Delete':
-        this.removeActiveItems();
+        if (!this.readOnly) this.removeActiveItems();
         break;
     }
   }
@@ -995,7 +1002,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
 
   get handleDataChange(): DebouncedFunc<(serialize?: boolean) => void> {
     return throttle((serialize = true) => {
-      if (this.wsService.connected) {
+      if (this.wsService.connected && !this.readOnly) {
         this.wsService.emit('update-data', this.itemState);
       } else if (serialize) {
         this.serializeAndStore();

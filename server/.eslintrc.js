@@ -16,6 +16,7 @@ module.exports = {
   },
   rules: {
     '@typescript-eslint/no-non-null-assertion': 'off',
+    'no-constant-condition': ['warn', { checkLoops: false }],
   },
   plugins: ['prettier', '@typescript-eslint', 'security'],
 };

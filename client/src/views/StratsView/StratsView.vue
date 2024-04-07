@@ -22,7 +22,7 @@
       :strats="sortedFilteredStratsOfCurrentMap"
       :collapsedStrats="collapsedStrats"
       :editedStrats="editedStrats"
-      :gameMode="gameMode"
+      :readOnly="readOnly"
       @delete-strat="requestDeleteStrat"
       @edit-strat="showStratForm"
       @update-strat="updateStrat"
@@ -79,7 +79,7 @@
         />
         <transition name="fade">
           <FloatingButton
-            v-if="!gameMode"
+            v-if="!readOnly"
             class="strats-view__floating-add"
             label="Add Strat"
             icon="plus"

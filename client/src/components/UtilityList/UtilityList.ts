@@ -14,39 +14,40 @@ import { writeToClipboard } from '@/utils/writeToClipboard';
   },
 })
 export default class UtilityList extends Vue {
-  @appModule.Action private showToast!: (toast: Toast) => void;
-  @Prop() private utilities!: Utility[];
-  @Ref() private menu!: any;
+  @appModule.Action showToast!: (toast: Toast) => void;
+  @Prop() utilities!: Utility[];
+  @Prop() readOnly!: boolean;
+  @Ref() menu!: any;
 
-  private trackingService = TrackingService.getInstance();
+  trackingService = TrackingService.getInstance();
 
   @Emit()
-  private openInLightbox(utility: Utility) {
+  openInLightbox(utility: Utility) {
     return utility;
   }
 
   @Emit()
-  private editUtility(utility: Utility) {
+  editUtility(utility: Utility) {
     return utility;
   }
 
   @Emit()
-  private shareUtility(utility: Utility) {
+  shareUtility(utility: Utility) {
     return utility;
   }
 
   @Emit()
-  private deleteUtility(utility: Utility) {
+  deleteUtility(utility: Utility) {
     return utility;
   }
 
-  private copySetpos(utility: Utility) {
+  copySetpos(utility: Utility) {
     writeToClipboard(utility.setpos!);
     this.showToast({ id: 'utilityList/copySetpos', text: 'Setpos Command copied!' });
     this.trackingService.track('Action: Copy Setpos', { from: 'context-menu' });
   }
 
-  private openMenu(e: Event, utility: Utility) {
+  openMenu(e: Event, utility: Utility) {
     e.preventDefault();
     e.stopImmediatePropagation();
     this.menu.open(e, { utility });

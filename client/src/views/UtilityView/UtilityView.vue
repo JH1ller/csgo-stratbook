@@ -3,6 +3,7 @@
     <map-picker @map-clicked="updateCurrentMap" :currentMap="currentMap" />
     <UtilityList
       :utilities="sortedFilteredUtilitiesOfCurrentMap"
+      :readOnly="readOnly"
       @open-in-lightbox="showLightbox"
       @edit-utility="showUtilityForm"
       @delete-utility="requestDeleteUtility"
@@ -27,6 +28,7 @@
           content="CTRL+Shift+F"
         />
         <FloatingButton
+          v-if="!readOnly"
           class="utility-view__floating-add"
           label="Add utility"
           icon="plus"

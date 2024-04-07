@@ -109,4 +109,37 @@ router.patch('/color', verifyAuth, async (req, res) => {
   }
 });
 
+// * Update role
+router.patch('/role', verifyAuth, async (req, res) => {
+  const team = await TeamModel.findById(res.locals.player.team);
+  if (!team) return res.status(400).json({ error: 'Could not find team with the provided ID.' });
+
+  const isSelf = res.locals.player._id.equals(req.body._id);
+  const isManager = team.manager.equals(res.locals.player._id);
+
+  if (!isManager) {
+    return res.status(403).json({ error: 'Only the captain can change the access role of other members.' });
+  }
+
+  if (isSelf && isManager) {
+    return res.status(400).json({ error: 'A captain cannot remove their editing rights.' });
+  }
+  const targetMember = await PlayerModel.findById(req.body._id);
+
+  if (!targetMember) return res.status(400).json({ error: 'Could not find player with the provided ID.' });
+
+  targetMember.role = req.body.role;
+
+  const updatedPlayer = await targetMember.save();
+  const updatedPlayerDto = toPlayerDto(updatedPlayer);
+
+  res.json(updatedPlayerDto);
+
+  if (updatedPlayer.team) {
+    (req.app.get('io') as TypedServer)
+      .to(updatedPlayer.team.toString())
+      .emit('updated-player', { player: updatedPlayerDto });
+  }
+});
+
 export default router;
