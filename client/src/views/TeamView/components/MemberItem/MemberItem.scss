@@ -81,6 +81,14 @@
     @include icon-button;
   }
 
+  &__checkbox {
+    @include spacing('margin-right', '2xs');
+
+    @include viewport_mq2 {
+      @include spacing('margin-right', 's');
+    }
+  }
+
   &__btn-label {
     display: none;
 

@@ -41,12 +41,19 @@
         @update="editorUpdated"
         @focus="editorFocussed"
         @blur="editorBlurred"
+        :readOnly="readOnly"
       />
       <div class="strat-item__btn-wrapper">
-        <div class="strat-item__btn --insert" @click="insertPlayerRows" content="Insert line for each player" v-tippy>
+        <div
+          class="strat-item__btn --insert"
+          v-if="!readOnly"
+          @click="insertPlayerRows"
+          content="Insert line for each player"
+          v-tippy
+        >
           <fa-icon icon="th-list" />
         </div>
-        <transition name="fade">
+        <template>
           <div class="strat-item__action-buttons" v-if="editMode">
             <div class="strat-item__btn --save" @click="updateContent" content="Save strat changes" v-tippy>
               <fa-icon icon="save" /><span class="strat-item__btn-label">Save</span>
@@ -55,56 +62,47 @@
               <fa-icon icon="ban" /><span class="strat-item__btn-label">Discard</span>
             </div>
           </div>
-        </transition>
-        <div
-          class="strat-item__btn --youtube"
-          v-if="strat.videoLink"
-          @click="openVideo"
-          content="Open video in browser"
-          v-tippy
-        >
-          <fa-icon icon="film" />
-        </div>
-        <div
-          class="strat-item__btn --map"
-          :class="{ '-active': hasDrawData }"
-          @click="showMap"
-          content="Open map"
-          v-tippy
-        >
-          <fa-icon icon="map" />
-        </div>
-        <transition name="fade">
-          <span v-show="!gameMode" class="strat-item__edit-buttons">
+          <span v-else class="strat-item__button-list">
             <div
-              class="strat-item__btn --toggle-active"
-              @click="toggleActive"
-              :content="strat.active ? 'Set inactive' : 'Set active'"
+              class="strat-item__btn --youtube"
+              v-if="strat.videoLink"
+              @click="openVideo"
+              content="Open video in browser"
               v-tippy
             >
-              <fa-icon icon="check-circle" v-if="strat.active" />
-              <fa-icon icon="minus-circle" v-else />
+              <fa-icon icon="film" />
             </div>
             <div
-              class="strat-item__btn --share"
-              :class="{ '-active': strat.shared }"
-              @click="strat.shared ? unshareStrat() : shareStrat()"
-              :content="strat.shared ? 'Stop sharing' : 'Create share link'"
+              class="strat-item__btn --map"
+              :class="{ '-active': hasDrawData }"
+              @click="showMap"
+              content="Open map"
               v-tippy
             >
-              <fa-icon icon="share-alt" />
+              <fa-icon icon="map" />
             </div>
-            <div class="strat-item__btn --edit" @click="editStrat" content="Edit strat" v-tippy>
-              <fa-icon icon="edit" />
-            </div>
-            <div class="strat-item__btn --delete" @click="deleteStrat" content="Delete strat" v-tippy>
-              <fa-icon icon="trash-alt" />
-            </div>
+            <span class="strat-item__edit-buttons" v-if="!readOnly">
+              <div
+                class="strat-item__btn --toggle-active"
+                @click="toggleActive"
+                :content="strat.active ? 'Set inactive' : 'Set active'"
+                v-tippy
+              >
+                <fa-icon icon="check-circle" v-if="strat.active" />
+                <fa-icon icon="minus-circle" v-else />
+              </div>
+              <div class="strat-item__btn --edit" @click="editStrat" content="Edit strat" v-tippy>
+                <fa-icon icon="edit" />
+              </div>
+              <div class="strat-item__btn --delete" @click="deleteStrat" content="Delete strat" v-tippy>
+                <fa-icon icon="trash-alt" />
+              </div>
+            </span>
           </span>
-        </transition>
+        </template>
       </div>
     </div>
-    <fa-icon v-if="isManualSort" class="strat-item__drag-icon" icon="ellipsis-v" v-handle />
+    <fa-icon v-if="isManualSort && !readOnly" class="strat-item__drag-icon" icon="ellipsis-v" v-handle />
   </div>
 </template>
 

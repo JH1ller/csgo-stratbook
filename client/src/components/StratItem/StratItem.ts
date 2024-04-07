@@ -22,19 +22,19 @@ import { Sort } from '@/utils/sortFunctions';
   directives: { handle: HandleDirective },
 })
 export default class StratItem extends Vue {
-  @Prop() private gameMode!: boolean;
-  @Prop() private strat!: Strat;
-  @Prop() private completedTutorial!: boolean;
-  @Prop() private isTutorial!: boolean;
-  @Prop() private collapsed!: boolean;
-  @Prop() private editMode!: boolean;
-  @Ref() private editor!: IStratEditor;
-  @appModule.Action private showToast!: (toast: Toast) => Promise<void>;
-  @stratModule.State private sort!: Sort;
+  @Prop() readOnly!: boolean;
+  @Prop() strat!: Strat;
+  @Prop() completedTutorial!: boolean;
+  @Prop() isTutorial!: boolean;
+  @Prop() collapsed!: boolean;
+  @Prop() editMode!: boolean;
+  @Ref() editor!: IStratEditor;
+  @appModule.Action showToast!: (toast: Toast) => Promise<void>;
+  @stratModule.State sort!: Sort;
 
-  private editorKey = 0;
+  editorKey = 0;
 
-  private get isManualSort() {
+  get isManualSort() {
     return this.sort === Sort.Manual;
   }
 
@@ -44,106 +44,106 @@ export default class StratItem extends Vue {
     );
   }
 
-  private get isCtSide(): boolean {
+  get isCtSide(): boolean {
     return this.strat.side === Sides.CT;
   }
 
-  private get sortedTypes(): StratTypes[] {
+  get sortedTypes(): StratTypes[] {
     return this.strat.types.sort((a, b) => a.localeCompare(b, 'en'));
   }
 
-  private openVideo() {
+  openVideo() {
     openLink(this.strat.videoLink as string);
   }
 
   @Emit()
-  private filterType(type: StratTypes) {
+  filterType(type: StratTypes) {
     this.showToast({ id: 'strat-item/filter-type', text: `Applied filter: ${titleCase(type)}` });
     return type;
   }
 
   @Emit()
-  private filterSide() {
+  filterSide() {
     this.showToast({ id: 'strat-item/filter-side', text: `Applied filter: ${this.strat.side} side` });
     return this.strat.side;
   }
 
   @Emit()
-  private deleteStrat() {
+  deleteStrat() {
     return this.strat._id;
   }
 
   @Emit()
-  private editStrat() {
+  editStrat() {
     return this.strat;
   }
 
   @Emit()
-  private shareStrat() {
+  shareStrat() {
     return this.strat._id;
   }
 
   @Emit()
-  private unshareStrat() {
+  unshareStrat() {
     return this.strat._id;
   }
 
   @Emit()
-  private toggleCollapse() {
+  toggleCollapse() {
     return this.strat._id;
   }
 
   @Emit()
-  private editChanged(value: boolean) {
+  editChanged(value: boolean) {
     return { stratID: this.strat._id, value };
   }
 
   @Emit()
-  private toggleActive(): Partial<Strat> {
+  toggleActive(): Partial<Strat> {
     return { _id: this.strat._id, active: !this.strat.active };
   }
 
   @Emit()
-  private showMap() {
+  showMap() {
     return;
   }
 
   @Emit()
-  private editorFocussed() {
+  editorFocussed() {
     return;
   }
 
   @Emit()
-  private editorBlurred() {
+  editorBlurred() {
     return;
   }
 
   @Emit()
-  private updateContent(): Partial<Strat> {
+  updateContent(): Partial<Strat> {
     this.editChanged(false);
     return { _id: this.strat._id, content: this.editor.textarea.innerHTML };
   }
 
-  private editorUpdated(content: string) {
+  editorUpdated(content: string) {
     const editMode = content !== this.strat.content;
     if (editMode !== this.editMode) {
       this.editChanged(editMode);
     }
   }
 
-  private discardContent(): void {
+  discardContent(): void {
     this.editChanged(false);
     // * force refresh of editor
     this.editorKey++;
   }
 
-  private insertPlayerRows(): void {
+  insertPlayerRows(): void {
     // TODO: find better way to structure this, instead of calling method on child component directly
     this.editor.insertPlayerRows();
   }
 
   // TODO: replace with i18n implementation once vuei18n is in
-  private typeTooltip(type: StratTypes): string {
+  typeTooltip(type: StratTypes): string {
     switch (type) {
       case StratTypes.BUYROUND:
         return 'Buy-Round';
@@ -155,7 +155,7 @@ export default class StratItem extends Vue {
   }
 
   // TODO: replace with i18n implementation once vuei18n is in
-  private get sideTooltip() {
+  get sideTooltip() {
     switch (this.strat.side) {
       case Sides.CT:
         return 'CT Side';

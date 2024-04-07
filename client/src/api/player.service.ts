@@ -2,9 +2,11 @@ import urljoin from 'url-join';
 import ApiService from './base';
 import { Player } from './models/Player';
 import { APIResponse, Endpoints } from './types';
+import { AccessRole } from './models/AccessRoles';
 
 export enum Actions {
   ChangeColor = 'color',
+  ChangeRole = 'role',
 }
 
 export class PlayerService {
@@ -38,6 +40,11 @@ export class PlayerService {
 
   async updatePlayerColor(payload: { _id: string; color: string }): Promise<APIResponse<Player>> {
     const target = urljoin(this.endpoint, Actions.ChangeColor);
+    return ApiService.makeRequest<Player>(ApiService.http.patch(target, payload));
+  }
+
+  async updatePlayerRole(payload: { _id: string; role: AccessRole }): Promise<APIResponse<Player>> {
+    const target = urljoin(this.endpoint, Actions.ChangeRole);
     return ApiService.makeRequest<Player>(ApiService.http.patch(target, payload));
   }
 }

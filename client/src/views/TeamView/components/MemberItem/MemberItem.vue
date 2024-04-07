@@ -14,13 +14,31 @@
     </div>
     <div class="member-item__button-group">
       <button
+        v-if="isManager && member._id !== profile._id"
+        class="member-item__btn"
+        :content="member.role === AccessRole.EDITOR ? 'Change role to viewer' : 'Change role to editor'"
+        v-tippy
+        @click="
+          () =>
+            updateRole({
+              _id: member._id,
+              role: member.role === AccessRole.VIEWER ? AccessRole.EDITOR : AccessRole.VIEWER,
+            })
+        "
+      >
+        <fa-icon :icon="member.role === AccessRole.EDITOR ? 'pencil-alt' : ['far', 'eye']" /><span
+          class="member-item__btn-label"
+          >{{ member.role === AccessRole.EDITOR ? 'Editor' : 'Viewer' }}</span
+        >
+      </button>
+      <button
         v-if="isManager && member._id !== teamInfo.manager"
         @click="() => transferManager(member._id)"
         class="member-item__btn"
         v-tippy
         content="Make captain"
       >
-        <fa-icon class="" icon="crown" /><span class="member-item__btn-label">Make captain</span>
+        <fa-icon icon="crown" /><span class="member-item__btn-label">Make captain</span>
       </button>
       <button
         v-if="isManager && member._id !== profile._id"
@@ -29,7 +47,7 @@
         v-tippy
         content="Kick player"
       >
-        <fa-icon class="" icon="user-times" /><span class="member-item__btn-label">Kick</span>
+        <fa-icon icon="user-times" /><span class="member-item__btn-label">Kick</span>
       </button>
       <v-swatches
         class="member-item__color-picker"

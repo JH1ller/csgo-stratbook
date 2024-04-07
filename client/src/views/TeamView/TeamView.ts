@@ -8,6 +8,7 @@ import { Routes } from '@/router/router.models';
 import EditTeamForm from '@/components/EditTeamForm/EditTeamForm.vue';
 import { Team } from '@/api/models/Team';
 import { Player } from '@/api/models/Player';
+import { AccessRole } from '@/api/models/AccessRoles';
 
 @Component({
   components: {
@@ -27,6 +28,7 @@ export default class TeamView extends Vue {
   @teamModule.Action kickMember!: (memberID: string) => Promise<Response>;
   @teamModule.Action updateTeam!: (data: FormData) => Promise<Response>;
   @teamModule.Action updatePlayerColor!: (data: { _id: string; color: string }) => Promise<void>;
+  @teamModule.Action updatePlayerRole!: (data: { _id: string; role: AccessRole }) => Promise<void>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
   @authModule.Action updateProfile!: (data: FormData) => Promise<void>;
 

@@ -9,6 +9,7 @@
       :profile="profile"
       :teamInfo="teamInfo"
       @update-color="updateColor"
+      @update-role="updateRole"
       @transfer-manager="transferManager"
       @kick-member="kickMember"
     >
