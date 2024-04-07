@@ -39,3 +39,8 @@ export enum StratSide {
   'CT' = 'CT',
   'T' = 'T',
 }
+
+export enum AccessRole {
+  EDITOR = 'EDITOR',
+  VIEWER = 'VIEWER',
+}

@@ -12,6 +12,7 @@ import { getRandomColor } from '@/utils/colors';
 import { toPlayerDto } from '@/dto/player.dto';
 import { toTeamDto } from '@/dto/team.dto';
 import { TelegramService } from '@/services/telegram.service';
+import { AccessRole } from '@/types/enums';
 
 const router = Router();
 const telegramService = TelegramService.getInstance();
@@ -152,6 +153,7 @@ router.patch('/join', verifyAuth, async (req, res) => {
 
   res.locals.player.color = color;
   res.locals.player.team = team._id;
+  res.locals.player.role = AccessRole.VIEWER;
 
   const updatedPlayer = await res.locals.player.save();
   return res.json(toPlayerDto(updatedPlayer));

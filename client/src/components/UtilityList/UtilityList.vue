@@ -6,6 +6,7 @@
       :utility="utility"
       :key="utility._id"
       :style="{ 'animation-delay': 0.025 * index + 's' }"
+      :readOnly="readOnly"
       @open-in-lightbox="openInLightbox"
       @open-menu="openMenu($event, utility)"
     />
@@ -15,11 +16,6 @@
       </li>
       <li data-context-setpos>
         <a @click.prevent="copySetpos(data.utility)"><fa-icon icon="map-marker-alt" />Copy Setpos</a>
-      </li>
-      <li disabled>
-        <a @click.prevent="shareUtility(data.utility)"
-          ><fa-icon icon="share-alt" />{{ data && data.utility.shared ? 'Unshare' : 'Share' }}</a
-        >
       </li>
       <li>
         <a @click.prevent="deleteUtility(data.utility)"><fa-icon icon="trash-alt" />Delete</a>

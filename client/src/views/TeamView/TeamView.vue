@@ -6,6 +6,7 @@
         @transfer-manager="requestTransferManager"
         @kick-member="requestKickMember"
         @update-color="updatePlayerColor"
+        @update-role="updatePlayerRole"
       />
       <TeamInfo
         :teamInfo="teamInfo"

@@ -22,7 +22,7 @@ export default class StratList extends Vue {
   @Prop() strats!: Strat[];
   @Prop() collapsedStrats!: string[];
   @Prop() editedStrats!: string[];
-  @Prop() gameMode!: boolean;
+  @Prop() readOnly!: boolean;
   @Ref() stratItemComponents!: IStratItem[];
 
   private isCollapsed(strat: Strat) {

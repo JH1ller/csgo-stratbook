@@ -5,6 +5,7 @@ import { Boards, PlayerItem } from '../types';
 import { Log } from '@/utils/logger';
 import { Room } from './room';
 import { TypedSocket, TypedServer } from './interfaces';
+import { AccessRole } from '@/types/enums';
 
 const boards: Boards = {};
 
@@ -76,8 +77,12 @@ export const registerBoardHandler = (io: TypedServer, socket: TypedSocket) => {
 
   socket.on('update-data', (boardData) => {
     const roomId = socket.data.drawRoomId;
+    if (!roomId) return;
+    const stratId = boards[roomId]?.mapData.stratId;
 
-    if (!roomId || !boards[roomId]) return;
+    // don't allow non-editors to update data
+    if (!roomId || !boards[roomId] || (stratId && socket.data.player?.role !== AccessRole.EDITOR)) return;
+
     boards[roomId].mapData.data = boardData;
 
     //Log.info('sockets::update-data', `Updated data of room ${roomId}`);

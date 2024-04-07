@@ -21,6 +21,7 @@ import TrackingService from '@/services/tracking.service';
 import BackdropDialog from '@/components/BackdropDialog/BackdropDialog.vue';
 import { GameMap } from '@/api/models/GameMap';
 import { Sort } from '@/utils/sortFunctions';
+import { AccessRole } from '@/api/models/AccessRoles';
 
 @Component({
   components: {
@@ -48,6 +49,7 @@ export default class StratsView extends Vue {
   @filterModule.State stratFilters!: StratFilters;
   @filterModule.Getter activeStratFilterCount!: number;
   @teamModule.State teamMembers!: Player[];
+  @teamModule.Getter isManager!: boolean;
   @authModule.State profile!: Player;
   @appModule.State gameMode!: boolean;
 
@@ -239,6 +241,10 @@ export default class StratsView extends Vue {
   private toggleGameMode() {
     this.gameMode ? this.exitGameMode() : this.startGameMode();
     this.trackingService.track('Action: Toggle GameMode', { value: this.gameMode });
+  }
+
+  get readOnly(): boolean {
+    return this.gameMode || (!this.isManager && this.profile.role !== AccessRole.EDITOR);
   }
 
   private get sortBtnIcon() {

@@ -66,7 +66,7 @@ import {
   faSort,
 } from '@fortawesome/free-solid-svg-icons';
 import { faDiscord, faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons';
-import { faCircle } from '@fortawesome/free-regular-svg-icons';
+import { faCircle, faEye } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 export default function loadIcons() {
@@ -141,6 +141,7 @@ export default function loadIcons() {
     faSortNumericUpAlt,
     faSort,
     faCrown,
+    faEye,
   );
 
   Vue.component('fa-icon', FontAwesomeIcon);

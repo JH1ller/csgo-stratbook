@@ -4,6 +4,7 @@ import { getUtility } from '@/utils/getters';
 import { verifyAuth } from '@/utils/verifyToken';
 import { uploadMultiple, deleteFile, processImage } from '@/utils/fileUpload';
 import { TypedServer } from '@/sockets/interfaces';
+import { AccessRole } from '@/types/enums';
 
 const router = Router();
 
@@ -22,6 +23,9 @@ router.get('/', verifyAuth, async (req, res) => {
 router.post('/', verifyAuth, uploadMultiple('images'), async (req, res) => {
   if (!res.locals.player.team) {
     return res.status(400).json({ error: "Authenticated user doesn't have a team" });
+  }
+  if (res.locals.player.role !== AccessRole.EDITOR) {
+    return res.status(403).json({ error: 'Only editors can create utilities' });
   }
 
   const utility = new UtilityModel({
@@ -60,6 +64,9 @@ router.post('/', verifyAuth, uploadMultiple('images'), async (req, res) => {
 router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, res) => {
   if (!res.locals.player.team.equals(res.locals.utility.team)) {
     return res.status(400).json({ error: 'Cannot update a utility of another team.' });
+  }
+  if (res.locals.player.role !== AccessRole.EDITOR) {
+    return res.status(403).json({ error: 'Only editors can update utilities' });
   }
   const updatableFields = [
     'name',
@@ -112,6 +119,9 @@ router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, 
 router.delete('/:utility_id', verifyAuth, getUtility, async (req, res) => {
   if (!res.locals.player.team.equals(res.locals.utility.team)) {
     return res.status(400).json({ error: 'Cannot delete a utility of another team.' });
+  }
+  if (res.locals.player.role !== AccessRole.EDITOR) {
+    return res.status(403).json({ error: 'Only editors can delete utilities' });
   }
   if (res.locals.utility.images.length) {
     await Promise.all(

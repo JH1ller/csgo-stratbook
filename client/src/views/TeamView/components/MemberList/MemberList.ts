@@ -4,6 +4,7 @@ import MemberItem from '../MemberItem/MemberItem.vue';
 import VueContext from 'vue-context';
 import { Team } from '@/api/models/Team';
 import { Player } from '@/api/models/Player';
+import { AccessRole } from '@/api/models/AccessRoles';
 
 @Component({
   components: {
@@ -24,6 +25,11 @@ export default class MemberList extends Vue {
 
   @Emit()
   updateColor(payload: { _id: string; color: string }) {
+    return payload;
+  }
+
+  @Emit()
+  updateRole(payload: { _id: string; role: AccessRole }) {
     return payload;
   }
 

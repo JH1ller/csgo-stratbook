@@ -5,10 +5,13 @@ import { Player } from '@/api/models/Player';
 import { Team } from '@/api/models/Team';
 import VSwatches from 'vue-swatches';
 import { COLORS } from '@/constants/colors';
+import { AccessRole } from '@/api/models/AccessRoles';
+import Checkbox from '@/components/Checkbox/Checkbox.vue';
 
 @Component({
   components: {
     VSwatches,
+    Checkbox,
   },
 })
 export default class MemberItem extends Vue {
@@ -18,6 +21,7 @@ export default class MemberItem extends Vue {
   @Prop() teamInfo!: Team;
 
   swatches = COLORS;
+  AccessRole = AccessRole;
 
   resolveStaticImageUrl: (url?: string) => string = resolveStaticImageUrl;
 
@@ -33,6 +37,11 @@ export default class MemberItem extends Vue {
 
   @Emit()
   updateColor(payload: { _id: string; color: string }) {
+    return payload;
+  }
+
+  @Emit()
+  updateRole(payload: { _id: string; role: AccessRole }) {
     return payload;
   }
 
