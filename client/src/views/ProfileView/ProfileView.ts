@@ -6,7 +6,8 @@ import ProfileForm from './components/ProfileForm/ProfileForm.vue';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
-import { Response } from '@/store';
+import { downloadFile } from '@/utils/downloadFile';
+import { Strat } from '@/api/models/Strat';
 
 @Component({
   components: {
@@ -14,20 +15,30 @@ import { Response } from '@/store';
   },
 })
 export default class ProfileView extends Vue {
-  @appModule.Action private showToast!: (toast: Toast) => void;
+  @appModule.Action showToast!: (toast: Toast) => void;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
   @authModule.State profile!: Player;
-  @authModule.Action private logout!: () => Promise<void>;
-  @authModule.Action private updateProfile!: (data: FormData) => Promise<void>;
-  @authModule.Action private deleteAccount!: () => Promise<void>;
-  @stratModule.Action private getStratExport!: () => Promise<Response>;
+  @authModule.Action logout!: () => Promise<void>;
+  @authModule.Action updateProfile!: (data: FormData) => Promise<void>;
+  @authModule.Action deleteAccount!: () => Promise<void>;
+  @stratModule.State strats!: Strat[];
+  //@stratModule.Action getStratExport!: () => Promise<Response>;
 
-  private async logoutRequest() {
+  async logoutRequest() {
     await this.logout();
     this.$router.push(Routes.Login);
   }
 
-  private async deleteRequest() {
+  getStratExport() {
+    const strats = this.strats.map((strat) => {
+      const { _id, drawData, createdBy, modifiedBy, team, __v, ...rest } = strat;
+      return rest;
+    });
+    console.log(this.strats, strats);
+    downloadFile(new Blob([JSON.stringify(strats, null, 2)], { type: 'application/json' }), 'strats.json');
+  }
+
+  async deleteRequest() {
     const dialogResult = await this.showDialog({
       key: 'profile-view/confirm-delete',
       text: 'Would you like to delete your account? WARNING: This action is permanent, there is no way to retrieve a deleted account!',
@@ -39,11 +50,11 @@ export default class ProfileView extends Vue {
     }
   }
 
-  private get avatar() {
+  get avatar() {
     return resolveStaticImageUrl(this.profile.avatar);
   }
 
-  private mounted() {
+  mounted() {
     const isConfirmed = !!this.$route.query.confirmed;
     if (isConfirmed) {
       this.showToast({ id: 'ProfileView/emailConfirmed', text: 'Your new email has been confirmed.' });

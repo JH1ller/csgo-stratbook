@@ -8,9 +8,9 @@
         <button @click="deleteRequest" class="profile-view__btn --delete">
           <fa-icon icon="exclamation-triangle" />Delete Account
         </button>
-        <!-- <button @click="getStratExport" class="profile-view__btn --export">
+        <button @click="getStratExport" class="profile-view__btn --export">
           <fa-icon icon="cloud-download-alt" />Export strats
-        </button> -->
+        </button>
       </div>
     </div>
   </div>

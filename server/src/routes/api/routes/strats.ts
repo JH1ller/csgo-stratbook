@@ -153,8 +153,6 @@ router.get('/export', verifyAuth, async (req, res) => {
 
   const stratsJson = JSON.stringify(strats, null, 2);
 
-  console.log(process.cwd());
-
   await mkdir('temp', { recursive: true });
 
   const fileName = path.join(process.cwd(), 'temp', `JSON_export-${nanoid(5)}`);

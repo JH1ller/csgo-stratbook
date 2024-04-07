@@ -140,7 +140,6 @@ export const stratModule: Module<StratState, RootState> = {
         await downloadFile(
           new Blob([res.success]),
           `strats-${rootState.team.teamInfo.name}-${getFormattedDate()}.json`,
-          ['application/json', '.json'],
         );
         dispatch('app/showToast', { id: 'strat/exportedStrats', text: 'Downloading strat export...' }, { root: true });
       }

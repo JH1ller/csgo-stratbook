@@ -26,4 +26,5 @@ export interface Strat extends Model {
   content: string;
   shared: boolean;
   index: number;
+  team: string;
 }
