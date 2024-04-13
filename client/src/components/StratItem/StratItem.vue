@@ -54,17 +54,10 @@
           <fa-icon icon="th-list" />
         </div>
         <div class="strat-item__labels">
-          <div class="strat-item__label" v-for="label in strat.labels" :key="label">{{ label }}</div>
-          <button class="strat-item__label --add" v-if="!labelDialogOpen" @click="handleLabelAddClicked">
-            Add <fa-icon icon="plus" />
-          </button>
-          <input
-            type="text"
-            ref="labelAddInput"
-            class="strat-item__label --input"
-            v-if="labelDialogOpen"
-            @keydown="handleLabelSubmit"
-          />
+          <div class="strat-item__label" v-for="label in strat.labels" :key="label" @click="() => removeLabel(label)">
+            {{ label }}<fa-icon icon="times" />
+          </div>
+          <button class="strat-item__label --add" @click="labelDialogOpen = true">labels<fa-icon icon="plus" /></button>
         </div>
         <template>
           <div class="strat-item__action-buttons" v-if="editMode">
@@ -116,7 +109,13 @@
       </div>
     </div>
     <fa-icon v-if="isManualSort && !readOnly" class="strat-item__drag-icon" icon="ellipsis-v" v-handle />
-    <LabelsDialog v-if="labelDialogOpen" @close="labelDialogOpen = false" @add="() => {}" @remove="() => {}" />
+    <LabelsDialog
+      v-if="labelDialogOpen"
+      :stratLabels="strat.labels"
+      @close="labelDialogOpen = false"
+      @add="addLabel"
+      @remove="removeLabel"
+    />
   </div>
 </template>
 

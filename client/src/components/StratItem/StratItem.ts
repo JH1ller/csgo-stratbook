@@ -34,6 +34,7 @@ export default class StratItem extends Vue {
   @Ref() labelAddInput!: HTMLInputElement;
   @appModule.Action showToast!: (toast: Toast) => Promise<void>;
   @stratModule.State sort!: Sort;
+  @stratModule.Action updateStrat!: (strat: Partial<Strat>) => Promise<void>;
 
   labelDialogOpen = false;
 
@@ -57,28 +58,13 @@ export default class StratItem extends Vue {
     return this.strat.types.sort((a, b) => a.localeCompare(b, 'en'));
   }
 
+  removeLabel(label: string) {
+    const labels = this.strat.labels.filter((str) => str !== label);
+    this.updateStrat({ _id: this.strat._id, labels });
+  }
+
   openVideo() {
     openLink(this.strat.videoLink as string);
-  }
-
-  async handleLabelAddClicked() {
-    this.labelDialogOpen = true;
-    await this.$nextTick();
-    this.labelAddInput.focus();
-  }
-
-  handleLabelSubmit(e: KeyboardEvent) {
-    if (e.key === 'Enter') {
-      const value = (e.target as HTMLInputElement).value;
-      if (value) {
-        this.addLabel(value);
-        this.labelDialogOpen = false;
-      }
-    }
-
-    if (e.key === 'Escape') {
-      this.labelDialogOpen = false;
-    }
   }
 
   @Emit()

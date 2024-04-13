@@ -1,34 +1,48 @@
 .strat-filter-form {
-  @include spacing('margin-bottom', 'sm');
-
   display: flex;
   flex-direction: column;
+
+  @include spacing('gap', 'sm');
+
+  & > :not(:first-of-type) {
+    // @include spacing('margin-top', 'sm');
+    @include spacing('padding-top', 'sm');
+
+    border-top: 2px solid var(--color-border);
+  }
 
   &__input {
     @include input-default;
   }
 
   &__label {
-    @include spacing('margin-bottom', '2xs');
+    @include spacing('margin-bottom', 'xs');
 
     font-size: 1.1rem;
-
-    &:not(:first-of-type) {
-      @include spacing('margin-top', 'sm');
-      @include spacing('padding-top', 'sm');
-
-      border-top: 2px solid var(--color-border);
-    }
   }
 
   &__picker {
-    @include spacing('margin-top', '2xs');
   }
 
   &__checkbox {
-    @include spacing('margin-top', 'sm');
-    @include spacing('padding-top', 'sm');
-
     border-top: 2px solid var(--color-border);
+  }
+
+  &__label-tag-list {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  &__label-tag {
+    @extend %label;
+
+    &:hover {
+    }
+
+    &.-active {
+      background: var(--color-green-80);
+    }
   }
 }

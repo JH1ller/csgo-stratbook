@@ -11,7 +11,6 @@ import { getFormattedDate } from '@/utils/getFormattedDate';
 import { downloadFile } from '@/utils/downloadFile';
 
 const SET_STRATS = 'SET_STRATS';
-const SET_LABELS = 'SET_LABELS';
 
 const ADD_STRAT = 'ADD_STRAT';
 const UPDATE_STRAT = 'UPDATE_STRAT';
@@ -25,7 +24,6 @@ const RESET_STATE = 'RESET_STATE';
 
 export interface StratState {
   strats: Strat[];
-  labels: string[];
   collapsedStrats: string[];
   editedStrats: string[];
   sort: Sort;
@@ -33,7 +31,6 @@ export interface StratState {
 
 const stratInitialState = (): StratState => ({
   strats: [],
-  labels: [],
   collapsedStrats: [],
   editedStrats: [],
   sort: Sort.Manual,
@@ -50,7 +47,7 @@ export const stratModule: Module<StratState, RootState> = {
       return state.strats.filter((strat) => strat.map === rootState.map.currentMap);
     },
     filteredStratsOfCurrentMap(_state, getters, rootState): Strat[] {
-      const { side, types, name, content, inactive } = rootState.filter.stratFilters;
+      const { side, types, name, content, inactive, labels } = rootState.filter.stratFilters;
 
       return (getters.stratsOfCurrentMap as Strat[]).filter(
         (strat) =>
@@ -58,19 +55,29 @@ export const stratModule: Module<StratState, RootState> = {
           (!types.length || types.some((typeFilter) => strat.types.includes(typeFilter))) &&
           (name ? strat.name.toLowerCase().includes(name.toLowerCase()) : true) &&
           (content ? extractTextFromHTML(strat.content).toLowerCase().includes(content.toLowerCase()) : true) &&
-          (inactive ? strat.active : true),
+          (inactive ? strat.active : true) &&
+          (!labels.length || labels.some((label) => strat.labels.includes(label))),
       );
     },
     sortedFilteredStratsOfCurrentMap(state, getters): Strat[] {
       return (getters.filteredStratsOfCurrentMap as Strat[]).sort(sortFunctions[state.sort]);
+    },
+    allLabels(state): string[] {
+      const labelSet = state.strats.reduce<Set<string>>((acc, curr) => {
+        for (const label of curr.labels) {
+          acc.add(label);
+        }
+        return acc;
+      }, new Set());
+
+      return [...labelSet];
     },
   },
   actions: {
     async fetchStrats({ commit }) {
       const res = await api.strat.getStrats();
       if (res.success) {
-        commit(SET_STRATS, res.success.strats);
-        commit(SET_LABELS, res.success.labels);
+        commit(SET_STRATS, res.success);
         return { success: res.success };
       } else {
         return { error: res.error };
@@ -229,9 +236,6 @@ export const stratModule: Module<StratState, RootState> = {
   mutations: {
     [SET_STRATS](state, strats: Strat[]) {
       state.strats = strats;
-    },
-    [SET_LABELS](state, labels: string[]) {
-      state.labels = labels;
     },
     [ADD_STRAT](state, strat: Strat) {
       state.strats.push(strat);

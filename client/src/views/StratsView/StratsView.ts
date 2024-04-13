@@ -77,24 +77,24 @@ export default class StratsView extends Vue {
   @appModule.Action exitGameMode!: () => Promise<void>;
 
   @Ref() stratList!: Vue;
-  private shortcutService = ShortcutService.getInstance();
+  shortcutService = ShortcutService.getInstance();
 
-  private stratFormOpen = false;
-  private stratFormEditMode = false;
-  private editStrat: Strat | null = null;
-  private lightboxOpen = false;
-  private currentLightboxUtility: Utility | null = null;
-  private filterMenuOpen = false;
-  private drawToolOpen = false;
-  private currentDrawToolStrat: Strat | null = null;
-  private hasEditorFocus = false;
-  private tutorialStrat: Strat | null = null;
+  stratFormOpen = false;
+  stratFormEditMode = false;
+  editStrat: Strat | null = null;
+  lightboxOpen = false;
+  currentLightboxUtility: Utility | null = null;
+  filterMenuOpen = false;
+  drawToolOpen = false;
+  currentDrawToolStrat: Strat | null = null;
+  hasEditorFocus = false;
+  tutorialStrat: Strat | null = null;
 
-  private Sort: typeof Sort = Sort;
+  Sort: typeof Sort = Sort;
 
-  private trackingService = TrackingService.getInstance();
+  trackingService = TrackingService.getInstance();
 
-  private created() {
+  created() {
     this.shortcutService.add([
       {
         shortcut: 'Ctrl+Shift+E',
@@ -133,18 +133,18 @@ export default class StratsView extends Vue {
     }
   }
 
-  private beforeDestroy() {
+  beforeDestroy() {
     this.shortcutService.reset();
   }
 
-  private execShortcut(action: () => unknown): boolean | void {
+  execShortcut(action: () => unknown): boolean | void {
     if (!this.editedStrats.length && !this.stratFormOpen && !this.hasEditorFocus) {
       action();
       return true;
     }
   }
 
-  private async stratFormSubmitted(data: Partial<Strat>) {
+  async stratFormSubmitted(data: Partial<Strat>) {
     if (data._id) {
       this.updateStrat(data);
     } else {
@@ -173,18 +173,18 @@ export default class StratsView extends Vue {
     this.hideStratForm();
   }
 
-  private showStratForm(strat?: Strat) {
+  showStratForm(strat?: Strat) {
     this.stratFormOpen = true;
     this.filterMenuOpen = false;
     this.editStrat = strat?._id ? strat : null;
     this.stratFormEditMode = !!strat?._id;
   }
 
-  private hideStratForm() {
+  hideStratForm() {
     this.stratFormOpen = false;
   }
 
-  private async requestDeleteStrat(stratID: string) {
+  async requestDeleteStrat(stratID: string) {
     const dialogResult = await this.showDialog({
       key: 'strats-view/confirm-delete',
       text: 'Are you sure you want to delete this strat?',
@@ -194,7 +194,7 @@ export default class StratsView extends Vue {
     }
   }
 
-  private async requestShareStrat(stratID: string) {
+  async requestShareStrat(stratID: string) {
     const dialogResult = await this.showDialog({
       key: 'strats-view/confirm-share',
       text: 'Do you want to create a share-link to let other teams add this strat to their stratbook?',
@@ -204,33 +204,33 @@ export default class StratsView extends Vue {
     }
   }
 
-  private showLightbox(utility: Utility) {
+  showLightbox(utility: Utility) {
     this.currentLightboxUtility = utility;
     this.lightboxOpen = true;
   }
 
-  private hideLightbox() {
+  hideLightbox() {
     this.currentLightboxUtility = null;
     this.lightboxOpen = false;
   }
 
-  private showDrawTool(strat: Strat) {
+  showDrawTool(strat: Strat) {
     this.currentDrawToolStrat = strat;
     this.drawToolOpen = true;
     if (!this.$route.params.stratId) this.$router.replace({ params: { stratId: strat._id } });
     this.trackingService.track('Click: Show DrawTool', { strat: strat.name });
   }
 
-  private closeDrawTool() {
+  closeDrawTool() {
     this.drawToolOpen = false;
     this.$router.replace({ path: '/strats' });
   }
 
-  private toggleFilterMenu() {
+  toggleFilterMenu() {
     this.filterMenuOpen = !this.filterMenuOpen;
   }
 
-  private toggleGameMode() {
+  toggleGameMode() {
     this.gameMode ? this.exitGameMode() : this.startGameMode();
     this.trackingService.track('Action: Toggle GameMode', { value: this.gameMode });
   }
@@ -239,7 +239,7 @@ export default class StratsView extends Vue {
     return this.gameMode || (!this.isManager && this.profile.role !== AccessRole.EDITOR);
   }
 
-  private get sortBtnIcon() {
+  get sortBtnIcon() {
     switch (this.sort) {
       case Sort.DateAddedASC:
         return 'sort-numeric-up-alt';
@@ -250,7 +250,7 @@ export default class StratsView extends Vue {
     }
   }
 
-  private async toggleSort() {
+  async toggleSort() {
     let newSort: Sort;
     switch (this.sort) {
       case Sort.DateAddedASC:
@@ -270,7 +270,7 @@ export default class StratsView extends Vue {
     });
   }
 
-  private applyStratTypeFilter(value: StratTypes) {
+  applyStratTypeFilter(value: StratTypes) {
     this.updateStratTypeFilter([value]);
   }
 }

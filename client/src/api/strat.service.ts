@@ -24,8 +24,8 @@ export class StratService {
     return StratService.instance;
   }
 
-  async getStrats(): Promise<APIResponse<{ strats: Strat[]; labels: string[] }>> {
-    return ApiService.makeRequest<{ strats: Strat[]; labels: string[] }>(ApiService.http.get(this.endpoint));
+  async getStrats(): Promise<APIResponse<Strat[]>> {
+    return ApiService.makeRequest<Strat[]>(ApiService.http.get(this.endpoint));
   }
 
   async deleteStrat(stratId: string): Promise<APIResponse<Message>> {

@@ -11,6 +11,7 @@ const SET_STRAT_TYPE_FILTER = 'SET_STRAT_TYPE_FILTER';
 const SET_STRAT_SIDE_FILTER = 'SET_STRAT_SIDE_FILTER';
 const SET_STRAT_NAME_FILTER = 'SET_STRAT_NAME_FILTER';
 const SET_STRAT_INACTIVE_FILTER = 'SET_STRAT_INACTIVE_FILTER';
+const SET_STRAT_LABEL_FILTER = 'SET_STRAT_LABEL_FILTER';
 const SET_UTILITY_TYPE_FILTER = 'SET_UTILITY_TYPE_FILTER';
 const SET_UTILITY_SIDE_FILTER = 'SET_UTILITY_STRAT_SIDE_FILTER';
 const SET_UTILITY_NAME_FILTER = 'SET_UTILITY_STRAT_NAME_FILTER';
@@ -24,6 +25,7 @@ export interface StratFilters {
   side: Sides | null;
   types: StratTypes[];
   inactive: boolean;
+  labels: string[];
 }
 export interface UtilityFilters {
   name: string;
@@ -43,6 +45,7 @@ const filterInitialState = (): FilterState => ({
     side: null,
     types: [],
     inactive: false,
+    labels: [],
   },
   utilityFilters: {
     name: '',
@@ -88,12 +91,17 @@ export const filterModule: Module<FilterState, RootState> = {
       commit(SET_STRAT_INACTIVE_FILTER, value);
       storageService.set('filters', state);
     },
+    updateStratLabelsFilter({ commit, state }, value: string[]) {
+      commit(SET_STRAT_LABEL_FILTER, value);
+      storageService.set('filters', state);
+    },
     clearStratFilters({ commit }) {
       commit(SET_STRAT_CONTENT_FILTER, '');
       commit(SET_STRAT_TYPE_FILTER, []);
       commit(SET_STRAT_SIDE_FILTER, null);
       commit(SET_STRAT_NAME_FILTER, '');
       commit(SET_STRAT_INACTIVE_FILTER, false);
+      commit(SET_STRAT_LABEL_FILTER, []);
       storageService.remove('filters');
     },
     updateUtilityTypeFilter({ commit, state }, value: UtilityTypes | null) {
@@ -149,6 +157,9 @@ export const filterModule: Module<FilterState, RootState> = {
     },
     [SET_STRAT_INACTIVE_FILTER](state, value: boolean) {
       state.stratFilters.inactive = value;
+    },
+    [SET_STRAT_LABEL_FILTER](state, value: string[]) {
+      state.stratFilters.labels = value;
     },
     [SET_UTILITY_TYPE_FILTER](state, value: UtilityTypes | null) {
       state.utilityFilters.type = value;

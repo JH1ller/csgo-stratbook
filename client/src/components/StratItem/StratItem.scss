@@ -227,24 +227,30 @@
     display: flex;
     align-items: center;
     gap: 4px;
+    padding-right: 8px;
+    border-right: 1px solid var(--color-border);
   }
 
   &__label {
-    padding: 4px 8px;
-    border-radius: 999px;
-    background: var(--color-border);
-    color: var(--color-text);
-    min-width: 36px;
-    font-size: 0.8rem;
+    @extend %label;
+
+    &:hover {
+      & > svg {
+        opacity: 1;
+        scale: 1;
+      }
+    }
+
+    & > svg {
+      transition: opacity 0.3s ease, scale 0.3s ease;
+      width: 12px;
+      height: 12px;
+      scale: 0.9;
+      opacity: 0.4;
+    }
 
     &.--add {
-      cursor: pointer;
-      background: var(--color-bg-tertiary);
-
-      & svg {
-        width: 8px;
-        height: 8px;
-      }
+      background: var(--color-green-80);
     }
   }
 }
