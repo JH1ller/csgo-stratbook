@@ -172,7 +172,6 @@
     }
 
     &.--insert {
-      margin-right: auto;
     }
 
     &.--save {
@@ -224,16 +223,21 @@
   }
 
   &__labels {
+    @extend %hidden-scrollbar;
+
+    margin-right: auto;
     display: flex;
     align-items: center;
     gap: 4px;
-    padding-right: 8px;
-    border-right: 1px solid var(--color-border);
+    padding-left: 8px;
+    border-left: 1px solid var(--color-border);
+    overflow-x: auto;
   }
 
   &__label {
     @extend %label;
 
+    flex-shrink: 0;
     &:hover {
       & > svg {
         opacity: 1;
