@@ -20,6 +20,7 @@
     <transition name="fade">
       <CookieBanner v-if="showCookieBanner && isDesktop === false" @close="closeCookieBanner" />
     </transition>
+    <portal-target name="root"></portal-target>
   </div>
 </template>
 
@@ -60,23 +61,23 @@ export default class App extends Vue {
   @teamModule.State teamInfo!: Team;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
 
-  private menuOpen: boolean = false;
-  private appVersion: string = pkg.version;
-  private showCookieBanner = false;
-  private isDesktop = window.desktopMode;
+  menuOpen: boolean = false;
+  appVersion: string = pkg.version;
+  showCookieBanner = false;
+  isDesktop = window.desktopMode;
 
-  private getCookie(name: string) {
+  getCookie(name: string) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts?.pop()?.split(';')?.shift();
   }
 
-  private closeCookieBanner() {
+  closeCookieBanner() {
     this.showCookieBanner = false;
     this.checkCookies();
   }
 
-  private mounted() {
+  mounted() {
     if (this.isDesktop) {
       this.initTracking();
     } else {
@@ -91,7 +92,7 @@ export default class App extends Vue {
     window.appVersion = this.appVersion;
   }
 
-  private checkVersion() {
+  checkVersion() {
     const currentVersion = this.storageService.get<string>('version');
     if (
       currentVersion &&
@@ -116,7 +117,7 @@ export default class App extends Vue {
     this.storageService.set('version', this.appVersion);
   }
 
-  private checkCookies() {
+  checkCookies() {
     const bannerShown = this.getCookie('bannerShown') === 'true' || this.storageService.get('bannerShown');
     const allowAnalytics = this.getCookie('allowAnalytics') === 'true' || this.storageService.get('allowAnalytics');
 
@@ -125,17 +126,17 @@ export default class App extends Vue {
     this.initTracking(!allowAnalytics);
   }
 
-  private initTracking(disableCookie = false) {
+  initTracking(disableCookie = false) {
     if (process.env.NODE_ENV === 'production') {
       this.trackingService.init(disableCookie, { breakpoint: this.breakpoint, team: this.teamInfo.name });
     }
   }
 
-  private closeMenu() {
+  closeMenu() {
     this.menuOpen = false;
   }
 
-  private toggleMenu() {
+  toggleMenu() {
     this.menuOpen = !this.menuOpen;
   }
 

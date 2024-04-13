@@ -27,7 +27,7 @@
   }
 
   @include viewport_mq3 {
-    padding: 0px 20px 6px 20px;
+    padding: 0px 12px 6px 20px;
   }
 
   &__title {
@@ -226,6 +226,7 @@
   &__labels {
     display: flex;
     align-items: center;
+    gap: 4px;
   }
 
   &__label {
@@ -238,6 +239,7 @@
 
     &.--add {
       cursor: pointer;
+      background: var(--color-bg-tertiary);
 
       & svg {
         width: 8px;

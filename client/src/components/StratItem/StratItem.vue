@@ -55,14 +55,14 @@
         </div>
         <div class="strat-item__labels">
           <div class="strat-item__label" v-for="label in strat.labels" :key="label">{{ label }}</div>
-          <button class="strat-item__label --add" v-if="!labelAddMode" @click="handleLabelAddClicked">
+          <button class="strat-item__label --add" v-if="!labelDialogOpen" @click="handleLabelAddClicked">
             Add <fa-icon icon="plus" />
           </button>
           <input
             type="text"
             ref="labelAddInput"
             class="strat-item__label --input"
-            v-if="labelAddMode"
+            v-if="labelDialogOpen"
             @keydown="handleLabelSubmit"
           />
         </div>
@@ -116,6 +116,7 @@
       </div>
     </div>
     <fa-icon v-if="isManualSort && !readOnly" class="strat-item__drag-icon" icon="ellipsis-v" v-handle />
+    <LabelsDialog v-if="labelDialogOpen" @close="labelDialogOpen = false" @add="() => {}" @remove="() => {}" />
   </div>
 </template>
 

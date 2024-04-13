@@ -28,12 +28,10 @@ router.get('/', verifyAuth, async (req, res) => {
 
   const labelArr = [...labelSet];
 
-  // res.json({
-  //   strats,
-  //   labels: labelArr,
-  // });
-
-  return res.json(strats);
+  return res.json({
+    strats,
+    labels: labelArr,
+  });
 });
 
 // * Create One

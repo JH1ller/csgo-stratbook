@@ -1,0 +1,16 @@
+.labels-dialog {
+  &__label-list {
+    display: flex;
+    gap: 4px;
+    align-items: flex-start;
+  }
+
+  &__label {
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: var(--color-border);
+    color: var(--color-text);
+    min-width: 36px;
+    font-size: 0.8rem;
+  }
+}

@@ -11,6 +11,7 @@ import { getFormattedDate } from '@/utils/getFormattedDate';
 import { downloadFile } from '@/utils/downloadFile';
 
 const SET_STRATS = 'SET_STRATS';
+const SET_LABELS = 'SET_LABELS';
 
 const ADD_STRAT = 'ADD_STRAT';
 const UPDATE_STRAT = 'UPDATE_STRAT';
@@ -24,6 +25,7 @@ const RESET_STATE = 'RESET_STATE';
 
 export interface StratState {
   strats: Strat[];
+  labels: string[];
   collapsedStrats: string[];
   editedStrats: string[];
   sort: Sort;
@@ -31,6 +33,7 @@ export interface StratState {
 
 const stratInitialState = (): StratState => ({
   strats: [],
+  labels: [],
   collapsedStrats: [],
   editedStrats: [],
   sort: Sort.Manual,
@@ -66,8 +69,8 @@ export const stratModule: Module<StratState, RootState> = {
     async fetchStrats({ commit }) {
       const res = await api.strat.getStrats();
       if (res.success) {
-        //const stratsWithSort = res.success.map((strat, index) => ({ ...strat, index }));
-        commit(SET_STRATS, res.success);
+        commit(SET_STRATS, res.success.strats);
+        commit(SET_LABELS, res.success.labels);
         return { success: res.success };
       } else {
         return { error: res.error };
@@ -226,6 +229,9 @@ export const stratModule: Module<StratState, RootState> = {
   mutations: {
     [SET_STRATS](state, strats: Strat[]) {
       state.strats = strats;
+    },
+    [SET_LABELS](state, labels: string[]) {
+      state.labels = labels;
     },
     [ADD_STRAT](state, strat: Strat) {
       state.strats.push(strat);
