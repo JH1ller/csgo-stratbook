@@ -31,7 +31,6 @@
         @editor-blurred="editorBlurred"
         @filter-type="filterType"
         @filter-side="filterSide"
-        @add-label="updateStrat"
         :style="{ 'animation-delay': 0.05 * index + 's' }"
       />
     </SlickItem>

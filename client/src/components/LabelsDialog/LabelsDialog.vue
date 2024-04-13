@@ -4,7 +4,7 @@
       <div class="labels-dialog__list-container">
         <p class="labels-dialog__title">Current labels<span class="labels-dialog__hint">(click to remove)</span></p>
         <div class="labels-dialog__label-list">
-          <div class="labels-dialog__label" v-for="label in stratLabels" :key="label" @click="() => remove(label)">
+          <div class="labels-dialog__label" v-for="label in currentLabels" :key="label" @click="() => remove(label)">
             {{ label }}<fa-icon icon="times" />
           </div>
         </div>

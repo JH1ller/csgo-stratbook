@@ -34,6 +34,7 @@ export default class StratItem extends Vue {
   @Ref() labelAddInput!: HTMLInputElement;
   @appModule.Action showToast!: (toast: Toast) => Promise<void>;
   @stratModule.State sort!: Sort;
+  @stratModule.Getter readonly allLabels!: string[];
   @stratModule.Action updateStrat!: (strat: Partial<Strat>) => Promise<void>;
 
   labelDialogOpen = false;
@@ -56,6 +57,10 @@ export default class StratItem extends Vue {
 
   get sortedTypes(): StratTypes[] {
     return this.strat.types.sort((a, b) => a.localeCompare(b, 'en'));
+  }
+
+  addLabel(value: string) {
+    this.updateStrat({ _id: this.strat._id, labels: [...this.strat.labels, value] });
   }
 
   removeLabel(label: string) {
@@ -127,11 +132,6 @@ export default class StratItem extends Vue {
   @Emit()
   editorBlurred() {
     return;
-  }
-
-  @Emit()
-  addLabel(value: string) {
-    return { _id: this.strat._id, labels: [...this.strat.labels, value] };
   }
 
   @Emit()

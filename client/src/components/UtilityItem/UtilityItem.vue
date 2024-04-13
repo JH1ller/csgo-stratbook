@@ -13,6 +13,27 @@
       <div class="utility-item__name">{{ utility.name }}</div>
       <button v-if="!readOnly" class="utility-item__context" @click="openMenu"><fa-icon icon="caret-down" /></button>
     </span>
+    <div class="utility-item__labels">
+      <button class="utility-item__label --add" @click.prevent.stop="labelDialogOpen = true">
+        labels<fa-icon icon="plus" />
+      </button>
+      <div
+        class="utility-item__label"
+        v-for="label in utility.labels"
+        :key="label"
+        @click.stop="() => removeLabel(label)"
+      >
+        {{ label }}<fa-icon icon="times" />
+      </div>
+    </div>
+    <LabelsDialog
+      v-if="labelDialogOpen"
+      :currentLabels="utility.labels"
+      :allLabels="allLabels"
+      @close="labelDialogOpen = false"
+      @add="addLabel"
+      @remove="removeLabel"
+    />
   </div>
 </template>
 

@@ -6,7 +6,6 @@ import TrackingService from '@/services/tracking.service';
 import { extractTextFromHTML } from '@/utils/extractTextFromHTML';
 import StorageService from '@/services/storage.service';
 import { sortFunctions, Sort } from '@/utils/sortFunctions';
-import { writeToClipboard } from '@/utils/writeToClipboard';
 import { getFormattedDate } from '@/utils/getFormattedDate';
 import { downloadFile } from '@/utils/downloadFile';
 
@@ -111,23 +110,6 @@ export const stratModule: Module<StratState, RootState> = {
     },
     async updateStrats(_, payload: Partial<Strat>[]) {
       api.strat.updateStrats(payload);
-    },
-    async shareStrat({ dispatch, state }, stratID: string) {
-      const res = await api.strat.updateStrats([{ _id: stratID, shared: true }]);
-      if (res.success) {
-        const shareLink = `${window.location.origin}/#/share/${stratID}`;
-        writeToClipboard(shareLink);
-        dispatch('app/showToast', { id: 'strat/shareStrat', text: 'Copied share link to clipboard.' }, { root: true });
-        trackingService.track('Action: Share Strat', {
-          name: state.strats.find((strat) => strat._id === stratID)?.name as string,
-        });
-      }
-    },
-    async unshareStrat({ dispatch }, stratID: string) {
-      const res = await api.strat.updateStrats([{ _id: stratID, shared: false }]);
-      if (res.success) {
-        dispatch('app/showToast', { id: 'strat/unshareStrat', text: 'Strat is no longer shared.' }, { root: true });
-      }
     },
     async addSharedStrat({ dispatch, state }, stratID: string) {
       const res = await api.strat.addSharedStrat(stratID);

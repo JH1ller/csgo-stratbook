@@ -111,7 +111,8 @@
     <fa-icon v-if="isManualSort && !readOnly" class="strat-item__drag-icon" icon="ellipsis-v" v-handle />
     <LabelsDialog
       v-if="labelDialogOpen"
-      :stratLabels="strat.labels"
+      :currentLabels="strat.labels"
+      :allLabels="allLabels"
       @close="labelDialogOpen = false"
       @add="addLabel"
       @remove="removeLabel"

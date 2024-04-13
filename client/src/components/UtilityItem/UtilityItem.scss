@@ -132,4 +132,39 @@
     height: 48px;
     color: $color--emperor;
   }
+
+  &__labels {
+    @extend %hidden-scrollbar;
+
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__label {
+    @extend %label;
+
+    flex-shrink: 0;
+    &:hover {
+      & > svg {
+        opacity: 1;
+        scale: 1;
+      }
+    }
+
+    & > svg {
+      transition: opacity 0.3s ease, scale 0.3s ease;
+      width: 12px;
+      height: 12px;
+      scale: 0.9;
+      opacity: 0.4;
+    }
+
+    &.--add {
+      background: var(--color-green-80);
+    }
+  }
 }

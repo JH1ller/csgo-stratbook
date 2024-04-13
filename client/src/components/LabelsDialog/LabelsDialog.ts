@@ -1,5 +1,4 @@
 import CloseOnEscape from '@/mixins/CloseOnEscape';
-import { stratModule } from '@/store/namespaces';
 import { Component, Emit, Mixins, Prop } from 'vue-property-decorator';
 
 @Component({
@@ -8,11 +7,11 @@ import { Component, Emit, Mixins, Prop } from 'vue-property-decorator';
   },
 })
 export default class LabelsDialog extends Mixins(CloseOnEscape) {
-  @stratModule.Getter readonly allLabels!: string[];
-  @Prop() readonly stratLabels!: string[];
+  @Prop() readonly allLabels!: string[];
+  @Prop() readonly currentLabels!: string[];
 
   get otherLabels(): string[] {
-    return this.allLabels.filter((label) => !this.stratLabels.includes(label));
+    return this.allLabels.filter((label) => !this.currentLabels.includes(label));
   }
 
   newLabelName: string = '';

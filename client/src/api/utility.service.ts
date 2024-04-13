@@ -36,17 +36,12 @@ export class UtilityService {
     return ApiService.makeRequest<Utility>(
       ApiService.http.post(target, utility, {
         headers: { 'Content-Type': 'multipart/form-data' },
-      })
+      }),
     );
   }
 
   async updateUtility(payload: FormData): Promise<APIResponse<Utility>> {
     const target = urljoin(Endpoints.Utilities);
     return ApiService.makeRequest<Utility>(ApiService.http.patch(target, payload));
-  }
-
-  async addSharedUtility(utilityID: string): Promise<APIResponse<Utility>> {
-    const target = urljoin(Endpoints.Utilities, Actions.Share, utilityID);
-    return ApiService.makeRequest<Utility>(ApiService.http.post(target));
   }
 }

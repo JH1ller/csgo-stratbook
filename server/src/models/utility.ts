@@ -16,6 +16,7 @@ export interface Utility {
   side: StratSide;
   videoLink?: string;
   setpos?: string;
+  labels: string[];
   createdBy: Types.ObjectId;
   createdAt: Date;
   shared: boolean;
@@ -95,6 +96,11 @@ const utilitySchema = new Schema<Utility>({
 
   setpos: {
     type: String,
+  },
+
+  labels: {
+    type: [String],
+    default: [],
   },
 
   createdBy: {
