@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { UtilityModel } from '@/models/utility';
+import { Utility, UtilityModel } from '@/models/utility';
 import { getUtility } from '@/utils/getters';
 import { verifyAuth } from '@/utils/verifyToken';
 import { uploadMultiple, deleteFile, processImage } from '@/utils/fileUpload';
 import { TypedServer } from '@/sockets/interfaces';
+import { AccessRole } from '@/types/enums';
 
 const router = Router();
 
@@ -22,6 +23,9 @@ router.get('/', verifyAuth, async (req, res) => {
 router.post('/', verifyAuth, uploadMultiple('images'), async (req, res) => {
   if (!res.locals.player.team) {
     return res.status(400).json({ error: "Authenticated user doesn't have a team" });
+  }
+  if (res.locals.player.role !== AccessRole.EDITOR) {
+    return res.status(403).json({ error: 'Only editors can create utilities' });
   }
 
   const utility = new UtilityModel({
@@ -45,7 +49,7 @@ router.post('/', verifyAuth, uploadMultiple('images'), async (req, res) => {
     const fileNames = await Promise.all(
       req.files.map(async (file) => {
         return await processImage(file, 1920, 1080);
-      })
+      }),
     );
     utility.images.push(...fileNames);
   }
@@ -61,7 +65,10 @@ router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, 
   if (!res.locals.player.team.equals(res.locals.utility.team)) {
     return res.status(400).json({ error: 'Cannot update a utility of another team.' });
   }
-  const updatableFields = [
+  if (res.locals.player.role !== AccessRole.EDITOR) {
+    return res.status(403).json({ error: 'Only editors can update utilities' });
+  }
+  const updatableFields: (keyof Utility)[] = [
     'name',
     'map',
     'side',
@@ -74,10 +81,11 @@ router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, 
     'shared',
     'videoLink',
     'setpos',
+    'labels',
   ];
   Object.entries(req.body).forEach(([key, value]) => {
     // check for undefined / null, but accept empty string ''
-    if (value != null && updatableFields.includes(key)) {
+    if (value != null && updatableFields.includes(key as keyof Utility)) {
       res.locals.utility[key.toString()] = value;
     }
   });
@@ -86,7 +94,7 @@ router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, 
     const fileNames = await Promise.all(
       req.files.map(async (file) => {
         return await processImage(file, 1920, 1080);
-      })
+      }),
     );
     res.locals.utility.images.push(...fileNames);
   }
@@ -97,7 +105,7 @@ router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, 
     await Promise.all(
       imagesToDelete.map(async (image: string) => {
         await deleteFile(image);
-      })
+      }),
     );
   }
 
@@ -112,6 +120,16 @@ router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, 
 router.delete('/:utility_id', verifyAuth, getUtility, async (req, res) => {
   if (!res.locals.player.team.equals(res.locals.utility.team)) {
     return res.status(400).json({ error: 'Cannot delete a utility of another team.' });
+  }
+  if (res.locals.player.role !== AccessRole.EDITOR) {
+    return res.status(403).json({ error: 'Only editors can delete utilities' });
+  }
+  if (res.locals.utility.images.length) {
+    await Promise.all(
+      res.locals.utility.images.map(async (image: string) => {
+        await deleteFile(image);
+      }),
+    );
   }
   await res.locals.utility.delete();
   res.json({ message: 'Deleted utility successfully' });

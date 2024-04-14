@@ -6,6 +6,7 @@ export default class PosePicker extends Vue {
   @Prop() private crouch!: boolean;
   @Prop() private jump!: boolean;
   @Prop() private movement!: UtilityMovement;
+  @Prop({ default: false }) readonly!: boolean;
 
   private UtilityMovement: typeof UtilityMovement = UtilityMovement;
 

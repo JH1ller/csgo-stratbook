@@ -7,8 +7,8 @@ import { Response } from '@/store';
 import { Routes } from '@/router/router.models';
 import EditTeamForm from '@/components/EditTeamForm/EditTeamForm.vue';
 import { Team } from '@/api/models/Team';
-import { catchPromise } from '@/utils/catchPromise';
 import { Player } from '@/api/models/Player';
+import { AccessRole } from '@/api/models/AccessRoles';
 
 @Component({
   components: {
@@ -28,60 +28,58 @@ export default class TeamView extends Vue {
   @teamModule.Action kickMember!: (memberID: string) => Promise<Response>;
   @teamModule.Action updateTeam!: (data: FormData) => Promise<Response>;
   @teamModule.Action updatePlayerColor!: (data: { _id: string; color: string }) => Promise<void>;
-  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
+  @teamModule.Action updatePlayerRole!: (data: { _id: string; role: AccessRole }) => Promise<void>;
+  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
   @authModule.Action updateProfile!: (data: FormData) => Promise<void>;
 
   showEditForm = false;
 
-  requestTeamLeave() {
-    catchPromise(
-      this.showDialog({
-        key: 'team-view/confirm-leave',
-        text:
-          this.teamMembers.length === 1
-            ? 'Are you sure you want to leave your team?<br><bold>With no team members left, the team will be deleted.</bold>'
-            : 'Are you sure you want to leave your team?',
-        htmlMode: true,
-      }),
-      async () => {
-        const res = await this.leaveTeam();
-        if (res.success) this.$router.push(Routes.JoinTeam);
-      },
-    );
+  async requestTeamLeave() {
+    const dialogResult = await this.showDialog({
+      key: 'team-view/confirm-leave',
+      text:
+        this.teamMembers.length === 1
+          ? 'Are you sure you want to leave your team?<br><bold>With no team members left, the team will be deleted.</bold>'
+          : 'Are you sure you want to leave your team?',
+      htmlMode: true,
+    });
+
+    if (dialogResult) {
+      const res = await this.leaveTeam();
+      if (res.success) this.$router.push(Routes.JoinTeam);
+    }
   }
-  requestTeamDelete() {
+  async requestTeamDelete() {
     if (!this.isManager) return;
 
-    catchPromise(
-      this.showDialog({
-        key: 'team-view/confirm-delete',
-        text: 'Are you sure you want to delete this team? This action is permanent and non-reversable!',
-      }),
-      async () => {
-        const res = await this.deleteTeam();
-        if (res.success) this.$router.push(Routes.JoinTeam);
-      },
-    );
+    const dialogResult = await this.showDialog({
+      key: 'team-view/confirm-delete',
+      text: 'Are you sure you want to delete this team? This action is permanent and non-reversable!',
+    });
+    if (dialogResult) {
+      const res = await this.deleteTeam();
+      if (res.success) this.$router.push(Routes.JoinTeam);
+    }
   }
 
-  requestTransferManager(memberID: string) {
-    catchPromise(
-      this.showDialog({
-        key: 'team-view/confirm-transfer',
-        text: 'Are you sure you want to transfer team leadership?',
-      }),
-      () => this.transferManager(memberID),
-    );
+  async requestTransferManager(memberID: string) {
+    const dialogResult = await this.showDialog({
+      key: 'team-view/confirm-transfer',
+      text: 'Are you sure you want to transfer team leadership?',
+    });
+    if (dialogResult) {
+      this.transferManager(memberID);
+    }
   }
 
-  requestKickMember(memberID: string) {
-    catchPromise(
-      this.showDialog({
-        key: 'team-view/confirm-kick',
-        text: 'Are you sure you want to kick this player?',
-      }),
-      () => this.kickMember(memberID),
-    );
+  async requestKickMember(memberID: string) {
+    const dialogResult = await this.showDialog({
+      key: 'team-view/confirm-kick',
+      text: 'Are you sure you want to kick this player?',
+    });
+    if (dialogResult) {
+      this.kickMember(memberID);
+    }
   }
 
   async requestTeamUpdate(formData: FormData) {

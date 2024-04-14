@@ -10,9 +10,12 @@ const SET_STRAT_CONTENT_FILTER = 'SET_STRAT_CONTENT_FILTER';
 const SET_STRAT_TYPE_FILTER = 'SET_STRAT_TYPE_FILTER';
 const SET_STRAT_SIDE_FILTER = 'SET_STRAT_SIDE_FILTER';
 const SET_STRAT_NAME_FILTER = 'SET_STRAT_NAME_FILTER';
+const SET_STRAT_INACTIVE_FILTER = 'SET_STRAT_INACTIVE_FILTER';
+const SET_STRAT_LABEL_FILTER = 'SET_STRAT_LABEL_FILTER';
 const SET_UTILITY_TYPE_FILTER = 'SET_UTILITY_TYPE_FILTER';
 const SET_UTILITY_SIDE_FILTER = 'SET_UTILITY_STRAT_SIDE_FILTER';
 const SET_UTILITY_NAME_FILTER = 'SET_UTILITY_STRAT_NAME_FILTER';
+const SET_UTILITY_LABEL_FILTER = 'SET_UTILITY_LABEL_FILTER';
 const SET_STRAT_FILTER_BY_KEY = 'SET_STRAT_FILTER_BY_KEY';
 const SET_UTIL_FILTER_BY_KEY = 'SET_UTIL_FILTER_BY_KEY';
 const RESET_STATE = 'RESET_STATE';
@@ -22,11 +25,14 @@ export interface StratFilters {
   content: string;
   side: Sides | null;
   types: StratTypes[];
+  inactive: boolean;
+  labels: string[];
 }
 export interface UtilityFilters {
   name: string;
   side: Sides | null;
   type: UtilityTypes | null;
+  labels: string[];
 }
 
 export interface FilterState {
@@ -40,11 +46,14 @@ const filterInitialState = (): FilterState => ({
     content: '',
     side: null,
     types: [],
+    inactive: false,
+    labels: [],
   },
   utilityFilters: {
     name: '',
     side: null,
     type: null,
+    labels: [],
   },
 });
 
@@ -56,10 +65,10 @@ export const filterModule: Module<FilterState, RootState> = {
   state: filterInitialState(),
   getters: {
     activeUtilityFilterCount(state): number {
-      return Object.values(state.utilityFilters).filter(v => v).length;
+      return Object.values(state.utilityFilters).filter((v) => (Array.isArray(v) ? v.length : v)).length;
     },
     activeStratFilterCount(state): number {
-      return Object.values(state.stratFilters).filter(v => (Array.isArray(v) ? v.length : v)).length;
+      return Object.values(state.stratFilters).filter((v) => (Array.isArray(v) ? v.length : v)).length;
     },
   },
   actions: {
@@ -81,11 +90,21 @@ export const filterModule: Module<FilterState, RootState> = {
       commit(SET_STRAT_NAME_FILTER, value);
       storageService.set('filters', state);
     },
+    updateStratInactiveFilter({ commit, state }, value: boolean) {
+      commit(SET_STRAT_INACTIVE_FILTER, value);
+      storageService.set('filters', state);
+    },
+    updateStratLabelsFilter({ commit, state }, value: string[]) {
+      commit(SET_STRAT_LABEL_FILTER, value);
+      storageService.set('filters', state);
+    },
     clearStratFilters({ commit }) {
       commit(SET_STRAT_CONTENT_FILTER, '');
       commit(SET_STRAT_TYPE_FILTER, []);
       commit(SET_STRAT_SIDE_FILTER, null);
       commit(SET_STRAT_NAME_FILTER, '');
+      commit(SET_STRAT_INACTIVE_FILTER, false);
+      commit(SET_STRAT_LABEL_FILTER, []);
       storageService.remove('filters');
     },
     updateUtilityTypeFilter({ commit, state }, value: UtilityTypes | null) {
@@ -102,10 +121,15 @@ export const filterModule: Module<FilterState, RootState> = {
       commit(SET_UTILITY_NAME_FILTER, value);
       storageService.set('filters', state);
     },
+    updateUtilityLabelsFilter({ commit, state }, value: string[]) {
+      commit(SET_UTILITY_LABEL_FILTER, value);
+      storageService.set('filters', state);
+    },
     clearUtilityFilters({ commit }) {
       commit(SET_UTILITY_TYPE_FILTER, null);
       commit(SET_UTILITY_SIDE_FILTER, null);
       commit(SET_UTILITY_NAME_FILTER, '');
+      commit(SET_UTILITY_LABEL_FILTER, []);
       storageService.remove('filters');
     },
     loadFiltersFromStorage({ commit }) {
@@ -139,6 +163,12 @@ export const filterModule: Module<FilterState, RootState> = {
     [SET_STRAT_NAME_FILTER](state, value: string) {
       state.stratFilters.name = value;
     },
+    [SET_STRAT_INACTIVE_FILTER](state, value: boolean) {
+      state.stratFilters.inactive = value;
+    },
+    [SET_STRAT_LABEL_FILTER](state, value: string[]) {
+      state.stratFilters.labels = value;
+    },
     [SET_UTILITY_TYPE_FILTER](state, value: UtilityTypes | null) {
       state.utilityFilters.type = value;
     },
@@ -147,6 +177,9 @@ export const filterModule: Module<FilterState, RootState> = {
     },
     [SET_UTILITY_NAME_FILTER](state, value: string) {
       state.utilityFilters.name = value;
+    },
+    [SET_UTILITY_LABEL_FILTER](state, value: string[]) {
+      state.utilityFilters.labels = value;
     },
     [SET_STRAT_FILTER_BY_KEY](state, [key, value]: [keyof StratFilters, any]) {
       (state.stratFilters[key] as any) = value;

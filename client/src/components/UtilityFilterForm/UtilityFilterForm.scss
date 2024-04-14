@@ -2,22 +2,44 @@
   display: flex;
   flex-direction: column;
 
+  @include spacing('gap', 'sm');
+
+  & > :not(:first-of-type) {
+    // @include spacing('margin-top', 'sm');
+    @include spacing('padding-top', 'sm');
+
+    border-top: 2px solid var(--color-border);
+  }
+
   &__input {
     @include input-default;
   }
 
   &__label {
-    font-size: 1.1rem;
-    margin-bottom: 8px;
+    @include spacing('margin-bottom', 'xs');
 
-    &:not(:first-of-type) {
-      margin-top: 24px;
-      padding-top: 24px;
-      border-top: 1px solid $color--grey;
-    }
+    font-size: 1.1rem;
   }
 
-  &__picker {
-    margin-top: 8px;
+  &__checkbox {
+    border-top: 2px solid var(--color-border);
+  }
+
+  &__label-tag-list {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  &__label-tag {
+    @extend %label;
+
+    &:hover {
+    }
+
+    &.-active {
+      background: var(--color-green-80);
+    }
   }
 }

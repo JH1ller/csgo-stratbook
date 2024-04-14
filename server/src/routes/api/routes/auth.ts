@@ -15,8 +15,10 @@ import { verifyAuth } from '@/utils/verifyToken';
 import UserNotFoundError from '@/utils/errors/UserNotFoundError';
 import SteamAuth from 'node-steam-openid';
 import { Log } from '@/utils/logger';
+import { TelegramService } from '@/services/telegram.service';
 
 const router = Router();
+const telegramService = TelegramService.getInstance();
 
 const steam = new SteamAuth({
   realm: API_URL,
@@ -30,7 +32,10 @@ router.post('/register', uploadSingle('avatar'), async (req, res) => {
     return res.status(400).json({ error: error.details[0].message });
   }
 
-  const emailExists = await PlayerModel.findOne({ email: req.body.email });
+  const normalizedEmail = req.body.email.toLowerCase();
+
+  // TODO: run script to make all existing account emails lowercase and avoid regex query
+  const emailExists = await PlayerModel.findOne({ email: new RegExp(normalizedEmail.replace('+', '\\+'), 'i') });
 
   if (emailExists) return res.status(400).json({ error: 'Email already exists.' });
 
@@ -39,7 +44,7 @@ router.post('/register', uploadSingle('avatar'), async (req, res) => {
 
   const user = new PlayerModel({
     name: req.body.name,
-    email: req.body.email,
+    email: normalizedEmail,
     password: hashedPassword,
   });
 
@@ -53,11 +58,13 @@ router.post('/register', uploadSingle('avatar'), async (req, res) => {
   await user.save();
   await sendMail(user.email, token, user.name, MailTemplate.VERIFY_NEW);
 
+  telegramService.send(`User ${user.name} registered.`);
   res.json({ _id: user._id, email: user.email });
 });
 
 router.post('/login', async (req, res) => {
-  const targetUser = await PlayerModel.findOne({ email: req.body.email });
+  const normalizedEmail = req.body.email.toLowerCase();
+  const targetUser = await PlayerModel.findOne({ email: new RegExp(normalizedEmail.replace('+', '\\+'), 'i') });
 
   if (!targetUser) return res.status(400).json({ error: 'Email or password is invalid.' });
 

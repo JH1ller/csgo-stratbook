@@ -3,6 +3,21 @@ import { PlayerModel } from '@/models/player';
 import { TeamModel } from '@/models/team';
 import { UtilityModel } from '@/models/utility';
 import { RequestHandler } from 'express';
+import { StratDocument } from '@/models/strat';
+
+export const getStrats: RequestHandler = async (req, res, next) => {
+  const stratIDs = req.body.map((payload: Partial<StratDocument>) => payload._id);
+  try {
+    const strats = await StratModel.find().where('_id').in(stratIDs).exec();
+    if (!strats.length) {
+      return res.status(404).json({ error: 'Cannot find any strats' });
+    }
+    res.locals.strats = strats;
+    next();
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
 
 export const getStrat: RequestHandler = async (req, res, next) => {
   const stratID = req.params.strat_id || req.body._id;

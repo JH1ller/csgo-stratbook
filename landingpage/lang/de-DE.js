@@ -12,7 +12,7 @@ export default {
       tagline: 'Free & Open-Source Platform',
       headline: 'The best place to manage your strats and nades.',
       subline:
-        "Stratbook won't make you win every game.\n But at least it will keep your strats and nades organized.",
+        'Plan out your strategies with our collaborative tactics board and keep your strategies and nades organized in one place.',
       btnOpenApp: 'Open App',
       btnRegister: 'Register',
     },
@@ -25,7 +25,7 @@ export default {
         questionText:
           "I'm thinking about maintaining all my strats in stratbook, but I'm worried that the service won't be up for long?",
         answerText:
-          'I can guarantee you, that stratbook will be a long term project that will get long term updates and support.',
+          "Stratbook is a long term project that is continuously updated and improved. We've been up for over 3 years now with thousands of active users and aren't going anywhere :)",
       },
       {
         id: 'feature-requests',
@@ -43,13 +43,7 @@ export default {
         id: 'costs',
         questionText: 'Are there any costs or prices?',
         answerText:
-          'Stratbook is so called "Free and Open Source Software". Using the code and hosting the service yourself will always be free.<br>The prehosted service at "app.stratbook.live" is also currently free. I\'m not planning to make a profit from this, so there only might be a light monetization at a later stage to cover hosting and domain costs.',
-      },
-      {
-        id: 'server-down',
-        questionText: 'What if Stratbook servers are down?',
-        answerText:
-          "Stratbook is hosted on Amazon Web Services, so downtimes are extremely unlikely. I'm working on implementing PWA (Progressive Web App) Support, which allows you to install Stratbook locally and even use it offline without internet. Strats and nades are then updated once you have a connection again.",
+          'Stratbook is so called "Free and Open Source Software". Using the code and hosting the service yourself will always be free.<br>The prehosted service at "app.stratbook.pro" is also currently free. If you wish to support the development and the hosting of Stratbook there is a donation button at the bottom of the page.',
       },
       {
         id: 'self-host',
@@ -61,16 +55,85 @@ export default {
         id: 'whos-behind',
         questionText: 'Who is behind this project?',
         answerText:
-          "Hi there! I'm Justin, a 25 year old web engineer & esports enthusiast based in Stuttgart, Germany. I played CSGO in the german amateur scene for a few years and started developing Stratbook in my freetime during Covid-19.<br>Since the start of 2021, my friend and fellow developer Clemens has also joined the project and has already made great efforts with rethinking our architecture.<br>But you, too, could be behind this project! Drop me a message if you're interested in collaborating or helping out.",
+          "Hi there! I'm Justin, a 27 year old software engineer & esports enthusiast based in Hamburg, Germany. I played CSGO in the german amateur scene for a few years and started developing Stratbook in my freetime during Covid-19.<br>But you, too, could be behind this project! Drop me a message if you're interested in collaborating or helping out.",
       },
     ],
   },
   legal: {
-    headline: 'Impressum',
+    headline: 'Legal Notice',
   },
   changelog: {
     headline: 'Changelog',
     changes: [
+      {
+        version: '2.5.0',
+        date: '2023-09-17',
+        changes: [
+          'Strats can be saved from map view when a name is added.',
+          'Added deeplinks to strat drawing board',
+          'minor bug fixes',
+        ],
+      },
+      {
+        version: '2.4.0',
+        date: '2023-05-05',
+        changes: [
+          'Manual sorting of strats via drag & drop',
+          'Various small fixes',
+        ],
+      },
+      {
+        version: '2.3.1',
+        date: '2023-04-24',
+        changes: [
+          'Decreased size of player icons on tactics board',
+          'Youtube Shorts links can now be added to utilities',
+          'Upgrade desktop app to latest chromium version',
+        ],
+      },
+      {
+        version: '2.3.0',
+        date: '2023-04-19',
+        changes: [
+          'Player icons on tactics board',
+          'Fixed minor issues with loading indicator',
+          'Fixed player color not being updated correctly on tactics board',
+        ],
+      },
+      {
+        version: '2.2.1',
+        date: '2023-03-27',
+        changes: [
+          'Handle links in strat content',
+          'Fixed issue with sharing strats',
+        ],
+      },
+      {
+        version: '2.2.0',
+        date: '2023-01-20',
+        changes: [
+          'Added a filter to hide inactive strats',
+          'Fixed issue with emails not being case insensitive',
+          'Fixed issue where unsaved strat content changes are lost when window is resized while editing',
+        ],
+      },
+      {
+        version: '2.1.3',
+        date: '2022-12-17',
+        changes: [
+          'Updated ancient minimap',
+          'Fixed issues on mirage minimap',
+          'Fixed "last online" label for online players on team page',
+        ],
+      },
+      {
+        version: '2.1.2',
+        date: '2022-11-26',
+        changes: [
+          'Added Anubis to the map pool',
+          'Utility screenshots are displayed in their original ratio by default',
+        ],
+      },
       {
         version: '2.1.1',
         date: '2022-06-27',
@@ -201,7 +264,7 @@ export default {
       },
       {
         version: '1.2.2',
-        date: '2021-02-02',
+        date: '2021-02-03',
         changes: [
           'Fixed new bug that prevented utilities from being added.',
           'Fixed error when changing team avatar',

@@ -9,7 +9,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'CS:GO Stratbook',
+    title: 'Stratbook',
     htmlAttrs: {
       lang: 'en',
     },
@@ -20,14 +20,18 @@ export default {
         hid: 'description',
         name: 'description',
         content:
-          'Free web app to manage csgo strats and nades for your team. Always synced with your teammates, and works great on mobile.',
+          'Free counterstrike strategy & nade management tool and realtime tactics board. Keep your playbook organized with Stratbook.',
       },
       { hid: 'author', name: 'author', content: 'Justin Hiller' },
       {
         hid: 'keywords',
         name: 'keywords',
         content:
-          'stratbook, strategies, strategy, esport, csgo, counter-strike, counterstrike, global offensive, cs:go, webapp, vue, free, database, manage',
+          'stratbook, strategies, strategy, tactics, playbook, tool, esport, csgo, counter-strike, counterstrike, global offensive, cs:go, free, database, manage',
+      },
+      {
+        name: 'thumbnail',
+        content: '/screen.webp',
       },
     ],
     link: [
@@ -42,12 +46,21 @@ export default {
       },
       {
         rel: 'stylesheet',
-        href:
-          'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Ubuntu:wght@300;400;500;700&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Ubuntu:wght@300;400;500;700&display=swap',
       },
       {
         rel: 'canonical',
-        href: 'https://stratbook.live/',
+        href: 'https://stratbook.pro/',
+      },
+      {
+        rel: 'alternate',
+        hreflang: 'en',
+        href: 'https://stratbook.pro/',
+      },
+      {
+        rel: 'alternate',
+        hreflang: 'de',
+        href: 'https://stratbook.pro/de',
       },
     ],
   },
@@ -82,7 +95,6 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
     '@nuxtjs/style-resources',
     'nuxt-i18n',
   ],
@@ -98,7 +110,6 @@ export default {
     seo: true,
     lazy: true,
     langDir: 'lang/',
-    baseUrl: 'https://stratbook.live',
     defaultLocale: 'en',
     locales: [
       {

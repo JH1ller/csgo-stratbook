@@ -1,7 +1,7 @@
 <template>
   <div class="strat-editor">
     <div
-      contenteditable="true"
+      contenteditable
       ref="textarea"
       class="strat-editor__editor"
       placeholder="Click here to write down a strat.

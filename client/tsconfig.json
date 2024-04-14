@@ -15,7 +15,7 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "useUnknownInCatchVariables": false,
-    "types": ["webpack-env"],
+    "types": ["webpack-env", "@types/wicg-file-system-access"],
     "paths": {
       "@/*": ["src/*"]
     },

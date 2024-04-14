@@ -47,7 +47,7 @@ export default {};
   @include spacing('padding-top', 'md');
   @include spacing('padding-bottom', 'xs');
 
-  background-color: $color--abbey;
+  background: $color--shark;
 
   @include viewport_mq2 {
     @include spacing('padding-top', 'md');
@@ -87,6 +87,7 @@ export default {};
 
   &__links {
     @include grid-column(12, 1);
+    @include spacing('gap', 'sm');
 
     display: flex;
     flex-direction: column;
@@ -95,6 +96,7 @@ export default {};
 
     @include viewport_mq3 {
       @include grid-column(9, 4);
+      @include spacing('gap', 'xl');
 
       flex-direction: row;
       justify-content: flex-end;
@@ -108,7 +110,6 @@ export default {};
 
   &__link {
     @include typo_link($color--white);
-    @include spacing('margin-bottom', 'xs');
 
     font-size: 1.1rem;
     white-space: nowrap;
@@ -120,8 +121,6 @@ export default {};
     }
 
     &.--social {
-      display: flex;
-
       & > svg {
         width: 24px;
 
@@ -133,16 +132,38 @@ export default {};
 
     &.--kofi {
       opacity: 1;
+
+      &:hover {
+        animation: wiggle 1000ms infinite;
+      }
     }
 
     @include viewport_mq3 {
-      @include spacing('margin-left', 'md');
+      // @include spacing('margin-left', 'md');
 
-      margin-bottom: 0;
+      // margin-bottom: 0;
     }
 
     @include viewport_mq6 {
-      @include spacing('margin-left', '2xl');
+      // @include spacing('margin-left', '2xl');
+    }
+  }
+
+  @keyframes wiggle {
+    0% {
+      transform: rotate(0deg);
+    }
+    25% {
+      transform: rotate(-5deg);
+    }
+    50% {
+      transform: rotate(10deg);
+    }
+    75% {
+      transform: rotate(-5deg);
+    }
+    100% {
+      transform: rotate(0deg);
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Emit, Inject, Prop, Ref, Vue } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop, Ref, Vue, Watch } from 'vue-property-decorator';
 import Tribute, { TributeCollection, TributeItem, TributeOptions } from 'tributejs';
 import { appModule, authModule, teamModule, utilityModule } from '@/store/namespaces';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
@@ -26,14 +26,20 @@ export default class StratEditor extends Vue {
   @Inject('lightbox') readonly showLightboxFunc!: (utility: Utility) => void;
   @Prop() stratSide!: Sides;
   @Prop() htmlContent!: string;
+  @Prop() readOnly!: boolean;
   @Ref() textarea!: HTMLDivElement;
   @teamModule.State teamMembers!: Player[];
   @authModule.State profile!: Player;
   @utilityModule.Getter utilitiesOfCurrentMap!: Utility[];
-  @appModule.Action private showToast!: (toast: Toast) => void;
-  private tribute!: Tribute<LinkOption>;
+  @appModule.Action showToast!: (toast: Toast) => void;
+  tribute!: Tribute<LinkOption>;
 
-  private get utilityOptionList(): LinkOption[] {
+  @Watch('readOnly')
+  updateContentEditable() {
+    this.textarea.contentEditable = this.readOnly ? 'false' : 'true';
+  }
+
+  get utilityOptionList(): LinkOption[] {
     return [
       {
         icon: UtilityTypes.FLASH.toLowerCase(),
@@ -66,7 +72,7 @@ export default class StratEditor extends Vue {
     ];
   }
 
-  private get mentionOptionList(): LinkOption[] {
+  get mentionOptionList(): LinkOption[] {
     return [
       ...this.teamMembers.map((member) => ({
         id: member._id,
@@ -82,7 +88,7 @@ export default class StratEditor extends Vue {
     ];
   }
 
-  private get tributeOptions(): TributeOptions<LinkOption> & {
+  get tributeOptions(): TributeOptions<LinkOption> & {
     collection: Array<TributeCollection<LinkOption> & { spaceSelectsMatch?: boolean; menuItemLimit?: number }>;
   } {
     return {
@@ -105,7 +111,6 @@ export default class StratEditor extends Vue {
           noMatchTemplate: () => '<span style="visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
           spaceSelectsMatch: true,
-          menuItemLimit: 6,
         },
         {
           values: this.utilityOptionList,
@@ -126,7 +131,6 @@ export default class StratEditor extends Vue {
           noMatchTemplate: () => '<span style:"visibility: hidden;"></span>', // TODO: doesn't work for some reason, uses tribute fallback
           requireLeadingSpace: true,
           spaceSelectsMatch: true,
-          menuItemLimit: 6,
         },
         {
           values: [
@@ -206,7 +210,7 @@ export default class StratEditor extends Vue {
     return;
   }
 
-  private htmlInserted(e: CustomEvent) {
+  htmlInserted(e: CustomEvent) {
     const command: string = e.detail.item.original.id;
     if (command?.endsWith(':')) {
       const collectionIndex = this.tributeOptions.collection.findIndex((collection) => collection.trigger === command);
@@ -217,26 +221,28 @@ export default class StratEditor extends Vue {
     this.addClickListeners();
   }
 
-  private get sanitizedHtml(): string {
+  get sanitizedHtml(): string {
     return sanitizeHtml(this.htmlContent, {
-      allowedTags: ['span', 'img', 'div', 'br'],
+      allowedTags: ['span', 'img', 'div', 'br', 'a'],
       allowedAttributes: {
         span: ['contenteditable', 'class', 'data-*', 'style'],
+        a: ['contenteditable', 'class', 'target', 'href'],
         img: ['class', 'src'],
       },
     });
   }
 
-  private updated() {
+  updated() {
     this.addClickListeners();
   }
 
-  private mounted() {
+  mounted() {
     this.tribute = new Tribute(this.tributeOptions);
     this.tribute.attach(this.textarea);
     new ReplaceKeywords(this.textarea, { transformations: transformMap });
     this.addClickListeners();
     this.setupTextarea();
+    this.updateContentEditable();
   }
 
   setupTextarea() {
@@ -253,7 +259,7 @@ export default class StratEditor extends Vue {
     });
   }
 
-  private addClickListeners() {
+  addClickListeners() {
     const utilNodes: NodeListOf<HTMLElement> = this.textarea.querySelectorAll('[data-util-id]');
     utilNodes.forEach((node) => {
       const id = node.getAttribute('data-util-id');
@@ -283,23 +289,23 @@ export default class StratEditor extends Vue {
     });
   }
 
-  private utilClicked(id: string) {
+  utilClicked(id: string) {
     const utility = this.utilitiesOfCurrentMap.find((utility) => utility._id === id);
     if (utility) this.showLightboxFunc(utility);
   }
 
   @Emit()
-  private update() {
+  update() {
     return this.textarea.innerHTML;
   }
 
   @Emit()
-  private focus() {
+  focus() {
     return;
   }
 
   @Emit()
-  private blur() {
+  blur() {
     return;
   }
 }

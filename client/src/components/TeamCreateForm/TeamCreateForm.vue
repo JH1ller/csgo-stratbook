@@ -1,7 +1,7 @@
 <template>
   <div class="team-create-form">
     <h2 class="team-create-form__headline">Create a team</h2>
-    <form class="team-create-form__form" @submit="createClicked" novalidate>
+    <form class="team-create-form__form" @submit.prevent="createClicked" novalidate>
       <transition name="fade">
         <p class="team-create-form__error" v-if="formError">{{ formError }}</p>
       </transition>

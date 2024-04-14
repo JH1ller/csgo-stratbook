@@ -30,14 +30,16 @@
         </v-layer>
         <!-- Main content layer -->
         <v-layer>
-          <v-image v-for="item in imageItems" :key="item.id" :config="getImageItemConfig(item)" />
-          <v-line v-for="item in lineItems" :key="item.id" :config="getLineItemConfig(item)" />
+          <v-image v-for="item in itemState.images" :key="item.id" :config="getImageItemConfig(item)" />
+          <v-line v-for="item in itemState.lines" :key="item.id" :config="getLineItemConfig(item)" />
           <v-text
-            v-for="item in textItems"
+            v-for="item in itemState.texts"
             :key="item.id"
             :config="getTextItemConfig(item)"
             @dblclick="handleTextDblClick"
           />
+          <v-image v-for="item in itemState.players" :key="item.id" :config="getPlayerItemConfig(item)" />
+          <v-text v-for="item in itemState.players" :key="item.id + 'text'" :config="getPlayerTextItemConfig(item)" />
         </v-layer>
         <!-- Overlayed utility layer -->
         <v-layer>
@@ -76,6 +78,7 @@
         <fa-icon icon="mouse-pointer" /><span class="sketch-tool__btn-label">Pointer</span>
       </button>
       <button
+        v-if="!readOnly"
         class="sketch-tool__btn"
         :class="{ '-active': activeTool === ToolTypes.Brush }"
         @click="setActiveTool(ToolTypes.Brush)"
@@ -85,6 +88,7 @@
         <fa-icon icon="pencil-alt" /><span class="sketch-tool__btn-label">Draw</span>
       </button>
       <button
+        v-if="!readOnly"
         class="sketch-tool__btn"
         :class="{ '-active': activeTool === ToolTypes.Pan }"
         @click="setActiveTool(ToolTypes.Pan)"
@@ -94,6 +98,7 @@
         <fa-icon icon="arrows-alt" /><span class="sketch-tool__btn-label">Pan</span>
       </button>
       <button
+        v-if="!readOnly"
         class="sketch-tool__btn"
         :class="{ '-active': activeTool === ToolTypes.Text }"
         @click="setActiveTool(ToolTypes.Text)"
@@ -130,40 +135,48 @@
         <fa-icon icon="cog" /><span class="sketch-tool__btn-label">Settings</span>
       </button>
     </div>
-    <div class="sketch-tool__draggables-bar">
+    <div v-if="!readOnly" class="sketch-tool__draggables-bar">
       <div
         class="sketch-tool__draggable -anim"
+        :data-type="item.toLowerCase()"
         v-for="item in UtilityTypes"
         :key="item"
         draggable="true"
         @dragstart="handleDragStart($event, item)"
-        @dragend="handleDragEnd"
         @animationend="(e) => e.target.classList.remove('-anim')"
       >
-        <img :src="getUtilityIcon(item)" />
+        <svg-icon :name="item.toLowerCase()" />
+      </div>
+      <div
+        class="sketch-tool__draggable"
+        data-type="player"
+        draggable="true"
+        @dragstart="handleDragStart($event, 'PLAYER')"
+      >
+        <svg-icon name="player" />
       </div>
     </div>
     <div class="sketch-tool__left-container">
       <div class="sketch-tool__keymaps-bar">
-        <div class="sketch-tool__keymap" @click="undo">
+        <div v-if="!readOnly" class="sketch-tool__keymap" @click="undo">
           <button class="sketch-tool__key-outer">
             <div class="sketch-tool__key-inner">Z</div>
           </button>
           <div class="sketch-tool__keymap-label">Undo</div>
         </div>
-        <div class="sketch-tool__keymap" @click="redo">
+        <div v-if="!readOnly" class="sketch-tool__keymap" @click="redo">
           <button class="sketch-tool__key-outer">
             <div class="sketch-tool__key-inner">Y</div>
           </button>
           <div class="sketch-tool__keymap-label">Redo</div>
         </div>
-        <div class="sketch-tool__keymap" @click="removeActiveItems">
+        <div v-if="!readOnly" class="sketch-tool__keymap" @click="removeActiveItems">
           <button class="sketch-tool__key-outer">
             <div class="sketch-tool__key-inner">Del</div>
           </button>
           <div class="sketch-tool__keymap-label">Delete objects</div>
         </div>
-        <div class="sketch-tool__keymap" @click="clearStage">
+        <div v-if="!readOnly" class="sketch-tool__keymap" @click="clearStage">
           <button class="sketch-tool__key-outer">
             <div class="sketch-tool__key-inner">R</div>
           </button>
@@ -189,6 +202,18 @@
         </span>
       </transition-group>
     </div>
+    <vue-context ref="playerPicker" v-slot="{ data }" @close="rejectPlayerPicker">
+      <li v-for="player in teamMembers" :key="player._id">
+        <a @click="() => data.callback(player)">
+          {{ player.name }}
+        </a>
+      </li>
+      <li key="default">
+        <a @click="() => data.callback()">
+          <span class="sketch-tool__context-dot" :style="`--color: ${currentColor}`" /> Selected color
+        </a>
+      </li>
+    </vue-context>
   </div>
 </template>
 

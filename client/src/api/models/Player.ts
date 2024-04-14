@@ -1,3 +1,4 @@
+import { AccessRole } from './AccessRoles';
 import { Model } from './Model';
 
 export interface Player extends Model {
@@ -9,4 +10,5 @@ export interface Player extends Model {
   lastOnline?: Date;
   completedTutorial?: boolean;
   color: string;
+  role: AccessRole;
 }

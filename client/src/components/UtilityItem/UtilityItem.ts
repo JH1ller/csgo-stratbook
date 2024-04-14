@@ -3,44 +3,58 @@ import { Utility } from '@/api/models/Utility';
 import { UtilityMovement } from '@/api/models/UtilityMovement';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
-import MouseButtonDisplay from '@/components/MouseButtonDisplay/MouseButtonDisplay.vue';
 import UtilityTypeDisplay from '@/components/UtilityTypeDisplay/UtilityTypeDisplay.vue';
-import { extractVideoId, getThumbnailURL } from '@/utils/youtubeUtils';
+import { parseYoutubeUrl, getThumbnailURL } from '@/utils/youtubeUtils';
 import SmartImage from '@/components/SmartImage/SmartImage.vue';
+import LabelsDialog from '@/components/LabelsDialog/LabelsDialog.vue';
+import { utilityModule } from '@/store/namespaces';
 
 @Component({
   components: {
-    MouseButtonDisplay,
     UtilityTypeDisplay,
     SmartImage,
+    LabelsDialog,
   },
 })
 export default class UtilityItem extends Vue {
-  @Prop() private utility!: Utility;
+  @utilityModule.Getter readonly allLabels!: string[];
+  @utilityModule.Action readonly updateUtility!: (payload: FormData | Partial<Utility>) => Promise<void>;
+  @Prop() utility!: Utility;
+  @Prop() readOnly!: boolean;
 
-  private UtilityMovement: typeof UtilityMovement = UtilityMovement;
-  private Sides: typeof Sides = Sides;
+  labelDialogOpen = false;
 
-  private getThumbnailURL: typeof getThumbnailURL = getThumbnailURL;
-  private extractVideoId: typeof extractVideoId = extractVideoId;
+  UtilityMovement: typeof UtilityMovement = UtilityMovement;
+  Sides: typeof Sides = Sides;
 
-  private get utilityImage(): string | undefined {
+  get utilityImage(): string | undefined {
     if (this.utility.images.length) {
       return resolveStaticImageUrl(this.utility.images[0]);
     }
 
     if (this.utility.videoLink) {
-      return getThumbnailURL(extractVideoId(this.utility.videoLink)!);
+      return getThumbnailURL(parseYoutubeUrl(this.utility.videoLink)!.id);
     }
   }
 
+  addLabel(value: string) {
+    if (this.readOnly) return;
+    this.updateUtility({ _id: this.utility._id, labels: [...this.utility.labels, value] });
+  }
+
+  removeLabel(label: string) {
+    if (this.readOnly) return;
+    const labels = this.utility.labels.filter((str) => str !== label);
+    this.updateUtility({ _id: this.utility._id, labels });
+  }
+
   @Emit()
-  private openInLightbox() {
+  openInLightbox() {
     return this.utility;
   }
 
   @Emit()
-  private openMenu(e: Event) {
+  openMenu(e: Event) {
     return e;
   }
 }

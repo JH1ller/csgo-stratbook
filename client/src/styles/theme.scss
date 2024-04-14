@@ -6,6 +6,7 @@ body {
   --color-text-tertiary: #7a7a7a;
   --color-text-contrast: #ffffff;
   --color-text-contrast-70: rgba(255, 255, 255, 0.7);
+  --color-input: var(--color-bg);
   --color-accent: rgb(44, 62, 80);
   --color-accent-80: rgba(44, 62, 80, 0.65);
   --color-accent-65: rgba(44, 62, 80, 0.65);
@@ -19,6 +20,7 @@ body {
   --color-blue: hsl(177deg 48% 49%);
   --color-blue-10: rgba(65, 184, 178, 0.1);
   --color-yellow: #e6b352;
+  --color-yellow-dark: hsl(39, 75%, 45%);
   --color-red: hsl(349deg 84% 62%);
   --color-red-dark: hsl(349deg 60% 50%);
   --color-red-20: hsla(349, 84%, 62%, 0.2);
@@ -34,10 +36,11 @@ body {
   --color-bg-contrast: rgb(35, 35, 46);
   --color-bg-contrast-50: rgba(35, 35, 46, 0.5);
 
-  --color-border: #dcdcdc;
+  --color-border: hsl(0, 0%, 80%);
 
   // Fonts
   --font-default: 'Ubuntu', sans-serif;
+  --font-mono: 'Roboto Mono', monospace;
 
   // Misc
   --invert-value: invert(0);
@@ -50,6 +53,7 @@ body.-dark {
   --color-text-secondary: #7a7a7a;
   --color-text-tertiary: #686868;
   --color-text-contrast: #ffffff;
+  --color-input: var(--color-bg-tertiary);
 
   --color-app-bg: hsl(240deg 14% 8%);
   --color-bg: hsl(240deg 14% 10%);
@@ -57,7 +61,7 @@ body.-dark {
   --color-bg-secondary: hsl(240deg 14% 16%);
   --color-bg-tertiary: hsl(240deg 14% 20%);
 
-  --color-border: hsl(240deg 14% 22%);
+  --color-border: hsl(240deg 14% 25%);
 
   // Fonts
   --font-default: 'Ubuntu', sans-serif;

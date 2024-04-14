@@ -7,15 +7,16 @@ import UtilityLightbox from '@/components/UtilityLightbox/UtilityLightbox.vue';
 import FilterButton from '@/components/FilterButton/FilterButton.vue';
 import UtilityFilterForm from '@/components/UtilityFilterForm/UtilityFilterForm.vue';
 import FilterMenu from '@/components/FilterMenu/FilterMenu.vue';
-import { appModule, filterModule, mapModule, utilityModule } from '@/store/namespaces';
+import { appModule, authModule, filterModule, mapModule, teamModule, utilityModule } from '@/store/namespaces';
 import { Utility } from '@/api/models/Utility';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { UtilityTypes } from '@/api/models/UtilityTypes';
 import { Sides } from '@/api/models/Sides';
 import { UtilityFilters } from '@/store/modules/filter';
-import { catchPromise } from '@/utils/catchPromise';
 import ShortcutService from '@/services/shortcut.service';
 import { GameMap } from '@/api/models/GameMap';
+import { AccessRole } from '@/api/models/AccessRoles';
+import { Player } from '@/api/models/Player';
 
 @Component({
   components: {
@@ -33,7 +34,9 @@ export default class UtilityView extends Vue {
   @mapModule.State currentMap!: GameMap;
   @utilityModule.Getter sortedFilteredUtilitiesOfCurrentMap!: Utility[];
   @mapModule.Action updateCurrentMap!: (mapID: GameMap) => Promise<void>;
-  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
+  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
+  @teamModule.Getter isManager!: boolean;
+  @authModule.State profile!: Player;
 
   @filterModule.State utilityFilters!: UtilityFilters;
   @filterModule.Getter activeUtilityFilterCount!: number;
@@ -48,16 +51,20 @@ export default class UtilityView extends Vue {
   @utilityModule.Action shareUtility!: (utilityID: string) => Promise<void>;
   @utilityModule.Action unshareUtility!: (utilityID: string) => Promise<void>;
 
-  private shortcutService = ShortcutService.getInstance();
+  shortcutService = ShortcutService.getInstance();
 
-  private utilityFormOpen = false;
-  private utilityFormEditMode = false;
-  private editUtility: Utility | null = null;
-  private lightboxOpen = false;
-  private currentLightboxUtility: Utility | null = null;
-  private filterMenuOpen = false;
+  utilityFormOpen = false;
+  utilityFormEditMode = false;
+  editUtility: Utility | null = null;
+  lightboxOpen = false;
+  currentLightboxUtility: Utility | null = null;
+  filterMenuOpen = false;
 
-  private created() {
+  get readOnly(): boolean {
+    return !this.isManager && this.profile.role !== AccessRole.EDITOR;
+  }
+
+  created() {
     this.shortcutService.add([
       {
         shortcut: 'Ctrl+Shift+F',
@@ -70,18 +77,18 @@ export default class UtilityView extends Vue {
     ]);
   }
 
-  private beforeDestroy() {
+  beforeDestroy() {
     this.shortcutService.reset();
   }
 
-  private execShortcut(action: () => unknown): boolean | void {
+  execShortcut(action: () => unknown): boolean | void {
     if (!this.utilityFormOpen) {
       action();
       return true;
     }
   }
 
-  private utilityFormSubmitted(data: FormData) {
+  utilityFormSubmitted(data: FormData) {
     if (data.has('_id')) {
       this.updateUtility(data);
     } else {
@@ -90,48 +97,48 @@ export default class UtilityView extends Vue {
     this.hideUtilityForm();
   }
 
-  private requestDeleteUtility(utility: Utility) {
-    catchPromise(
-      this.showDialog({
-        key: 'utility-view/confirm-delete',
-        text: 'Are you sure you want to delete this utility?',
-      }),
-      () => this.deleteUtility(utility._id),
-    );
+  async requestDeleteUtility(utility: Utility) {
+    const dialogResult = await this.showDialog({
+      key: 'utility-view/confirm-delete',
+      text: 'Are you sure you want to delete this utility?',
+    });
+    if (dialogResult) {
+      this.deleteUtility(utility._id);
+    }
   }
 
-  private requestShareUtility(utility: Utility) {
-    catchPromise(
-      this.showDialog({
-        key: 'utility-view/confirm-share',
-        text: 'Do you want to create a share-link to let other teams add this utility to their stratbook?',
-      }),
-      () => this.shareUtility(utility._id),
-    );
+  async requestShareUtility(utility: Utility) {
+    const dialogResult = await this.showDialog({
+      key: 'utility-view/confirm-share',
+      text: 'Do you want to create a share-link to let other teams add this utility to their stratbook?',
+    });
+    if (dialogResult) {
+      this.shareUtility(utility._id);
+    }
   }
 
-  private showUtilityForm(utility?: Utility) {
+  showUtilityForm(utility?: Utility) {
     this.utilityFormOpen = true;
     this.filterMenuOpen = false;
     this.editUtility = utility?._id ? utility : null;
     this.utilityFormEditMode = !!utility?._id;
   }
 
-  private hideUtilityForm() {
+  hideUtilityForm() {
     this.utilityFormOpen = false;
   }
 
-  private showLightbox(utility: Utility) {
+  showLightbox(utility: Utility) {
     this.currentLightboxUtility = utility;
     this.lightboxOpen = true;
   }
 
-  private hideLightbox() {
+  hideLightbox() {
     this.currentLightboxUtility = null;
     this.lightboxOpen = false;
   }
 
-  private toggleFilterMenu() {
+  toggleFilterMenu() {
     this.filterMenuOpen = !this.filterMenuOpen;
   }
 }

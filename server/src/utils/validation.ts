@@ -33,3 +33,26 @@ export const teamSchema = Joi.object({
   serverIp: Joi.string().min(6).max(200).optional().allow(''),
   serverPw: Joi.string().min(1).max(30).optional().allow(''),
 });
+
+export const dotEnvSchema = Joi.object({
+  DATABASE_URL: Joi.string()
+    .required()
+    .pattern(/mongodb(\+srv)?:\/\/.*/),
+  DATABASE_URL_DEV: Joi.string()
+    .optional()
+    .pattern(/mongodb(\+srv)?:\/\/.*/),
+  EMAIL_SECRET: Joi.string().required().min(32),
+  TOKEN_SECRET: Joi.string().required().min(32),
+  SOCKET_ADMIN_UI_PW: Joi.string().optional().min(6),
+  MAIL_HOST: Joi.string().required().hostname(),
+  MAIL_USER: Joi.string().required().email(),
+  MAIL_PW: Joi.string().required().min(6),
+  AWS_ACCESS_KEY_ID: Joi.string().required(),
+  AWS_SECRET_ACCESS_KEY: Joi.string().required(),
+  S3_BUCKET_NAME: Joi.string().required(),
+  JWT_TOKEN_TTL: Joi.string().optional(),
+  REFRESH_TOKEN_TTL: Joi.string().optional(),
+  SENTRY_DSN: Joi.string().optional(),
+  TELEGRAM_TOKEN: Joi.string().optional(),
+  TELEGRAM_USER: Joi.string().optional(),
+});

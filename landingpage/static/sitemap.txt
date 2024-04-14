@@ -1,8 +1,8 @@
-https://stratbook.live
-https://stratbook.live/faq
-https://stratbook.live/changelog
-https://stratbook.live/legal
-https://stratbook.live/de
-https://stratbook.live/de/faq
-https://stratbook.live/de/changelog
-https://stratbook.live/de/legal
+https://stratbook.pro
+https://stratbook.pro/faq
+https://stratbook.pro/changelog
+https://stratbook.pro/legal
+https://stratbook.pro/de
+https://stratbook.pro/de/faq
+https://stratbook.pro/de/changelog
+https://stratbook.pro/de/legal

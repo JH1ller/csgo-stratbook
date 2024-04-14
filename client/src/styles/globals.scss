@@ -12,8 +12,11 @@ html,
 body {
   height: 100%;
   overflow: overlay;
+  font-family: var(--font-default);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--color-default);
+  font-size: 16px;
   background-color: var(--color-app-bg);
   transition: background-color 0.3s ease;
   * {

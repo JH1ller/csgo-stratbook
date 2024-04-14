@@ -9,7 +9,7 @@ module.exports = {
   //   ecmaVersion: 2020,
   // },
   plugins: ['prettier', '@typescript-eslint'],
-  extends: ['plugin:vue/base', 'plugin:vue/essential', 'eslint:recommended', '@vue/typescript/recommended'],
+  extends: ['plugin:vue/base', 'plugin:vue/essential', 'eslint:recommended', '@vue/typescript'],
   rules: {
     //'@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
@@ -19,5 +19,6 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     'no-case-declarations': 'off',
     'no-debugger': 'off',
+    'vue/multi-word-component-names': 'off',
   },
 };

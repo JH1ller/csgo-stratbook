@@ -26,7 +26,7 @@ const transporter = nodemailer.createTransport({
 
 const email = new Email({
   message: {
-    from: 'Stratbook <support@stratbook.live>',
+    from: 'Stratbook <support@stratbook.pro>',
   },
   send: true,
   transport: transporter,

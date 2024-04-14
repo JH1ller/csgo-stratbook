@@ -1,42 +1,33 @@
 import FormField, { FormFieldData } from './FormField';
+import { parseYoutubeUrl } from './youtubeUtils';
 
 export const validateForm = (formData: Record<string, FormField>): boolean => {
-  let valid = true;
-
-  // TODO: can be changed to Object.values
-  const fields = Object.entries(formData);
-
-  fields.forEach(([, field]) => {
+  for (const field of Object.values(formData)) {
     if (!field.validate()) {
-      valid = false;
+      return false;
     }
-  });
+  }
 
-  return valid;
-};
-
-// TODO: deprecated -> remove
-export const validate = (data: FormFieldData): boolean => {
-  return data.validators.every(validator => validator(data));
+  return true;
 };
 
 export type ValidatorFunction = (data: FormFieldData) => boolean;
 
 export class Validators {
-  static emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  static emailRegex =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   static pwRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$/;
   static numberRegex = /^\d+$/;
   static urlRegex = /(https?:\/\/)?([\w-])+\.{1}([a-zA-Z]{2,63})([/\w-]*)*\/?\??([^#\n\r]*)?#?([^\n\r]*)/;
-  static youtubeRegex = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
 
   static notEmpty(): ValidatorFunction {
     const errorMessage = 'Field cannot be empty.';
-    return data => {
+    return (data) => {
       const result = data.required ? data.value.length > 0 : true;
       if (!result) {
         data.errors.push(errorMessage);
       } else {
-        data.errors = data.errors.filter(msg => msg !== errorMessage);
+        data.errors = data.errors.filter((msg) => msg !== errorMessage);
       }
       return result;
     };
@@ -44,7 +35,7 @@ export class Validators {
 
   static exactLength(length: number): ValidatorFunction {
     const errorMessage = `Must be at exactly ${length} characters long.`;
-    return data => {
+    return (data) => {
       const result = data.required
         ? data.value.length === length
         : data.value.length
@@ -53,7 +44,7 @@ export class Validators {
       if (!result) {
         data.errors.push(errorMessage);
       } else {
-        data.errors = data.errors.filter(msg => msg !== errorMessage);
+        data.errors = data.errors.filter((msg) => msg !== errorMessage);
       }
       return result;
     };
@@ -61,7 +52,7 @@ export class Validators {
 
   static minLength(minLength: number): ValidatorFunction {
     const errorMessage = `Must be at least ${minLength} characters.`;
-    return data => {
+    return (data) => {
       const result = data.required
         ? data.value.length >= minLength
         : data.value.length
@@ -70,7 +61,7 @@ export class Validators {
       if (!result) {
         data.errors.push(errorMessage);
       } else {
-        data.errors = data.errors.filter(msg => msg !== errorMessage);
+        data.errors = data.errors.filter((msg) => msg !== errorMessage);
       }
       return result;
     };
@@ -78,7 +69,7 @@ export class Validators {
 
   static maxLength(maxLength: number): ValidatorFunction {
     const errorMessage = `Must be a maximum of ${maxLength} characters.`;
-    return data => {
+    return (data) => {
       const result = data.required
         ? data.value.length <= maxLength
         : data.value.length
@@ -87,7 +78,7 @@ export class Validators {
       if (!result) {
         data.errors.push(errorMessage);
       } else {
-        data.errors = data.errors.filter(msg => msg !== errorMessage);
+        data.errors = data.errors.filter((msg) => msg !== errorMessage);
       }
       return result;
     };
@@ -95,7 +86,7 @@ export class Validators {
 
   static isEmail(): ValidatorFunction {
     const errorMessage = `Must be a valid email address.`;
-    return data => {
+    return (data) => {
       const result = data.required
         ? this.emailRegex.test(data.value)
         : data.value.length
@@ -104,7 +95,7 @@ export class Validators {
       if (!result) {
         data.errors.push(errorMessage);
       } else {
-        data.errors = data.errors.filter(msg => msg !== errorMessage);
+        data.errors = data.errors.filter((msg) => msg !== errorMessage);
       }
       return result;
     };
@@ -112,7 +103,7 @@ export class Validators {
 
   static isURL(): ValidatorFunction {
     const errorMessage = `Must be a valid URL.`;
-    return data => {
+    return (data) => {
       const result = data.required
         ? this.urlRegex.test(data.value)
         : data.value.length
@@ -121,7 +112,7 @@ export class Validators {
       if (!result) {
         data.errors.push(errorMessage);
       } else {
-        data.errors = data.errors.filter(msg => msg !== errorMessage);
+        data.errors = data.errors.filter((msg) => msg !== errorMessage);
       }
       return result;
     };
@@ -129,7 +120,7 @@ export class Validators {
 
   static isSufficientPw(): ValidatorFunction {
     const errorMessage = `Must be include lower-case, upper-case and number`;
-    return data => {
+    return (data) => {
       const result = data.required
         ? this.pwRegex.test(data.value)
         : data.value.length
@@ -138,7 +129,7 @@ export class Validators {
       if (!result) {
         data.errors.push(errorMessage);
       } else {
-        data.errors = data.errors.filter(msg => msg !== errorMessage);
+        data.errors = data.errors.filter((msg) => msg !== errorMessage);
       }
       return result;
     };
@@ -146,13 +137,13 @@ export class Validators {
 
   static isYoutubeLink(): ValidatorFunction {
     const errorMessage = `Currently only youtube is supported.`;
-    return data => {
-      const expressionResult = data.value.match(this.youtubeRegex)?.[7]?.length === 11;
+    return (data) => {
+      const expressionResult = !!parseYoutubeUrl(data.value);
       const result = data.required ? expressionResult : data.value.length ? expressionResult : true;
       if (!result) {
         data.errors.push(errorMessage);
       } else {
-        data.errors = data.errors.filter(msg => msg !== errorMessage);
+        data.errors = data.errors.filter((msg) => msg !== errorMessage);
       }
       return result;
     };
@@ -160,7 +151,7 @@ export class Validators {
 
   static isNumber(): ValidatorFunction {
     const errorMessage = `Must be a number.`;
-    return data => {
+    return (data) => {
       const result = data.required
         ? this.numberRegex.test(data.value)
         : data.value.length
@@ -169,7 +160,7 @@ export class Validators {
       if (!result) {
         data.errors.push(errorMessage);
       } else {
-        data.errors = data.errors.filter(msg => msg !== errorMessage);
+        data.errors = data.errors.filter((msg) => msg !== errorMessage);
       }
       return result;
     };
@@ -177,12 +168,12 @@ export class Validators {
 
   static isPartOf(list: unknown[]): ValidatorFunction {
     const errorMessage = `Must be one of the following options: ${list.join(', ')}`;
-    return data => {
+    return (data) => {
       const result = data.required ? list.includes(data.value) : data.value.length ? list.includes(data.value) : true;
       if (!result) {
         data.errors.push(errorMessage);
       } else {
-        data.errors = data.errors.filter(msg => msg !== errorMessage);
+        data.errors = data.errors.filter((msg) => msg !== errorMessage);
       }
       return result;
     };
@@ -190,7 +181,7 @@ export class Validators {
 
   static matches(fieldRef: FormField): ValidatorFunction {
     const errorMessage = `Value does not match.`;
-    return data => {
+    return (data) => {
       const result = data.required
         ? data.value === fieldRef.value
         : data.value.length
@@ -199,7 +190,7 @@ export class Validators {
       if (!result) {
         data.errors.push(errorMessage);
       } else {
-        data.errors = data.errors.filter(msg => msg !== errorMessage);
+        data.errors = data.errors.filter((msg) => msg !== errorMessage);
       }
       return result;
     };

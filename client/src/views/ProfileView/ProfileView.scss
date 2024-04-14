@@ -1,34 +1,33 @@
 .profile-view {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include viewport_mq3 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
   &__content {
     @include view-content;
 
-    @include viewport_range(mq1, mq3) {
-      width: 100%;
-      height: 100%;
-    }
-
-    padding-bottom: 48px;
-    position: relative;
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: center;
+    width: 100%;
 
     @include viewport_mq3 {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding-bottom: 72px;
+      width: 80%;
     }
+
+    @include viewport_mq5 {
+      width: 60%;
+    }
+
+    @include grid();
   }
 
   &__detail {
     @include fieldset;
 
-    width: 100%;
+    width: unset;
+    order: 2;
+
+    @include grid-cell(12, 1);
 
     @include viewport_range(mq1, mq3) {
       @include spacing('margin-top', sm);
@@ -36,45 +35,53 @@
     }
 
     @include viewport_mq3 {
-      width: 400px;
+      @include grid-cell(8, 1);
+
+      order: 1;
     }
   }
 
   &__avatar {
-    width: 150px;
-    height: 150px;
+    @include grid-cell(12, 1);
+
+    justify-self: center;
+    order: 1;
+    width: 200px;
     object-fit: cover;
     border-radius: 50%;
     box-shadow: $shadow-subtle;
 
     @include viewport_mq3 {
-      @include spacing('margin-left', sm);
-    }
+      @include grid-cell(4, 9);
 
-    @include viewport_mq4 {
-      width: 200px;
-      height: 200px;
+      justify-self: end;
+      order: 2;
+      max-width: 100%;
     }
   }
 
   &__btn-wrapper {
-    position: absolute;
-    right: 16px;
-    bottom: 16px;
+    @include grid-cell(12, 1);
+    order: 3;
     color: var(--color-bg);
     display: flex;
-
-    & > :not(:first-of-type) {
-      margin-left: 16px;
-    }
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    flex-grow: 0;
+    margin-top: auto;
 
     @include viewport_mq3 {
-      right: 24px;
-      bottom: 24px;
+      gap: 12px;
     }
   }
 
   &__btn {
     @include button-danger;
+
+    &.--export {
+      background-color: var(--color-yellow);
+      border-color: var(--color-yellow-dark);
+    }
   }
 }

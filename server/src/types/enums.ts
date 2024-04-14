@@ -7,6 +7,7 @@ export enum GameMap {
   'INFERNO' = 'INFERNO',
   'TRAIN' = 'TRAIN',
   'ANCIENT' = 'ANCIENT',
+  'ANUBIS' = 'ANUBIS',
 }
 
 export enum UtilityType {
@@ -37,4 +38,9 @@ export enum StratType {
 export enum StratSide {
   'CT' = 'CT',
   'T' = 'T',
+}
+
+export enum AccessRole {
+  EDITOR = 'EDITOR',
+  VIEWER = 'VIEWER',
 }

@@ -1,3 +1,4 @@
+import { AccessRole } from '@/types/enums';
 import { Types, Schema, model, Document } from 'mongoose';
 import mongooseDelete from 'mongoose-delete';
 
@@ -17,6 +18,7 @@ export interface Player {
   color: string;
   steamId: string;
   accountType: 'local' | 'steam';
+  role: AccessRole;
 }
 
 export type PlayerDocument = Player &
@@ -96,6 +98,12 @@ const playerSchema = new Schema<Player>({
     enum: ['local', 'steam'],
     default: 'local',
     required: true,
+  },
+
+  role: {
+    type: String,
+    enum: Object.values(AccessRole),
+    default: AccessRole.EDITOR,
   },
 });
 

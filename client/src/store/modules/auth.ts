@@ -67,9 +67,8 @@ export const authModule: Module<AuthState, RootState> = {
             { root: true },
           );
           updateStrats = true;
-        } catch (error) {
-          updateStrats = false; // * not needed, but to prevent empty block statement
-        }
+          // eslint-disable-next-line no-empty
+        } catch (error) {}
       }
 
       const res = await api.player.updatePlayer(data, updateStrats);

@@ -9,6 +9,7 @@
         @type-filter-change="updateStratTypeFilter"
         @side-filter-change="updateStratSideFilter"
         @name-filter-change="updateStratNameFilter"
+        @inactive-filter-change="updateStratInactiveFilter"
         :filters="stratFilters"
       />
     </FilterMenu>
@@ -21,11 +22,10 @@
       :strats="sortedFilteredStratsOfCurrentMap"
       :collapsedStrats="collapsedStrats"
       :editedStrats="editedStrats"
-      :gameMode="gameMode"
+      :readOnly="readOnly"
       @delete-strat="requestDeleteStrat"
       @edit-strat="showStratForm"
-      @toggle-active="toggleStratActive"
-      @update-content="updateContent"
+      @update-strat="updateStrat"
       @share-strat="requestShareStrat"
       @unshare-strat="unshareStrat"
       @show-map="showDrawTool"
@@ -48,7 +48,7 @@
         />
         <FloatingButton
           class="strats-view__floating-sort"
-          :icon="sort === Sort.DateAddedASC ? 'sort-amount-down' : 'sort-amount-up'"
+          :icon="sortBtnIcon"
           label="Sort"
           @click="toggleSort"
           v-tippy
@@ -79,7 +79,7 @@
         />
         <transition name="fade">
           <FloatingButton
-            v-if="!gameMode"
+            v-if="!readOnly"
             class="strats-view__floating-add"
             label="Add Strat"
             icon="plus"
@@ -104,10 +104,8 @@
       />
     </transition>
     <transition name="fade">
-      <BackdropDialog :fullscreen="true" v-if="drawToolOpen && currentDrawToolStrat" @close="drawToolOpen = false">
+      <BackdropDialog :fullscreen="true" v-if="drawToolOpen && currentDrawToolStrat" @close="closeDrawTool">
         <SketchTool
-          @save="updateStrat"
-          @close="drawToolOpen = false"
           :stratName="currentDrawToolStrat.name"
           :userName="profile.name"
           :roomId="currentDrawToolStrat._id.slice(0, 10)"

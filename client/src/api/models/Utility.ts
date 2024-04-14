@@ -21,4 +21,5 @@ export interface Utility extends Model {
   createdAt: Date;
   images: string[];
   shared: boolean;
+  labels: string[];
 }

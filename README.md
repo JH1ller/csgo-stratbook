@@ -3,18 +3,27 @@
 </p>
 
 
-__Vue-Typescript application to manage strategies in Valve's popular competitive FPS Counterstrike: Global Offensive__
+__Web & Desktop application to collaboratively manage strategies & utilities in Valve's popular competitive FPS Counterstrike: Global Offensive__
 
-__Live Version [here!](https://stratbook.live)__
+__Live Version [here!](https://stratbook.pro)__
 
-![electron](https://img.shields.io/badge/electron-9.4.0-blue.svg)
-![vue](https://img.shields.io/badge/vue-2.6.11-blue.svg)
-![typescript](https://img.shields.io/badge/typescript-4.1.3-blue.svg)
-![socket.io](https://img.shields.io/badge/socket.io-2.3.0-blue.svg)
+## Features
+
+✅ Add & manage your team
+
+✅ Add & manage strats
+
+✅ Add & manage utilities
+
+✅ Link teammates & utilities in the powerful strat editor
+
+✅ Teammates see changes in real-time
+
+✅ Real-time tactics board to plan out strategies
+
 
 ## Table of Content
 
-- [Table of Content](#table-of-content)
 - [Technologies](#technologies)
   - [Client/Frontend](#clientfrontend)
   - [Server/Backend](#serverbackend)
@@ -37,6 +46,7 @@ __Live Version [here!](https://stratbook.live)__
 - Typescript
 - Socket.io-Client
 - SCSS
+- Konva
 
 ### Server/Backend
 
@@ -63,9 +73,10 @@ __Live Version [here!](https://stratbook.live)__
 ### Server (Local)
 
 - Navigate to the /server directory
-- Run `npm i` to install all dependencies
+- Run `npm i` to install a
+ll dependencies
 - Create an `.env` file and add the required environment variables documented [here](https://github.com/JH1ller/csgo-stratbook/blob/master/server/README.md)
-- Run `npm run dev` to start the server in development mode
+- Run `npm run serve` to start the server in development mode
 ### Client (Local)
 
 - Navigate to the /client directory.

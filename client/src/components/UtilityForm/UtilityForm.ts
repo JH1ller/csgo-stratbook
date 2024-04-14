@@ -31,32 +31,32 @@ import CloseOnEscape from '@/mixins/CloseOnEscape';
   },
 })
 export default class UtilityForm extends Mixins(CloseOnEscape) {
-  @appModule.Action private showToast!: (toast: Toast) => void;
+  @appModule.Action showToast!: (toast: Toast) => void;
   @Prop() utility!: Utility;
   @Prop() isEdit!: boolean;
 
-  private formFields: Record<string, FormField> = {
+  formFields: Record<string, FormField> = {
     name: new FormField('Name', true, [Validators.notEmpty(), Validators.maxLength(50)]),
     description: new FormField('Description', false, [Validators.maxLength(200)]),
     videoLink: new FormField('Video Link', false, [Validators.isYoutubeLink()]),
     setpos: new FormField('Setpos Command', false, [Validators.maxLength(200)]),
   };
 
-  private type: UtilityTypes = UtilityTypes.SMOKE;
-  private side: Sides = Sides.T;
-  private mouseButton: MouseButtons = MouseButtons.LEFT;
-  private crouch = false;
-  private jump = false;
-  private movement = UtilityMovement.STILL;
-  private files: (File | string)[] = [];
+  type: UtilityTypes = UtilityTypes.SMOKE;
+  side: Sides = Sides.T;
+  mouseButton: MouseButtons = MouseButtons.LEFT;
+  crouch = false;
+  jump = false;
+  movement = UtilityMovement.STILL;
+  files: (File | string)[] = [];
 
-  private mounted() {
+  mounted() {
     if (this.utility && this.isEdit) {
       this.mapToFields();
     }
   }
 
-  private handleSubmit() {
+  handleSubmit() {
     if (validateForm(this.formFields)) {
       if (this.files.length || this.formFields.videoLink.value || this.formFields.setpos.value) {
         this.submitUtility();
@@ -70,13 +70,13 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
   }
 
   @Emit()
-  private submitUtility(): FormData {
+  submitUtility(): FormData {
     const requestFormData = new FormData();
 
     const filesToDelete: string[] = [];
 
-    this.utility?.images.forEach(image => {
-      if (!this.files.find(file => file === image)) {
+    this.utility?.images.forEach((image) => {
+      if (!this.files.find((file) => file === image)) {
         filesToDelete.push(image);
       }
     });
@@ -85,7 +85,7 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
       requestFormData.append('delete', JSON.stringify(filesToDelete));
     }
 
-    this.files.forEach(file => {
+    this.files.forEach((file) => {
       if (typeof file !== 'string') {
         requestFormData.append('images', file, file.name);
       }
@@ -107,7 +107,7 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
     return requestFormData;
   }
 
-  private mapToFields() {
+  mapToFields() {
     this.formFields.name.value = this.utility.name;
     this.formFields.description.value = this.utility.description ?? '';
     this.formFields.videoLink.value = this.utility.videoLink ?? '';
@@ -121,15 +121,15 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
     this.files.push(...this.utility.images);
   }
 
-  private toggleCrouch() {
+  toggleCrouch() {
     this.crouch = !this.crouch;
   }
 
-  private toggleJump() {
+  toggleJump() {
     this.jump = !this.jump;
   }
 
-  private toggleMovement() {
+  toggleMovement() {
     switch (this.movement) {
       case UtilityMovement.STILL:
         this.movement = UtilityMovement.WALK;

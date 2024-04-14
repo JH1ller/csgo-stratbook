@@ -48,8 +48,6 @@ import {
   faExpand,
   faMapMarkerAlt,
   faPhotoVideo,
-  faSortAmountUp,
-  faSortAmountDown,
   faAlignCenter,
   faMousePointer,
   faICursor,
@@ -61,9 +59,14 @@ import {
   faCaretDown,
   faMoon,
   faSun,
+  faCloudDownloadAlt,
+  faUser,
+  faSortNumericDown,
+  faSortNumericUpAlt,
+  faSort,
 } from '@fortawesome/free-solid-svg-icons';
 import { faDiscord, faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons';
-import { faCircle } from '@fortawesome/free-regular-svg-icons';
+import { faCircle, faEye } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 export default function loadIcons() {
@@ -120,8 +123,6 @@ export default function loadIcons() {
     faExpand,
     faMapMarkerAlt,
     faPhotoVideo,
-    faSortAmountUp,
-    faSortAmountDown,
     faAlignCenter,
     faMousePointer,
     faICursor,
@@ -134,6 +135,13 @@ export default function loadIcons() {
     faCaretDown,
     faMoon,
     faSun,
+    faCloudDownloadAlt,
+    faUser,
+    faSortNumericDown,
+    faSortNumericUpAlt,
+    faSort,
+    faCrown,
+    faEye,
   );
 
   Vue.component('fa-icon', FontAwesomeIcon);

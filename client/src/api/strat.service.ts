@@ -5,6 +5,8 @@ import { APIResponse, Endpoints, Message } from './types';
 
 export enum Actions {
   Share = 'share',
+  Export = 'export',
+  Batch = 'batch',
 }
 
 export class StratService {
@@ -39,8 +41,18 @@ export class StratService {
     return ApiService.makeRequest<Strat>(ApiService.http.patch(this.endpoint, payload));
   }
 
+  async updateStrats(payload: Partial<Strat>[]): Promise<APIResponse<Strat[]>> {
+    const target = urljoin(this.endpoint, Actions.Batch);
+    return ApiService.makeRequest<Strat[]>(ApiService.http.patch(target, payload));
+  }
+
   async addSharedStrat(stratID: string): Promise<APIResponse<Strat>> {
     const target = urljoin(this.endpoint, Actions.Share, stratID);
     return ApiService.makeRequest<Strat>(ApiService.http.post(target));
+  }
+
+  async getStratExport(): Promise<APIResponse<Blob>> {
+    const target = urljoin(this.endpoint, Actions.Export);
+    return ApiService.makeRequest<Blob>(ApiService.http.get(target, { responseType: 'blob' }));
   }
 }

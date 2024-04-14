@@ -1,4 +1,3 @@
-import { HOST_NAME } from '@/config';
 import StorageService from '@/services/storage.service';
 import { Component, Emit, Inject, Vue } from 'vue-property-decorator';
 
@@ -8,7 +7,7 @@ export default class CookieBanner extends Vue {
   private analyticsChecked = false;
 
   private setCookie(key: string, value: string) {
-    document.cookie = `${key}=${value}; domain=${HOST_NAME}; max-age=31536000; path=/`;
+    document.cookie = `${key}=${value}; domain=${window.location.hostname}; max-age=31536000; path=/`;
   }
 
   private saveClicked() {

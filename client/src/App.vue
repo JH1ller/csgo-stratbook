@@ -20,6 +20,7 @@
     <transition name="fade">
       <CookieBanner v-if="showCookieBanner && isDesktop === false" @close="closeCookieBanner" />
     </transition>
+    <portal-target name="root"></portal-target>
   </div>
 </template>
 
@@ -34,7 +35,6 @@ import pkg from '../package.json';
 import { appModule, teamModule } from './store/namespaces';
 import TrackingService from '@/services/tracking.service';
 import { Dialog } from './components/DialogWrapper/DialogWrapper.models';
-import { catchPromise } from './utils/catchPromise';
 import StorageService from './services/storage.service';
 import { gt, major, minor } from 'semver';
 import { Breakpoints } from './services/breakpoint.service';
@@ -59,27 +59,26 @@ export default class App extends Vue {
   @appModule.State gameMode!: boolean;
   @appModule.State breakpoint!: Breakpoints;
   @teamModule.State teamInfo!: Team;
-  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<void>;
+  @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
 
-  private menuOpen: boolean = false;
-  private appVersion: string = pkg.version;
-  private showCookieBanner = false;
-  private isDesktop = window.desktopMode;
+  menuOpen: boolean = false;
+  appVersion: string = pkg.version;
+  showCookieBanner = false;
+  isDesktop = window.desktopMode;
 
-  private getCookie(name: string) {
+  getCookie(name: string) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts?.pop()?.split(';')?.shift();
   }
 
-  private closeCookieBanner() {
+  closeCookieBanner() {
     this.showCookieBanner = false;
     this.checkCookies();
   }
 
-  private mounted() {
+  mounted() {
     if (this.isDesktop) {
-      this.initAutoUpdate();
       this.initTracking();
     } else {
       this.checkCookies();
@@ -90,48 +89,35 @@ export default class App extends Vue {
     window.onbeforeunload = () => {
       this.wsService.disconnect();
     };
+    window.appVersion = this.appVersion;
   }
 
-  private checkVersion() {
+  checkVersion() {
     const currentVersion = this.storageService.get<string>('version');
     if (
       currentVersion &&
       gt(`${major(this.appVersion)}.${minor(this.appVersion)}.0`, `${major(currentVersion)}.${minor(currentVersion)}.0`)
     ) {
-      catchPromise(
-        this.showDialog({
-          key: 'app/update-notice',
-          text: `<h1>Stratbook has been updated to ${this.appVersion}.</h1><br><blockquote class="twitter-tweet"><p lang="en" dir="ltr">📌v2.1.0 is live!<br>This update is all about colors!🌈<br><br>🖍️The color assigned to a player will highlight them in every strategy text.<br>🌘Upon popular request, we&#39;ve also added a Darkmode now! 🎉<br>✨Last but not least the team page got a new design.</p>&mdash; Stratbook (@csgostratbook) <a href="https://twitter.com/csgostratbook/status/1541031306997407751?ref_src=twsrc%5Etfw">June 26, 2022</a></blockquote>`,
-          resolveBtn: 'OK',
-          confirmOnly: true,
-          htmlMode: true,
-        }),
-      );
+      this.showDialog({
+        key: 'app/update-notice',
+        text: `
+        <h1>Stratbook has been updated to v${this.appVersion}.</h1>
+          <ul>
+            <li>- Strats can be saved from map view when a name is added.</li>
+            <li>- Added deeplinks to strat drawing board, e.g. https://app.stratbook.pro/#/strats/[strat-id]</li>
+            <li>- minor bug fixes</li>
+            <li>- more to come soon!</li>
+          </ul>
+          `,
+        resolveBtn: 'OK',
+        confirmOnly: true,
+        htmlMode: true,
+      });
     }
     this.storageService.set('version', this.appVersion);
   }
 
-  private async initAutoUpdate() {
-    const { ipcRenderer } = await import('electron');
-
-    ipcRenderer.on('update-downloaded', (_event, version: string) => {
-      ipcRenderer.removeAllListeners('update-downloaded');
-      catchPromise(
-        this.showDialog({
-          key: 'app/update-downloaded',
-          text: `A new update has been downloaded. (${this.appVersion} -> ${version})<br>An app restart is required for the update to take effect. Restart now?`,
-          resolveBtn: 'Restart',
-          htmlMode: true,
-        }),
-        () => ipcRenderer.send('restart-app'),
-      );
-    });
-
-    ipcRenderer.send('app-ready');
-    ipcRenderer.send('start-game-mode');
-  }
-
-  private checkCookies() {
+  checkCookies() {
     const bannerShown = this.getCookie('bannerShown') === 'true' || this.storageService.get('bannerShown');
     const allowAnalytics = this.getCookie('allowAnalytics') === 'true' || this.storageService.get('allowAnalytics');
 
@@ -140,17 +126,17 @@ export default class App extends Vue {
     this.initTracking(!allowAnalytics);
   }
 
-  private initTracking(disableCookie = false) {
+  initTracking(disableCookie = false) {
     if (process.env.NODE_ENV === 'production') {
       this.trackingService.init(disableCookie, { breakpoint: this.breakpoint, team: this.teamInfo.name });
     }
   }
 
-  private closeMenu() {
+  closeMenu() {
     this.menuOpen = false;
   }
 
-  private toggleMenu() {
+  toggleMenu() {
     this.menuOpen = !this.menuOpen;
   }
 
@@ -165,13 +151,8 @@ export default class App extends Vue {
 @import '~vue-swatches/dist/vue-swatches.css';
 
 .app {
-  font-family: var(--font-default);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: var(--color-default);
   height: 100%;
   overflow: hidden;
-  font-size: 16px;
 
   &__version-wrapper {
     position: absolute;

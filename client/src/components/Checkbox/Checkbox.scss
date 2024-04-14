@@ -1,0 +1,36 @@
+.checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  &__input {
+    display: none;
+  }
+
+  &__box {
+    width: 24px;
+    height: 24px;
+    background: var(--color-bg);
+    border: 2px solid var(--color-border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    cursor: pointer;
+
+    & svg {
+      opacity: 0;
+      transition: opacity 0.1s ease;
+      color: var(--color-text);
+      width: 70%;
+    }
+
+    &.-checked svg {
+      opacity: 1;
+    }
+  }
+
+  &__label {
+    @include spacing('margin-left', xs);
+  }
+}

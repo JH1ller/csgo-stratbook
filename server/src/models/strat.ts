@@ -6,11 +6,13 @@ import { DrawBoardState } from '@/types';
 const arrNotEmpty = (value: unknown[]) => !!value.length;
 
 export interface Strat {
+  _id: string;
   name: string;
   map: GameMap;
   team: Types.ObjectId;
   side: StratSide;
   types: StratType[];
+  labels: string[];
   active: boolean;
   videoLink?: string;
   note?: string;
@@ -21,14 +23,16 @@ export interface Strat {
   modifiedBy?: Types.ObjectId;
   modifiedAt?: Date;
   shared: boolean;
+  index: number;
 }
 
-export type StratDocument = Document<unknown, any, Strat>;
+export type StratDocument = Document<Types.ObjectId, any, Strat>;
 
 const drawBoardStateSchema = new Schema<DrawBoardState>({
   images: [Object],
   lines: [Object],
   texts: [Object],
+  players: [Object],
 });
 
 const stratSchema = new Schema<Strat>({
@@ -40,7 +44,7 @@ const stratSchema = new Schema<Strat>({
 
   map: {
     type: String,
-    enum: ['DUST_2', 'MIRAGE', 'OVERPASS', 'NUKE', 'VERTIGO', 'INFERNO', 'TRAIN', 'ANCIENT'],
+    enum: ['DUST_2', 'MIRAGE', 'OVERPASS', 'NUKE', 'VERTIGO', 'INFERNO', 'TRAIN', 'ANCIENT', 'ANUBIS'],
     required: true,
   },
 
@@ -60,6 +64,11 @@ const stratSchema = new Schema<Strat>({
     type: [String],
     default: [],
     validate: [arrNotEmpty, '{PATH} must have a length of >=1'],
+  },
+
+  labels: {
+    type: [String],
+    default: [],
   },
 
   active: {
@@ -108,6 +117,10 @@ const stratSchema = new Schema<Strat>({
   shared: {
     type: Boolean,
     default: false,
+  },
+
+  index: {
+    type: Number,
   },
 });
 
