@@ -12,6 +12,7 @@ export interface Strat {
   team: Types.ObjectId;
   side: StratSide;
   types: StratType[];
+  labels: string[];
   active: boolean;
   videoLink?: string;
   note?: string;
@@ -63,6 +64,11 @@ const stratSchema = new Schema<Strat>({
     type: [String],
     default: [],
     validate: [arrNotEmpty, '{PATH} must have a length of >=1'],
+  },
+
+  labels: {
+    type: [String],
+    default: [],
   },
 
   active: {

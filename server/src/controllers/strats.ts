@@ -4,6 +4,7 @@ import { sanitize } from '@/utils/sanitizeHtml';
 import type { Document, Types } from 'mongoose';
 
 const updatableFields: (keyof Strat)[] = [
+  'labels',
   'name',
   'map',
   'side',

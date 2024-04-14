@@ -9,18 +9,18 @@ export default class ConfirmDialog extends Vue {
   @Prop({ default: false }) confirmOnly!: boolean;
   @Prop({ default: false }) htmlMode!: boolean;
 
-  private confirmClicked() {
+  confirmClicked() {
     this.resolve(true);
     this.close();
   }
 
-  private cancelClicked() {
+  cancelClicked() {
     this.resolve(false);
     this.close();
   }
 
   @Emit()
-  private close() {
+  close() {
     return;
   }
 }

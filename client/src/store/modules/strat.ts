@@ -6,7 +6,6 @@ import TrackingService from '@/services/tracking.service';
 import { extractTextFromHTML } from '@/utils/extractTextFromHTML';
 import StorageService from '@/services/storage.service';
 import { sortFunctions, Sort } from '@/utils/sortFunctions';
-import { writeToClipboard } from '@/utils/writeToClipboard';
 import { getFormattedDate } from '@/utils/getFormattedDate';
 import { downloadFile } from '@/utils/downloadFile';
 
@@ -47,7 +46,7 @@ export const stratModule: Module<StratState, RootState> = {
       return state.strats.filter((strat) => strat.map === rootState.map.currentMap);
     },
     filteredStratsOfCurrentMap(_state, getters, rootState): Strat[] {
-      const { side, types, name, content, inactive } = rootState.filter.stratFilters;
+      const { side, types, name, content, inactive, labels } = rootState.filter.stratFilters;
 
       return (getters.stratsOfCurrentMap as Strat[]).filter(
         (strat) =>
@@ -55,18 +54,28 @@ export const stratModule: Module<StratState, RootState> = {
           (!types.length || types.some((typeFilter) => strat.types.includes(typeFilter))) &&
           (name ? strat.name.toLowerCase().includes(name.toLowerCase()) : true) &&
           (content ? extractTextFromHTML(strat.content).toLowerCase().includes(content.toLowerCase()) : true) &&
-          (inactive ? strat.active : true),
+          (inactive ? strat.active : true) &&
+          (!labels.length || labels.some((label) => strat.labels.includes(label))),
       );
     },
     sortedFilteredStratsOfCurrentMap(state, getters): Strat[] {
       return (getters.filteredStratsOfCurrentMap as Strat[]).sort(sortFunctions[state.sort]);
+    },
+    allLabels(state): string[] {
+      const labelSet = state.strats.reduce<Set<string>>((acc, curr) => {
+        for (const label of curr.labels) {
+          acc.add(label);
+        }
+        return acc;
+      }, new Set());
+
+      return [...labelSet];
     },
   },
   actions: {
     async fetchStrats({ commit }) {
       const res = await api.strat.getStrats();
       if (res.success) {
-        //const stratsWithSort = res.success.map((strat, index) => ({ ...strat, index }));
         commit(SET_STRATS, res.success);
         return { success: res.success };
       } else {
@@ -101,23 +110,6 @@ export const stratModule: Module<StratState, RootState> = {
     },
     async updateStrats(_, payload: Partial<Strat>[]) {
       api.strat.updateStrats(payload);
-    },
-    async shareStrat({ dispatch, state }, stratID: string) {
-      const res = await api.strat.updateStrats([{ _id: stratID, shared: true }]);
-      if (res.success) {
-        const shareLink = `${window.location.origin}/#/share/${stratID}`;
-        writeToClipboard(shareLink);
-        dispatch('app/showToast', { id: 'strat/shareStrat', text: 'Copied share link to clipboard.' }, { root: true });
-        trackingService.track('Action: Share Strat', {
-          name: state.strats.find((strat) => strat._id === stratID)?.name as string,
-        });
-      }
-    },
-    async unshareStrat({ dispatch }, stratID: string) {
-      const res = await api.strat.updateStrats([{ _id: stratID, shared: false }]);
-      if (res.success) {
-        dispatch('app/showToast', { id: 'strat/unshareStrat', text: 'Strat is no longer shared.' }, { root: true });
-      }
     },
     async addSharedStrat({ dispatch, state }, stratID: string) {
       const res = await api.strat.addSharedStrat(stratID);

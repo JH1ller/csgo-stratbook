@@ -14,6 +14,9 @@ import { BrowserTracing } from '@sentry/tracing';
 import { SENTRY_DSN } from './config';
 import loadIcons from './utils/loadIcons';
 import SvgIcon from './components/SvgIcon/SvgIcon.vue';
+import VuePortal from 'portal-vue';
+
+Vue.use(VuePortal);
 
 loadIcons();
 

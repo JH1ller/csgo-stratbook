@@ -3,6 +3,7 @@ import StratEditor from '@/components/StratEditor/StratEditor.vue';
 import IStratEditor from '@/components/StratEditor/StratEditor';
 import TypeBadge from '@/components/TypeBadge/TypeBadge.vue';
 import SideBadge from '@/components/SideBadge/SideBadge.vue';
+import LabelsDialog from '@/components/LabelsDialog/LabelsDialog.vue';
 import { appModule, stratModule } from '@/store/namespaces';
 import { Strat } from '@/api/models/Strat';
 import { Sides } from '@/api/models/Sides';
@@ -18,6 +19,7 @@ import { Sort } from '@/utils/sortFunctions';
     StratEditor,
     TypeBadge,
     SideBadge,
+    LabelsDialog,
   },
   directives: { handle: HandleDirective },
 })
@@ -29,8 +31,13 @@ export default class StratItem extends Vue {
   @Prop() collapsed!: boolean;
   @Prop() editMode!: boolean;
   @Ref() editor!: IStratEditor;
+  @Ref() labelAddInput!: HTMLInputElement;
   @appModule.Action showToast!: (toast: Toast) => Promise<void>;
   @stratModule.State sort!: Sort;
+  @stratModule.Getter readonly allLabels!: string[];
+  @stratModule.Action updateStrat!: (strat: Partial<Strat>) => Promise<void>;
+
+  labelDialogOpen = false;
 
   editorKey = 0;
 
@@ -50,6 +57,17 @@ export default class StratItem extends Vue {
 
   get sortedTypes(): StratTypes[] {
     return this.strat.types.sort((a, b) => a.localeCompare(b, 'en'));
+  }
+
+  addLabel(value: string) {
+    if (this.readOnly) return;
+    this.updateStrat({ _id: this.strat._id, labels: [...this.strat.labels, value] });
+  }
+
+  removeLabel(label: string) {
+    if (this.readOnly) return;
+    const labels = this.strat.labels.filter((str) => str !== label);
+    this.updateStrat({ _id: this.strat._id, labels });
   }
 
   openVideo() {

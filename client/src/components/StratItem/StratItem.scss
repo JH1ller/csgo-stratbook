@@ -27,7 +27,7 @@
   }
 
   @include viewport_mq3 {
-    padding: 0px 20px 6px 20px;
+    padding: 0px 12px 6px 20px;
   }
 
   &__title {
@@ -172,7 +172,6 @@
     }
 
     &.--insert {
-      margin-right: auto;
     }
 
     &.--save {
@@ -221,5 +220,54 @@
     height: 48px;
     color: var(--color-text-secondary);
     cursor: grab;
+  }
+
+  &__labels {
+    @extend %hidden-scrollbar;
+
+    &:not(:has(.-readonly)) {
+      padding-left: 8px;
+      border-left: 1px solid var(--color-border);
+    }
+
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    overflow-x: auto;
+  }
+
+  &__label {
+    @extend %label;
+
+    flex-shrink: 0;
+
+    &.-readonly {
+      cursor: default;
+      padding: 4px 6px;
+
+      & > svg {
+        display: none;
+      }
+    }
+
+    &:hover {
+      & > svg {
+        opacity: 1;
+        scale: 1;
+      }
+    }
+
+    & > svg {
+      transition: opacity 0.3s ease, scale 0.3s ease;
+      width: 12px;
+      height: 12px;
+      scale: 0.9;
+      opacity: 0.4;
+    }
+
+    &.--add {
+      background: var(--color-green-80);
+    }
   }
 }

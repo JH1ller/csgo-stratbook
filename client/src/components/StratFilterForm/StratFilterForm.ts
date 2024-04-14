@@ -5,6 +5,8 @@ import Checkbox from '@/components/Checkbox/Checkbox.vue';
 import { StratFilters } from '@/store/modules/filter';
 import { Sides } from '@/api/models/Sides';
 import { StratTypes } from '@/api/models/StratTypes';
+import { filterModule, stratModule } from '@/store/namespaces';
+import { toggleArray } from '@/utils/toggleArray';
 
 @Component({
   components: {
@@ -15,44 +17,54 @@ import { StratTypes } from '@/api/models/StratTypes';
 })
 export default class StratFilterForm extends Vue {
   @Prop() filters!: StratFilters;
+  @stratModule.Getter readonly allLabels!: string[];
+  @filterModule.Action updateStratLabelsFilter!: (value: string[]) => Promise<void>;
 
-  private get nameFilter() {
+  get nameFilter() {
     return this.filters.name;
   }
 
-  private set nameFilter(value: string) {
+  set nameFilter(value: string) {
     this.$emit('name-filter-change', value);
   }
 
-  private get contentFilter() {
+  get contentFilter() {
     return this.filters.content;
   }
 
-  private set contentFilter(value: string) {
+  set contentFilter(value: string) {
     this.$emit('content-filter-change', value);
   }
 
-  private get typeFilters() {
+  get typeFilters() {
     return this.filters.types;
   }
 
-  private set typeFilters(value: StratTypes[]) {
+  set typeFilters(value: StratTypes[]) {
     this.$emit('type-filter-change', value);
   }
 
-  private get inactiveFilter() {
+  get inactiveFilter() {
     return this.filters.inactive;
   }
 
-  private set inactiveFilter(value: boolean) {
+  set inactiveFilter(value: boolean) {
     this.$emit('inactive-filter-change', value);
   }
 
-  private get sideFilter() {
+  get sideFilter() {
     return this.filters.side;
   }
 
-  private set sideFilter(side: Sides | null) {
+  labelClicked(label: string) {
+    return this.updateStratLabelsFilter(toggleArray(this.filters.labels, label));
+  }
+
+  isLabelActive(label: string) {
+    return this.filters.labels.includes(label);
+  }
+
+  set sideFilter(side: Sides | null) {
     if (this.filters.side === side) {
       this.$emit('side-filter-change', null);
     } else {

@@ -53,6 +53,20 @@
         >
           <fa-icon icon="th-list" />
         </div>
+        <div class="strat-item__labels">
+          <button class="strat-item__label --add" @click="labelDialogOpen = true" v-if="!readOnly">
+            labels<fa-icon icon="plus" />
+          </button>
+          <div
+            class="strat-item__label"
+            :class="{ '-readonly': readOnly }"
+            v-for="label in strat.labels"
+            :key="label"
+            @click="() => removeLabel(label)"
+          >
+            {{ label }}<fa-icon icon="times" />
+          </div>
+        </div>
         <template>
           <div class="strat-item__action-buttons" v-if="editMode">
             <div class="strat-item__btn --save" @click="updateContent" content="Save strat changes" v-tippy>
@@ -103,6 +117,14 @@
       </div>
     </div>
     <fa-icon v-if="isManualSort && !readOnly" class="strat-item__drag-icon" icon="ellipsis-v" v-handle />
+    <LabelsDialog
+      v-if="labelDialogOpen"
+      :currentLabels="strat.labels"
+      :allLabels="allLabels"
+      @close="labelDialogOpen = false"
+      @add="addLabel"
+      @remove="removeLabel"
+    />
   </div>
 </template>
 

@@ -4,6 +4,8 @@ import UtilityPicker from '@/components/UtilityPicker/UtilityPicker.vue';
 import { UtilityFilters } from '@/store/modules/filter';
 import { Sides } from '@/api/models/Sides';
 import { UtilityTypes } from '@/api/models/UtilityTypes';
+import { filterModule, utilityModule } from '@/store/namespaces';
+import { toggleArray } from '@/utils/toggleArray';
 
 @Component({
   components: {
@@ -13,20 +15,22 @@ import { UtilityTypes } from '@/api/models/UtilityTypes';
 })
 export default class UtilityFilterForm extends Vue {
   @Prop() filters!: UtilityFilters;
+  @utilityModule.Getter readonly allLabels!: string[];
+  @filterModule.Action updateUtilityLabelsFilter!: (value: string[]) => Promise<void>;
 
-  private get nameFilter() {
+  get nameFilter() {
     return this.filters.name;
   }
 
-  private set nameFilter(value: string) {
+  set nameFilter(value: string) {
     this.$emit('name-filter-change', value);
   }
 
-  private get typeFilter() {
+  get typeFilter() {
     return this.filters.type;
   }
 
-  private set typeFilter(type: UtilityTypes | null) {
+  set typeFilter(type: UtilityTypes | null) {
     if (this.filters.type === type) {
       this.$emit('type-filter-change', null);
     } else {
@@ -34,11 +38,19 @@ export default class UtilityFilterForm extends Vue {
     }
   }
 
-  private get sideFilter() {
+  labelClicked(label: string) {
+    return this.updateUtilityLabelsFilter(toggleArray(this.filters.labels, label));
+  }
+
+  isLabelActive(label: string) {
+    return this.filters.labels.includes(label);
+  }
+
+  get sideFilter() {
     return this.filters.side;
   }
 
-  private set sideFilter(side: Sides | null) {
+  set sideFilter(side: Sides | null) {
     if (this.filters.side === side) {
       this.$emit('side-filter-change', null);
     } else {

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { UtilityModel } from '@/models/utility';
+import { Utility, UtilityModel } from '@/models/utility';
 import { getUtility } from '@/utils/getters';
 import { verifyAuth } from '@/utils/verifyToken';
 import { uploadMultiple, deleteFile, processImage } from '@/utils/fileUpload';
@@ -68,7 +68,7 @@ router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, 
   if (res.locals.player.role !== AccessRole.EDITOR) {
     return res.status(403).json({ error: 'Only editors can update utilities' });
   }
-  const updatableFields = [
+  const updatableFields: (keyof Utility)[] = [
     'name',
     'map',
     'side',
@@ -81,10 +81,11 @@ router.patch('/', verifyAuth, uploadMultiple('images'), getUtility, async (req, 
     'shared',
     'videoLink',
     'setpos',
+    'labels',
   ];
   Object.entries(req.body).forEach(([key, value]) => {
     // check for undefined / null, but accept empty string ''
-    if (value != null && updatableFields.includes(key)) {
+    if (value != null && updatableFields.includes(key as keyof Utility)) {
       res.locals.utility[key.toString()] = value;
     }
   });

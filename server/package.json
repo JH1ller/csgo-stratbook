@@ -5,7 +5,7 @@
   "scripts": {
     "start": "cross-env TS_NODE_BASEURL=./dist_server node -r tsconfig-paths/register dist_server/index.js",
     "start:pm2": "tsc && cross-env TS_NODE_BASEURL=./dist_server pm2 start dist_server/index.js --node-args=\"-r tsconfig-paths/register\"",
-    "serve": "cross-env NODE_ENV=development tsnd --respawn --inspect=0.0.0.0:9229 --files -r tsconfig-paths/register src/index.ts",
+    "dev": "cross-env NODE_ENV=development tsnd --respawn --inspect=0.0.0.0:9229 --files -r tsconfig-paths/register src/index.ts",
     "build": "zx scripts/build.mjs",
     "postinstall": "npm run build || echo \"build failed :(\"",
     "deploy": "zx scripts/deploy.mjs",

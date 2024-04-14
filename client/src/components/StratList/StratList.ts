@@ -25,7 +25,7 @@ export default class StratList extends Vue {
   @Prop() readOnly!: boolean;
   @Ref() stratItemComponents!: IStratItem[];
 
-  private isCollapsed(strat: Strat) {
+  isCollapsed(strat: Strat) {
     return this.collapsedStrats.some((id) => id === strat._id);
   }
 
@@ -39,74 +39,69 @@ export default class StratList extends Vue {
     await this.updateStrats(stratsToUpdate);
   }
 
-  private isEdited(strat: Strat) {
+  isEdited(strat: Strat) {
     return this.editedStrats.some((id) => id === strat._id);
   }
 
   // TODO: solve this drilling with provide/inject
   // Emitted through from strat-item
   @Emit()
-  private deleteStrat(stratID: string) {
+  deleteStrat(stratID: string) {
     return stratID;
   }
 
   @Emit()
-  private shareStrat(stratID: string) {
+  shareStrat(stratID: string) {
     return stratID;
   }
 
   @Emit()
-  private unshareStrat(stratID: string) {
+  unshareStrat(stratID: string) {
     return stratID;
   }
 
   @Emit()
-  private toggleActive(payload: Partial<Strat>) {
-    return payload;
-  }
-
-  @Emit()
-  private editStrat(strat: Strat) {
+  editStrat(strat: Strat) {
     return strat;
   }
 
   @Emit()
-  private updateContent(payload: Partial<Strat>) {
+  updateStrat(payload: Partial<Strat>) {
     return payload;
   }
 
   @Emit()
-  private showMap(strat: Strat) {
+  showMap(strat: Strat) {
     return strat;
   }
 
   @Emit()
-  private toggleCollapse(stratID: string) {
+  toggleCollapse(stratID: string) {
     return stratID;
   }
 
   @Emit()
-  private editChanged(payload: { stratID: string; value: boolean }) {
+  editChanged(payload: { stratID: string; value: boolean }) {
     return payload;
   }
 
   @Emit()
-  private editorFocussed() {
+  editorFocussed() {
     return;
   }
 
   @Emit()
-  private editorBlurred() {
+  editorBlurred() {
     return;
   }
 
   @Emit()
-  private filterType(value: StratTypes) {
+  filterType(value: StratTypes) {
     return value;
   }
 
   @Emit()
-  private filterSide(value: Sides) {
+  filterSide(value: Sides) {
     return value;
   }
 }

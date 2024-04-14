@@ -11,7 +11,7 @@
   animation: 0.3s ease-in-out fade;
 
   &__content {
-    padding: 16px 16px 12px 16px;
+    padding: 8px;
     background-color: var(--color-bg-secondary);
     min-width: 100%;
     overflow-y: auto;
@@ -20,7 +20,7 @@
 
     @include viewport_mq3 {
       min-height: unset;
-      padding: 20px 20px 12px 20px;
+      padding: 12px;
       height: auto;
       min-width: 320px;
       border-radius: 10px;
@@ -44,7 +44,7 @@
     }
 
     @include viewport_mq7 {
-      padding: 24px 24px 16px 24px;
+      padding: 16px;
       min-width: 360px;
 
       &.-fullscreen {

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Strat, StratModel } from '@/models/strat';
+import { Strat, StratDocument, StratModel } from '@/models/strat';
 import { getStrat, getStrats } from '@/utils/getters';
 import { verifyAuth } from '@/utils/verifyToken';
 import { TypedServer } from '@/sockets/interfaces';
@@ -15,11 +15,11 @@ router.get('/', verifyAuth, async (req, res) => {
   if (!res.locals.player.team) {
     return res.status(400).json({ error: "Authenticated user doesn't have a team" });
   }
-  const strats = req.query.map
+  const strats: StratDocument[] = req.query.map
     ? await StratModel.find({ map: req.query.map, team: res.locals.player.team })
     : await StratModel.find({ team: res.locals.player.team });
 
-  res.json(strats);
+  return res.json(strats);
 });
 
 // * Create One

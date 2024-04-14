@@ -5,15 +5,16 @@
     display: flex;
     background: var(--color-bg-secondary);
     box-shadow: $shadow-subtle;
-    padding: 12px;
+    padding: 6px;
     border-radius: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
     border: 2px solid var(--color-border);
+    gap: 6px;
 
     @include viewport_mq3 {
       justify-content: flex-start;
-      padding: 20px;
+      padding: 12px;
     }
   }
 
@@ -25,7 +26,6 @@
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s ease;
-    margin: 0 5px;
 
     &:hover {
       background-color: var(--color-bg);
@@ -44,16 +44,16 @@
   }
 
   &__image {
-    width: 70px;
-    height: 70px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid var(--color-border);
     transition: all 0.3s ease;
 
     @include viewport_mq3 {
-      width: 100px;
-      height: 100px;
+      width: 70px;
+      height: 70px;
       border-width: 5px;
     }
   }
@@ -66,6 +66,7 @@
     padding: 2px 5px;
     background-color: var(--color-bg);
     transition: all 0.3s ease;
+    white-space: nowrap;
 
     @include viewport_mq3 {
       font-size: 1rem;

@@ -24,29 +24,29 @@ export default class StratForm extends Mixins(CloseOnEscape) {
   @Prop() strat!: Strat;
   @Prop() isEdit!: boolean;
 
-  private formFields: Record<string, FormField> = {
+  formFields: Record<string, FormField> = {
     name: new FormField('Name', true, [Validators.notEmpty(), Validators.maxLength(50)]),
     note: new FormField('Note', false, [Validators.maxLength(100)]),
     videoLink: new FormField('Video Link', false, [Validators.isURL()]),
   };
 
-  private types: StratTypes[] = [StratTypes.BUYROUND];
-  private side: Sides = Sides.T;
+  types: StratTypes[] = [StratTypes.BUYROUND];
+  side: Sides = Sides.T;
 
-  private mounted() {
+  mounted() {
     if (this.strat && this.isEdit) {
       this.mapToFields();
     }
   }
 
-  private handleSubmit() {
+  handleSubmit() {
     if (validateForm(this.formFields)) {
       this.submitStrat();
     }
   }
 
   @Emit()
-  private submitStrat(): Partial<Strat> {
+  submitStrat(): Partial<Strat> {
     return {
       _id: this.isEdit ? this.strat._id : undefined,
       name: this.formFields.name.value,
@@ -57,7 +57,7 @@ export default class StratForm extends Mixins(CloseOnEscape) {
     };
   }
 
-  private mapToFields() {
+  mapToFields() {
     this.formFields.name.value = this.strat.name;
     this.formFields.note.value = this.strat.note ?? '';
     this.formFields.videoLink.value = this.strat.videoLink ?? '';
