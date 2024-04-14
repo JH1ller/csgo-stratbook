@@ -65,7 +65,7 @@ export const filterModule: Module<FilterState, RootState> = {
   state: filterInitialState(),
   getters: {
     activeUtilityFilterCount(state): number {
-      return Object.values(state.utilityFilters).filter((v) => v).length;
+      return Object.values(state.utilityFilters).filter((v) => (Array.isArray(v) ? v.length : v)).length;
     },
     activeStratFilterCount(state): number {
       return Object.values(state.stratFilters).filter((v) => (Array.isArray(v) ? v.length : v)).length;

@@ -73,7 +73,7 @@ export const utilityModule: Module<UtilityState, RootState> = {
       if (res.success)
         dispatch('app/showToast', { id: 'utility/createUtility', text: 'Added utility.' }, { root: true });
     },
-    async updateUtility({ dispatch }, data: FormData) {
+    async updateUtility({ dispatch }, data: FormData | Partial<Utility>) {
       const res = await api.utility.updateUtility(data);
       if (res.success)
         dispatch(

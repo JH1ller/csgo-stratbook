@@ -40,7 +40,7 @@ export class UtilityService {
     );
   }
 
-  async updateUtility(payload: FormData): Promise<APIResponse<Utility>> {
+  async updateUtility(payload: FormData | Partial<Utility>): Promise<APIResponse<Utility>> {
     const target = urljoin(Endpoints.Utilities);
     return ApiService.makeRequest<Utility>(ApiService.http.patch(target, payload));
   }

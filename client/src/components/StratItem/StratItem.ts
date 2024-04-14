@@ -60,10 +60,12 @@ export default class StratItem extends Vue {
   }
 
   addLabel(value: string) {
+    if (this.readOnly) return;
     this.updateStrat({ _id: this.strat._id, labels: [...this.strat.labels, value] });
   }
 
   removeLabel(label: string) {
+    if (this.readOnly) return;
     const labels = this.strat.labels.filter((str) => str !== label);
     this.updateStrat({ _id: this.strat._id, labels });
   }

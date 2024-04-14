@@ -54,8 +54,16 @@
           <fa-icon icon="th-list" />
         </div>
         <div class="strat-item__labels">
-          <button class="strat-item__label --add" @click="labelDialogOpen = true">labels<fa-icon icon="plus" /></button>
-          <div class="strat-item__label" v-for="label in strat.labels" :key="label" @click="() => removeLabel(label)">
+          <button class="strat-item__label --add" @click="labelDialogOpen = true" v-if="!readOnly">
+            labels<fa-icon icon="plus" />
+          </button>
+          <div
+            class="strat-item__label"
+            :class="{ '-readonly': readOnly }"
+            v-for="label in strat.labels"
+            :key="label"
+            @click="() => removeLabel(label)"
+          >
             {{ label }}<fa-icon icon="times" />
           </div>
         </div>

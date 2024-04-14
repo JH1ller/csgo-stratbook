@@ -225,12 +225,15 @@
   &__labels {
     @extend %hidden-scrollbar;
 
+    &:not(:has(.-readonly)) {
+      padding-left: 8px;
+      border-left: 1px solid var(--color-border);
+    }
+
     margin-right: auto;
     display: flex;
     align-items: center;
     gap: 4px;
-    padding-left: 8px;
-    border-left: 1px solid var(--color-border);
     overflow-x: auto;
   }
 
@@ -238,6 +241,16 @@
     @extend %label;
 
     flex-shrink: 0;
+
+    &.-readonly {
+      cursor: default;
+      padding: 4px 6px;
+
+      & > svg {
+        display: none;
+      }
+    }
+
     &:hover {
       & > svg {
         opacity: 1;
