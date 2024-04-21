@@ -10,40 +10,40 @@ import FormField from '@/utils/FormField';
   },
 })
 export default class LoginForm extends Vue {
-  @appModule.Action private showToast!: (toast: Toast) => void;
+  @appModule.Action showToast!: (toast: Toast) => void;
   @Prop() formError!: string;
 
-  private email: FormField = new FormField('Email', true, [Validators.notEmpty(), Validators.isEmail()], 'email');
+  email: FormField = new FormField('Email', true, [Validators.notEmpty(), Validators.isEmail()], 'email');
 
-  private password: FormField = new FormField('Password', true, [Validators.notEmpty()], 'password');
+  password: FormField = new FormField('Password', true, [Validators.notEmpty()], 'password');
 
-  private handleSubmit() {
+  handleSubmit() {
     if (this.email.validate() && this.password.validate()) {
       this.submit();
     }
   }
 
   @Emit()
-  private resetPassword() {
+  resetPassword() {
     return;
   }
 
   @Emit()
-  private submit() {
+  submit() {
     return { email: this.email.value, password: this.password.value };
   }
 
   @Emit()
-  private steamLogin() {
+  steamLogin() {
     return;
   }
 
   @Emit()
-  private updateFormError(text: string) {
+  updateFormError(text: string) {
     return text;
   }
 
-  private mounted() {
+  mounted() {
     const email = this.$route.query.confirmed ?? this.$route.query.already_confirmed;
     if (email) {
       this.showToast({

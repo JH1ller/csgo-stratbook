@@ -15,6 +15,7 @@ import { SENTRY_DSN } from './config';
 import loadIcons from './utils/loadIcons';
 import SvgIcon from './components/SvgIcon/SvgIcon.vue';
 import VuePortal from 'portal-vue';
+import { getCookie } from './utils/cookie';
 
 Vue.use(VuePortal);
 
@@ -66,7 +67,7 @@ const storageService = StorageService.getInstance();
 
 new BreakpointService((MQ) => store.dispatch('app/updateBreakpoint', MQ));
 
-const hasSession = !!storageService.get('has-session');
+const hasSession = !!storageService.get('has-session') || getCookie('stratbook_jwt');
 
 (async () => {
   if (hasSession) {

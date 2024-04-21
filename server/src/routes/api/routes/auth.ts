@@ -84,8 +84,6 @@ router.post('/login', async (req, res) => {
     refreshToken,
     player: targetUser._id,
     expires: refreshTokenExpiration,
-    userAgent: req.get('User-Agent'),
-    ip: req.ip,
   });
 
   await session.save();
@@ -104,8 +102,7 @@ router.post('/login', async (req, res) => {
   res.set('Access-Control-Expose-Headers', 'Set-Cookie');
   res.set('Access-Control-Allow-Headers', 'Set-Cookie');
 
-  // TODO: check why we're using send() instead of json()
-  res.send({
+  res.json({
     token,
     refreshToken: jsonMode ? refreshToken : undefined,
   });
@@ -234,6 +231,8 @@ router.get('/steam', async (_req, res) => {
 router.get('/steam/authenticate', async (req, res) => {
   try {
     const steamUser = await steam.authenticate(req);
+    console.log(steamUser);
+
     let user = await PlayerModel.findOne({ steamId: steamUser.steamid });
 
     if (!user) {
@@ -273,6 +272,7 @@ router.get('/steam/authenticate', async (req, res) => {
 
     res.set('Access-Control-Expose-Headers', 'Set-Cookie');
     res.set('Access-Control-Allow-Headers', 'Set-Cookie');
+
     res.cookie('stratbook_jwt', token);
 
     return res.redirect(APP_URL);

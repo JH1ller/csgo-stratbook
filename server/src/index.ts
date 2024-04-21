@@ -20,16 +20,9 @@ import { Log } from './utils/logger';
 import { instrument } from '@socket.io/admin-ui';
 import { hashSync } from 'bcryptjs';
 import { TelegramService } from './services/telegram.service';
-import { dotEnvSchema } from './utils/validation';
+import { validateDotEnv } from './utils/validation';
 
-const { error } = dotEnvSchema.validate(process.env, { abortEarly: false, allowUnknown: true });
-if (error) {
-  console.error('Error validating .env file:');
-  for (const err of error.details) {
-    console.error(err.message);
-  }
-  process.exit(1);
-}
+validateDotEnv();
 
 const app = express();
 const httpServer = createServer(app);

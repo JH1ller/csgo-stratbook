@@ -55,4 +55,16 @@ export const dotEnvSchema = Joi.object({
   SENTRY_DSN: Joi.string().optional(),
   TELEGRAM_TOKEN: Joi.string().optional(),
   TELEGRAM_USER: Joi.string().optional(),
+  STEAM_API_KEY: Joi.string().required(),
 });
+
+export const validateDotEnv = () => {
+  const { error } = dotEnvSchema.validate(process.env, { abortEarly: false, allowUnknown: true });
+  if (error) {
+    console.error('Error validating .env file:');
+    for (const err of error.details) {
+      console.error(err.message);
+    }
+    process.exit(1);
+  }
+};

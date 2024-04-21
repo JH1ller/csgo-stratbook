@@ -40,6 +40,7 @@ import { gt, major, minor } from 'semver';
 import { Breakpoints } from './services/breakpoint.service';
 import { Team } from './api/models/Team';
 import WebSocketService from './services/WebSocketService';
+import { getCookie } from './utils/cookie';
 
 @Component({
   components: {
@@ -65,12 +66,6 @@ export default class App extends Vue {
   appVersion: string = pkg.version;
   showCookieBanner = false;
   isDesktop = window.desktopMode;
-
-  getCookie(name: string) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts?.pop()?.split(';')?.shift();
-  }
 
   closeCookieBanner() {
     this.showCookieBanner = false;
@@ -118,8 +113,8 @@ export default class App extends Vue {
   }
 
   checkCookies() {
-    const bannerShown = this.getCookie('bannerShown') === 'true' || this.storageService.get('bannerShown');
-    const allowAnalytics = this.getCookie('allowAnalytics') === 'true' || this.storageService.get('allowAnalytics');
+    const bannerShown = getCookie('bannerShown') === 'true' || this.storageService.get('bannerShown');
+    const allowAnalytics = getCookie('allowAnalytics') === 'true' || this.storageService.get('allowAnalytics');
 
     if (!bannerShown) this.showCookieBanner = true;
 
