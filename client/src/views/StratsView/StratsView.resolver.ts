@@ -4,8 +4,6 @@ import { authGuard } from '@/guards/auth.guard';
 import { teamGuard } from '@/guards/team.guard';
 
 export const stratsResolver: NavigationGuard = async (to, from, next) => {
-  //await store.dispatch('auth/fetchProfile');
-
   const authGuardResult: boolean = authGuard(to, from, next);
   if (!authGuardResult) return;
   const teamGuardResult: boolean = await teamGuard(to, from, next);

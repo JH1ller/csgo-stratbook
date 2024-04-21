@@ -115,10 +115,6 @@ export const authModule: Module<AuthState, RootState> = {
         return { error: res.error };
       }
     },
-    async fetchSteamUrl() {
-      const { success } = await api.auth.fetchSteamUrl();
-      return { success };
-    },
     async logout({ dispatch, state }) {
       trackingService.track('Action: Logout', { email: state.profile.email, name: state.profile.name });
       await api.auth.logout();

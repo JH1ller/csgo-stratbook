@@ -1,5 +1,5 @@
 'use strict';
-import { app, protocol, BrowserWindow, ipcMain, shell, screen } from 'electron';
+import { app, protocol, BrowserWindow, ipcMain, shell, screen, dialog } from 'electron';
 import {
   createProtocol,
   /* installVueDevtools */
@@ -8,6 +8,7 @@ import { autoUpdater } from 'electron-updater';
 import ElectronLog from 'electron-log';
 //import debug from 'electron-debug';
 import ElectronStore from 'electron-store';
+import path from 'path';
 // import GSIServer from './main_process/gsi-server';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -21,12 +22,30 @@ const store = new ElectronStore<{
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null;
 
-// let gsiServer: GSIServer;
-
-//debug({ isEnabled: isDebug || isDevelopment });
-
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
+
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient('stratbook', process.execPath, [path.resolve(process.argv[1])]);
+  }
+} else {
+  app.setAsDefaultProtocolClient('stratbook');
+}
+
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (gotTheLock) {
+  app.on('second-instance', (_, commandLine) => {
+    const rx = /^stratbook:\/\/(.+)\//;
+    const match = commandLine.at(-1)?.match(rx);
+    const token = match ? match[1] : null;
+    console.log('second-instance', token, commandLine.at(-1));
+    win?.webContents.send('steam-auth', token);
+  });
+} else {
+  app.quit();
+}
 
 const getWindowBounds = (): Electron.BrowserWindowConstructorOptions => {
   const primaryDisplay = screen.getPrimaryDisplay();

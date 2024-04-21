@@ -37,7 +37,7 @@ export default class AuthService {
   async login(email: string, password: string): Promise<APIResponse<Authorization>> {
     const target = urljoin(API_URL, this.endpoint, Actions.Login);
     return ApiService.makeRequest<{ token: string }>(
-      axios.post(target, { email, password, jsonMode: window.desktopMode }, { withCredentials: true }),
+      axios.post(target, { email, password, electronMode: window.desktopMode }, { withCredentials: true }),
     );
   }
 
@@ -54,7 +54,7 @@ export default class AuthService {
   async refresh(refreshToken?: string): Promise<APIResponse<Authorization>> {
     const target = urljoin(API_URL, this.endpoint, Actions.Refresh);
     return ApiService.makeRequest<Authorization>(
-      axios.post(target, { jsonMode: window.desktopMode, refreshToken }, { withCredentials: true }),
+      axios.post(target, { electronMode: window.desktopMode, refreshToken }, { withCredentials: true }),
     );
   }
 

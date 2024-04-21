@@ -20,12 +20,6 @@ import { TelegramService } from '@/services/telegram.service';
 const router = Router();
 const telegramService = TelegramService.getInstance();
 
-const steam = new SteamAuth({
-  realm: API_URL,
-  returnUrl: urljoin(API_URL, '/auth/steam/authenticate'),
-  apiKey: process.env.STEAM_API_KEY!,
-});
-
 router.post('/register', uploadSingle('avatar'), async (req, res) => {
   const { error } = registerSchema.validate(req.body);
   if (error) {
@@ -78,7 +72,7 @@ router.post('/login', async (req, res) => {
   const refreshToken = nanoid(64);
   const refreshTokenExpiration = new Date(Date.now() + ms(process.env.REFRESH_TOKEN_TTL ?? '180d'));
 
-  const jsonMode = !!req.body.jsonMode;
+  const electronMode = !!req.body.electronMode;
 
   const session = new SessionModel({
     refreshToken,
@@ -104,12 +98,13 @@ router.post('/login', async (req, res) => {
 
   res.json({
     token,
-    refreshToken: jsonMode ? refreshToken : undefined,
+    refreshToken: electronMode ? refreshToken : undefined,
   });
 });
 
 router.post('/refresh', cookieParser(), async (req, res) => {
-  const currentRefreshToken = req.cookies.refreshToken ?? req.body.refreshToken;
+  const currentRefreshToken = req.body.refreshToken ?? req.cookies.refreshToken;
+
   const session = await SessionModel.findOne({ refreshToken: currentRefreshToken });
   if (!session) return res.status(400).json({ error: 'Invalid refresh token' });
 
@@ -118,7 +113,7 @@ router.post('/refresh', cookieParser(), async (req, res) => {
     return res.status(400).json({ error: 'Refresh token expired' });
   }
 
-  const jsonMode = !!req.body.jsonMode;
+  const electronMode = !!req.body.electronMode;
 
   const refreshToken = nanoid(64);
   const refreshTokenExpiration = new Date(Date.now() + ms(process.env.REFRESH_TOKEN_TTL ?? '180d'));
@@ -140,7 +135,7 @@ router.post('/refresh', cookieParser(), async (req, res) => {
 
   res.send({
     token,
-    refreshToken: jsonMode ? refreshToken : undefined,
+    refreshToken: electronMode ? refreshToken : undefined,
   });
 });
 
@@ -223,13 +218,31 @@ router.patch('/reset', async (req, res) => {
   }
 });
 
-router.get('/steam', async (_req, res) => {
+router.get('/steam', async (req, res) => {
+  let returnUrl = urljoin(API_URL, '/auth/steam/authenticate');
+
+  if (req.headers['user-agent']?.includes('Electron')) {
+    returnUrl += '?electronMode=true';
+  }
+
+  const steam = new SteamAuth({
+    realm: API_URL,
+    returnUrl,
+    apiKey: process.env.STEAM_API_KEY!,
+  });
+
   const redirectUrl = await steam.getRedirectUrl();
   return res.send(redirectUrl);
 });
 
 router.get('/steam/authenticate', async (req, res) => {
   try {
+    const steam = new SteamAuth({
+      realm: API_URL,
+      returnUrl: urljoin(API_URL, '/auth/steam/authenticate'),
+      apiKey: process.env.STEAM_API_KEY!,
+    });
+
     const steamUser = await steam.authenticate(req);
     console.log(steamUser);
 
@@ -250,7 +263,7 @@ router.get('/steam/authenticate', async (req, res) => {
     const refreshTokenExpiration = new Date(Date.now() + ms(process.env.REFRESH_TOKEN_TTL ?? '180d'));
 
     // TODO: implement for this request to make Desktop App Signin work
-    const jsonMode = !!req.body.jsonMode;
+    const electronMode = !!req.query.electronMode;
 
     const session = new SessionModel({
       refreshToken,
@@ -260,20 +273,18 @@ router.get('/steam/authenticate', async (req, res) => {
 
     await session.save();
 
-    const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET!, {
-      expiresIn: process.env.JWT_TOKEN_TTL,
-    });
-
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      maxAge: ms(process.env.REFRESH_TOKEN_TTL!),
-      sameSite: 'lax',
-    });
-
     res.set('Access-Control-Expose-Headers', 'Set-Cookie');
     res.set('Access-Control-Allow-Headers', 'Set-Cookie');
 
-    res.cookie('stratbook_jwt', token);
+    if (electronMode) {
+      return res.redirect('stratbook://' + refreshToken);
+    } else {
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        maxAge: ms(process.env.REFRESH_TOKEN_TTL!),
+        sameSite: 'lax',
+      });
+    }
 
     return res.redirect(APP_URL);
   } catch (error) {

@@ -3,6 +3,8 @@ import LoginForm from '@/components/LoginForm/LoginForm.vue';
 import { Response } from '@/store';
 import { authModule } from '@/store/namespaces';
 import { Routes } from '@/router/router.models';
+import api from '@/api/base';
+import { openLink } from '@/utils/openLink';
 
 @Component({
   components: {
@@ -11,10 +13,9 @@ import { Routes } from '@/router/router.models';
 })
 export default class LoginView extends Vue {
   @authModule.Action login!: (credentials: { email: string; password: string }) => Promise<Response>;
-  @authModule.Action fetchSteamUrl!: () => Promise<Response>;
-  private formError: string = '';
+  formError: string = '';
 
-  private async loginRequest(payload: any) {
+  async loginRequest(payload: { email: string; password: string }) {
     const res = await this.login({
       email: payload.email,
       password: payload.password,
@@ -27,12 +28,18 @@ export default class LoginView extends Vue {
     }
   }
 
-  private updateFormError(text: string): void {
+  updateFormError(text: string): void {
     this.formError = text;
   }
 
   async loginWithSteam() {
-    const { success } = await this.fetchSteamUrl();
-    window.location.href = success as string;
+    const { success } = await api.auth.fetchSteamUrl();
+    if (success) {
+      if (window.desktopMode) {
+        openLink(success);
+      } else {
+        window.location.href = success;
+      }
+    }
   }
 }

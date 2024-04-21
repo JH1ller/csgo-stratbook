@@ -83,4 +83,23 @@
     @include error-notification;
     @include spacing('margin-bottom', 'xs');
   }
+
+  &__steam {
+    @include button-primary(true, true);
+
+    margin-bottom: 16px;
+    background: #2a475e;
+    border-color: #1b2838;
+
+    &:hover,
+    &:active,
+    &:focus {
+      background: lighten(#2a475e, 5%);
+    }
+
+    & > svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
 }
