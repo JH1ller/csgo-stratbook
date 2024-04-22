@@ -37,11 +37,12 @@ const gotTheLock = app.requestSingleInstanceLock();
 
 if (gotTheLock) {
   app.on('second-instance', (_, commandLine) => {
-    const rx = /^stratbook:\/\/(.+)\//;
+    const rx = /^stratbook:\/\/([a-z]+)(?:\/(.+))?\//;
     const match = commandLine.at(-1)?.match(rx);
-    const token = match ? match[1] : null;
-    console.log('second-instance', token, commandLine.at(-1));
-    win?.webContents.send('steam-auth', token);
+    if (!match) return;
+    const [, action, token] = match;
+    console.log('electron-deeplink', action, token);
+    win?.webContents.send('steam-auth', { action, token });
   });
 } else {
   app.quit();

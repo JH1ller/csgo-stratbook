@@ -48,6 +48,8 @@
     }
 
     color: var(--color-text);
+    display: flex;
+    align-items: center;
   }
 
   &__role {
@@ -101,6 +103,15 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
+  }
+
+  &__steam-icon {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+    & path {
+      fill: var(--color-text);
+    }
   }
 }
 

@@ -54,4 +54,8 @@ export default class MemberItem extends Vue {
   kickMember(id: string) {
     return id;
   }
+
+  get steamProfileUrl() {
+    return this.member.steamId ? `https://steamcommunity.com/profiles/${this.member.steamId}` : undefined;
+  }
 }

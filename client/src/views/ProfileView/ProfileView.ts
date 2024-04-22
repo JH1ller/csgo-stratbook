@@ -7,6 +7,8 @@ import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { Response } from '@/store';
+import api from '@/api/base';
+import { openLink } from '@/utils/openLink';
 
 @Component({
   components: {
@@ -48,5 +50,20 @@ export default class ProfileView extends Vue {
     if (isConfirmed) {
       this.showToast({ id: 'ProfileView/emailConfirmed', text: 'Your new email has been confirmed.' });
     }
+  }
+
+  async connectSteam() {
+    const { success } = await api.auth.fetchSteamUrl();
+    if (success) {
+      if (window.desktopMode) {
+        openLink(success);
+      } else {
+        window.location.href = success;
+      }
+    }
+  }
+
+  get steamProfileUrl() {
+    return `https://steamcommunity.com/profiles/${this.profile.steamId}`;
   }
 }

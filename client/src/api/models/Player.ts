@@ -11,4 +11,6 @@ export interface Player extends Model {
   completedTutorial?: boolean;
   color: string;
   role: AccessRole;
+  steamId: string;
+  accountType: 'local' | 'steam';
 }

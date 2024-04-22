@@ -11,7 +11,7 @@ import { registerSchema } from '@/utils/validation';
 import { sendMail, MailTemplate } from '@/utils/mailService';
 import { uploadSingle, processImage, deleteFile } from '@/utils/fileUpload';
 import { APP_URL, API_URL } from '@/config';
-import { verifyAuth } from '@/utils/verifyToken';
+import { verifyAuth, verifyAuthOptional } from '@/utils/verifyToken';
 import UserNotFoundError from '@/utils/errors/UserNotFoundError';
 import SteamAuth from 'node-steam-openid';
 import { Log } from '@/utils/logger';
@@ -218,16 +218,27 @@ router.patch('/reset', async (req, res) => {
   }
 });
 
-router.get('/steam', async (req, res) => {
-  let returnUrl = urljoin(API_URL, '/auth/steam/authenticate');
+router.get('/steam', verifyAuthOptional, async (req, res) => {
+  const returnUrl = new URL(urljoin(API_URL, '/auth/steam/authenticate'));
 
-  if (req.headers['user-agent']?.includes('Electron')) {
-    returnUrl += '?electronMode=true';
+  const urlQuery = new URLSearchParams();
+
+  if (req.get('user-agent')?.includes('Electron')) {
+    urlQuery.set('electronMode', 'true');
   }
+
+  if (res.locals.player) {
+    console.log('player found');
+    urlQuery.set('playerId', res.locals.player._id.toString());
+  }
+
+  returnUrl.search = urlQuery.toString();
+
+  console.log('returnUrl', returnUrl.toString());
 
   const steam = new SteamAuth({
     realm: API_URL,
-    returnUrl,
+    returnUrl: returnUrl.toString(),
     apiKey: process.env.STEAM_API_KEY!,
   });
 
@@ -237,6 +248,8 @@ router.get('/steam', async (req, res) => {
 
 router.get('/steam/authenticate', async (req, res) => {
   try {
+    const electronMode = !!req.query.electronMode;
+
     const steam = new SteamAuth({
       realm: API_URL,
       returnUrl: urljoin(API_URL, '/auth/steam/authenticate'),
@@ -244,7 +257,24 @@ router.get('/steam/authenticate', async (req, res) => {
     });
 
     const steamUser = await steam.authenticate(req);
-    console.log(steamUser);
+    // console.log(steamUser);
+
+    if (req.query.playerId) {
+      console.log('playerId', req.query.playerId);
+      const player = await PlayerModel.findById(req.query.playerId);
+      if (!player) {
+        return res.status(404).json({ error: 'Player not found' });
+      }
+      player.steamId = steamUser.steamid;
+      player.accountType = 'steam';
+      await player.save();
+
+      if (electronMode) {
+        return res.redirect(`stratbook://connect`);
+      }
+
+      return res.redirect(APP_URL);
+    }
 
     let user = await PlayerModel.findOne({ steamId: steamUser.steamid });
 
@@ -262,9 +292,6 @@ router.get('/steam/authenticate', async (req, res) => {
     const refreshToken = nanoid(64);
     const refreshTokenExpiration = new Date(Date.now() + ms(process.env.REFRESH_TOKEN_TTL ?? '180d'));
 
-    // TODO: implement for this request to make Desktop App Signin work
-    const electronMode = !!req.query.electronMode;
-
     const session = new SessionModel({
       refreshToken,
       player: user._id,
@@ -277,7 +304,7 @@ router.get('/steam/authenticate', async (req, res) => {
     res.set('Access-Control-Allow-Headers', 'Set-Cookie');
 
     if (electronMode) {
-      return res.redirect('stratbook://' + refreshToken);
+      return res.redirect(`stratbook://token/${refreshToken}`);
     } else {
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,

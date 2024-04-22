@@ -1,6 +1,6 @@
 import { Player, PlayerDocument } from '@/models/player';
 
-export type PlayerDto = Omit<Player, 'password' | 'confirmed' | 'isAdmin' | 'steamId'> & {
+export type PlayerDto = Omit<Player, 'password' | 'confirmed' | 'isAdmin'> & {
   _id: string;
 };
 
@@ -18,5 +18,6 @@ export const toPlayerDto = (player: PlayerDocument): PlayerDto => {
     isOnline: player.isOnline,
     lastOnline: player.lastOnline,
     accountType: player.accountType,
+    steamId: player.steamId,
   };
 };

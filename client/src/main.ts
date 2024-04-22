@@ -86,10 +86,17 @@ const initStore = async () => {
 (async () => {
   if (window.desktopMode) {
     const ipcRenderer = require('electron').ipcRenderer;
-    ipcRenderer.on('steam-auth', (_, token) => {
-      console.log('steam-auth', token);
-      storageService.set('refreshToken', token);
-      initStore();
+    ipcRenderer.on('steam-auth', (_, { action, token }) => {
+      console.log('steam-auth', action, token);
+      if (action === 'token') {
+        storageService.set('refreshToken', token);
+        initStore();
+      } else if (action === 'connect') {
+        store.dispatch('app/showToast', {
+          id: 'main/steam-connected',
+          text: 'Steam account successfully connected.',
+        });
+      }
     });
   }
   await initStore();

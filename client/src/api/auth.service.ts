@@ -43,7 +43,7 @@ export default class AuthService {
 
   async fetchSteamUrl(): Promise<APIResponse<string>> {
     const target = urljoin(API_URL, this.endpoint, Actions.SteamLogin);
-    return ApiService.makeRequest(axios.get(target, { withCredentials: true }));
+    return ApiService.makeRequest(ApiService.http.get(target, { withCredentials: true }));
   }
 
   async logout(): Promise<APIResponse<string>> {
