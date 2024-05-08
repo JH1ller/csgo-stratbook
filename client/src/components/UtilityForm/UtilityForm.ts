@@ -118,7 +118,7 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
     this.crouch = this.utility.crouch;
     this.jump = this.utility.jump;
     this.movement = this.utility.movement;
-    this.files.push(...this.utility.images);
+    this.files = [...this.utility.images];
   }
 
   toggleCrouch() {

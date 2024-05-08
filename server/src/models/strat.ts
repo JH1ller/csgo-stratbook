@@ -1,9 +1,10 @@
-import { Types, Schema, model, Document } from 'mongoose';
+import { Document, model, Schema, Types } from 'mongoose';
 import mongooseDelete from 'mongoose-delete';
-import { GameMap, StratSide, StratType } from '@/types/enums';
-import { DrawBoardState } from '@/types';
 
-const arrNotEmpty = (value: unknown[]) => !!value.length;
+import { DrawBoardState } from '@/types';
+import { GameMap, StratSide, StratType } from '@/types/enums';
+
+const arrayNotEmpty = (value: unknown[]) => value.length > 0;
 
 export interface Strat {
   _id: string;
@@ -26,7 +27,7 @@ export interface Strat {
   index: number;
 }
 
-export type StratDocument = Document<Types.ObjectId, any, Strat>;
+export type StratDocument = Document<Types.ObjectId, unknown, Strat>;
 
 const drawBoardStateSchema = new Schema<DrawBoardState>({
   images: [Object],
@@ -63,7 +64,7 @@ const stratSchema = new Schema<Strat>({
   types: {
     type: [String],
     default: [],
-    validate: [arrNotEmpty, '{PATH} must have a length of >=1'],
+    validate: [arrayNotEmpty, '{PATH} must have a length of >=1'],
   },
 
   labels: {

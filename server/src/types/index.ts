@@ -11,6 +11,7 @@ export interface MapData {
 }
 
 export interface Client {
+  id: string;
   userName: string;
   color: string;
   position: {
@@ -20,10 +21,10 @@ export interface Client {
 }
 
 export interface DrawBoardState {
-  images: unknown[];
-  lines: unknown[];
-  texts: unknown[];
-  players: unknown[];
+  images?: unknown[];
+  lines?: unknown[];
+  texts?: unknown[];
+  players?: PlayerItem[];
 }
 
 export interface PlayerItem {

@@ -1,32 +1,31 @@
-import { Router } from 'express';
 import bcrypt from 'bcryptjs';
+import cookieParser from 'cookie-parser';
+import { Router } from 'express';
 import jwt, { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 import ms from 'ms';
 import { nanoid } from 'nanoid';
-import cookieParser from 'cookie-parser';
+import SteamAuth from 'node-steam-openid';
 import urljoin from 'url-join';
+
 import { PlayerModel } from '@/models/player';
 import { SessionModel } from '@/models/session';
-import { registerSchema } from '@/utils/validation';
-import { sendMail, MailTemplate } from '@/utils/mailService';
-import { uploadSingle, processImage, deleteFile } from '@/utils/fileUpload';
-import { APP_URL, API_URL } from '@/config';
-import { verifyAuth, verifyAuthOptional } from '@/utils/verifyToken';
+import { configService } from '@/services/config.service';
+import { imageService } from '@/services/image.service';
+import { mailService,MailTemplate } from '@/services/mail.service';
+import { telegramService } from '@/services/telegram.service';
 import UserNotFoundError from '@/utils/errors/UserNotFoundError';
-import SteamAuth from 'node-steam-openid';
-import { Log } from '@/utils/logger';
-import { TelegramService } from '@/services/telegram.service';
+import { registerSchema } from '@/utils/validation';
+import { verifyAuth, verifyAuthOptional } from '@/utils/verifyToken';
 
 const router = Router();
-const telegramService = TelegramService.getInstance();
 
-router.post('/register', uploadSingle('avatar'), async (req, res) => {
-  const { error } = registerSchema.validate(req.body);
+router.post('/register', imageService.upload.single('avatar'), async (request, res) => {
+  const { error, data } = registerSchema.safeParse(request.body);
   if (error) {
-    return res.status(400).json({ error: error.details[0].message });
+    return res.status(400).json({ error: error.format()._errors[0] });
   }
 
-  const normalizedEmail = req.body.email.toLowerCase();
+  const normalizedEmail = data.email.toLowerCase();
 
   // TODO: run script to make all existing account emails lowercase and avoid regex query
   const emailExists = await PlayerModel.findOne({ email: new RegExp(normalizedEmail.replace('+', '\\+'), 'i') });
@@ -34,35 +33,35 @@ router.post('/register', uploadSingle('avatar'), async (req, res) => {
   if (emailExists) return res.status(400).json({ error: 'Email already exists.' });
 
   const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+  const hashedPassword = await bcrypt.hash(data.password, salt);
 
   const user = new PlayerModel({
-    name: req.body.name,
+    name: data.name,
     email: normalizedEmail,
     password: hashedPassword,
   });
 
-  if (req.file) {
-    const fileName = await processImage(req.file, 200, 200);
+  if (request.file) {
+    const fileName = await imageService.processImage(request.file, 200, 200);
     user.avatar = fileName;
   }
 
-  const token = jwt.sign({ _id: user._id }, process.env.EMAIL_SECRET!);
+  const token = jwt.sign({ _id: user._id }, configService.env.EMAIL_SECRET);
 
   await user.save();
-  await sendMail(user.email, token, user.name, MailTemplate.VERIFY_NEW);
+  await mailService.sendMail(user.email, token, user.name, MailTemplate.VERIFY_NEW);
 
   telegramService.send(`User ${user.name} registered.`);
   res.json({ _id: user._id, email: user.email });
 });
 
-router.post('/login', async (req, res) => {
-  const normalizedEmail = req.body.email.toLowerCase();
+router.post('/login', async (request, res) => {
+  const normalizedEmail = request.body.email.toLowerCase();
   const targetUser = await PlayerModel.findOne({ email: new RegExp(normalizedEmail.replace('+', '\\+'), 'i') });
 
   if (!targetUser) return res.status(400).json({ error: 'Email or password is invalid.' });
 
-  const validPassword = await bcrypt.compare(req.body.password, targetUser.password);
+  const validPassword = await bcrypt.compare(request.body.password, targetUser.password);
 
   if (!validPassword) return res.status(400).json({ error: 'Email or password is invalid.' });
 
@@ -70,9 +69,9 @@ router.post('/login', async (req, res) => {
     return res.status(401).send({ error: 'Please confirm your email to log in.' });
 
   const refreshToken = nanoid(64);
-  const refreshTokenExpiration = new Date(Date.now() + ms(process.env.REFRESH_TOKEN_TTL ?? '180d'));
+  const refreshTokenExpiration = new Date(Date.now() + ms(configService.env.REFRESH_TOKEN_TTL ?? '180d'));
 
-  const electronMode = !!req.body.electronMode;
+  const electronMode = !!request.body.electronMode;
 
   const session = new SessionModel({
     refreshToken,
@@ -82,14 +81,15 @@ router.post('/login', async (req, res) => {
 
   await session.save();
 
-  const token = jwt.sign({ _id: targetUser._id }, process.env.TOKEN_SECRET!, {
-    expiresIn: process.env.JWT_TOKEN_TTL ?? '1h',
+  const token = jwt.sign({ _id: targetUser._id }, configService.env.TOKEN_SECRET!, {
+    expiresIn: configService.env.JWT_TOKEN_TTL ?? '1h',
   });
 
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
-    maxAge: ms(process.env.REFRESH_TOKEN_TTL ?? '180d'),
+    maxAge: ms(configService.env.REFRESH_TOKEN_TTL ?? '180d'),
     sameSite: 'lax',
+    domain: configService.env.NODE_ENV === 'production' ? '.stratbook.pro' : '.localhost.pro',
   });
 
   // TODO: evaluate if these headers are still needed
@@ -101,9 +101,12 @@ router.post('/login', async (req, res) => {
     refreshToken: electronMode ? refreshToken : undefined,
   });
 });
+// -gFr2jcWboDfLIDXsH-vUAJMiPOKvTK05aiAZ1NNOyTlLTQ3av_Rur3YOk9qCiQw
 
-router.post('/refresh', cookieParser(), async (req, res) => {
-  const currentRefreshToken = req.body.refreshToken ?? req.cookies.refreshToken;
+router.post('/refresh', cookieParser(), async (request, res) => {
+  const currentRefreshToken = request.body.refreshToken ?? request.cookies.refreshToken;
+
+  console.log(currentRefreshToken);
 
   const session = await SessionModel.findOne({ refreshToken: currentRefreshToken });
   if (!session) return res.status(400).json({ error: 'Invalid refresh token' });
@@ -113,24 +116,25 @@ router.post('/refresh', cookieParser(), async (req, res) => {
     return res.status(400).json({ error: 'Refresh token expired' });
   }
 
-  const electronMode = !!req.body.electronMode;
+  const electronMode = !!request.body.electronMode;
 
   const refreshToken = nanoid(64);
-  const refreshTokenExpiration = new Date(Date.now() + ms(process.env.REFRESH_TOKEN_TTL ?? '180d'));
+  const refreshTokenExpiration = new Date(Date.now() + ms(configService.env.REFRESH_TOKEN_TTL ?? '180d'));
 
   session.refreshToken = refreshToken;
   session.expires = refreshTokenExpiration;
 
   await session.save();
 
-  const token = jwt.sign({ _id: session.player }, process.env.TOKEN_SECRET!, {
-    expiresIn: process.env.JWT_TOKEN_TTL ?? '1h',
+  const token = jwt.sign({ _id: session.player }, configService.env.TOKEN_SECRET!, {
+    expiresIn: configService.env.JWT_TOKEN_TTL ?? '1h',
   });
 
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
-    maxAge: ms(process.env.REFRESH_TOKEN_TTL ?? '180d'),
+    maxAge: ms(configService.env.REFRESH_TOKEN_TTL ?? '180d'),
     sameSite: 'lax',
+    domain: configService.env.NODE_ENV === 'production' ? '.stratbook.pro' : '.localhost.pro',
   });
 
   res.send({
@@ -139,8 +143,8 @@ router.post('/refresh', cookieParser(), async (req, res) => {
   });
 });
 
-router.post('/logout', cookieParser(), async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
+router.post('/logout', cookieParser(), async (request, res) => {
+  const refreshToken = request.cookies.refreshToken;
   const session = await SessionModel.findOne({ refreshToken });
   if (!session) return res.status(400).json({ error: 'Invalid refresh token' });
 
@@ -149,9 +153,9 @@ router.post('/logout', cookieParser(), async (req, res) => {
   res.send('Successfully logged out.');
 });
 
-router.delete('/', verifyAuth, async (_req, res) => {
+router.delete('/', verifyAuth, async (_request, res) => {
   if (res.locals.player.avatar) {
-    await deleteFile(res.locals.player.avatar);
+    await imageService.deleteFile(res.locals.player.avatar);
   }
 
   await PlayerModel.findByIdAndRemove(res.locals.player._id);
@@ -159,8 +163,8 @@ router.delete('/', verifyAuth, async (_req, res) => {
   res.send('Successfully deleted account.');
 });
 
-router.get('/confirmation/:token', async (req, res) => {
-  const { _id, email } = jwt.verify(req.params.token, process.env.EMAIL_SECRET!) as JwtPayload;
+router.get('/confirmation/:token', async (request, res) => {
+  const { _id, email } = jwt.verify(request.params.token, configService.env.EMAIL_SECRET) as JwtPayload;
   const targetUser = await PlayerModel.findById(_id);
 
   if (!targetUser) {
@@ -170,42 +174,42 @@ router.get('/confirmation/:token', async (req, res) => {
   if (email) {
     targetUser.email = email;
     await targetUser.save();
-    return res.redirect(urljoin(APP_URL, `/#/profile?confirmed=1`));
+    return res.redirect(urljoin(configService.urls.appUrl, `/profile?confirmed=1`));
   }
 
   if (targetUser.confirmed) {
-    return res.redirect(urljoin(APP_URL, `/#/login?already_confirmed=${targetUser.email}`));
+    return res.redirect(urljoin(configService.urls.appUrl, `/login?already_confirmed=${targetUser.email}`));
   } else {
     targetUser.confirmed = true;
     await targetUser.save();
-    return res.redirect(urljoin(APP_URL, `/#/login?confirmed=${targetUser.email}`));
+    return res.redirect(urljoin(configService.urls.appUrl, `/login?confirmed=${targetUser.email}`));
   }
 });
 
-router.post('/forgot-password', async (req, res) => {
-  const targetUser = await PlayerModel.findOne({ email: req.body.email });
+router.post('/forgot-password', async (request, res) => {
+  const targetUser = await PlayerModel.findOne({ email: request.body.email });
 
   if (!targetUser) {
     return res.status(400).json({ error: 'Could not find user with that email address.' });
   }
 
-  const token = jwt.sign({ _id: targetUser._id }, process.env.EMAIL_SECRET!, { expiresIn: '2 days' });
+  const token = jwt.sign({ _id: targetUser._id }, configService.env.EMAIL_SECRET!, { expiresIn: '2 days' });
 
-  await sendMail(targetUser.email, token, targetUser.name, MailTemplate.RESET_PASSWORD);
+  await mailService.sendMail(targetUser.email, token, targetUser.name, MailTemplate.RESET_PASSWORD);
 
   return res.json(true);
 });
 
-router.patch('/reset', async (req, res) => {
+router.patch('/reset', async (request, res) => {
   try {
-    const { _id } = jwt.verify(req.body.token, process.env.EMAIL_SECRET!) as JwtPayload;
+    const { _id } = jwt.verify(request.body.token, configService.env.EMAIL_SECRET) as JwtPayload;
 
     const targetUser = await PlayerModel.findById(_id);
     if (!targetUser) {
       return res.status(401).json({ error: 'Player not found' });
     }
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    const hashedPassword = await bcrypt.hash(request.body.password, salt);
 
     targetUser.password = hashedPassword;
     await targetUser.save();
@@ -218,12 +222,12 @@ router.patch('/reset', async (req, res) => {
   }
 });
 
-router.get('/steam', verifyAuthOptional, async (req, res) => {
-  const returnUrl = new URL(urljoin(API_URL, '/auth/steam/authenticate'));
+router.get('/steam', verifyAuthOptional, async (request, res) => {
+  const returnUrl = new URL(urljoin(configService.urls.appUrl, '/auth/steam/authenticate'));
 
   const urlQuery = new URLSearchParams();
 
-  if (req.get('user-agent')?.includes('Electron')) {
+  if (request.get('user-agent')?.includes('Electron')) {
     urlQuery.set('electronMode', 'true');
   }
 
@@ -237,87 +241,95 @@ router.get('/steam', verifyAuthOptional, async (req, res) => {
   console.log('returnUrl', returnUrl.toString());
 
   const steam = new SteamAuth({
-    realm: API_URL,
+    realm: configService.urls.apiUrl,
     returnUrl: returnUrl.toString(),
-    apiKey: process.env.STEAM_API_KEY!,
+    apiKey: configService.env.STEAM_API_KEY!,
   });
 
   const redirectUrl = await steam.getRedirectUrl();
   return res.send(redirectUrl);
 });
 
-router.get('/steam/authenticate', async (req, res) => {
-  try {
-    const electronMode = !!req.query.electronMode;
+router.get('/steam/authenticate', async (request, res) => {
+  const electronMode = !!request.query.electronMode;
 
-    const steam = new SteamAuth({
-      realm: API_URL,
-      returnUrl: urljoin(API_URL, '/auth/steam/authenticate'),
-      apiKey: process.env.STEAM_API_KEY!,
-    });
+  const steam = new SteamAuth({
+    realm: configService.urls.apiUrl,
+    returnUrl: urljoin(configService.urls.apiUrl, '/auth/steam/authenticate'),
+    apiKey: configService.env.STEAM_API_KEY!,
+  });
 
-    const steamUser = await steam.authenticate(req);
-    // console.log(steamUser);
+  const steamUser = await steam.authenticate(request);
 
-    if (req.query.playerId) {
-      console.log('playerId', req.query.playerId);
-      const player = await PlayerModel.findById(req.query.playerId);
-      if (!player) {
-        return res.status(404).json({ error: 'Player not found' });
-      }
-      player.steamId = steamUser.steamid;
-      player.accountType = 'steam';
-      await player.save();
+  let user = await PlayerModel.findOne({ steamId: steamUser.steamid });
 
-      if (electronMode) {
-        return res.redirect(`stratbook://connect`);
-      }
+  if (request.query.playerId) {
+    console.log('playerId', request.query.playerId);
 
-      return res.redirect(APP_URL);
+    const redirectUrl = new URL(configService.urls.appUrl);
+
+    const player = await PlayerModel.findById(request.query.playerId);
+
+    redirectUrl.pathname = '/profile';
+
+    if (!player) {
+      redirectUrl.searchParams.set('message', 'Player not found');
+      return res.redirect(redirectUrl.toString());
+    }
+    if (user) {
+      redirectUrl.searchParams.set('message', 'Steam account already linked to another user');
+      return res.redirect(redirectUrl.toString());
     }
 
-    let user = await PlayerModel.findOne({ steamId: steamUser.steamid });
-
-    if (!user) {
-      user = new PlayerModel({
-        name: steamUser.username,
-        avatar: steamUser.avatar.large,
-        steamId: steamUser.steamid,
-        accountType: 'steam',
-      });
-
-      await user.save();
-    }
-
-    const refreshToken = nanoid(64);
-    const refreshTokenExpiration = new Date(Date.now() + ms(process.env.REFRESH_TOKEN_TTL ?? '180d'));
-
-    const session = new SessionModel({
-      refreshToken,
-      player: user._id,
-      expires: refreshTokenExpiration,
-    });
-
-    await session.save();
-
-    res.set('Access-Control-Expose-Headers', 'Set-Cookie');
-    res.set('Access-Control-Allow-Headers', 'Set-Cookie');
+    player.steamId = steamUser.steamid;
+    player.accountType = 'steam';
+    await player.save();
 
     if (electronMode) {
-      return res.redirect(`stratbook://token/${refreshToken}`);
-    } else {
-      res.cookie('refreshToken', refreshToken, {
-        httpOnly: true,
-        maxAge: ms(process.env.REFRESH_TOKEN_TTL!),
-        sameSite: 'lax',
-      });
+      return res.redirect(`stratbook://connect`);
     }
 
-    return res.redirect(APP_URL);
-  } catch (error) {
-    Log.error('auth/steam/authenticate', error.message);
-    return res.status(500).json({ error: 'test' });
+    redirectUrl.searchParams.set('message', 'Steam account successfully linked');
+    return res.redirect(redirectUrl.toString());
   }
+
+  if (!user) {
+    user = new PlayerModel({
+      name: steamUser.username,
+      avatar: steamUser.avatar.large,
+      steamId: steamUser.steamid,
+      accountType: 'steam',
+    });
+
+    await user.save();
+  }
+
+  const refreshToken = nanoid(64);
+  const refreshTokenExpiration = new Date(Date.now() + ms(configService.env.REFRESH_TOKEN_TTL ?? '180d'));
+
+  const session = new SessionModel({
+    refreshToken,
+    player: user._id,
+    expires: refreshTokenExpiration,
+  });
+
+  await session.save();
+
+  res.set('Access-Control-Expose-Headers', 'Set-Cookie');
+  res.set('Access-Control-Allow-Headers', 'Set-Cookie');
+
+  if (electronMode) {
+    return res.redirect(`stratbook://token/${refreshToken}`);
+  } else {
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      maxAge: ms(configService.env.REFRESH_TOKEN_TTL ?? '180d'),
+      sameSite: 'lax',
+      domain: configService.env.NODE_ENV === 'production' ? '.stratbook.pro' : '.localhost.pro',
+    });
+  }
+
+  return res.redirect(configService.urls.appUrl);
 });
 
 export default router;

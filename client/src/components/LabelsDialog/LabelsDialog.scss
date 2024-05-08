@@ -4,6 +4,10 @@
   gap: 8px;
   width: 100%;
 
+  @include viewport_mq3 {
+    width: 400px;
+  }
+
   &__hint {
     font-size: 0.8rem;
     color: var(--color-text-secondary);

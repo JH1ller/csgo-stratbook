@@ -1,9 +1,10 @@
 import { RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
+
 import { PlayerModel } from '@/models/player';
 
-export const verifyAuth: RequestHandler = async (req, res, next) => {
-  const token = req.header('Authorization');
+export const verifyAuth: RequestHandler = async (request, res, next) => {
+  const token = request.header('Authorization');
   if (!token) return res.status(401).send({ error: 'Access denied: No token provided.' });
 
   try {
@@ -14,13 +15,13 @@ export const verifyAuth: RequestHandler = async (req, res, next) => {
     }
     res.locals.player = player;
     next();
-  } catch (error) {
+  } catch {
     return res.status(401).send({ error: 'Access denied: Invalid token.' });
   }
 };
 
-export const verifyAuthOptional: RequestHandler = async (req, res, next) => {
-  const token = req.header('Authorization');
+export const verifyAuthOptional: RequestHandler = async (request, res, next) => {
+  const token = request.header('Authorization');
   if (!token) {
     return next();
   }
@@ -32,7 +33,7 @@ export const verifyAuthOptional: RequestHandler = async (req, res, next) => {
     }
     res.locals.player = player;
     return next();
-  } catch (error) {
+  } catch {
     return res.status(401).send({ error: 'Access denied: Invalid token.' });
   }
 };

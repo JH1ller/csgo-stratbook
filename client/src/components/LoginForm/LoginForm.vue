@@ -17,10 +17,6 @@
     />
     <button type="submit" class="login-form__submit">Sign in</button>
 
-    <span class="login-form__register-text">
-      Not registered?
-      <router-link :to="{ name: 'Register' }" class="login-form__register-link">Create an account</router-link>
-    </span>
     <router-link :to="{ name: 'ForgotPassword' }" class="login-form__forgot-password">Forgot password</router-link>
   </form>
 </template>

@@ -8,42 +8,32 @@ enum Environment {
 // TODO: refactor this whole file for different domains
 const env = process.env.NODE_ENV as Environment;
 
+function getOrigin(subdomain: string) {
+  const url = new URL(window.location.href);
+  url.hostname = url.hostname.replace('app.', subdomain ? subdomain + '.' : '');
+  if (env === Environment.Development) {
+    url.port = '3000';
+  }
+  return url.origin;
+}
+
 // TODO: find generic solution for Electron
-const domain =
-  isDesktop() && env === Environment.Production
-    ? 'stratbook.pro'
-    : window.location.hostname.split('.').slice(-2).join('.');
+// const host = isDesktop() ? 'stratbook.pro' : window.location.host.match(hostRx)?.groups?.host;
 
-const wsUrls: Record<Environment, string> = {
-  development: `http://${domain}:3000/`,
-  production: `https://${domain}/`,
-};
+// const hostRx = /^https?:\/\/(?<subdomain>\w+)\.(?:\w+\.\w+|\w+:\d+)/;
+// const host = window.location.origin;
 
-export const WS_URL = wsUrls[env];
+export const WS_URL = getOrigin('');
 
-const apiUrls: Record<Environment, string> = {
-  development: `http://${domain}:3000/api/`,
-  production: `https://api.${domain}/`,
-};
+export const API_URL = getOrigin('api');
 
-export const API_URL = apiUrls[env];
-
-const appUrls: Record<Environment, string> = {
-  development: `http://${domain}:8080/`,
-  production: window.location.origin,
-};
-
-export const APP_URL = appUrls[env];
+export const APP_URL = window.location.origin;
 
 export const S3_URL = 'https://csgo-stratbook.s3.amazonaws.com/';
 
 export const TOKEN_TTL = 1 * 60 * 60 * 1000; // 1h
 
 export const SPLITBEE_ID = 'J3KX6SRRBPBD';
-
-// unused
-export const GA_ID = 'G-787NDTZVPN';
-export const GTM_ID = 'GTM-TTHQVT5';
 
 export const MXP_TOKEN = '626f6b394032519f813a44d8de173ee3';
 

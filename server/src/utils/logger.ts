@@ -1,26 +1,32 @@
-import { red, blue, green, yellow, gray, Color, bold, cyan } from 'colors';
-export class Log {
-  private static log(colorFunc: Color, ns: string, ...data: unknown[]): void {
-    console.log(`[${gray(new Date().toLocaleTimeString())} ${bold(colorFunc(ns))}]`, ...data);
+import { bold, Color, cyan, gray, green, red, yellow } from 'colors';
+export class Logger {
+  private namespace: string;
+
+  constructor(namespace: string) {
+    this.namespace = namespace;
   }
 
-  static success(namespace?: string, ...data: unknown[]): void {
-    this.log(green, namespace ?? 'log::success', ...data);
+  static log(colorFunction: Color, ns: string, ...data: unknown[]): void {
+    console.log(`[${gray(new Date().toLocaleTimeString())} ${bold(colorFunction(ns))}]`, ...data);
   }
 
-  static error(namespace?: string, ...data: unknown[]): void {
-    this.log(red, namespace ?? 'log::error', ...data);
+  success(...data: unknown[]): void {
+    Logger.log(green, this.namespace, ...data);
   }
 
-  static warn(namespace?: string, ...data: unknown[]): void {
-    this.log(yellow, namespace ?? 'log::warn', ...data);
+  error(...data: unknown[]): void {
+    Logger.log(red, this.namespace, ...data);
   }
 
-  static info(namespace?: string, ...data: unknown[]): void {
-    this.log(cyan, namespace ?? 'log::info', ...data);
+  warn(...data: unknown[]): void {
+    Logger.log(yellow, this.namespace, ...data);
   }
 
-  static debug(namespace?: string, ...data: unknown[]): void {
-    this.log(gray, namespace ?? 'log::info', ...data);
+  info(...data: unknown[]): void {
+    Logger.log(cyan, this.namespace, ...data);
+  }
+
+  debug(...data: unknown[]): void {
+    Logger.log(gray, this.namespace, ...data);
   }
 }

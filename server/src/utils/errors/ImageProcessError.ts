@@ -1,9 +1,10 @@
+import { Logger } from '../logger';
+
+const logger = new Logger('ImageProcessError');
+
 export default class ImageProcessError extends Error {
-  constructor(error: unknown) {
-    if (error instanceof Error) {
-      super(error.message);
-    } else {
-      super(error as string);
-    }
+  constructor(message: string) {
+    super(message);
+    logger.error(message);
   }
 }

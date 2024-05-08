@@ -41,6 +41,7 @@ import { Breakpoints } from './services/breakpoint.service';
 import { Team } from './api/models/Team';
 import WebSocketService from './services/WebSocketService';
 import { getCookie } from './utils/cookie';
+import { Toast } from './components/ToastWrapper/ToastWrapper.models';
 
 @Component({
   components: {
@@ -61,6 +62,7 @@ export default class App extends Vue {
   @appModule.State breakpoint!: Breakpoints;
   @teamModule.State teamInfo!: Team;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
+  @appModule.Action private showToast!: (toast: Toast) => void;
 
   menuOpen: boolean = false;
   appVersion: string = pkg.version;
@@ -85,6 +87,18 @@ export default class App extends Vue {
       this.wsService.disconnect();
     };
     window.appVersion = this.appVersion;
+
+    this.handleQueryMessage();
+  }
+
+  handleQueryMessage() {
+    const params = new URLSearchParams(window.location.search);
+    const message = params.get('message');
+    if (message) {
+      this.showToast({ id: 'app/queryMessage', text: message });
+      params.delete('message');
+      window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+    }
   }
 
   checkVersion() {
@@ -99,7 +113,7 @@ export default class App extends Vue {
         <h1>Stratbook has been updated to v${this.appVersion}.</h1>
           <ul>
             <li>- Strats can be saved from map view when a name is added.</li>
-            <li>- Added deeplinks to strat drawing board, e.g. https://app.stratbook.pro/#/strats/[strat-id]</li>
+            <li>- Added deeplinks to strat drawing board, e.g. https://app.stratbook.pro/strats/[strat-id]</li>
             <li>- minor bug fixes</li>
             <li>- more to come soon!</li>
           </ul>

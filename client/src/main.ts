@@ -68,11 +68,8 @@ const storageService = StorageService.getInstance();
 new BreakpointService((MQ) => store.dispatch('app/updateBreakpoint', MQ));
 
 const initStore = async () => {
-  if (!window.desktopMode || storageService.get('refreshToken')) {
-    await store.dispatch('auth/refresh');
-  }
-
   if (storageService.get('has-session')) {
+    await store.dispatch('auth/refresh');
     await store.dispatch('auth/fetchProfile');
     await store.dispatch('loadDataFromStorage');
     router.onReady(() => {

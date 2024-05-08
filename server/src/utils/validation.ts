@@ -1,70 +1,73 @@
-import Joi from 'joi';
+import { z } from 'zod';
 
-export const registerSchema = Joi.object({
-  name: Joi.string().min(2).max(20).required(),
-  email: Joi.string().required().email(),
-  password: Joi.string()
+export const registerSchema = z.object({
+  name: z.string().min(2).max(20),
+  email: z.string().email(),
+  password: z
+    .string()
     .min(6)
-    .pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$/)
-    .required(),
+    .regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,32}$/),
 });
 
-export const profileUpdateSchema = Joi.object({
-  name: Joi.string().min(2).max(20),
-  email: Joi.string().email(),
-  password: Joi.string()
+export const profileUpdateSchema = z.object({
+  name: z.string().min(2).max(20),
+  email: z.string().email(),
+  password: z
+    .string()
     .min(6)
-    .pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$/),
-  completedTutorial: Joi.boolean(),
-  color: Joi.string().min(4).max(7),
+    .regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,32}$/),
+  completedTutorial: z.boolean(),
+  color: z.string().min(4).max(7),
 });
 
-export const loginSchema = Joi.object({
-  email: Joi.string().min(6).required().email(),
-  password: Joi.string()
+export const loginSchema = z.object({
+  email: z.string().min(6).email(),
+  password: z
+    .string()
     .min(6)
-    .pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$/)
-    .required(),
+    .regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,32}$/),
 });
 
-export const teamSchema = Joi.object({
-  name: Joi.string().min(3).max(24).required(),
-  website: Joi.string().min(6).uri().optional().allow(''),
-  serverIp: Joi.string().min(6).max(200).optional().allow(''),
-  serverPw: Joi.string().min(1).max(30).optional().allow(''),
+export const teamSchema = z.object({
+  name: z.string().min(3).max(24),
+  website: z.string().min(6).url().optional().or(z.literal('')),
+  serverIp: z.string().min(6).max(200).optional().or(z.literal('')),
+  serverPw: z.string().min(1).max(30).optional().or(z.literal('')),
 });
 
-export const dotEnvSchema = Joi.object({
-  DATABASE_URL: Joi.string()
-    .required()
-    .pattern(/mongodb(\+srv)?:\/\/.*/),
-  DATABASE_URL_DEV: Joi.string()
-    .optional()
-    .pattern(/mongodb(\+srv)?:\/\/.*/),
-  EMAIL_SECRET: Joi.string().required().min(32),
-  TOKEN_SECRET: Joi.string().required().min(32),
-  SOCKET_ADMIN_UI_PW: Joi.string().optional().min(6),
-  MAIL_HOST: Joi.string().required().hostname(),
-  MAIL_USER: Joi.string().required().email(),
-  MAIL_PW: Joi.string().required().min(6),
-  AWS_ACCESS_KEY_ID: Joi.string().required(),
-  AWS_SECRET_ACCESS_KEY: Joi.string().required(),
-  S3_BUCKET_NAME: Joi.string().required(),
-  JWT_TOKEN_TTL: Joi.string().optional(),
-  REFRESH_TOKEN_TTL: Joi.string().optional(),
-  SENTRY_DSN: Joi.string().optional(),
-  TELEGRAM_TOKEN: Joi.string().optional(),
-  TELEGRAM_USER: Joi.string().optional(),
-  STEAM_API_KEY: Joi.string().required(),
+export const envSchema = z.object({
+  PORT: z.string().optional(),
+  NODE_ENV: z.enum(['development', 'production']),
+  DATABASE_URL: z.string().regex(/mongodb(\+srv)?:\/\/.*/),
+  DATABASE_URL_DEV: z
+    .string()
+    .regex(/mongodb(\+srv)?:\/\/.*/)
+    .optional(),
+  EMAIL_SECRET: z.string().min(32),
+  TOKEN_SECRET: z.string().min(32),
+  SOCKET_ADMIN_UI_PW: z.string().min(6).optional(),
+  MAIL_HOST: z.string(),
+  MAIL_USER: z.string().email(),
+  MAIL_PW: z.string().min(6),
+  AWS_ACCESS_KEY_ID: z.string(),
+  AWS_SECRET_ACCESS_KEY: z.string(),
+  S3_BUCKET_NAME: z.string(),
+  JWT_TOKEN_TTL: z.string().optional(),
+  REFRESH_TOKEN_TTL: z.string().optional(),
+  SENTRY_DSN: z.string().optional(),
+  TELEGRAM_TOKEN: z.string().optional(),
+  TELEGRAM_USER: z.string().optional(),
+  STEAM_API_KEY: z.string(),
 });
 
-export const validateDotEnv = () => {
-  const { error } = dotEnvSchema.validate(process.env, { abortEarly: false, allowUnknown: true });
+export const parseEnvironment = () => {
+  const { error, data } = envSchema.safeParse(process.env);
+
   if (error) {
-    console.error('Error validating .env file:');
-    for (const err of error.details) {
-      console.error(err.message);
-    }
-    process.exit(1);
+    throw new Error(`Config validation error: ${error.format()._errors.join(', ')}`);
   }
+
+  return data;
 };
+
+export type Environment = z.infer<typeof envSchema>;

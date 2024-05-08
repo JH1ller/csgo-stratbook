@@ -1,6 +1,7 @@
-import { AccessRole } from '@/types/enums';
-import { Types, Schema, model, Document } from 'mongoose';
+import { Document, model, Schema, Types } from 'mongoose';
 import mongooseDelete from 'mongoose-delete';
+
+import { AccessRole } from '@/types/enums';
 
 export interface Player {
   name: string;
@@ -22,7 +23,7 @@ export interface Player {
 }
 
 export type PlayerDocument = Player &
-  Document<unknown, any, Player> & { _id: Types.ObjectId; $locals: { skipModified?: boolean } };
+  Document<unknown, unknown, Player> & { _id: Types.ObjectId; $locals: { skipModified?: boolean } };
 
 const playerSchema = new Schema<Player>({
   name: {

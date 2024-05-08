@@ -14,6 +14,9 @@ function getPublishConfig() {
 }
 
 module.exports = {
+  devServer: {
+    allowedHosts: 'all',
+  },
   publicPath: process.env.NODE_ENV === 'staging' ? '/app/' : '/',
   outputDir: path.resolve(__dirname, '../server/dist_app'),
   pages: {

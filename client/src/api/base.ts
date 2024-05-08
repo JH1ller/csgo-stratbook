@@ -69,11 +69,8 @@ export default class ApiService {
       (config) => {
         if (store.state.auth.token) {
           config.headers['Authorization'] = store.state.auth.token;
-          return config;
-        } else {
-          Log.error('axios::interceptor', 'User not authenticated. Request cancelled.');
-          throw new axios.Cancel('User not authenticated. Request cancelled.');
         }
+        return config;
       },
       (error) => {
         Log.error('axios::interceptor', 'User not authenticated. Request cancelled.');

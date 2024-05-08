@@ -1,30 +1,35 @@
 import TelegramBot from 'node-telegram-bot-api';
 
-export class TelegramService {
-  private static instance: TelegramService;
-  private botInstance!: TelegramBot;
-  private userId!: number;
-  private initialized = false;
+import { Logger } from '@/utils/logger';
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private constructor() {}
+import { configService } from './config.service';
 
-  static getInstance(): TelegramService {
-    if (!TelegramService.instance) {
-      TelegramService.instance = new TelegramService();
+const logger = new Logger('TelegramService');
+
+class TelegramService {
+  private userId?: string;
+  private bot?: TelegramBot;
+
+  constructor() {
+    const { TELEGRAM_TOKEN, TELEGRAM_USER } = configService.env;
+    if (TELEGRAM_TOKEN && TELEGRAM_USER) {
+      this.bot = new TelegramBot(TELEGRAM_TOKEN, { polling: false });
+      this.userId = TELEGRAM_USER;
+      logger.success('initialized');
+    } else {
+      logger.error('not initialized due to missing token or user');
     }
-    return TelegramService.instance;
   }
 
-  init(token: string, userId: string) {
-    this.botInstance = new TelegramBot(token, { polling: true });
-    this.userId = +userId;
-    this.initialized = true;
-  }
-
-  send(msg: string) {
-    if (!this.initialized) return;
-
-    this.botInstance.sendMessage(this.userId, msg);
+  send(message: string) {
+    if (!this.bot || !this.userId) {
+      logger.error('send failed due to missing token or user');
+      return;
+    }
+    this.bot.sendMessage(this.userId, message);
   }
 }
+
+const telegramService = new TelegramService();
+
+export { telegramService };

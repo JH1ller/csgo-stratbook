@@ -1,5 +1,6 @@
-import { Types, Schema, model, Document } from 'mongoose';
+import { Document, model, Schema, Types } from 'mongoose';
 import mongooseDelete from 'mongoose-delete';
+
 import { GameMap, MouseButton, Movement, StratSide, UtilityType } from '@/types/enums';
 
 export interface Utility {
@@ -24,7 +25,7 @@ export interface Utility {
   deletedAt?: Date;
 }
 
-export type UtilityDocument = Document<unknown, any, Utility>;
+export type UtilityDocument = Document<unknown, unknown, Utility>;
 
 const utilitySchema = new Schema<Utility>({
   name: {
