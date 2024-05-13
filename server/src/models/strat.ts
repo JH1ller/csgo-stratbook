@@ -45,7 +45,7 @@ const stratSchema = new Schema<Strat>({
 
   map: {
     type: String,
-    enum: ['DUST_2', 'MIRAGE', 'OVERPASS', 'NUKE', 'VERTIGO', 'INFERNO', 'TRAIN', 'ANCIENT', 'ANUBIS'],
+    enum: Object.values(GameMap),
     required: true,
   },
 
@@ -57,7 +57,7 @@ const stratSchema = new Schema<Strat>({
 
   side: {
     type: String,
-    enum: ['CT', 'T'],
+    enum: Object.values(StratSide),
     required: true,
   },
 

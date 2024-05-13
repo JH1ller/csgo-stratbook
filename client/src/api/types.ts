@@ -5,6 +5,7 @@ export enum Endpoints {
   Teams = '/teams',
   Auth = '/auth',
   Utilities = '/utilities',
+  Notice = '/notices',
 }
 
 export enum Actions {

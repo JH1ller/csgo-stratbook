@@ -14,16 +14,15 @@ import DarkmodeToggle from '@/components/DarkmodeToggle/DarkmodeToggle.vue';
   },
 })
 export default class MainMenu extends Vue {
-  private appName = 'stratbook'; // TODO: dynamic
-  @Inject() private trackingService!: TrackingService;
+  readonly appName = 'stratbook';
+  @Inject() trackingService!: TrackingService;
   @authModule.State profile!: Player;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
-  @Prop() private menuOpen!: boolean;
+  @Prop() menuOpen!: boolean;
 
-  private Routes: typeof Routes = Routes;
-  private isDesktop = window.desktopMode;
+  Routes: typeof Routes = Routes;
 
-  private get menuItems() {
+  get menuItems() {
     return [
       {
         label: 'Strats',
@@ -56,50 +55,33 @@ export default class MainMenu extends Vue {
     return resolveStaticImageUrl(this.profile?.avatar);
   }
 
-  private async downloadDesktopClient() {
-    const dialogResult = await this.showDialog({
-      key: 'main-menu/download-desktop',
-      text: 'Click <b>Download now</b> to get the Stratbook desktop application.<br/> \
-          It offers better performance and might later get features that are not possible in the web version.<br/>\
-          If Windows prevents running the app, you should be able to click <b>More Info</b> and <b>Run anyway</b>.<br/> \
-          The app automatically checks for updates on startup.',
-      resolveBtn: 'Download now',
-      htmlMode: true,
-    });
-    if (dialogResult) {
-      this.trackingService.track('Action: Download Desktop Client');
-      window.open(`https://csgo-stratbook.s3.eu-central-1.amazonaws.com/Stratbook+Setup+${window.appVersion}.exe`);
-    }
-    this.trackingService.track('Click: Get Desktop Client');
-  }
-
-  private openTwitter() {
+  openTwitter() {
     this.trackingService.track('Click: Open Twitter');
     openLink('https://twitter.com/csgostratbook');
   }
 
-  private openDiscord() {
+  openDiscord() {
     this.trackingService.track('Click: Open Discord');
     openLink('https://discord.com/invite/mkxzQJGRgq');
   }
 
-  private openGithub() {
+  openGithub() {
     this.trackingService.track('Click: Open Github');
     openLink('https://github.com/JH1ller/csgo-stratbook');
   }
 
-  private openDonationLink() {
+  openDonationLink() {
     this.trackingService.track('Click: Open Ko-Fi');
     openLink('https://ko-fi.com/Q5Q02X2XQ');
   }
 
   @Emit()
-  private toggleMenu() {
+  toggleMenu() {
     return;
   }
 
   @Emit()
-  private closeMenu() {
+  closeMenu() {
     return;
   }
 }

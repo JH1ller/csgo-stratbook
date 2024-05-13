@@ -16,7 +16,6 @@
       fieldName="password"
     />
     <button type="submit" class="login-form__submit">Sign in</button>
-
     <router-link :to="{ name: 'ForgotPassword' }" class="login-form__forgot-password">Forgot password</router-link>
   </form>
 </template>
