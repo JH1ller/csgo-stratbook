@@ -56,8 +56,8 @@ class MailService {
   sendMail = async (to: string, token: string, name: string, template: MailTemplate) => {
     const link =
       template === MailTemplate.RESET_PASSWORD
-        ? urljoin(configService.urls.appUrl, `/reset?token=${token}`)
-        : urljoin(configService.urls.apiUrl, `/auth/confirmation/${token}`);
+        ? urljoin(configService.urls.appUrl.toString(), `/reset?token=${token}`)
+        : urljoin(configService.urls.apiUrl.toString(), `/auth/confirmation/${token}`);
 
     try {
       const res = await this.email.send({

@@ -1,4 +1,5 @@
 import StorageService from '@/services/storage.service';
+import { setCookie } from '@/utils/cookie';
 import { Component, Emit, Inject, Vue } from 'vue-property-decorator';
 
 @Component({})
@@ -7,7 +8,7 @@ export default class CookieBanner extends Vue {
   private analyticsChecked = false;
 
   private setCookie(key: string, value: string) {
-    document.cookie = `${key}=${value}; domain=${window.location.hostname}; max-age=31536000; path=/`;
+    setCookie(key, value);
   }
 
   private saveClicked() {

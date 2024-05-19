@@ -16,6 +16,7 @@ import loadIcons from './utils/loadIcons';
 import SvgIcon from './components/SvgIcon/SvgIcon.vue';
 import VuePortal from 'portal-vue';
 import { Routes } from './router/router.models';
+import { getCookie } from './utils/cookie';
 
 Vue.use(VuePortal);
 
@@ -68,7 +69,7 @@ const storageService = StorageService.getInstance();
 new BreakpointService((MQ) => store.dispatch('app/updateBreakpoint', MQ));
 
 const initStore = async () => {
-  if (storageService.get('has-session')) {
+  if (storageService.get('has-session') || getCookie('has-session')) {
     await store.dispatch('auth/refresh');
     await store.dispatch('auth/fetchProfile');
     await store.dispatch('loadDataFromStorage');

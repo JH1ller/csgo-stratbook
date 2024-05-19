@@ -8,6 +8,7 @@ import { RouteNames, Routes } from '@/router/router.models';
 import { TOKEN_TTL } from '@/config';
 import TrackingService from '@/services/tracking.service';
 import StorageService from '@/services/storage.service';
+import { removeCookie } from '@/utils/cookie';
 
 const SET_TOKEN = 'SET_TOKEN';
 const SET_PROFILE = 'SET_PROFILE';
@@ -151,6 +152,7 @@ export const authModule: Module<AuthState, RootState> = {
       }
       if (res.error) {
         storageService.remove('has-session');
+        removeCookie('has-session');
         if (router.currentRoute.name !== RouteNames.Login) router.push(Routes.Login);
       }
     },

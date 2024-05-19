@@ -11,7 +11,7 @@ import { PlayerModel } from '@/models/player';
 import { SessionModel } from '@/models/session';
 import { configService } from '@/services/config.service';
 import { imageService } from '@/services/image.service';
-import { mailService,MailTemplate } from '@/services/mail.service';
+import { mailService, MailTemplate } from '@/services/mail.service';
 import { telegramService } from '@/services/telegram.service';
 import UserNotFoundError from '@/utils/errors/UserNotFoundError';
 import { registerSchema } from '@/utils/validation';
@@ -89,7 +89,7 @@ router.post('/login', async (request, res) => {
     httpOnly: true,
     maxAge: ms(configService.env.REFRESH_TOKEN_TTL ?? '180d'),
     sameSite: 'lax',
-    domain: configService.env.NODE_ENV === 'production' ? '.stratbook.pro' : '.localhost.pro',
+    domain: '.' + configService.origin,
   });
 
   // TODO: evaluate if these headers are still needed
@@ -101,7 +101,6 @@ router.post('/login', async (request, res) => {
     refreshToken: electronMode ? refreshToken : undefined,
   });
 });
-// -gFr2jcWboDfLIDXsH-vUAJMiPOKvTK05aiAZ1NNOyTlLTQ3av_Rur3YOk9qCiQw
 
 router.post('/refresh', cookieParser(), async (request, res) => {
   const currentRefreshToken = request.body.refreshToken ?? request.cookies.refreshToken;
@@ -134,7 +133,7 @@ router.post('/refresh', cookieParser(), async (request, res) => {
     httpOnly: true,
     maxAge: ms(configService.env.REFRESH_TOKEN_TTL ?? '180d'),
     sameSite: 'lax',
-    domain: configService.env.NODE_ENV === 'production' ? '.stratbook.pro' : '.localhost.pro',
+    domain: '.' + configService.origin,
   });
 
   res.send({
@@ -174,15 +173,15 @@ router.get('/confirmation/:token', async (request, res) => {
   if (email) {
     targetUser.email = email;
     await targetUser.save();
-    return res.redirect(urljoin(configService.urls.appUrl, `/profile?confirmed=1`));
+    return res.redirect(urljoin(configService.urls.appUrl.toString(), `/profile?confirmed=1`));
   }
 
   if (targetUser.confirmed) {
-    return res.redirect(urljoin(configService.urls.appUrl, `/login?already_confirmed=${targetUser.email}`));
+    return res.redirect(urljoin(configService.urls.appUrl.toString(), `/login?already_confirmed=${targetUser.email}`));
   } else {
     targetUser.confirmed = true;
     await targetUser.save();
-    return res.redirect(urljoin(configService.urls.appUrl, `/login?confirmed=${targetUser.email}`));
+    return res.redirect(urljoin(configService.urls.appUrl.toString(), `/login?confirmed=${targetUser.email}`));
   }
 });
 
@@ -223,7 +222,9 @@ router.patch('/reset', async (request, res) => {
 });
 
 router.get('/steam', verifyAuthOptional, async (request, res) => {
-  const returnUrl = new URL(urljoin(configService.urls.appUrl, '/auth/steam/authenticate'));
+  console.log(request.accepted, request.accepts('application/json'));
+  const returnUrl = new URL(configService.urls.apiUrl);
+  returnUrl.pathname = '/auth/steam/authenticate';
 
   const urlQuery = new URLSearchParams();
 
@@ -241,7 +242,7 @@ router.get('/steam', verifyAuthOptional, async (request, res) => {
   console.log('returnUrl', returnUrl.toString());
 
   const steam = new SteamAuth({
-    realm: configService.urls.apiUrl,
+    realm: configService.urls.apiUrl.toString(),
     returnUrl: returnUrl.toString(),
     apiKey: configService.env.STEAM_API_KEY!,
   });
@@ -254,12 +255,14 @@ router.get('/steam/authenticate', async (request, res) => {
   const electronMode = !!request.query.electronMode;
 
   const steam = new SteamAuth({
-    realm: configService.urls.apiUrl,
-    returnUrl: urljoin(configService.urls.apiUrl, '/auth/steam/authenticate'),
+    realm: configService.urls.apiUrl.toString(),
+    returnUrl: urljoin(configService.urls.apiUrl.toString(), '/auth/steam/authenticate'),
     apiKey: configService.env.STEAM_API_KEY!,
   });
 
   const steamUser = await steam.authenticate(request);
+
+  console.log(steamUser);
 
   let user = await PlayerModel.findOne({ steamId: steamUser.steamid });
 
@@ -325,11 +328,19 @@ router.get('/steam/authenticate', async (request, res) => {
       httpOnly: true,
       maxAge: ms(configService.env.REFRESH_TOKEN_TTL ?? '180d'),
       sameSite: 'lax',
-      domain: configService.env.NODE_ENV === 'production' ? '.stratbook.pro' : '.localhost.pro',
+      domain: '.' + configService.origin,
+    });
+    res.cookie('has-session', '1', {
+      sameSite: 'lax',
+      domain: '.' + configService.origin,
     });
   }
 
-  return res.redirect(configService.urls.appUrl);
+  console.log(refreshToken);
+
+  const redirectUrl = new URL(configService.urls.appUrl);
+
+  return res.redirect(redirectUrl.toString());
 });
 
 export default router;

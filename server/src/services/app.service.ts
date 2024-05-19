@@ -10,6 +10,7 @@ import express, { Application } from 'express';
 import rateLimit from 'express-rate-limit';
 import subdomain from 'express-subdomain';
 import helmet from 'helmet';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import mongoose from 'mongoose';
 
 import { loggerMiddleware } from '../middleware/logger';
@@ -23,12 +24,11 @@ const logger = new Logger('AppService');
 class AppService {
   private app: Application;
   private _httpServer: Server;
-  port: number;
+
   private db = mongoose.connection;
 
   constructor() {
     this.app = express();
-    this.port = Number(configService.env.PORT) || 3000;
     this._httpServer = createServer(this.app);
     this.setupDbConnection();
     this.setupMiddleware();
@@ -56,11 +56,9 @@ class AppService {
       }),
     );
     this.app.use(express.json({ limit: '500kb' }));
-    this.app.use(history({}));
     this.app.use(cookieParser());
     this.app.use(hostRedirect);
     this.app.use(loggerMiddleware);
-    this.app.use(history());
 
     if (configService.isProd) {
       if (configService.env.SENTRY_DSN) {
@@ -79,15 +77,37 @@ class AppService {
   }
 
   private setupRoutes() {
-    this.app.use(subdomain('app', express.static('dist_app')));
-    this.app.use(subdomain('static', express.static('public')));
+    if (configService.isDev) {
+      this.app.use((_, res, next) => {
+        res.setHeader('Content-Security-Policy', "script-src 'self' 'unsafe-eval'");
+        res.setHeader('Cross-Origin-Opener-Policy', 'unsafe-none');
+        next();
+      });
+      this.app.use(
+        subdomain(
+          'app',
+          createProxyMiddleware({
+            target: 'http://localhost:8080',
+            changeOrigin: true,
+            // logger,
+            secure: false,
+          }),
+        ),
+      );
+    } else {
+      this.app.use(subdomain('app', express.static('dist_app')));
+    }
     this.app.use(subdomain('api', apiRouter));
+    this.app.use(subdomain('static', express.static('public')));
     this.app.use('/', express.static('dist_landingpage'));
+    this.app.use(history());
   }
 
   start() {
-    this.httpServer.listen(this.port, configService.isDev ? 'localhost.pro' : undefined, () =>
-      logger.success(`Server started on port ${this.port} [${green(configService.env.NODE_ENV.toUpperCase())}]`),
+    this.httpServer.listen(configService.port, configService.origin, () =>
+      logger.success(
+        `Server started. [${green(configService.env.NODE_ENV.toUpperCase())}] ${configService.urls.baseUrl.toString()}`,
+      ),
     );
   }
 }

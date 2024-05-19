@@ -12,6 +12,8 @@ class ConfigService {
     'https://app.stratbook.pro',
     'http://app.localhost.pro:8080',
     'http://app.localhost.pro:3000',
+    'http://app.localhost:8080',
+    'http://app.localhost:3000',
   ];
 
   constructor() {
@@ -22,8 +24,12 @@ class ConfigService {
     return this._env;
   }
 
+  get port(): number {
+    return Number(configService.env.PORT) || 3000;
+  }
+
   get origin() {
-    return this.isDev ? 'localhost.pro:3000' : 'stratbook.pro';
+    return this.isDev ? 'localhost.pro' : 'stratbook.pro';
   }
 
   get protocol() {
@@ -40,11 +46,11 @@ class ConfigService {
 
   get urls() {
     return {
-      baseUrl: `${this.protocol}${this.origin}/`,
-      apiUrl: `${this.protocol}api.${this.origin}/`,
-      appUrl: `${this.protocol}app.${this.origin}/`,
-      staticUrl: `${this.protocol}static.${this.origin}/`,
-      s3Url: 'https://csgo-stratbook.s3.amazonaws.com/',
+      baseUrl: Object.freeze(new URL(`${this.protocol}${this.origin}${this.isDev ? `:${this.port}` : ''}/`)),
+      apiUrl: Object.freeze(new URL(`${this.protocol}api.${this.origin}${this.isDev ? `:${this.port}` : ''}/`)),
+      appUrl: Object.freeze(new URL(`${this.protocol}app.${this.origin}${this.isDev ? `:${this.port}` : ''}/`)),
+      staticUrl: Object.freeze(new URL(`${this.protocol}static.${this.origin}${this.isDev ? `:${this.port}` : ''}/`)),
+      s3Url: Object.freeze(new URL('https://csgo-stratbook.s3.amazonaws.com/')),
     };
   }
 }
