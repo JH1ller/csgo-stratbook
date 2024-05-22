@@ -1,17 +1,20 @@
 import { appModule } from '@/store/namespaces';
-import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
+import { Component, Vue, Emit, Prop, Inject } from 'vue-property-decorator';
 import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import TextInput from '@/components/TextInput/TextInput.vue';
 import { Validators } from '@/utils/validation';
 import FormField from '@/utils/FormField';
+import StorageService from '@/services/storage.service';
 @Component({
   components: {
     TextInput,
   },
 })
 export default class LoginForm extends Vue {
+  @Inject() storageService!: StorageService;
   @appModule.Action showToast!: (toast: Toast) => void;
   @Prop() formError!: string;
+  steamEnabled: boolean = false;
 
   email: FormField = new FormField('Email', true, [Validators.notEmpty(), Validators.isEmail()], 'email');
 
@@ -54,5 +57,6 @@ export default class LoginForm extends Vue {
       });
       this.email.value = email as string;
     }
+    this.steamEnabled = this.storageService.get('steam-enabled') === true;
   }
 }

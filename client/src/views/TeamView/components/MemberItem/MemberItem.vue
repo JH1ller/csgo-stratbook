@@ -16,7 +16,7 @@
     </div>
     <div class="member-item__button-group">
       <button
-        v-if="isManager && member._id !== profile._id"
+        v-if="rolesEnabled && isManager && member._id !== profile._id"
         class="member-item__btn"
         :content="member.role === AccessRole.EDITOR ? 'Change role to viewer' : 'Change role to editor'"
         v-tippy

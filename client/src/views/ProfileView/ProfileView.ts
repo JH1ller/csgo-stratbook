@@ -1,4 +1,4 @@
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Inject, Vue } from 'vue-property-decorator';
 import { Routes } from '@/router/router.models';
 import { appModule, authModule, stratModule } from '@/store/namespaces';
 import { Player } from '@/api/models/Player';
@@ -9,6 +9,7 @@ import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { Response } from '@/store';
 import api from '@/api/base';
 import { openLink } from '@/utils/openLink';
+import StorageService from '@/services/storage.service';
 
 @Component({
   components: {
@@ -16,6 +17,7 @@ import { openLink } from '@/utils/openLink';
   },
 })
 export default class ProfileView extends Vue {
+  @Inject() storageService!: StorageService;
   @appModule.Action showToast!: (toast: Toast) => void;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
   @authModule.State profile!: Player;
@@ -23,6 +25,9 @@ export default class ProfileView extends Vue {
   @authModule.Action updateProfile!: (data: FormData) => Promise<void>;
   @authModule.Action deleteAccount!: () => Promise<void>;
   @stratModule.Action getStratExport!: () => Promise<Response>;
+
+  steamEnabled = false;
+  exportEnabled = false;
 
   async logoutRequest() {
     await this.logout();
@@ -46,6 +51,8 @@ export default class ProfileView extends Vue {
   }
 
   mounted() {
+    this.steamEnabled = this.storageService.get('steam-enabled') === true;
+    this.exportEnabled = this.storageService.get('export-enabled') === true;
     const isConfirmed = !!this.$route.query.confirmed;
     if (isConfirmed) {
       this.showToast({ id: 'ProfileView/emailConfirmed', text: 'Your new email has been confirmed.' });

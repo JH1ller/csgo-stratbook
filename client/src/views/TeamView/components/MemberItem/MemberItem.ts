@@ -1,4 +1,4 @@
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop, Vue } from 'vue-property-decorator';
 import { resolveStaticImageUrl } from '@/utils/resolveUrls';
 import ago from 's-ago';
 import { Player } from '@/api/models/Player';
@@ -7,6 +7,7 @@ import VSwatches from 'vue-swatches';
 import { COLORS } from '@/constants/colors';
 import { AccessRole } from '@/api/models/AccessRoles';
 import Checkbox from '@/components/Checkbox/Checkbox.vue';
+import StorageService from '@/services/storage.service';
 
 @Component({
   components: {
@@ -15,6 +16,7 @@ import Checkbox from '@/components/Checkbox/Checkbox.vue';
   },
 })
 export default class MemberItem extends Vue {
+  @Inject() storageService!: StorageService;
   @Prop() member!: Player;
   @Prop() teamMembers!: Player[];
   @Prop() profile!: Player;
@@ -22,6 +24,7 @@ export default class MemberItem extends Vue {
 
   swatches = COLORS;
   AccessRole = AccessRole;
+  rolesEnabled = false;
 
   resolveStaticImageUrl: (url?: string) => string = resolveStaticImageUrl;
 
@@ -57,5 +60,9 @@ export default class MemberItem extends Vue {
 
   get steamProfileUrl() {
     return this.member.steamId ? `https://steamcommunity.com/profiles/${this.member.steamId}` : undefined;
+  }
+
+  mounted() {
+    this.rolesEnabled = this.storageService.get('roles-enabled') === true;
   }
 }

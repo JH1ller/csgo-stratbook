@@ -1,4 +1,4 @@
-import { Component, Prop, Vue, Emit, Ref } from 'vue-property-decorator';
+import { Component, Prop, Vue, Emit, Ref, Inject } from 'vue-property-decorator';
 import StratEditor from '@/components/StratEditor/StratEditor.vue';
 import IStratEditor from '@/components/StratEditor/StratEditor';
 import TypeBadge from '@/components/TypeBadge/TypeBadge.vue';
@@ -13,6 +13,7 @@ import { Toast } from '../ToastWrapper/ToastWrapper.models';
 import { titleCase } from '@/utils/titleCase';
 import { HandleDirective } from 'vue-slicksort';
 import { Sort } from '@/utils/sortFunctions';
+import StorageService from '@/services/storage.service';
 
 @Component({
   components: {
@@ -24,6 +25,7 @@ import { Sort } from '@/utils/sortFunctions';
   directives: { handle: HandleDirective },
 })
 export default class StratItem extends Vue {
+  @Inject() storageService!: StorageService;
   @Prop() readOnly!: boolean;
   @Prop() strat!: Strat;
   @Prop() completedTutorial!: boolean;
@@ -38,8 +40,13 @@ export default class StratItem extends Vue {
   @stratModule.Action updateStrat!: (strat: Partial<Strat>) => Promise<void>;
 
   labelDialogOpen = false;
+  labelsEnabled = false;
 
   editorKey = 0;
+
+  mounted() {
+    this.labelsEnabled = this.storageService.get('labels-enabled') === true;
+  }
 
   get isManualSort() {
     return this.sort === Sort.Manual;

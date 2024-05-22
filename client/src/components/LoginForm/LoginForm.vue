@@ -1,7 +1,7 @@
 <template>
   <form class="login-form" @submit.prevent="handleSubmit" novalidate>
     <img alt="Application Logo" src="@/assets/images/new_logo_a.png" class="login-form__logo" />
-    <div class="login-form__steam-container">
+    <div v-if="steamEnabled" class="login-form__steam-container">
       <img class="login-form__steam" src="@/assets/images/steam_button.png" @click.prevent="steamLogin" />
     </div>
     <transition name="fade">
@@ -16,6 +16,10 @@
       fieldName="password"
     />
     <button type="submit" class="login-form__submit">Sign in</button>
+    <span class="login-form__register-text">
+      Not registered?
+      <router-link :to="{ name: 'Register' }" class="login-form__register-link">Create an account</router-link>
+    </span>
     <router-link :to="{ name: 'ForgotPassword' }" class="login-form__forgot-password">Forgot password</router-link>
   </form>
 </template>

@@ -13,6 +13,7 @@ import { configService } from '@/services/config.service';
 import { imageService } from '@/services/image.service';
 import { mailService, MailTemplate } from '@/services/mail.service';
 import { telegramService } from '@/services/telegram.service';
+import { hasSessionConfig, refreshTokenConfig } from '@/utils/cookies';
 import UserNotFoundError from '@/utils/errors/UserNotFoundError';
 import { registerSchema } from '@/utils/validation';
 import { verifyAuth, verifyAuthOptional } from '@/utils/verifyToken';
@@ -85,12 +86,9 @@ router.post('/login', async (request, res) => {
     expiresIn: configService.env.JWT_TOKEN_TTL ?? '1h',
   });
 
-  res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    maxAge: ms(configService.env.REFRESH_TOKEN_TTL ?? '180d'),
-    sameSite: 'lax',
-    domain: '.' + configService.origin,
-  });
+  res.cookie('refreshToken', refreshToken, refreshTokenConfig());
+
+  res.cookie('hasSession', '1', hasSessionConfig());
 
   // TODO: evaluate if these headers are still needed
   res.set('Access-Control-Expose-Headers', 'Set-Cookie');
@@ -108,10 +106,16 @@ router.post('/refresh', cookieParser(), async (request, res) => {
   console.log(currentRefreshToken);
 
   const session = await SessionModel.findOne({ refreshToken: currentRefreshToken });
-  if (!session) return res.status(400).json({ error: 'Invalid refresh token' });
+  if (!session) {
+    res.clearCookie('refreshToken', refreshTokenConfig());
+    res.clearCookie('hasSession', hasSessionConfig());
+    return res.status(400).json({ error: 'Invalid refresh token' });
+  }
 
   if (session.expires < new Date()) {
     session.remove();
+    res.clearCookie('refreshToken', refreshTokenConfig());
+    res.clearCookie('hasSession', hasSessionConfig());
     return res.status(400).json({ error: 'Refresh token expired' });
   }
 
@@ -129,12 +133,9 @@ router.post('/refresh', cookieParser(), async (request, res) => {
     expiresIn: configService.env.JWT_TOKEN_TTL ?? '1h',
   });
 
-  res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    maxAge: ms(configService.env.REFRESH_TOKEN_TTL ?? '180d'),
-    sameSite: 'lax',
-    domain: '.' + configService.origin,
-  });
+  res.cookie('refreshToken', refreshToken, refreshTokenConfig());
+
+  res.cookie('hasSession', '1', hasSessionConfig());
 
   res.send({
     token,
@@ -148,6 +149,9 @@ router.post('/logout', cookieParser(), async (request, res) => {
   if (!session) return res.status(400).json({ error: 'Invalid refresh token' });
 
   await SessionModel.findByIdAndRemove(session._id);
+
+  res.clearCookie('refreshToken', refreshTokenConfig());
+  res.clearCookie('hasSession', hasSessionConfig());
 
   res.send('Successfully logged out.');
 });
@@ -324,16 +328,8 @@ router.get('/steam/authenticate', async (request, res) => {
   if (electronMode) {
     return res.redirect(`stratbook://token/${refreshToken}`);
   } else {
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      maxAge: ms(configService.env.REFRESH_TOKEN_TTL ?? '180d'),
-      sameSite: 'lax',
-      domain: '.' + configService.origin,
-    });
-    res.cookie('has-session', '1', {
-      sameSite: 'lax',
-      domain: '.' + configService.origin,
-    });
+    res.cookie('refreshToken', refreshToken, refreshTokenConfig());
+    res.cookie('hasSession', '1', hasSessionConfig());
   }
 
   console.log(refreshToken);

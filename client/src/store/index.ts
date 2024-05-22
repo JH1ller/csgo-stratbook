@@ -46,7 +46,12 @@ export default new Vuex.Store({
   actions: {
     resetState({ dispatch, state }) {
       Object.keys(state).forEach((module) => dispatch(`${module}/resetState`));
-      storageService.clear(); // TODO: only clear user related stuff, not 'version' for example
+      storageService.remove('refreshToken');
+      storageService.remove('hasSession');
+      storageService.remove('userId');
+      storageService.remove('username');
+      storageService.remove('filters');
+      storageService.remove('collapsed');
     },
     loadDataFromStorage({ dispatch }) {
       dispatch('map/loadCurrentMapFromStorage');

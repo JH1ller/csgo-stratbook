@@ -99,7 +99,13 @@ class AppService {
     }
     this.app.use(subdomain('api', apiRouter));
     this.app.use(subdomain('static', express.static('public')));
-    this.app.use('/', express.static('dist_landingpage'));
+    this.app.use('/', (req, res, next) => {
+      const { refreshToken, hasSession } = req.cookies;
+      if (refreshToken || hasSession) {
+        return res.redirect(configService.urls.appUrl.toString());
+      }
+      return express.static('dist_landingpage')(req, res, next);
+    });
     this.app.use(history());
   }
 

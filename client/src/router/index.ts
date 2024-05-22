@@ -24,7 +24,7 @@ const routes = [
     path: '/',
     name: RouteNames.Home,
     redirect: () => {
-      if (storageService.get('has-session')) {
+      if (storageService.get('hasSession')) {
         return Routes.Strats;
       } else {
         return Routes.Login;

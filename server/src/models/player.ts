@@ -35,7 +35,6 @@ const playerSchema = new Schema<Player>({
 
   email: {
     type: String,
-    unique: true,
     maxlength: 255,
     minlength: 6,
   },
