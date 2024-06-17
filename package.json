@@ -5,7 +5,7 @@
   "scripts": {
     "start": "npm run start --workspace server",
     "build": "npm run build --workspaces",
-    "deploy:": "git push heroku master"
+    "deploy:": "git push prod master"
   },
   "keywords": [],
   "author": "",
