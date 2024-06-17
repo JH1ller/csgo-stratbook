@@ -15,6 +15,8 @@ import { SENTRY_DSN } from './config';
 import loadIcons from './utils/loadIcons';
 import SvgIcon from './components/SvgIcon/SvgIcon.vue';
 import VuePortal from 'portal-vue';
+import { Routes } from './router/router.models';
+import { getCookie } from './utils/cookie';
 
 Vue.use(VuePortal);
 
@@ -66,14 +68,37 @@ const storageService = StorageService.getInstance();
 
 new BreakpointService((MQ) => store.dispatch('app/updateBreakpoint', MQ));
 
-const hasSession = !!storageService.get('has-session');
-
-(async () => {
-  if (hasSession) {
-    await store.dispatch('auth/refresh');
+const initStore = async () => {
+  if (storageService.get('hasSession') || getCookie('hasSession')) {
+    const result: boolean = await store.dispatch('auth/refresh');
+    if (!result) return;
     await store.dispatch('auth/fetchProfile');
     await store.dispatch('loadDataFromStorage');
+    router.onReady(() => {
+      if (router.currentRoute.name === 'Login') {
+        router.push(Routes.Strats);
+      }
+    });
   }
+};
+
+(async () => {
+  if (window.desktopMode) {
+    const ipcRenderer = require('electron').ipcRenderer;
+    ipcRenderer.on('steam-auth', (_, { action, token }) => {
+      console.log('steam-auth', action, token);
+      if (action === 'token') {
+        storageService.set('refreshToken', token);
+        initStore();
+      } else if (action === 'connect') {
+        store.dispatch('app/showToast', {
+          id: 'main/steam-connected',
+          text: 'Steam account successfully connected.',
+        });
+      }
+    });
+  }
+  await initStore();
   (window as any).intervalActive = false;
 
   // fade out app loader

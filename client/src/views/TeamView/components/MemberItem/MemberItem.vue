@@ -2,9 +2,11 @@
   <li class="member-item" :class="{ '-self': member._id === profile._id, '-online': member.isOnline }">
     <img class="member-item__avatar" :src="resolveStaticImageUrl(member.avatar)" alt="Member Avatar" />
     <div class="member-item__text">
-      <p class="member-item__name">
-        {{ member.name }}
-      </p>
+      <a class="member-item__name" :href="steamProfileUrl" target="_blank"
+        ><fa-icon v-if="member.accountType === 'steam'" :icon="['fab', 'steam']" class="member-item__steam-icon" />{{
+          member.name
+        }}</a
+      >
       <p class="member-item__role">
         {{ member._id === teamInfo.manager ? 'Captain' : 'Member' }}
       </p>
@@ -14,7 +16,7 @@
     </div>
     <div class="member-item__button-group">
       <button
-        v-if="isManager && member._id !== profile._id"
+        v-if="rolesEnabled && isManager && member._id !== profile._id"
         class="member-item__btn"
         :content="member.role === AccessRole.EDITOR ? 'Change role to viewer' : 'Change role to editor'"
         v-tippy

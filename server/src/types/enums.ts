@@ -1,46 +1,60 @@
-export enum GameMap {
-  'DUST_2' = 'DUST_2',
-  'MIRAGE' = 'MIRAGE',
-  'OVERPASS' = 'OVERPASS',
-  'NUKE' = 'NUKE',
-  'VERTIGO' = 'VERTIGO',
-  'INFERNO' = 'INFERNO',
-  'TRAIN' = 'TRAIN',
-  'ANCIENT' = 'ANCIENT',
-  'ANUBIS' = 'ANUBIS',
-}
+export const GameMap = {
+  DUST_2: 'DUST_2',
+  MIRAGE: 'MIRAGE',
+  OVERPASS: 'OVERPASS',
+  NUKE: 'NUKE',
+  VERTIGO: 'VERTIGO',
+  INFERNO: 'INFERNO',
+  TRAIN: 'TRAIN',
+  ANCIENT: 'ANCIENT',
+  ANUBIS: 'ANUBIS',
+} as const;
 
-export enum UtilityType {
-  'FLASH' = 'FLASH',
-  'GRENADE' = 'GRENADE',
-  'SMOKE' = 'SMOKE',
-  'MOLOTOV' = 'MOLOTOV',
-}
+export type GameMap = (typeof GameMap)[keyof typeof GameMap];
 
-export enum MouseButton {
-  'LEFT' = 'LEFT',
-  'RIGHT' = 'RIGHT',
-  'LEFTRIGHT' = 'LEFTRIGHT',
-}
+export const UtilityType = {
+  FLASH: 'FLASH',
+  GRENADE: 'GRENADE',
+  SMOKE: 'SMOKE',
+  MOLOTOV: 'MOLOTOV',
+} as const;
 
-export enum Movement {
-  'STILL' = 'STILL',
-  'WALK' = 'WALK',
-  'RUN' = 'RUN',
-}
+export type UtilityType = (typeof UtilityType)[keyof typeof UtilityType];
 
-export enum StratType {
-  'PISTOL' = 'PISTOL',
-  'FORCE' = 'FORCE',
-  'BUYROUND' = 'BUYROUND',
-}
+export const MouseButton = {
+  LEFT: 'LEFT',
+  RIGHT: 'RIGHT',
+  LEFTRIGHT: 'LEFTRIGHT',
+} as const;
 
-export enum StratSide {
-  'CT' = 'CT',
-  'T' = 'T',
-}
+export type MouseButton = (typeof MouseButton)[keyof typeof MouseButton];
 
-export enum AccessRole {
-  EDITOR = 'EDITOR',
-  VIEWER = 'VIEWER',
-}
+export const Movement = {
+  STILL: 'STILL',
+  WALK: 'WALK',
+  RUN: 'RUN',
+} as const;
+
+export type Movement = (typeof Movement)[keyof typeof Movement];
+
+export const StratType = {
+  PISTOL: 'PISTOL',
+  FORCE: 'FORCE',
+  BUYROUND: 'BUYROUND',
+} as const;
+
+export type StratType = (typeof StratType)[keyof typeof StratType];
+
+export const StratSide = {
+  CT: 'CT',
+  T: 'T',
+} as const;
+
+export type StratSide = (typeof StratSide)[keyof typeof StratSide];
+
+export const AccessRole = {
+  EDITOR: 'EDITOR',
+  VIEWER: 'VIEWER',
+} as const;
+
+export type AccessRole = (typeof AccessRole)[keyof typeof AccessRole];

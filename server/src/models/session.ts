@@ -1,14 +1,12 @@
-import { Types, Schema, model, Document } from 'mongoose';
+import { Document, model, Schema, Types } from 'mongoose';
 
 export interface Session {
   refreshToken: string;
   player: Types.ObjectId;
   expires: Date;
-  userAgent: string;
-  ip: string;
 }
 
-export type SessionDocument = Document<unknown, any, Session>;
+export type SessionDocument = Document<unknown, unknown, Session>;
 
 const sessionSchema = new Schema<Session>({
   refreshToken: {
@@ -26,14 +24,6 @@ const sessionSchema = new Schema<Session>({
   expires: {
     type: Date,
     required: true,
-  },
-
-  userAgent: {
-    type: String,
-  },
-
-  ip: {
-    type: String,
   },
 });
 

@@ -53,7 +53,7 @@
         >
           <fa-icon icon="th-list" />
         </div>
-        <div class="strat-item__labels">
+        <div v-if="labelsEnabled" class="strat-item__labels">
           <button class="strat-item__label --add" @click="labelDialogOpen = true" v-if="!readOnly">
             labels<fa-icon icon="plus" />
           </button>

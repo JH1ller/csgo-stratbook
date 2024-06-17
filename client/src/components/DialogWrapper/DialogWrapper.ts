@@ -7,6 +7,6 @@ import { appModule } from '@/store/namespaces';
   components: { ConfirmDialog },
 })
 export default class DialogWrapper extends Vue {
-  @appModule.State private openDialogs!: Dialog[];
-  @appModule.Action private closeDialog!: (key: string) => Promise<void>;
+  @appModule.State openDialogs!: Dialog[];
+  @appModule.Action closeDialog!: (key: string) => Promise<void>;
 }

@@ -1,29 +1,31 @@
+import { mkdir, unlink,writeFile } from 'node:fs/promises';
+import path from 'node:path';
+
 import { Router } from 'express';
+import { nanoid } from 'nanoid';
+
+import { updateStrats } from '@/controllers/strats';
 import { Strat, StratDocument, StratModel } from '@/models/strat';
+import { socketService } from '@/services/socket.service';
+import { AccessRole } from '@/types/enums';
 import { getStrat, getStrats } from '@/utils/getters';
 import { verifyAuth } from '@/utils/verifyToken';
-import { TypedServer } from '@/sockets/interfaces';
-import { writeFile, mkdir, unlink } from 'fs/promises';
-import path from 'path';
-import { nanoid } from 'nanoid';
-import { updateStrats } from '@/controllers/strats';
-import { AccessRole } from '@/types/enums';
 
 const router = Router();
 
-router.get('/', verifyAuth, async (req, res) => {
+router.get('/', verifyAuth, async (request, res) => {
   if (!res.locals.player.team) {
     return res.status(400).json({ error: "Authenticated user doesn't have a team" });
   }
-  const strats: StratDocument[] = req.query.map
-    ? await StratModel.find({ map: req.query.map, team: res.locals.player.team })
+  const strats: StratDocument[] = request.query.map
+    ? await StratModel.find({ map: request.query.map, team: res.locals.player.team })
     : await StratModel.find({ team: res.locals.player.team });
 
   return res.json(strats);
 });
 
 // * Create One
-router.post('/', verifyAuth, async (req, res) => {
+router.post('/', verifyAuth, async (request, res) => {
   if (!res.locals.player.team) {
     return res.status(400).json({ error: "Authenticated user doesn't have a team" });
   }
@@ -33,14 +35,14 @@ router.post('/', verifyAuth, async (req, res) => {
   }
 
   const strat = new StratModel({
-    name: req.body.name,
-    types: req.body.types,
-    map: req.body.map,
-    side: req.body.side,
-    active: req.body.active,
-    videoLink: req.body.videoLink,
-    note: req.body.note,
-    drawData: req.body.drawData,
+    name: request.body.name,
+    types: request.body.types,
+    map: request.body.map,
+    side: request.body.side,
+    active: request.body.active,
+    videoLink: request.body.videoLink,
+    note: request.body.note,
+    drawData: request.body.drawData,
     team: res.locals.player.team,
     createdBy: res.locals.player._id,
     createdAt: new Date(),
@@ -50,11 +52,11 @@ router.post('/', verifyAuth, async (req, res) => {
 
   const newStrat = await strat.save();
   res.status(201).json(newStrat.toObject());
-  (req.app.get('io') as TypedServer).to(newStrat.team.toString()).emit('created-strat', { strat: newStrat.toObject() });
+  socketService.to(newStrat.team.toString()).emit('created-strat', { strat: newStrat.toObject() });
 });
 
 // * Add shared
-router.post('/share/:id', verifyAuth, async (req, res) => {
+router.post('/share/:id', verifyAuth, async (request, res) => {
   if (!res.locals.player.team) {
     return res.status(400).json({ error: "Authenticated user doesn't have a team" });
   }
@@ -63,7 +65,7 @@ router.post('/share/:id', verifyAuth, async (req, res) => {
     return res.status(403).json({ error: 'Only editors can add strats' });
   }
 
-  const strat = await StratModel.findById(req.params.id);
+  const strat = await StratModel.findById(request.params.id);
   if (!strat || !strat.shared) {
     return res.status(400).json({ error: "Strat doesn't exist or hasn't been shared by owner." });
   }
@@ -74,13 +76,13 @@ router.post('/share/:id', verifyAuth, async (req, res) => {
 
   const stratCopy = new StratModel({
     ...strat.toObject<Strat>({
-      transform: (_doc, ret) => {
-        delete ret._id;
-        delete ret.team;
-        delete ret.modifiedBy;
-        delete ret.modifiedAt;
-        delete ret.shared;
-        return ret;
+      transform: (_document, returnValue) => {
+        delete returnValue._id;
+        delete returnValue.team;
+        delete returnValue.modifiedBy;
+        delete returnValue.modifiedAt;
+        delete returnValue.shared;
+        return returnValue;
       },
     }),
     team: res.locals.player.team,
@@ -90,13 +92,11 @@ router.post('/share/:id', verifyAuth, async (req, res) => {
 
   await stratCopy.save();
   res.status(201).json(stratCopy);
-  (req.app.get('io') as TypedServer)
-    .to(stratCopy.team.toString())
-    .emit('created-strat', { strat: stratCopy.toObject() });
+  socketService.to(stratCopy.team.toString()).emit('created-strat', { strat: stratCopy.toObject() });
 });
 
 // * Update One
-router.patch('/', verifyAuth, getStrat, async (req, res) => {
+router.patch('/', verifyAuth, getStrat, async (request, res) => {
   if (!res.locals.player.team.equals(res.locals.strat.team)) {
     return res.status(400).json({ error: 'Cannot update a strat of another team.' });
   }
@@ -104,15 +104,13 @@ router.patch('/', verifyAuth, getStrat, async (req, res) => {
     return res.status(403).json({ error: 'Only editors can update strats' });
   }
 
-  const updatedStrats = await updateStrats([res.locals.strat], [req.body]);
+  const updatedStrats = await updateStrats([res.locals.strat], [request.body]);
   res.json(updatedStrats[0]);
-  (req.app.get('io') as TypedServer)
-    .to(updatedStrats[0].team.toString())
-    .emit('updated-strat', { strat: updatedStrats[0].toObject() });
+  socketService.to(updatedStrats[0].team.toString()).emit('updated-strat', { strat: updatedStrats[0].toObject() });
 });
 
 // * Update Multiple
-router.patch('/batch', verifyAuth, getStrats, async (req, res) => {
+router.patch('/batch', verifyAuth, getStrats, async (request, res) => {
   if (res.locals.strats.some((strat: Strat) => !res.locals.player.team.equals(strat.team))) {
     return res.status(400).json({ error: 'Cannot update a strat of another team.' });
   }
@@ -120,15 +118,15 @@ router.patch('/batch', verifyAuth, getStrats, async (req, res) => {
     return res.status(403).json({ error: 'Only editors can update strats' });
   }
 
-  const updatedStrats = await updateStrats(res.locals.strats, req.body);
+  const updatedStrats = await updateStrats(res.locals.strats, request.body);
   res.json(updatedStrats);
-  (req.app.get('io') as TypedServer)
+  socketService
     .to(updatedStrats[0].team.toString())
     .emit('updated-strats', { strats: updatedStrats.map((strat) => strat.toObject()) });
 });
 
 // * Delete One
-router.delete('/:strat_id', verifyAuth, getStrat, async (req, res) => {
+router.delete('/:strat_id', verifyAuth, getStrat, async (request, res) => {
   if (!res.locals.player.team.equals(res.locals.strat.team)) {
     return res.status(400).json({ error: 'Cannot delete a strat of another team.' });
   }
@@ -137,23 +135,19 @@ router.delete('/:strat_id', verifyAuth, getStrat, async (req, res) => {
   }
   await res.locals.strat.delete();
   res.json({ message: 'Deleted strat successfully' });
-  (req.app.get('io') as TypedServer)
-    .to(res.locals.strat.team.toString())
-    .emit('deleted-strat', { stratId: res.locals.strat._id });
+  socketService.to(res.locals.strat.team.toString()).emit('deleted-strat', { stratId: res.locals.strat._id });
 });
 
 // * Export to JSON
-router.get('/export', verifyAuth, async (req, res) => {
+router.get('/export', verifyAuth, async (request, res) => {
   if (!res.locals.player.team) {
     return res.status(400).json({ error: "Authenticated user doesn't have a team" });
   }
-  const strats = req.query.map
-    ? await StratModel.find({ map: req.query.map, team: res.locals.player.team })
+  const strats = request.query.map
+    ? await StratModel.find({ map: request.query.map, team: res.locals.player.team })
     : await StratModel.find({ team: res.locals.player.team });
 
   const stratsJson = JSON.stringify(strats, null, 2);
-
-  console.log(process.cwd());
 
   await mkdir('temp', { recursive: true });
 

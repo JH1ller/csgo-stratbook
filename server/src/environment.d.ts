@@ -1,6 +1,6 @@
 declare global {
   namespace NodeJS {
-    interface ProcessEnv {
+    interface ProcessEnvironment {
       DATABASE_URL_DEV: string;
       DATABASE_URL: string;
       NODE_ENV: 'development' | 'production';

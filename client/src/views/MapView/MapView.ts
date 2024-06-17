@@ -16,6 +16,7 @@ import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { Strat } from '@/api/models/Strat';
 import { Sides } from '@/api/models/Sides';
 import { StratTypes } from '@/api/models/StratTypes';
+import { Status } from '@/store/modules/auth';
 
 @Component({
   components: {
@@ -28,6 +29,7 @@ import { StratTypes } from '@/api/models/StratTypes';
 export default class MapView extends Vue {
   @Inject() storageService!: StorageService;
   @authModule.State profile!: Player;
+  @authModule.State status!: Status;
   @appModule.Action private showToast!: (toast: Toast) => void;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
   @stratModule.Action createStrat!: (payload: Partial<Strat>) => Promise<Strat>;
@@ -50,7 +52,7 @@ export default class MapView extends Vue {
     this.userName = userName;
     this.sketchTool.submitUserName(userName);
 
-    if (!this.stratName && stratName && this.profile) {
+    if (!this.stratName && stratName && this.status === Status.LOGGED_IN_WITH_TEAM) {
       const dialogResult = await this.showDialog({
         key: 'map-view/submit-name',
         text: `You added a name to your strat. Would you like to save it to your stratbook? This will also redirect you to the strats page.`,

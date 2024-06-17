@@ -1,4 +1,4 @@
-import { Schema, Types, model, Document } from 'mongoose';
+import { Document, model, Schema, Types } from 'mongoose';
 import mongooseDelete from 'mongoose-delete';
 
 export interface Team {
@@ -20,7 +20,7 @@ export interface Team {
 }
 
 export type TeamDocument = Team &
-  Document<unknown, any, Team> & { _id: Types.ObjectId; $locals: { skipModified?: boolean } };
+  Document<unknown, unknown, Team> & { _id: Types.ObjectId; $locals: { skipModified?: boolean } };
 
 const teamSchema = new Schema<Team>({
   name: {

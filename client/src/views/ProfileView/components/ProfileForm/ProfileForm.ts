@@ -15,27 +15,27 @@ import { Validators } from '@/utils/validation';
 export default class ProfileForm extends Vue {
   @Prop() profile!: Player;
 
-  private formFields: Record<string, FormField> = {
+  formFields: Record<string, FormField> = {
     name: new FormField('Name', false, []),
     email: new FormField('Email', false, []),
     password: new FormField('New password', false, []),
   };
 
-  private repeatField = new FormField('Repeat new password', false, [Validators.matches(this.formFields.password)]);
+  repeatField = new FormField('Repeat new password', false, [Validators.matches(this.formFields.password)]);
 
   // * array because ImageUploader component expects array here, although limit is 1
-  private files: File[] = [];
+  files: File[] = [];
 
-  private mounted() {
+  mounted() {
     this.mapToFields();
   }
 
   @Watch('profile')
-  private profileUpdated() {
+  profileUpdated() {
     this.mapToFields();
   }
 
-  private mapToFields() {
+  mapToFields() {
     this.formFields.name.value = this.profile.name;
     this.formFields.email.value = this.profile.email;
     this.formFields.password.value = '';
@@ -43,13 +43,13 @@ export default class ProfileForm extends Vue {
     this.files = [];
   }
 
-  private handleSubmit() {
+  handleSubmit() {
     if (this.repeatField.validate()) {
       this.submit();
     }
   }
 
-  private submit() {
+  submit() {
     const requestFormData = new FormData();
 
     if (this.files.length) {

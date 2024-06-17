@@ -13,6 +13,7 @@ import StratsView from '@/views/StratsView/StratsView.vue';
 import StorageService from '@/services/storage.service';
 import { mapResolver } from '@/views/MapView/MapView.resolver';
 import { authGuard } from '@/guards/auth.guard';
+import { Status } from '@/store/modules/auth';
 
 Vue.use(VueRouter);
 
@@ -23,7 +24,7 @@ const routes = [
     path: '/',
     name: RouteNames.Home,
     redirect: () => {
-      if (storageService.get('has-session')) {
+      if (storageService.get('hasSession')) {
         return Routes.Strats;
       } else {
         return Routes.Login;
@@ -46,6 +47,13 @@ const routes = [
     path: '/login',
     name: RouteNames.Login,
     component: LoginView,
+    beforeEnter: ((to, from, next) => {
+      if (store.state.auth.status !== Status.NO_AUTH) {
+        next(Routes.Strats);
+      } else {
+        next();
+      }
+    }) as NavigationGuard,
   },
   {
     path: '/reset',
@@ -110,6 +118,7 @@ const routes = [
 
 const router = new VueRouter({
   routes,
+  mode: 'history',
 });
 
 export default router;

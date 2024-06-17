@@ -8,6 +8,7 @@ import { RouteNames, Routes } from '@/router/router.models';
 import { TOKEN_TTL } from '@/config';
 import TrackingService from '@/services/tracking.service';
 import StorageService from '@/services/storage.service';
+import { removeCookie } from '@/utils/cookie';
 
 const SET_TOKEN = 'SET_TOKEN';
 const SET_PROFILE = 'SET_PROFILE';
@@ -106,7 +107,7 @@ export const authModule: Module<AuthState, RootState> = {
         }
 
         await dispatch('fetchProfile');
-        storageService.set('has-session', '1');
+        storageService.set('hasSession', '1');
         dispatch('app/showToast', { id: 'auth/login', text: 'Logged in successfully.' }, { root: true });
         trackingService.track('Action: Login', { email, name: state.profile.name });
         setTimeout(() => dispatch('refresh'), TOKEN_TTL - 10000);
@@ -146,11 +147,13 @@ export const authModule: Module<AuthState, RootState> = {
           storageService.set('refreshToken', res.success.refreshToken);
         }
 
-        storageService.set('has-session', '1');
+        storageService.set('hasSession', '1');
         setTimeout(() => dispatch('refresh'), TOKEN_TTL - 10000);
+        return true;
       }
       if (res.error) {
-        storageService.remove('has-session');
+        storageService.remove('hasSession');
+        removeCookie('hasSession');
         if (router.currentRoute.name !== RouteNames.Login) router.push(Routes.Login);
       }
     },

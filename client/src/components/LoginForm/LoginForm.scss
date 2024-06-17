@@ -83,4 +83,25 @@
     @include error-notification;
     @include spacing('margin-bottom', 'xs');
   }
+
+  &__steam {
+    cursor: pointer;
+
+    transition: filter 0.3s ease;
+
+    &:hover,
+    &:active,
+    &:focus {
+      filter: brightness(1.2);
+    }
+  }
+
+  &__steam-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 20px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--color-border);
+  }
 }

@@ -1,22 +1,20 @@
 module.exports = {
   root: true,
-  env: {
-    node: true,
-  },
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:unicorn/recommended'],
   parser: '@typescript-eslint/parser',
-  extends: [
-    'plugin:security/recommended',
-    'eslint:recommended',
-    'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended',
-  ],
   parserOptions: {
-    ecmaVersion: 2020,
+    project: ['./tsconfig.json'],
+    ecmaVersion: 'latest',
     sourceType: 'module',
   },
+  ignorePatterns: ['!./src/**/*.ts', '.eslintrc.js', 'scripts', 'dist_landingpage', 'dist_app'],
+  plugins: ['@typescript-eslint', 'unicorn', 'simple-import-sort'],
   rules: {
-    '@typescript-eslint/no-non-null-assertion': 'off',
-    'no-constant-condition': ['warn', { checkLoops: false }],
+    'simple-import-sort/imports': 'warn',
+    'simple-import-sort/exports': 'warn',
+    'unicorn/prevent-abbreviations': 'off',
+    'unicorn/no-null': 'off',
+    'unicorn/filename-case': 'off',
+    '@typescript-eslint/no-unnecessary-condition': ['warn', { allowConstantLoopConditions: true }],
   },
-  plugins: ['prettier', '@typescript-eslint', 'security'],
 };

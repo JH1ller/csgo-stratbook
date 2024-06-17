@@ -1,6 +1,7 @@
-import { AccessRole } from '@/types/enums';
-import { Types, Schema, model, Document } from 'mongoose';
+import { Document, model, Schema, Types } from 'mongoose';
 import mongooseDelete from 'mongoose-delete';
+
+import { AccessRole } from '@/types/enums';
 
 export interface Player {
   name: string;
@@ -16,11 +17,13 @@ export interface Player {
   isAdmin: boolean;
   completedTutorial: boolean;
   color: string;
+  steamId: string;
+  accountType: 'local' | 'steam';
   role: AccessRole;
 }
 
 export type PlayerDocument = Player &
-  Document<unknown, any, Player> & { _id: Types.ObjectId; $locals: { skipModified?: boolean } };
+  Document<unknown, unknown, Player> & { _id: Types.ObjectId; $locals: { skipModified?: boolean } };
 
 const playerSchema = new Schema<Player>({
   name: {
@@ -32,15 +35,12 @@ const playerSchema = new Schema<Player>({
 
   email: {
     type: String,
-    required: true,
-    unique: true,
     maxlength: 255,
     minlength: 6,
   },
 
   password: {
     type: String,
-    required: true,
     minlength: 8,
   },
 
@@ -87,6 +87,18 @@ const playerSchema = new Schema<Player>({
   },
 
   color: String,
+
+  steamId: {
+    type: String,
+    required: false,
+  },
+
+  accountType: {
+    type: String,
+    enum: ['local', 'steam'],
+    default: 'local',
+    required: true,
+  },
 
   role: {
     type: String,

@@ -1,12 +1,13 @@
+import { Server, Socket } from 'socket.io';
+
 import { Player, PlayerDocument } from '@/models/player';
 import { Strat } from '@/models/strat';
 import { Team } from '@/models/team';
 import { Utility } from '@/models/utility';
 import { Client, DrawBoardState } from '@/types';
 import { GameMap } from '@/types/enums';
-import { Server, Socket } from 'socket.io';
 
-interface ServerToClientEvents {
+export interface ServerToClientEvents {
   pong: () => void;
   // draw board events
   'draw-room-joined': (payload: {
@@ -39,7 +40,7 @@ interface ServerToClientEvents {
   'deleted-team': () => void;
 }
 
-interface ClientToServerEvents {
+export interface ClientToServerEvents {
   'join-draw-room': (payload: { targetRoomId?: string; userName?: string; stratId?: string; map: GameMap }) => void;
   'leave-draw-room': () => void;
   'pointer-position': (payload: { x: number; y: number }) => void;
@@ -50,11 +51,11 @@ interface ClientToServerEvents {
   ping: () => void;
 }
 
-interface InterServerEvents {
+export interface InterServerEvents {
   ping: () => void;
 }
 
-interface SocketData {
+export interface SocketData {
   drawRoomId: string;
   player: PlayerDocument;
   activeQuery: Promise<unknown>;

@@ -1,19 +1,24 @@
-import { Log } from '@/utils/logger';
+import { gray } from 'colors';
 import { RequestHandler } from 'express';
 
-const truncate = (input: string, length: number) =>
-  input.length > length ? `${input.substring(0, length)}...` : input;
+import { Logger } from '@/utils/logger';
 
-export const logger: RequestHandler = (req, _res, next) => {
+const truncate = (input: string, length: number) =>
+  input.length > length ? `${input.slice(0, Math.max(0, length))}...` : input;
+
+export const loggerMiddleware: RequestHandler = (request, _res, next) => {
   try {
-    const bodyCopy = { ...req.body };
+    const bodyCopy = { ...request.body };
     delete bodyCopy.password;
-    Log.info(
-      `http::${req.method.toLowerCase()}->${req.url}`,
+    Logger.log(
+      gray,
+      `http::${request.method.toLowerCase()}->${request.url}`,
       ...Object.entries(bodyCopy).map(
-        ([key, value], index) => `${index !== 0 ? '| ' : ' '}${key}: ${truncate(value as string, 50)}`
-      )
+        ([key, value], index) => `${index === 0 ? ' ' : '| '}${key}: ${truncate(value as string, 50)}`,
+      ),
     );
-  } catch (error) {}
+  } catch {
+    //
+  }
   next();
 };

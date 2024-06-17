@@ -20,17 +20,6 @@
       <a class="main-menu__list-item main-menu__link --github" @click="openGithub"
         ><fa-icon :icon="['fab', 'github']" />Github</a
       >
-      <a v-if="!isDesktop" class="main-menu__list-item main-menu__link --download" @click="downloadDesktopClient"
-        ><fa-icon icon="download" />Get desktop app</a
-      >
-      <!-- Removed for now because it's not working anymore -->
-      <!-- <a
-        class="main-menu__list-item main-menu__link --feedback"
-        data-feedback-fish
-        :data-feedback-fish-userid="profile.email"
-      >
-        <fa-icon icon="comment" />Feedback
-      </a> -->
       <a class="main-menu__list-item main-menu__link --kofi" @click="openDonationLink()">
         <fa-icon icon="coffee" />Buy me a coffee
       </a>
@@ -46,7 +35,6 @@
         <span></span>
       </div>
     </div>
-    <!-- <FeedbackFish projectId="092eb5ee119a8c" /> -->
   </div>
 </template>
 
