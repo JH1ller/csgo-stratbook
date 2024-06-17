@@ -1,8 +1,9 @@
-import { Model } from './Model';
-
-export interface Notice extends Model {
+export type Notice = {
+  id: string;
+  title: string;
+  tags: string[];
   version: string;
   content: string;
-  tags: string[];
   expires: string;
-}
+  image?: string;
+};

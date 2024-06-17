@@ -1,23 +1,23 @@
+import * as prismic from '@prismicio/client';
 import { Router } from 'express';
 
-import { NoticeModel } from '@/models/notice';
-
+import { toNoticeDto } from '@/dto/notice.dto';
+import { configService } from '@/services/config.service';
 const router = Router();
 
-router.get('/', async (req, res) => {
-  const notices = await NoticeModel.find({ expires: { $gte: new Date() } });
+const repositoryName = 'stratbook';
+const client = prismic.createClient(repositoryName, { fetch, accessToken: configService.env.PRISMIC_TOKEN });
 
-  res.json(notices);
-});
-
-router.get('/create', async (req, res) => {
-  const notice = new NoticeModel({
-    version: '1.0.0',
-    content: 'Welcome to',
-    expires: new Date(Date.now() + 3 * 30 * 24 * 60 * 60 * 1000), // Expires in three months
-  });
-  await notice.save();
-  return res.status(200);
+router.get('/', async (_, res) => {
+  try {
+    const notices = await client.getAllByType('notice');
+    console.log(notices);
+    const noticeDtos = notices.map((notice) => toNoticeDto(notice));
+    res.json(noticeDtos);
+  } catch (error) {
+    console.error(error);
+    res.json([]);
+  }
 });
 
 export default router;

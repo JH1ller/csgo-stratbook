@@ -116,7 +116,7 @@ export default class App extends Vue {
 
     const seenNotices = this.storageService.get<string[]>('seenNotices') || [];
     const notices = result.success.filter(
-      (notice) => !seenNotices.includes(notice._id) && new Date() < new Date(notice.expires),
+      (notice) => !seenNotices.includes(notice.id) && new Date() < new Date(notice.expires),
     );
 
     this.notices = notices;

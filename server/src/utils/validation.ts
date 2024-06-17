@@ -58,6 +58,7 @@ export const envSchema = z.object({
   TELEGRAM_TOKEN: z.string().optional(),
   TELEGRAM_USER: z.string().optional(),
   STEAM_API_KEY: z.string(),
+  PRISMIC_TOKEN: z.string(),
 });
 
 export const parseEnvironment = () => {
