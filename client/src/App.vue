@@ -20,6 +20,9 @@
     <transition name="fade">
       <CookieBanner v-if="showCookieBanner && isDesktop === false" @close="closeCookieBanner" />
     </transition>
+    <transition name="fade">
+      <NoticeDialog :notices="notices" v-if="showNotice" @close="showNotice = false" />
+    </transition>
     <portal-target name="root"></portal-target>
   </div>
 </template>
@@ -31,17 +34,19 @@ import ToastWrapper from '@/components/ToastWrapper/ToastWrapper.vue';
 import MainMenu from '@/components/menus/MainMenu/MainMenu.vue';
 import DialogWrapper from './components/DialogWrapper/DialogWrapper.vue';
 import CookieBanner from './components/CookieBanner/CookieBanner.vue';
+import NoticeDialog from './components/NoticeDialog/NoticeDialog.vue';
 import pkg from '../package.json';
 import { appModule, teamModule } from './store/namespaces';
 import TrackingService from '@/services/tracking.service';
 import { Dialog } from './components/DialogWrapper/DialogWrapper.models';
 import StorageService from './services/storage.service';
-import { gt, major, minor } from 'semver';
 import { Breakpoints } from './services/breakpoint.service';
 import { Team } from './api/models/Team';
 import WebSocketService from './services/WebSocketService';
 import { getCookie } from './utils/cookie';
 import { Toast } from './components/ToastWrapper/ToastWrapper.models';
+import { noticeService } from './api/notice.service';
+import { Notice } from './api/models/Notice';
 
 @Component({
   components: {
@@ -50,6 +55,7 @@ import { Toast } from './components/ToastWrapper/ToastWrapper.models';
     ToastWrapper,
     DialogWrapper,
     CookieBanner,
+    NoticeDialog,
   },
 })
 export default class App extends Vue {
@@ -68,6 +74,8 @@ export default class App extends Vue {
   appVersion: string = pkg.version;
   showCookieBanner = false;
   isDesktop = window.desktopMode;
+  showNotice = false;
+  notices: Notice[] = [];
 
   closeCookieBanner() {
     this.showCookieBanner = false;
@@ -89,6 +97,7 @@ export default class App extends Vue {
     window.appVersion = this.appVersion;
 
     this.handleQueryMessage();
+    this.getNotices();
   }
 
   handleQueryMessage() {
@@ -101,28 +110,23 @@ export default class App extends Vue {
     }
   }
 
+  async getNotices() {
+    const result = await noticeService.getAll();
+    if (!result.success) return;
+
+    const seenNotices = this.storageService.get<string[]>('seenNotices') || [];
+    const notices = result.success.filter(
+      (notice) => !seenNotices.includes(notice._id) && new Date() < new Date(notice.expires),
+    );
+
+    this.notices = notices;
+    this.showNotice = notices.length > 0;
+    // this.notices.forEach((notice) => {
+    //   this.storageService.set('seenNotices', [...(this.storageService.get('seenNotices') || []), notice._id]);
+    // });
+  }
+
   checkVersion() {
-    const currentVersion = this.storageService.get<string>('version');
-    if (
-      currentVersion &&
-      gt(`${major(this.appVersion)}.${minor(this.appVersion)}.0`, `${major(currentVersion)}.${minor(currentVersion)}.0`)
-    ) {
-      this.showDialog({
-        key: 'app/update-notice',
-        text: `
-        <h1>Stratbook has been updated to v${this.appVersion}.</h1>
-          <ul>
-            <li>- Strats can be saved from map view when a name is added.</li>
-            <li>- Added deeplinks to strat drawing board, e.g. https://app.stratbook.pro/strats/[strat-id]</li>
-            <li>- minor bug fixes</li>
-            <li>- more to come soon!</li>
-          </ul>
-          `,
-        resolveBtn: 'OK',
-        confirmOnly: true,
-        htmlMode: true,
-      });
-    }
     this.storageService.set('version', this.appVersion);
   }
 

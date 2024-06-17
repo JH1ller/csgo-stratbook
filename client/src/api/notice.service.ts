@@ -3,6 +3,7 @@ import axios from 'axios';
 import urljoin from 'url-join';
 import ApiService from './base';
 import { APIResponse, Endpoints } from './types';
+import { Notice } from './models/Notice';
 
 class NoticeService {
   private endpoint = Endpoints.Notice;
@@ -12,9 +13,9 @@ class NoticeService {
     return ApiService.makeRequest<string>(axios.get(target));
   }
 
-  async getAll(): Promise<APIResponse<string>> {
+  async getAll(): Promise<APIResponse<Notice[]>> {
     const target = urljoin(API_URL, this.endpoint, '/');
-    return ApiService.makeRequest<string>(axios.get(target));
+    return ApiService.makeRequest<Notice[]>(axios.get(target));
   }
 }
 

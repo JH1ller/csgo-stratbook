@@ -1,0 +1,81 @@
+.notice-dialog {
+  &__window {
+    border-radius: 10px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: min(100%, 500px);
+    transform: translate(-50%, -50%);
+    padding: 24px;
+    background-color: var(--color-bg);
+    box-shadow: $shadow-soft;
+  }
+
+  &__notice {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 200% 200%;
+    animation: gradient 10s ease infinite;
+    padding: 2px 8px;
+    border-radius: 4px;
+    align-self: flex-start;
+  }
+
+  &__buttons {
+    @include spacing('gap', xs);
+
+    display: flex;
+    margin-top: 24px;
+    justify-content: center;
+  }
+
+  &__text {
+    line-height: 1.4;
+
+    & bold {
+      font-weight: 700;
+    }
+  }
+
+  &__btn-close {
+    @include button-default;
+  }
+
+  & h1 {
+    font-size: 1.15rem;
+  }
+
+  & strong,
+  & b {
+    font-weight: $weight-bold;
+  }
+
+  & ul {
+    margin-top: 12px;
+    background: var(--color-bg-secondary);
+    padding: 8px 8px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
