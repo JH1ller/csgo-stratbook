@@ -4,8 +4,8 @@
   "description": "<p align=\"center\">   <img src=\".readme/logo.png\" width=\"256\"> </p>",
   "scripts": {
     "start": "npm run start --workspace server",
-    "build": "npm run build --workspaces",
-    "deploy:": "git push prod master"
+    "build": "npm run build --workspaces --if-present",
+    "deploy": "git push prod master --force"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +16,6 @@
     "landingpage"
   ],
   "engines": {
-    "node": ">=18.18.0"
+    "node": "18.18.0"
   }
 }
