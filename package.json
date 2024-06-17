@@ -1,0 +1,21 @@
+{
+  "name": "csgo-stratbook",
+  "version": "1.0.0",
+  "description": "<p align=\"center\">   <img src=\".readme/logo.png\" width=\"256\"> </p>",
+  "scripts": {
+    "start": "npm run start --workspace server",
+    "build": "npm run build --workspaces",
+    "deploy:": "git push heroku master"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "workspaces": [
+    "server",
+    "client",
+    "landingpage"
+  ],
+  "engines": {
+    "node": ">=18.18.0"
+  }
+}
