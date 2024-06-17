@@ -65,11 +65,6 @@ export default class MainMenu extends Vue {
     openLink('https://discord.com/invite/mkxzQJGRgq');
   }
 
-  openGithub() {
-    this.trackingService.track('Click: Open Github');
-    openLink('https://github.com/JH1ller/csgo-stratbook');
-  }
-
   openDonationLink() {
     this.trackingService.track('Click: Open Ko-Fi');
     openLink('https://ko-fi.com/Q5Q02X2XQ');

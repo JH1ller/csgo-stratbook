@@ -11,18 +11,17 @@
         <span class="main-menu__label" :style="{ transitionDelay: '0.' + index + 's' }">{{ item.label }}</span>
       </router-link>
       <DarkmodeToggle class="main-menu__darkmode-toggle" />
-      <a class="main-menu__list-item main-menu__link --twitter" @click="openTwitter"
-        ><fa-icon :icon="['fab', 'twitter']" />twitter</a
-      >
-      <a class="main-menu__list-item main-menu__link --discord" @click="openDiscord"
-        ><fa-icon :icon="['fab', 'discord']" />Discord</a
-      >
-      <a class="main-menu__list-item main-menu__link --github" @click="openGithub"
-        ><fa-icon :icon="['fab', 'github']" />Github</a
-      >
-      <a class="main-menu__list-item main-menu__link --kofi" @click="openDonationLink()">
-        <fa-icon icon="coffee" />Buy me a coffee
-      </a>
+      <div class="main-menu__links">
+        <a class="main-menu__list-item main-menu__link --kofi" @click="openDonationLink()">
+          <fa-icon icon="coffee" />Buy me a coffee
+        </a>
+        <a class="main-menu__list-item main-menu__link --twitter" @click="openTwitter"
+          ><fa-icon :icon="['fab', 'twitter']" />twitter</a
+        >
+        <a class="main-menu__list-item main-menu__link --discord" @click="openDiscord"
+          ><fa-icon :icon="['fab', 'discord']" />Discord</a
+        >
+      </div>
       <router-link to="/profile" class="main-menu__profile" v-if="profile._id">
         <img :src="avatarUrl" class="main-menu__avatar" alt="User Avatar" />
         <span class="main-menu__label main-menu__profile-label">{{ profile.name }}</span>
