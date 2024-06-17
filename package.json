@@ -1,22 +1,23 @@
 {
   "name": "csgo-stratbook",
-  "version": "1.0.0",
-  "description": "<p align=\"center\">   <img src=\".readme/logo.png\" width=\"256\"> </p>",
+  "version": "2.6.0",
+  "type": "module",
+  "description": "",
   "scripts": {
     "start": "npm run start --workspace server",
-    "build": "npm run build --workspaces --if-present",
+    "build": "tsx scripts/build.ts",
     "deploy": "git push prod master --force"
   },
   "dependencies": {
-    "tsx": "4.15.6"
+    "tsx": "4.15.6",
+    "zx": "8.1.2"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "workspaces": [
     "server",
-    "client",
-    "landingpage"
+    "client"
   ],
   "engines": {
     "node": "18.18.0"

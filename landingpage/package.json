@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "nuxt-ts",
-    "build": "nuxt-ts generate",
+    "build": "nuxt-ts build",
     "start": "nuxt-ts start",
+    "generate": "nuxt-ts generate",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint": "npm run lint:js"
   },
@@ -39,6 +40,15 @@
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^7.4.1",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "sass": "^1.77.6",
+    "sass-loader": "10.4.1",
+    "webpack": "4.46.0"
+  },
+  "overrides": {
+    "webpack": "4.46.0",
+    "vue-loader": "15.10.1",
+    "@nuxt/vue-app": "2.16.3",
+    "@nuxt/webpack": "2.16.3"
   }
 }
