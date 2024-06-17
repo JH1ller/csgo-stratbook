@@ -110,7 +110,7 @@ class AppService {
   }
 
   start() {
-    this.httpServer.listen(configService.port, configService.origin, () =>
+    this.httpServer.listen(configService.port, configService.isDev ? configService.origin : undefined, () =>
       logger.success(
         `Server started. [${green(configService.env.NODE_ENV.toUpperCase())}] ${configService.urls.baseUrl.toString()}`,
       ),
