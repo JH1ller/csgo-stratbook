@@ -7,6 +7,9 @@
     "build": "npm run build --workspaces --if-present",
     "deploy": "git push prod master --force"
   },
+  "dependencies": {
+    "tsx": "4.15.6"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
