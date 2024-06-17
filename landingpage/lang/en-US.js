@@ -43,19 +43,7 @@ export default {
         id: 'costs',
         questionText: 'Are there any costs or prices?',
         answerText:
-          'Stratbook is so called "Free and Open Source Software". Using the code and hosting the service yourself will always be free.<br>The prehosted service at "app.stratbook.pro" is also currently free. If you wish to support the development and the hosting of Stratbook there is a donation button at the bottom of the page.',
-      },
-      {
-        id: 'self-host',
-        questionText: 'Can I host Stratbook myself?',
-        answerText:
-          'You can absolutely host Stratbook yourself. There is a guide on setting it up and installing prerequesites on the Github page of the project, which will be continuously improved.',
-      },
-      {
-        id: 'whos-behind',
-        questionText: 'Who is behind this project?',
-        answerText:
-          "Hi there! I'm Justin, a 27 year old software engineer & esports enthusiast based in Hamburg, Germany. I played CSGO in the german amateur scene for a few years and started developing Stratbook in my freetime during Covid-19.<br>But you, too, could be behind this project! Drop me a message if you're interested in collaborating or helping out.",
+          'Stratbook is totally free. If you wish to support the development and the hosting of Stratbook there is a donation button at the bottom of the page.',
       },
     ],
   },
@@ -65,6 +53,15 @@ export default {
   changelog: {
     headline: 'Changelog',
     changes: [
+      {
+        version: '2.6.0',
+        date: '2024-06-17',
+        changes: [
+          'Steam authentication',
+          'Automatic redirect from landing page',
+          'Tons of behind the scenes improvements',
+        ],
+      },
       {
         version: '2.5.0',
         date: '2023-09-17',

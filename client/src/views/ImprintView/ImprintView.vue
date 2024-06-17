@@ -4,14 +4,14 @@
       <h1 class="imprint-view__headline">Legal Notice / Impressum</h1>
       <div class="impressum">
         <p>Angaben gemäß § 5 TMG</p>
-        <p>Justin Hiller <br /></p>
+        <p>Hiller Software<br /></p>
         <p>
           <strong>Kontakt:</strong> <br />
-          E-Mail: <a href="mailto:justin@hiller-family.com">justin@hiller-family.com</a><br />
+          E-Mail: <a href="mailto:hello@jstin.dev">hello@jstin.dev</a><br />
           Anschrift:
           <br />
-          Däumlingweg 12<br />
-          70567 Stuttgart
+          Looft 3<br />
+          22043 Hamburg
         </p>
         <br />
         <p>

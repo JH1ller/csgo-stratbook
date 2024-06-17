@@ -44,14 +44,12 @@
       >
         <fa-icon :icon="['fab', 'discord']" />
       </a>
-      <a
-        href="https://github.com/JH1ller/csgo-stratbook"
-        rel="noreferrer"
-        class="navbar__link --social"
-        target="_blank"
-      >
-        <fa-icon :icon="['fab', 'github']" />
-      </a>
+      <a href="https://ko-fi.com/Q5Q02X2XQ" rel="noreferrer" target="_blank"
+        ><img
+          height="36"
+          src="https://cdn.ko-fi.com/cdn/kofi5.png?v=2"
+          alt="Buy Me a Coffee at ko-fi.com"
+      /></a>
     </div>
     <div class="navbar__mobile-menu" :class="{ '-active': menuOpen }">
       <div class="navbar__mobile-links">
@@ -92,14 +90,15 @@
           <fa-icon :icon="['fab', 'discord']" />
         </a>
         <a
-          href="https://github.com/JH1ller/csgo-stratbook"
+          href="https://ko-fi.com/Q5Q02X2XQ"
           rel="noreferrer"
           target="_blank"
-          class="navbar__mobile-link --social"
-          @click="menuOpen = false"
-        >
-          <fa-icon :icon="['fab', 'github']" />
-        </a>
+          class="navbar__mobile-link --kofi"
+          ><img
+            height="36"
+            src="https://cdn.ko-fi.com/cdn/kofi5.png?v=2"
+            alt="Buy Me a Coffee at ko-fi.com"
+        /></a>
       </div>
     </div>
   </nav>
@@ -235,17 +234,21 @@ export default class Navbar extends Vue {
       display: flex;
       justify-content: flex-end;
       align-items: center;
+      gap: 12px;
       color: $color--white;
     }
 
     @include viewport_mq5 {
       @include grid-column(5, 6);
     }
+
+    @include viewport_mq6 {
+      gap: 24px;
+    }
   }
 
   &__link {
     @include typo_link($color--white);
-    @include spacing('margin-left', '2xs');
 
     border-radius: 8px;
     padding: 10px 16px;
@@ -291,14 +294,10 @@ export default class Navbar extends Vue {
     }
 
     @include viewport_mq6 {
-      @include spacing('margin-left', 'xs');
-
       font-size: 1.2rem;
     }
 
     @include viewport_mq7 {
-      @include spacing('margin-left', 'lg');
-
       font-size: 1.35rem;
     }
   }
