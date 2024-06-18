@@ -17,9 +17,9 @@
   "author": "",
   "license": "ISC",
   "workspaces": [
-    "server",
     "client",
-    "landingpage-new"
+    "landingpage-new",
+    "server"
   ],
   "engines": {
     "node": "18.18.0"
