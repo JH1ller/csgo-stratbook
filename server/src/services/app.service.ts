@@ -97,8 +97,8 @@ class AppService {
     } else {
       this.app.use(subdomain('app', express.static('dist_app')));
     }
-    this.app.use(subdomain('api', apiRouter));
-    this.app.use(subdomain('static', express.static('public')));
+    this.app.use('/api', apiRouter);
+    this.app.use('/static', express.static('public'));
     this.app.use('/', (req, res, next) => {
       const { refreshToken, hasSession } = req.cookies;
       if (refreshToken || hasSession) {

@@ -28,7 +28,6 @@
     "@prismicio/client": "^7.5.0",
     "@prismicio/helpers": "^2.3.9",
     "@sentry/node": "^7.50.0",
-    "@socket.io/admin-ui": "^0.5.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.2",
     "colors": "^1.4.0",

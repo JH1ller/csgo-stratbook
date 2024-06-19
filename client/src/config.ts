@@ -25,7 +25,7 @@ function getOrigin(subdomain: string) {
 
 export const WS_URL = getOrigin('');
 
-export const API_URL = getOrigin('api');
+export const API_URL = getOrigin('') + '/api';
 
 export const APP_URL = window.location.origin;
 

@@ -49,9 +49,9 @@ class ConfigService {
   get urls() {
     return {
       baseUrl: Object.freeze(new URL(`${this.protocol}${this.origin}${this.isDev ? `:${this.port}` : ''}/`)),
-      apiUrl: Object.freeze(new URL(`${this.protocol}api.${this.origin}${this.isDev ? `:${this.port}` : ''}/`)),
+      apiUrl: Object.freeze(new URL(`${this.protocol}${this.origin}${this.isDev ? `:${this.port}` : ''}/api/`)),
       appUrl: Object.freeze(new URL(`${this.protocol}app.${this.origin}${this.isDev ? `:${this.port}` : ''}/`)),
-      staticUrl: Object.freeze(new URL(`${this.protocol}static.${this.origin}${this.isDev ? `:${this.port}` : ''}/`)),
+      staticUrl: Object.freeze(new URL(`${this.protocol}${this.origin}${this.isDev ? `:${this.port}` : ''}/static/`)),
       s3Url: Object.freeze(new URL('https://csgo-stratbook.s3.amazonaws.com/')),
     };
   }

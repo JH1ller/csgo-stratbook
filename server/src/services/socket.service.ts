@@ -1,7 +1,5 @@
 import { Server } from 'node:http';
 
-import { instrument } from '@socket.io/admin-ui';
-import { hashSync } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Server as SocketServer } from 'socket.io';
 
@@ -54,16 +52,6 @@ export class SocketService extends SocketServer<
 
     logger.success('Successfully attached.');
 
-    if (configService.env.SOCKET_ADMIN_UI_PW) {
-      instrument(this, {
-        auth: {
-          type: 'basic',
-          username: 'admin',
-          password: hashSync(configService.env.SOCKET_ADMIN_UI_PW, 10),
-        },
-      });
-    }
-
     this.use(async (socket, next) => {
       const token = socket.handshake.auth.token;
       if (token) {
@@ -97,7 +85,7 @@ export class SocketService extends SocketServer<
         const player = socket.data.player;
 
         logger.info(
-          `User '${player?.name ?? socket.id}' disconnected. Active connections: ${
+          `User '${player.name ?? socket.id}' disconnected. Active connections: ${
             this.sockets.sockets.size
           }. Disconnect reason: ${reason}`,
         );
@@ -165,7 +153,7 @@ export class SocketService extends SocketServer<
 
       socket.data.drawRoomId = room.id;
 
-      const client = room.addClient(socket.id, userName, socket.data.player?.color);
+      const client = room.addClient(socket.id, userName, socket.data.player.color);
 
       //* only fetch drawData from db for the first user who joins
       if (stratId && room.clients.size === 1) {
@@ -293,7 +281,7 @@ export class SocketService extends SocketServer<
 
     const player = socket.data.player;
 
-    if (stratId && player?.team) {
+    if (stratId && player.team) {
       const strat = await StratModel.findById(stratId);
       if (!strat) {
         logger.warn(`Strat ${stratId} not found.`);

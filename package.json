@@ -5,6 +5,7 @@
   "description": "",
   "scripts": {
     "start": "npm run start --workspace server",
+    "dev": "npm run dev --workspaces",
     "build": "npm run build --workspaces --if-present",
     "deploy:prod": "git push prod master --force",
     "deploy": "git push staging master --force"
