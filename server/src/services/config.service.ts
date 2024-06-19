@@ -14,6 +14,8 @@ class ConfigService {
     'http://app.localhost.pro:3000',
     'http://app.localhost:8080',
     'http://app.localhost:3000',
+    'https://jstin.dev',
+    'https://app.jstin.dev',
   ];
 
   constructor() {
