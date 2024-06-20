@@ -47,7 +47,19 @@ class AppService {
   }
 
   private setupMiddleware() {
-    this.app.use(helmet());
+    this.app.use(
+      helmet({
+        contentSecurityPolicy: {
+          useDefaults: false,
+          directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", 'app.jstin.dev', 'app.stratbook.pro'],
+            objectSrc: ["'none'"],
+            upgradeInsecureRequests: [],
+          },
+        },
+      }),
+    );
     this.app.use(compression());
     this.app.use(
       cors({
@@ -95,6 +107,7 @@ class AppService {
         ),
       );
     } else {
+      this.app.use(subdomain('app', history({ verbose: true })));
       this.app.use(subdomain('app', express.static('dist_app')));
     }
     this.app.use('/api', apiRouter);
@@ -106,7 +119,6 @@ class AppService {
       }
       return express.static('dist_landingpage')(req, res, next);
     });
-    this.app.use(history());
   }
 
   start() {
