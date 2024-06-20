@@ -107,8 +107,8 @@ class AppService {
         ),
       );
     } else {
-      this.app.use(subdomain('app', history({ verbose: true })));
       this.app.use(subdomain('app', express.static('dist_app')));
+      this.app.use(subdomain('app', history({ verbose: true })));
     }
     this.app.use('/api', apiRouter);
     this.app.use('/static', express.static('public'));
