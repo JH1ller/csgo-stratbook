@@ -21,7 +21,7 @@
   "workspaces": [
     "server",
     "client",
-    "landingpage"
+    "landingpage-new"
   ],
   "engines": {
     "node": "18.18.0"

@@ -121,9 +121,9 @@ export default class App extends Vue {
 
     this.notices = notices;
     this.showNotice = notices.length > 0;
-    // this.notices.forEach((notice) => {
-    //   this.storageService.set('seenNotices', [...(this.storageService.get('seenNotices') || []), notice._id]);
-    // });
+    this.notices.forEach((notice) => {
+      this.storageService.set('seenNotices', [...(this.storageService.get('seenNotices') || []), notice.id]);
+    });
   }
 
   checkVersion() {
@@ -206,7 +206,9 @@ export default class App extends Vue {
     margin-left: 70px;
     width: calc(100% - 70px);
     padding: 24px;
-    transition: margin-left 0.3s ease, width 0.3s ease;
+    transition:
+      margin-left 0.3s ease,
+      width 0.3s ease;
 
     &.-fullscreen {
       padding: 0;
