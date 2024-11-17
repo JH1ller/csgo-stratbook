@@ -54,6 +54,7 @@ class AppService {
           directives: {
             defaultSrc: ["'self'"],
             scriptSrc: ["'self'", 'app.jstin.dev', 'app.stratbook.pro'],
+            styleSrc: ["'self'", "'unsafe-inline'"],
             objectSrc: ["'none'"],
             upgradeInsecureRequests: [],
           },
