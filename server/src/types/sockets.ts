@@ -57,8 +57,8 @@ export interface InterServerEvents {
 
 export interface SocketData {
   drawRoomId: string;
-  player: PlayerDocument;
-  activeQuery: Promise<unknown>;
+  player: PlayerDocument | undefined;
+  activeQuery: Promise<unknown> | undefined;
 }
 
 export type TypedServer = Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>;

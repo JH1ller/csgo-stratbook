@@ -85,7 +85,7 @@ export class SocketService extends SocketServer<
         const player = socket.data.player;
 
         logger.info(
-          `User '${player.name ?? socket.id}' disconnected. Active connections: ${
+          `User '${player?.name ?? socket.id}' disconnected. Active connections: ${
             this.sockets.sockets.size
           }. Disconnect reason: ${reason}`,
         );
@@ -140,7 +140,7 @@ export class SocketService extends SocketServer<
 
   registerBoardHandler(socket: TypedSocket) {
     socket.on('join-draw-room', async ({ targetRoomId, userName, stratId, map }) => {
-      if (targetRoomId && typeof targetRoomId !== 'string') return;
+      if ((targetRoomId && typeof targetRoomId !== 'string') || !socket.data.player) return;
 
       // create room if it doesn't exist yet
       const room = this.getRoom(targetRoomId) ?? new Room({ map, stratId, roomId: targetRoomId });
@@ -271,7 +271,7 @@ export class SocketService extends SocketServer<
   async leaveDrawRoomHandler(socket: TypedSocket) {
     const room = this.getRoom(socket.data.drawRoomId);
 
-    if (!room) return;
+    if (!room || !socket.data.player) return;
 
     socket.leave(room.id);
 

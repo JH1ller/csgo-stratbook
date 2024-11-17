@@ -57,6 +57,7 @@ class AppService {
             objectSrc: ["'none'"],
             upgradeInsecureRequests: [],
           },
+          reportOnly: true,
         },
       }),
     );
