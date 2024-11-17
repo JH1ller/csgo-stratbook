@@ -105,22 +105,23 @@ class AppService {
       });
     }
 
-    // Apply the history API fallback for SPA routing
-    this.app.use(history({ verbose: true }));
-
-    if (configService.isDev) {
-      this.app.use(proxyMiddleware);
-    } else {
-      this.app.use(express.static(configService.appDir));
-    }
-
     // API routes
     this.app.use('/api', apiRouter);
 
     // Serve static files for public assets
     this.app.use('/static', express.static('public'));
 
-    // Serve landing page
+    if (configService.isDev) {
+      this.app.use('/', proxyMiddleware);
+    } else {
+      // Apply history fallback BEFORE static files
+      this.app.use(history({ verbose: true }));
+
+      // Serve Vue app from the `dist_app` directory
+      this.app.use(express.static(configService.appDir)); // Ensure appDir = 'dist_app'
+    }
+
+    // Serve landing page or fallback for other routes
     this.app.use('/', (req, res, next) => {
       const { refreshToken, hasSession } = req.cookies;
       if (refreshToken || hasSession || configService.isDev) {
