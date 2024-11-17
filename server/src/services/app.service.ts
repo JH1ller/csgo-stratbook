@@ -114,18 +114,20 @@ class AppService {
     if (configService.isDev) {
       this.app.use('/', proxyMiddleware);
     } else {
-      // Apply history fallback BEFORE static files
-      this.app.use(history({ verbose: true }));
-
-      // Serve Vue app from the `dist_app` directory
-      this.app.use(express.static(configService.appDir));
+      // // Apply history fallback BEFORE static files
+      // this.app.use();
+      // // TODO: current problem: can't get to landingpage, always shows app
+      // // Serve Vue app from the `dist_app` directory
+      // this.app.use();
     }
 
     // Serve landing page or fallback for other routes
     this.app.use('/', (req, res, next) => {
       const { refreshToken, hasSession } = req.cookies;
       if (refreshToken || hasSession || configService.isDev) {
-        return next(); // Let the fallback or proxy handle it
+        history({ verbose: true })(req, res, next);
+        express.static(configService.appDir)(req, res, next);
+        return next();
       }
       return express.static(configService.landingpageDir)(req, res, next);
     });
