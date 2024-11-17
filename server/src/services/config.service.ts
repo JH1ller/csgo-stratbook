@@ -9,14 +9,17 @@ class ConfigService {
   readonly allowedOrigins = [
     'https://stratbook.pro',
     'app://.',
-    'https://app.stratbook.pro',
-    'http://app.localhost.pro:8080',
-    'http://app.localhost.pro:3000',
-    'http://app.localhost:8080',
-    'http://app.localhost:3000',
+    'https://stratbook.pro',
+    'http://localhost.pro:8080',
+    'http://localhost.pro:3000',
+    'http://localhost:8080',
+    'http://localhost:3000',
     'https://jstin.dev',
-    'https://app.jstin.dev',
+    'https://jstin.dev',
   ];
+
+  readonly appDir = 'dist_app';
+  readonly landingpageDir = 'dist_landingpage';
 
   constructor() {
     this._env = parseEnvironment();

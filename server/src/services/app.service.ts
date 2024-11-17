@@ -8,7 +8,6 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application } from 'express';
 import rateLimit from 'express-rate-limit';
-import subdomain from 'express-subdomain';
 import helmet from 'helmet';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import mongoose from 'mongoose';
@@ -53,7 +52,7 @@ class AppService {
           useDefaults: false,
           directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", 'app.jstin.dev', 'app.stratbook.pro'],
+            scriptSrc: ["'self'", 'jstin.dev', 'stratbook.pro'],
             styleSrc: ["'self'", "'unsafe-inline'"],
             imgSrc: ["'self'", 'data:', 'csgo-stratbook.s3.amazonaws.com'],
             objectSrc: ["'none'"],
@@ -92,42 +91,32 @@ class AppService {
   }
 
   private setupRoutes() {
+    const proxyMiddleware = createProxyMiddleware({
+      target: 'http://localhost:8080',
+      changeOrigin: true,
+      // logger,
+      secure: false,
+    });
+
     if (configService.isDev) {
       this.app.use((_, res, next) => {
         res.setHeader('Content-Security-Policy', "script-src 'self' 'unsafe-eval'");
         res.setHeader('Cross-Origin-Opener-Policy', 'unsafe-none');
         next();
       });
-      this.app.use(
-        subdomain(
-          'app',
-          createProxyMiddleware({
-            target: 'http://localhost:8080',
-            changeOrigin: true,
-            // logger,
-            secure: false,
-          }),
-        ),
-      );
-    } else {
-      // Static file serving for the "app" subdomain
-      this.app.use(subdomain('app', express.static('dist_app')));
-
-      // History API fallback for the "app" subdomain
-      this.app.use(subdomain('app', history({ verbose: true })));
-
-      // Re-serve static files after history fallback to avoid 404
-      this.app.use(subdomain('app', express.static('dist_app')));
     }
     this.app.use('/api', apiRouter);
     this.app.use('/static', express.static('public'));
     this.app.use('/', (req, res, next) => {
       const { refreshToken, hasSession } = req.cookies;
-      if (refreshToken || hasSession) {
-        return res.redirect(configService.urls.appUrl.toString());
+      if (refreshToken || hasSession || configService.isDev) {
+        return configService.isDev
+          ? proxyMiddleware(req, res, next)
+          : express.static(configService.appDir)(req, res, next);
       }
-      return express.static('dist_landingpage')(req, res, next);
+      return express.static(configService.landingpageDir)(req, res, next);
     });
+    this.app.use(history({ verbose: true }));
   }
 
   start() {
