@@ -94,7 +94,6 @@ class AppService {
     const proxyMiddleware = createProxyMiddleware({
       target: 'http://localhost:8080',
       changeOrigin: true,
-      // logger,
       secure: false,
     });
 
@@ -105,18 +104,30 @@ class AppService {
         next();
       });
     }
+
+    // Apply the history API fallback for SPA routing
+    this.app.use(history({ verbose: true }));
+
+    if (configService.isDev) {
+      this.app.use(proxyMiddleware);
+    } else {
+      this.app.use(express.static(configService.appDir));
+    }
+
+    // API routes
     this.app.use('/api', apiRouter);
+
+    // Serve static files for public assets
     this.app.use('/static', express.static('public'));
+
+    // Serve landing page
     this.app.use('/', (req, res, next) => {
       const { refreshToken, hasSession } = req.cookies;
       if (refreshToken || hasSession || configService.isDev) {
-        return configService.isDev
-          ? proxyMiddleware(req, res, next)
-          : express.static(configService.appDir)(req, res, next);
+        return next(); // Let the fallback or proxy handle it
       }
       return express.static(configService.landingpageDir)(req, res, next);
     });
-    this.app.use(history({ verbose: true }));
   }
 
   start() {
