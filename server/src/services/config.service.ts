@@ -34,7 +34,7 @@ class ConfigService {
   }
 
   get origin() {
-    return this.isDev ? 'localhost.pro' : 'stratbook.pro';
+    return this.isDev ? 'localhost.pro' : 'jstin.dev'; // TODO: 'stratbook.pro';
   }
 
   get protocol() {
