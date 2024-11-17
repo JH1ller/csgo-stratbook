@@ -1,5 +1,5 @@
 import { io, Socket } from 'socket.io-client';
-import { WS_URL } from '@/config';
+import { WS_HOST } from '@/config';
 import store from '@/store';
 import { Log } from '@/utils/logger';
 import { Player } from '../../api/models/Player';
@@ -32,7 +32,7 @@ class WebSocketService {
     if (!store.state.auth.token) Log.warn('WebSocketService::reconnect()', 'Missing auth token');
     this.socket?.close();
     this.socket?.removeAllListeners();
-    this.socket = io(WS_URL, {
+    this.socket = io(WS_HOST, {
       auth: {
         token: store.state.auth.token,
       },
@@ -60,7 +60,7 @@ class WebSocketService {
         }
         if (!this.socket) {
           Log.info('WebSocketService::connect()', 'new socket connection');
-          this.socket = io(WS_URL, {
+          this.socket = io(WS_HOST, {
             auth: {
               token: store.state.auth.token,
             },

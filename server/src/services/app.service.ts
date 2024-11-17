@@ -51,9 +51,9 @@ class AppService {
         contentSecurityPolicy: {
           useDefaults: false,
           directives: {
-            defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", 'jstin.dev', 'stratbook.pro'],
-            styleSrc: ["'self'", "'unsafe-inline'"],
+            defaultSrc: ["'self'", 'platform.twitter.com', 'jstin.dev', 'stratbook.pro'],
+            scriptSrc: ["'self'", 'cdn.splitbee.io', 'blob:'],
+            styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com'],
             imgSrc: ["'self'", 'data:', 'csgo-stratbook.s3.amazonaws.com'],
             objectSrc: ["'none'"],
             upgradeInsecureRequests: [],
@@ -118,7 +118,7 @@ class AppService {
       this.app.use(history({ verbose: true }));
 
       // Serve Vue app from the `dist_app` directory
-      this.app.use(express.static(configService.appDir)); // Ensure appDir = 'dist_app'
+      this.app.use(express.static(configService.appDir));
     }
 
     // Serve landing page or fallback for other routes

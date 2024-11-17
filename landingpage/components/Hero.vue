@@ -9,12 +9,12 @@
         {{ $t('index.hero.subline') }}
       </p>
       <div class="hero__button-wrapper">
-        <a class="hero__button-app" href="https://app.stratbook.pro/">{{
+        <a class="hero__button-app" href="https://stratbook.pro/">{{
           $t('index.hero.btnOpenApp')
         }}</a>
         <a
           class="hero__button-register"
-          href="https://app.stratbook.pro/register"
+          href="https://stratbook.pro/register"
           >{{ $t('index.hero.btnRegister') }}</a
         >
       </div>

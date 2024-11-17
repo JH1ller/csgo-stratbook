@@ -1,31 +1,6 @@
-import { isDesktop } from './utils/isDesktop';
+export const WS_HOST = window.location.host;
 
-enum Environment {
-  Development = 'development',
-  Production = 'production',
-}
-
-// TODO: refactor this whole file for different domains
-const env = process.env.NODE_ENV as Environment;
-
-function getOrigin(subdomain: string) {
-  const url = new URL(window.location.href);
-  url.hostname = url.hostname.replace('app.', subdomain ? subdomain + '.' : '');
-  if (env === Environment.Development) {
-    url.port = '3000';
-  }
-  return url.origin;
-}
-
-// TODO: find generic solution for Electron
-// const host = isDesktop() ? 'stratbook.pro' : window.location.host.match(hostRx)?.groups?.host;
-
-// const hostRx = /^https?:\/\/(?<subdomain>\w+)\.(?:\w+\.\w+|\w+:\d+)/;
-// const host = window.location.origin;
-
-export const WS_URL = getOrigin('');
-
-export const API_URL = getOrigin('') + '/api';
+export const API_URL = window.location.host + '/api';
 
 export const APP_URL = window.location.origin;
 
