@@ -55,6 +55,7 @@ class AppService {
             defaultSrc: ["'self'"],
             scriptSrc: ["'self'", 'app.jstin.dev', 'app.stratbook.pro'],
             styleSrc: ["'self'", "'unsafe-inline'"],
+            imgSrc: ["'self'", 'data:', 'csgo-stratbook.s3.amazonaws.com'],
             objectSrc: ["'none'"],
             upgradeInsecureRequests: [],
           },
@@ -109,7 +110,13 @@ class AppService {
         ),
       );
     } else {
+      // Static file serving for the "app" subdomain
+      this.app.use(subdomain('app', express.static('dist_app')));
+
+      // History API fallback for the "app" subdomain
       this.app.use(subdomain('app', history({ verbose: true })));
+
+      // Re-serve static files after history fallback to avoid 404
       this.app.use(subdomain('app', express.static('dist_app')));
     }
     this.app.use('/api', apiRouter);
