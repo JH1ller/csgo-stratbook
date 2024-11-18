@@ -125,29 +125,31 @@ class AppService {
       this.app.use('/', proxyMiddleware);
     }
 
-    const appHistory = history({
-      index: '/app/index.html',
-      rewrites: [{ from: /^\/app\/.*$/, to: '/app/index.html' }],
-    });
-    const landingPageHistory = history({
-      index: '/landingpage/index.html',
-      rewrites: [{ from: /^\/landingpage\/.*$/, to: '/landingpage/index.html' }],
-    });
+    // const appHistory = history({
+    //   index: '/app/index.html',
+    //   rewrites: [{ from: /^\/app\/.*$/, to: '/app/index.html' }],
+    // });
+    // const landingPageHistory = history({
+    //   index: '/landingpage/index.html',
+    //   rewrites: [{ from: /^\/landingpage\/.*$/, to: '/landingpage/index.html' }],
+    // });
 
-    const appStatic = express.static(path.join(__dirname, 'client-build/app'));
-    const landingPageStatic = express.static(path.join(__dirname, 'client-build/landingpage'));
+    const appStatic = express.static('client-build/app');
+    this.app.use('/', appStatic);
+    this.app.use(history({ verbose: true }));
+    // const landingPageStatic = express.static('client-build/landingpage');
 
-    // Serve landing page or fallback for other routes
-    this.app.use('/', (req, res, next) => {
-      const { refreshToken, hasSession } = req.cookies;
-      if (refreshToken || hasSession || configService.isDev) {
-        logger.info('Serving app', refreshToken, hasSession);
-        appHistory(req, res, () => appStatic(req, res, next));
-      } else {
-        logger.info('Serving landing page');
-        landingPageHistory(req, res, () => landingPageStatic(req, res, next));
-      }
-    });
+    // // Serve landing page or fallback for other routes
+    // this.app.use('/', (req, res, next) => {
+    //   const { refreshToken, hasSession } = req.cookies;
+    //   if (refreshToken || hasSession || configService.isDev) {
+    //     logger.info('Serving app', refreshToken, hasSession);
+    //     appHistory(req, res, () => appStatic(req, res, next));
+    //   } else {
+    //     logger.info('Serving landing page');
+    //     landingPageHistory(req, res, () => landingPageStatic(req, res, next));
+    //   }
+    // });
   }
 
   start() {
