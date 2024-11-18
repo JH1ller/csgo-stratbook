@@ -18,8 +18,8 @@ class ConfigService {
     'https://jstin.dev',
   ];
 
-  readonly appDir = 'dist_app';
-  readonly landingpageDir = 'dist_landingpage';
+  readonly appDir = './client-build/app/';
+  readonly landingpageDir = './client-build/landingpage/';
 
   constructor() {
     this._env = parseEnvironment();

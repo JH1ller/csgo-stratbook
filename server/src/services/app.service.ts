@@ -51,7 +51,15 @@ class AppService {
         contentSecurityPolicy: {
           useDefaults: false,
           directives: {
-            defaultSrc: ["'self'", 'platform.twitter.com', 'jstin.dev', 'stratbook.pro'],
+            defaultSrc: [
+              "'self'",
+              'platform.twitter.com',
+              'jstin.dev',
+              'stratbook.pro',
+              'localhost.pro',
+              'ws:',
+              'localhost',
+            ],
             scriptSrc: ["'self'", 'cdn.splitbee.io', 'blob:'],
             styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com'],
             imgSrc: ["'self'", 'data:', 'csgo-stratbook.s3.amazonaws.com'],
@@ -113,23 +121,21 @@ class AppService {
 
     if (configService.isDev) {
       this.app.use('/', proxyMiddleware);
-    } else {
-      // // Apply history fallback BEFORE static files
-      // this.app.use();
-      // // TODO: current problem: can't get to landingpage, always shows app
-      // // Serve Vue app from the `dist_app` directory
-      // this.app.use();
     }
 
+    this.app.use(express.static('client-build'));
+
+    this.app.use(history({ verbose: true, index: '/client-build/app/index.html' }));
+
     // Serve landing page or fallback for other routes
-    this.app.use('/', (req, res, next) => {
+    this.app.get('/', (req, res) => {
       const { refreshToken, hasSession } = req.cookies;
+
+      console.log('hasSession', hasSession, 'refreshToken', refreshToken);
       if (refreshToken || hasSession || configService.isDev) {
-        history({ verbose: true })(req, res, next);
-        express.static(configService.appDir)(req, res, next);
-        return next();
+        return res.sendFile('index.html', { root: configService.appDir });
       }
-      return express.static(configService.landingpageDir)(req, res, next);
+      return res.sendFile('index.html', { root: configService.landingpageDir });
     });
   }
 

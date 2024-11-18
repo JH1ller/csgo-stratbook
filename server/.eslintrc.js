@@ -7,7 +7,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  ignorePatterns: ['!./src/**/*.ts', '.eslintrc.js', 'scripts', 'dist_landingpage', 'dist_app'],
+  ignorePatterns: ['!./src/**/*.ts', '.eslintrc.js', 'scripts', 'client-build'],
   plugins: ['@typescript-eslint', 'unicorn', 'simple-import-sort'],
   rules: {
     'simple-import-sort/imports': 'warn',

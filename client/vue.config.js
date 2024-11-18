@@ -18,7 +18,7 @@ module.exports = {
     allowedHosts: 'all',
   },
   publicPath: '/',
-  outputDir: path.resolve(__dirname, '../server/dist_app'),
+  outputDir: path.resolve(__dirname, '../server/client-build/app'),
   pages: {
     index: 'src/main.ts',
     loader: 'src/loader.ts',

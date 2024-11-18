@@ -1,6 +1,6 @@
-export const WS_HOST = window.location.host;
+export const WS_HOST = window.location.origin;
 
-export const API_URL = window.location.host + '/api';
+export const API_URL = window.location.origin + '/api';
 
 export const APP_URL = window.location.origin;
 

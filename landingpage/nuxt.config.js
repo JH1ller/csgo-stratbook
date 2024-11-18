@@ -144,6 +144,6 @@ export default {
   },
   buildDir: 'build/',
   generate: {
-    dir: path.resolve(__dirname, '../server/dist_landingpage'),
+    dir: path.resolve(__dirname, '../server/client-build/landingpage'),
   },
 };
