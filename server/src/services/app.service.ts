@@ -123,19 +123,15 @@ class AppService {
       this.app.use('/', proxyMiddleware);
     }
 
-    this.app.use(express.static('client-build'));
-
     this.app.use(history({ verbose: true, index: '/client-build/app/index.html' }));
 
     // Serve landing page or fallback for other routes
-    this.app.get('/', (req, res) => {
+    this.app.use('/', (req, res, next) => {
       const { refreshToken, hasSession } = req.cookies;
-
-      console.log('hasSession', hasSession, 'refreshToken', refreshToken);
       if (refreshToken || hasSession || configService.isDev) {
-        return res.sendFile('index.html', { root: configService.appDir });
+        return express.static(configService.appDir)(req, res, next);
       }
-      return res.sendFile('index.html', { root: configService.landingpageDir });
+      return express.static(configService.landingpageDir)(req, res, next);
     });
   }
 
