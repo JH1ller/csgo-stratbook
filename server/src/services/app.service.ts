@@ -136,7 +136,7 @@ class AppService {
 
     const appStatic = express.static('client-build/app');
     this.app.use('/', appStatic);
-    this.app.use(history({ verbose: true }));
+    this.app.use(history({ verbose: true, index: 'client-build/app/index.html' }));
     // const landingPageStatic = express.static('client-build/landingpage');
 
     // // Serve landing page or fallback for other routes
