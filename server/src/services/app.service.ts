@@ -1,4 +1,6 @@
+/* eslint-disable unicorn/prefer-module */
 import { createServer, Server } from 'node:http';
+import path from 'node:path';
 
 import * as Sentry from '@sentry/node';
 import { green } from 'colors';
@@ -123,18 +125,29 @@ class AppService {
       this.app.use('/', proxyMiddleware);
     }
 
-    this.app.use('/hi', express.static(configService.landingpageDir));
-
-    // Serve landing page or fallback for other routes
-    this.app.get('/', (req, res, next) => {
-      const { refreshToken, hasSession } = req.cookies;
-      if (refreshToken || hasSession || configService.isDev) {
-        return express.static(configService.appDir)(req, res, next);
-      }
-      return res.redirect(301, '/hi');
+    const appHistory = history({
+      index: '/app/index.html',
+      rewrites: [{ from: /^\/app\/.*$/, to: '/app/index.html' }],
+    });
+    const landingPageHistory = history({
+      index: '/landingpage/index.html',
+      rewrites: [{ from: /^\/landingpage\/.*$/, to: '/landingpage/index.html' }],
     });
 
-    this.app.use(history({ verbose: true }));
+    const appStatic = express.static(path.join(__dirname, 'client-build/app'));
+    const landingPageStatic = express.static(path.join(__dirname, 'client-build/landingpage'));
+
+    // Serve landing page or fallback for other routes
+    this.app.use('/', (req, res, next) => {
+      const { refreshToken, hasSession } = req.cookies;
+      if (refreshToken || hasSession || configService.isDev) {
+        logger.info('Serving app', refreshToken, hasSession);
+        appHistory(req, res, () => appStatic(req, res, next));
+      } else {
+        logger.info('Serving landing page');
+        landingPageHistory(req, res, () => landingPageStatic(req, res, next));
+      }
+    });
   }
 
   start() {
