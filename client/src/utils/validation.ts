@@ -48,12 +48,7 @@ export class Validators {
   }
   static passAtLeastOne(validators: ValidatorFunction[]): ValidatorFunction {
     return (data) => {
-      for (const validator of validators) {
-        if (validator(data)) {
-          return true;
-        }
-      }
-      return false;
+      return validators.some((validator) => validator(data));
     };
   }
 
