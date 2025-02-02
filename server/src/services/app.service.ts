@@ -1,6 +1,5 @@
 /* eslint-disable unicorn/prefer-module */
 import { createServer, Server } from 'node:http';
-import path from 'node:path';
 
 import * as Sentry from '@sentry/node';
 import { green } from 'colors';
@@ -10,7 +9,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application } from 'express';
 import rateLimit from 'express-rate-limit';
-import helmet from 'helmet';
+// import helmet from 'helmet';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import mongoose from 'mongoose';
 
@@ -48,30 +47,30 @@ class AppService {
   }
 
   private setupMiddleware() {
-    this.app.use(
-      helmet({
-        contentSecurityPolicy: {
-          useDefaults: false,
-          directives: {
-            defaultSrc: [
-              "'self'",
-              'platform.twitter.com',
-              'jstin.dev',
-              'stratbook.pro',
-              'localhost.pro',
-              'ws:',
-              'localhost',
-            ],
-            scriptSrc: ["'self'", 'cdn.splitbee.io', 'blob:'],
-            styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com'],
-            imgSrc: ["'self'", 'data:', 'csgo-stratbook.s3.amazonaws.com'],
-            objectSrc: ["'none'"],
-            upgradeInsecureRequests: [],
-          },
-          reportOnly: true,
-        },
-      }),
-    );
+    // this.app.use(
+    //   helmet({
+    //     contentSecurityPolicy: {
+    //       useDefaults: false,
+    //       directives: {
+    //         defaultSrc: [
+    //           "'self'",
+    //           'platform.twitter.com',
+    //           'jstin.dev',
+    //           'stratbook.pro',
+    //           'localhost.pro',
+    //           'ws:',
+    //           'localhost',
+    //         ],
+    //         scriptSrc: ["'self'", 'cdn.splitbee.io', 'blob:'],
+    //         styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com'],
+    //         imgSrc: ["'self'", 'data:', 'csgo-stratbook.s3.amazonaws.com'],
+    //         objectSrc: ["'none'"],
+    //         upgradeInsecureRequests: [],
+    //       },
+    //       reportOnly: true,
+    //     },
+    //   }),
+    // );
     this.app.use(compression());
     this.app.use(
       cors({
@@ -134,9 +133,8 @@ class AppService {
     //   rewrites: [{ from: /^\/landingpage\/.*$/, to: '/landingpage/index.html' }],
     // });
 
-    const appStatic = express.static('client-build/app');
-    this.app.use('/', appStatic);
-    this.app.use(history({ verbose: true, index: 'client-build/app/index.html' }));
+    this.app.use('/', express.static('client-build/app'));
+    this.app.use(history({ verbose: true }));
     // const landingPageStatic = express.static('client-build/landingpage');
 
     // // Serve landing page or fallback for other routes
