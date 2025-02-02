@@ -99,6 +99,26 @@ class AppService {
       this.app.use('/', proxyMiddleware);
     }
 
+    this.app.use('/home', express.static('client-build/landingpage'));
+
+    // Middleware to check if the user is logged in
+    this.app.use((req, res, next) => {
+      const refreshToken = req.cookies.refreshToken;
+
+      // Allow access to /home and /static without checking for login
+      if (req.path.startsWith('/home') || req.path.startsWith('/static') || req.path.startsWith('/api')) {
+        return next();
+      }
+
+      // If the user is not logged in, redirect to /home
+      if (!refreshToken) {
+        return res.redirect('/home');
+      }
+
+      // If the user is logged in, proceed to the next middleware
+      next();
+    });
+
     this.app.use(history({ verbose: true }));
 
     this.app.use('/', express.static('client-build/app'));
