@@ -228,7 +228,7 @@ router.patch('/reset', async (request, res) => {
 router.get('/steam', verifyAuthOptional, async (request, res) => {
   console.log(request.accepted, request.accepts('application/json'));
   const returnUrl = new URL(configService.urls.apiUrl);
-  returnUrl.pathname = '/auth/steam/authenticate';
+  returnUrl.pathname = '/api/auth/steam/authenticate';
 
   const urlQuery = new URLSearchParams();
 
