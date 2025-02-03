@@ -4,7 +4,6 @@ import { Bomb, Crosshair, Users, Map, Shield, Menu } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { HeroHighlight } from "../hero-highlight"
-// import Logo from '@/public/stratbook_icon.svg'
 
 export default function LandingPage() {
   return (
@@ -12,7 +11,7 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Image className="h-10 w-10" src="/stratbook_icon.svg" alt="logo" width="40" height="40" />
+            <Image className="h-10 w-10" src="/home/stratbook_icon.svg" alt="logo" width="40" height="40" />
             <span className="font-bold text-xl">Stratbook</span>
           </div>
           <nav className="hidden md:flex items-center space-x-6">
@@ -27,8 +26,8 @@ export default function LandingPage() {
             </Link>
           </nav>
           <div className="flex items-center space-x-4">
-            <Button variant="outline">Log in</Button>
-            <Button>Sign up</Button>
+            <Link href="/login"><Button variant="outline">Log in</Button></Link>
+            <Link href="/register"><Button>Sign up</Button></Link>
             <Button variant="ghost" className="md:hidden" size="icon">
               <Menu className="h-6 w-6" />
               <span className="sr-only">Toggle menu</span>
@@ -45,7 +44,7 @@ export default function LandingPage() {
                   alt="CSGO Strategy Map"
                   className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
                   height="310"
-                  src="/strats_overview.webp"
+                  src="/home/strats_overview.webp"
                   width="550"
                 />
                 <div className="flex flex-col justify-center space-y-4">
