@@ -105,8 +105,6 @@ class AppService {
     this.app.use((req, res, next) => {
       const refreshToken = req.cookies.refreshToken;
 
-      console.log('>>', req.headers.accept);
-
       // Allow access to /home and /static without checking for login
       const allowedPaths = ['/home', '/static', '/api', '/login', '/register', '/js', '/css'];
       if (allowedPaths.some((path) => req.path.startsWith(path))) {
@@ -114,7 +112,7 @@ class AppService {
       }
 
       // If the user is not logged in, redirect to /home
-      if (!refreshToken) {
+      if (!refreshToken && req.headers.accept?.includes('text/html')) {
         return res.redirect('/home');
       }
 
