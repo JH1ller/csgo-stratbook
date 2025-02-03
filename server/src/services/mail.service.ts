@@ -4,6 +4,7 @@ import Email from 'email-templates';
 import nodemailer from 'nodemailer';
 import urljoin from 'url-join';
 
+import { Path } from '@/constants';
 import { configService } from '@/services/config.service';
 import { Logger } from '@/utils/logger';
 
@@ -56,8 +57,8 @@ class MailService {
   sendMail = async (to: string, token: string, name: string, template: MailTemplate) => {
     const link =
       template === MailTemplate.RESET_PASSWORD
-        ? urljoin(configService.urls.appUrl.toString(), `/reset?token=${token}`)
-        : urljoin(configService.urls.apiUrl.toString(), `/auth/confirmation/${token}`);
+        ? urljoin(configService.getUrl(Path.app).toString(), `/reset?token=${token}`)
+        : urljoin(configService.getUrl(Path.api).toString(), `/auth/confirmation/${token}`);
 
     try {
       const res = await this.email.send({

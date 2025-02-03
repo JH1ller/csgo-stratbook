@@ -1,4 +1,4 @@
-import { mkdir, unlink,writeFile } from 'node:fs/promises';
+import { mkdir, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { Router } from 'express';
@@ -6,6 +6,7 @@ import { nanoid } from 'nanoid';
 
 import { updateStrats } from '@/controllers/strats';
 import { Strat, StratDocument, StratModel } from '@/models/strat';
+import { TeamModel } from '@/models/team';
 import { socketService } from '@/services/socket.service';
 import { AccessRole } from '@/types/enums';
 import { getStrat, getStrats } from '@/utils/getters';
@@ -97,10 +98,14 @@ router.post('/share/:id', verifyAuth, async (request, res) => {
 
 // * Update One
 router.patch('/', verifyAuth, getStrat, async (request, res) => {
+  const team = await TeamModel.findById(res.locals.player.team);
+  if (!team) return res.status(400).json({ error: 'Could not find team with the provided ID.' });
+  const isCaptain = team.manager.equals(res.locals.player._id);
+
   if (!res.locals.player.team.equals(res.locals.strat.team)) {
     return res.status(400).json({ error: 'Cannot update a strat of another team.' });
   }
-  if (res.locals.player.role !== AccessRole.EDITOR) {
+  if (res.locals.player.role !== AccessRole.EDITOR && !isCaptain) {
     return res.status(403).json({ error: 'Only editors can update strats' });
   }
 
@@ -111,10 +116,14 @@ router.patch('/', verifyAuth, getStrat, async (request, res) => {
 
 // * Update Multiple
 router.patch('/batch', verifyAuth, getStrats, async (request, res) => {
+  const team = await TeamModel.findById(res.locals.player.team);
+  if (!team) return res.status(400).json({ error: 'Could not find team with the provided ID.' });
+  const isCaptain = team.manager.equals(res.locals.player._id);
+
   if (res.locals.strats.some((strat: Strat) => !res.locals.player.team.equals(strat.team))) {
     return res.status(400).json({ error: 'Cannot update a strat of another team.' });
   }
-  if (res.locals.player.role !== AccessRole.EDITOR) {
+  if (res.locals.player.role !== AccessRole.EDITOR && !isCaptain) {
     return res.status(403).json({ error: 'Only editors can update strats' });
   }
 
@@ -127,10 +136,14 @@ router.patch('/batch', verifyAuth, getStrats, async (request, res) => {
 
 // * Delete One
 router.delete('/:strat_id', verifyAuth, getStrat, async (request, res) => {
+  const team = await TeamModel.findById(res.locals.player.team);
+  if (!team) return res.status(400).json({ error: 'Could not find team with the provided ID.' });
+  const isCaptain = team.manager.equals(res.locals.player._id);
+
   if (!res.locals.player.team.equals(res.locals.strat.team)) {
     return res.status(400).json({ error: 'Cannot delete a strat of another team.' });
   }
-  if (res.locals.player.role !== AccessRole.EDITOR) {
+  if (res.locals.player.role !== AccessRole.EDITOR && !isCaptain) {
     return res.status(403).json({ error: 'Only editors can delete strats' });
   }
   await res.locals.strat.delete();

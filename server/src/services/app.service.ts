@@ -12,6 +12,8 @@ import rateLimit from 'express-rate-limit';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import mongoose from 'mongoose';
 
+import { Path } from '@/constants';
+
 import { loggerMiddleware } from '../middleware/logger';
 import { hostRedirect, secureRedirect } from '../middleware/redirect';
 import apiRouter from '../routes/api';
@@ -128,7 +130,7 @@ class AppService {
   start() {
     this.httpServer.listen(configService.port, configService.isDev ? configService.origin : undefined, () =>
       logger.success(
-        `Server started. [${green(configService.env.NODE_ENV.toUpperCase())}] ${configService.urls.baseUrl.toString()}`,
+        `Server started. [${green(configService.env.NODE_ENV.toUpperCase())}] ${configService.getUrl(Path.app)}`,
       ),
     );
   }

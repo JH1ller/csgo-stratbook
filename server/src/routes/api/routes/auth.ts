@@ -7,6 +7,7 @@ import { nanoid } from 'nanoid';
 import SteamAuth from 'node-steam-openid';
 import urljoin from 'url-join';
 
+import { Path } from '@/constants';
 import { PlayerModel } from '@/models/player';
 import { SessionModel } from '@/models/session';
 import { configService } from '@/services/config.service';
@@ -177,15 +178,17 @@ router.get('/confirmation/:token', async (request, res) => {
   if (email) {
     targetUser.email = email;
     await targetUser.save();
-    return res.redirect(urljoin(configService.urls.appUrl.toString(), `/profile?confirmed=1`));
+    return res.redirect(urljoin(configService.getUrl(Path.app).toString(), `/profile?confirmed=1`));
   }
 
   if (targetUser.confirmed) {
-    return res.redirect(urljoin(configService.urls.appUrl.toString(), `/login?already_confirmed=${targetUser.email}`));
+    return res.redirect(
+      urljoin(configService.getUrl(Path.app).toString(), `/login?already_confirmed=${targetUser.email}`),
+    );
   } else {
     targetUser.confirmed = true;
     await targetUser.save();
-    return res.redirect(urljoin(configService.urls.appUrl.toString(), `/login?confirmed=${targetUser.email}`));
+    return res.redirect(urljoin(configService.getUrl(Path.app).toString(), `/login?confirmed=${targetUser.email}`));
   }
 });
 
@@ -227,7 +230,7 @@ router.patch('/reset', async (request, res) => {
 
 router.get('/steam', verifyAuthOptional, async (request, res) => {
   console.log(request.accepted, request.accepts('application/json'));
-  const returnUrl = new URL(configService.urls.apiUrl);
+  const returnUrl = new URL(configService.getUrl(Path.api));
   returnUrl.pathname = '/api/auth/steam/authenticate';
 
   const urlQuery = new URLSearchParams();
@@ -246,7 +249,7 @@ router.get('/steam', verifyAuthOptional, async (request, res) => {
   console.log('returnUrl', returnUrl.toString());
 
   const steam = new SteamAuth({
-    realm: configService.urls.apiUrl.toString(),
+    realm: configService.getUrl(Path.api).toString(),
     returnUrl: returnUrl.toString(),
     apiKey: configService.env.STEAM_API_KEY!,
   });
@@ -259,8 +262,8 @@ router.get('/steam/authenticate', async (request, res) => {
   const electronMode = !!request.query.electronMode;
 
   const steam = new SteamAuth({
-    realm: configService.urls.apiUrl.toString(),
-    returnUrl: urljoin(configService.urls.apiUrl.toString(), '/auth/steam/authenticate'),
+    realm: configService.getUrl(Path.api).toString(),
+    returnUrl: urljoin(configService.getUrl(Path.api).toString(), '/auth/steam/authenticate'),
     apiKey: configService.env.STEAM_API_KEY!,
   });
 
@@ -273,7 +276,7 @@ router.get('/steam/authenticate', async (request, res) => {
   if (request.query.playerId) {
     console.log('playerId', request.query.playerId);
 
-    const redirectUrl = new URL(configService.urls.appUrl);
+    const redirectUrl = new URL(configService.getUrl(Path.app));
 
     const player = await PlayerModel.findById(request.query.playerId);
 
@@ -334,7 +337,7 @@ router.get('/steam/authenticate', async (request, res) => {
 
   console.log(refreshToken);
 
-  const redirectUrl = new URL(configService.urls.appUrl);
+  const redirectUrl = new URL(configService.getUrl(Path.app));
 
   return res.redirect(redirectUrl.toString());
 });

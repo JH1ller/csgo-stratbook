@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 
+import { Path } from '@/constants';
 import { Environment, parseEnvironment } from '@/utils/validation';
 dotenv.config();
 
@@ -20,6 +21,8 @@ class ConfigService {
 
   readonly appDir = './client-build/app/';
   readonly landingpageDir = './client-build/landingpage/';
+
+  readonly s3Url = 'https://csgo-stratbook.s3.amazonaws.com/';
 
   constructor() {
     this._env = parseEnvironment();
@@ -49,14 +52,10 @@ class ConfigService {
     return !this.isDev;
   }
 
-  get urls() {
-    return {
-      baseUrl: Object.freeze(new URL(`${this.protocol}${this.origin}${this.isDev ? `:${this.port}` : ''}/`)),
-      apiUrl: Object.freeze(new URL(`${this.protocol}${this.origin}${this.isDev ? `:${this.port}` : ''}/api/`)),
-      appUrl: Object.freeze(new URL(`${this.protocol}app.${this.origin}${this.isDev ? `:${this.port}` : ''}/`)),
-      staticUrl: Object.freeze(new URL(`${this.protocol}${this.origin}${this.isDev ? `:${this.port}` : ''}/static/`)),
-      s3Url: Object.freeze(new URL('https://csgo-stratbook.s3.amazonaws.com/')),
-    };
+  getUrl(path: Path) {
+    const url = new URL(`${this.protocol}${this.origin}${this.isDev ? `:${this.port}` : ''}`);
+    url.pathname = path;
+    return url.href;
   }
 }
 
