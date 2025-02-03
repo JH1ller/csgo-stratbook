@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=".readme/logo.png" width="256">
+  <img src=".readme/stratbook_icon.svg" width="256">
 </p>
 
 
@@ -24,6 +24,8 @@ __Live Version [here!](https://stratbook.pro)__
 
 ## Table of Content
 
+- [Features](#features)
+- [Table of Content](#table-of-content)
 - [Technologies](#technologies)
   - [Client/Frontend](#clientfrontend)
   - [Server/Backend](#serverbackend)

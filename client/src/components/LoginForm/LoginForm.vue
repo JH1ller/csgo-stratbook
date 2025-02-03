@@ -1,6 +1,7 @@
 <template>
   <form class="login-form" @submit.prevent="handleSubmit" novalidate>
-    <img alt="Application Logo" src="@/assets/images/new_logo_a.png" class="login-form__logo" />
+    <img alt="Application Logo" src="@/assets/icons/logo.svg" class="login-form__logo" />
+    <h1 class="login-form__title">Sign in to Stratbook</h1>
     <div v-if="steamEnabled" class="login-form__steam-container">
       <img class="login-form__steam" src="@/assets/images/steam_button.png" @click.prevent="steamLogin" />
     </div>

@@ -7,14 +7,16 @@ import TrackingService from '@/services/tracking.service';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { openLink } from '@/utils/openLink';
 import DarkmodeToggle from '@/components/DarkmodeToggle/DarkmodeToggle.vue';
+import SvgIcon from '@/components/SvgIcon/SvgIcon';
 
 @Component({
   components: {
     DarkmodeToggle,
+    SvgIcon,
   },
 })
 export default class MainMenu extends Vue {
-  readonly appName = 'stratbook';
+  readonly appName = 'Stratbook';
   @Inject() trackingService!: TrackingService;
   @authModule.State profile!: Player;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;

@@ -18,12 +18,21 @@
     width: 130px;
     height: 130px;
     object-fit: contain;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 
     @include viewport_mq3 {
       width: 150px;
       height: 150px;
-      margin-bottom: 36px;
+      margin-bottom: 16px;
+    }
+  }
+
+  &__title {
+    margin-bottom: 16px;
+    @include typo_hl2;
+
+    @include viewport_mq3 {
+      margin-bottom: 24px;
     }
   }
 
