@@ -8,7 +8,7 @@ import SteamAuth from 'node-steam-openid';
 import urljoin from 'url-join';
 
 import { Path } from '@/constants';
-import { PlayerModel } from '@/models/player';
+import { PlayerDocument, PlayerModel } from '@/models/player';
 import { SessionModel } from '@/models/session';
 import { configService } from '@/services/config.service';
 import { imageService } from '@/services/image.service';
@@ -16,10 +16,13 @@ import { mailService, MailTemplate } from '@/services/mail.service';
 import { telegramService } from '@/services/telegram.service';
 import { hasSessionConfig, refreshTokenConfig } from '@/utils/cookies';
 import UserNotFoundError from '@/utils/errors/UserNotFoundError';
+import { Logger } from '@/utils/logger';
 import { registerSchema } from '@/utils/validation';
 import { verifyAuth, verifyAuthOptional } from '@/utils/verifyToken';
 
 const router = Router();
+
+const logger = new Logger('AuthRoutes');
 
 router.post('/register', imageService.upload.single('avatar'), async (request, res) => {
   const { error, data } = registerSchema.safeParse(request.body);
@@ -230,6 +233,7 @@ router.patch('/reset', async (request, res) => {
 
 router.get('/steam', verifyAuthOptional, async (request, res) => {
   console.log(request.accepted, request.accepts('application/json'));
+
   const returnUrl = new URL(configService.getUrl(Path.api));
   returnUrl.pathname = '/api/auth/steam/authenticate';
 
@@ -241,7 +245,11 @@ router.get('/steam', verifyAuthOptional, async (request, res) => {
 
   if (res.locals.player) {
     console.log('player found');
-    urlQuery.set('playerId', res.locals.player._id.toString());
+    const token = jwt.sign({ _id: res.locals.player._id.toString() }, configService.env.TOKEN_SECRET, {
+      expiresIn: '10m',
+    });
+    logger.debug('token', token);
+    urlQuery.set('token', token);
   }
 
   returnUrl.search = urlQuery.toString();
@@ -255,7 +263,12 @@ router.get('/steam', verifyAuthOptional, async (request, res) => {
   });
 
   const redirectUrl = await steam.getRedirectUrl();
-  return res.send(redirectUrl);
+
+  if (res.locals.player) {
+    return res.send(redirectUrl);
+  }
+
+  return res.redirect(redirectUrl);
 });
 
 router.get('/steam/authenticate', async (request, res) => {
@@ -273,14 +286,21 @@ router.get('/steam/authenticate', async (request, res) => {
 
   let user = await PlayerModel.findOne({ steamId: steamUser.steamid });
 
-  if (request.query.playerId) {
-    console.log('playerId', request.query.playerId);
-
+  if (request.query.token) {
     const redirectUrl = new URL(configService.getUrl(Path.app));
-
-    const player = await PlayerModel.findById(request.query.playerId);
-
     redirectUrl.pathname = '/profile';
+
+    let player: PlayerDocument | null = null;
+
+    try {
+      const { _id } = jwt.verify(request.query.token as string, configService.env.TOKEN_SECRET) as JwtPayload;
+
+      player = await PlayerModel.findById(_id);
+    } catch (error) {
+      logger.error('Invalid token', (error as Error).message);
+      redirectUrl.searchParams.set('message', 'Player not found');
+      return res.redirect(redirectUrl.toString());
+    }
 
     if (!player) {
       redirectUrl.searchParams.set('message', 'Player not found');

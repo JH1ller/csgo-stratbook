@@ -26,7 +26,7 @@ export default class ProfileView extends Vue {
   @authModule.Action deleteAccount!: () => Promise<void>;
   @stratModule.Action getStratExport!: () => Promise<Response>;
 
-  steamEnabled = false;
+  steamEnabled = true;
   exportEnabled = false;
 
   async logoutRequest() {
@@ -51,7 +51,7 @@ export default class ProfileView extends Vue {
   }
 
   mounted() {
-    this.steamEnabled = this.storageService.get('steam-enabled') === true;
+    // this.steamEnabled = this.storageService.get('steam-enabled') === true;
     this.exportEnabled = this.storageService.get('export-enabled') === true;
     const isConfirmed = !!this.$route.query.confirmed;
     if (isConfirmed) {

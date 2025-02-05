@@ -40,12 +40,12 @@ export default class StratItem extends Vue {
   @stratModule.Action updateStrat!: (strat: Partial<Strat>) => Promise<void>;
 
   labelDialogOpen = false;
-  labelsEnabled = false;
+  labelsEnabled = true;
 
   editorKey = 0;
 
   mounted() {
-    this.labelsEnabled = this.storageService.get('labels-enabled') === true;
+    // this.labelsEnabled = this.storageService.get('labels-enabled') === true;
   }
 
   get isManualSort() {

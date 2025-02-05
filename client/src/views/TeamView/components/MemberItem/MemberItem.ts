@@ -24,7 +24,7 @@ export default class MemberItem extends Vue {
 
   swatches = COLORS;
   AccessRole = AccessRole;
-  rolesEnabled = false;
+  rolesEnabled = true;
 
   resolveStaticImageUrl: (url?: string) => string = resolveStaticImageUrl;
 
@@ -63,6 +63,6 @@ export default class MemberItem extends Vue {
   }
 
   mounted() {
-    this.rolesEnabled = this.storageService.get('roles-enabled') === true;
+    // this.rolesEnabled = this.storageService.get('roles-enabled') === true;
   }
 }

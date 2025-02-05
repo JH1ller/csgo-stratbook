@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run start --workspace server",
     "dev": "concurrently \"npm run dev --workspace server\" \"npm run dev --workspace client\"",
-    "dev:lp": "npm run dev --workspace landingpage-new",
+    "dev:lp": "npm run dev --workspace landingpage",
     "build": "npm run build --workspaces --if-present",
     "deploy:prod": "git push prod master --force",
     "deploy": "git push staging master --force"
@@ -21,7 +21,7 @@
   "workspaces": [
     "server",
     "client",
-    "landingpage-new"
+    "landingpage"
   ],
   "engines": {
     "node": "18.18.0"

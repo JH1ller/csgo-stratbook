@@ -3,7 +3,6 @@ import LoginForm from '@/components/LoginForm/LoginForm.vue';
 import { Response } from '@/store';
 import { appModule, authModule } from '@/store/namespaces';
 import { Routes } from '@/router/router.models';
-import api from '@/api/base';
 import { openLink } from '@/utils/openLink';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import StorageService from '@/services/storage.service';
@@ -49,13 +48,12 @@ export default class LoginView extends Vue {
       if (!dialogResult) return;
     }
 
-    const { success } = await api.auth.fetchSteamUrl();
-    if (success) {
-      if (window.desktopMode) {
-        openLink(success);
-      } else {
-        window.location.href = success;
-      }
+    const steamPath = '/api/auth/steam';
+
+    if (window.desktopMode) {
+      openLink(steamPath);
+    } else {
+      window.location.href = steamPath;
     }
   }
 }

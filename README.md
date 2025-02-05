@@ -61,8 +61,7 @@ __Live Version [here!](https://stratbook.pro)__
 
 ### Landingpage
 
-- Nuxt (SSG)
-- Nuxt Class Components
+- Next.js
 
 ## Get started (local setup)
 

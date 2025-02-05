@@ -1,13 +1,12 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Crosshair, Users, Map, Shield, Menu } from 'lucide-react'
+import { Crosshair, Users, Map, Menu } from 'lucide-react'
 import Image from "next/image"
 import Link from "next/link"
-import { HeroHighlight } from "./ui/hero-highlight"
-import { HeroCard } from "./ui/hero-card"
-import { FeatureSection } from "./feature-section"
+import { HeroHighlight } from "../ui/hero-highlight"
+import { HeroCard } from "../ui/hero-card"
+import { FeatureSection } from "../feature-section"
 
 export function LandingPageComponent() {
   const featureSections = [
@@ -60,8 +59,7 @@ export function LandingPageComponent() {
             </Link>
           </nav>
           <div className="flex items-center space-x-4">
-            <Link href="../login"><Button variant="outline">Log in</Button></Link>
-            <Link href="../register"><Button>Sign up</Button></Link>
+            <Link href="../api/auth/steam"><Image src="/home/steam_button.png" alt="steam login button" width="180" height="35" /></Link>
             <Button variant="ghost" className="md:hidden" size="icon">
               <Menu className="h-6 w-6" />
               <span className="sr-only">Toggle menu</span>

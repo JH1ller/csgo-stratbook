@@ -77,12 +77,6 @@ class AppService {
   }
 
   private setupRoutes() {
-    const proxyMiddleware = createProxyMiddleware({
-      target: 'http://localhost:8080',
-      changeOrigin: true,
-      secure: false,
-    });
-
     if (configService.isDev) {
       this.app.use((_, res, next) => {
         res.setHeader('Content-Security-Policy', "script-src 'self' 'unsafe-eval'");
@@ -97,11 +91,16 @@ class AppService {
     // Serve static files for public assets
     this.app.use('/static', express.static('public'));
 
-    if (configService.isDev) {
-      this.app.use('/', proxyMiddleware);
-    }
-
     this.app.use('/home', express.static('client-build/landingpage'));
+
+    if (configService.isDev) {
+      const clientProxy = createProxyMiddleware({
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+      });
+      this.app.use('/', clientProxy);
+    }
 
     // Middleware to check if the user is logged in
     this.app.use((req, res, next) => {
