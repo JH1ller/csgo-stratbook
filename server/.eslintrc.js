@@ -15,6 +15,7 @@ module.exports = {
     'unicorn/prevent-abbreviations': 'off',
     'unicorn/no-null': 'off',
     'unicorn/filename-case': 'off',
+    'unicorn/prefer-optional-catch-binding': 'off',
     '@typescript-eslint/no-unnecessary-condition': ['warn', { allowConstantLoopConditions: true }],
   },
 };

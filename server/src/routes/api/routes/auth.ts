@@ -286,8 +286,9 @@ router.get('/steam/authenticate', async (request, res) => {
 
   let user = await PlayerModel.findOne({ steamId: steamUser.steamid });
 
+  const redirectUrl = new URL(configService.getUrl(Path.app));
+
   if (request.query.token) {
-    const redirectUrl = new URL(configService.getUrl(Path.app));
     redirectUrl.pathname = '/profile';
 
     let player: PlayerDocument | null = null;
@@ -324,14 +325,22 @@ router.get('/steam/authenticate', async (request, res) => {
   }
 
   if (!user) {
-    user = new PlayerModel({
-      name: steamUser.username,
-      avatar: steamUser.avatar.large,
-      steamId: steamUser.steamid,
-      accountType: 'steam',
-    });
+    try {
+      user = new PlayerModel({
+        name: steamUser.username.slice(0, 20),
+        avatar: steamUser.avatar.large,
+        steamId: steamUser.steamid,
+        accountType: 'steam',
+      });
 
-    await user.save();
+      console.log('new user', user);
+
+      await user.save();
+    } catch (error) {
+      logger.error('Error creating user', (error as Error).message);
+      redirectUrl.searchParams.set('message', 'An error occurred while creating the user');
+      return res.redirect(redirectUrl.toString());
+    }
   }
 
   const refreshToken = nanoid(64);
@@ -356,8 +365,6 @@ router.get('/steam/authenticate', async (request, res) => {
   }
 
   console.log(refreshToken);
-
-  const redirectUrl = new URL(configService.getUrl(Path.app));
 
   return res.redirect(redirectUrl.toString());
 });

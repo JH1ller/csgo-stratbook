@@ -37,6 +37,8 @@ const playerSchema = new Schema<Player>({
     type: String,
     maxlength: 255,
     minlength: 6,
+    unique: true,
+    sparse: true,
   },
 
   password: {
@@ -106,6 +108,8 @@ const playerSchema = new Schema<Player>({
     default: AccessRole.EDITOR,
   },
 });
+
+playerSchema.index({ email: 1 }, { unique: true, partialFilterExpression: { email: { $exists: true } } });
 
 playerSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
 
