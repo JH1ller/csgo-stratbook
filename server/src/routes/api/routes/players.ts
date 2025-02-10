@@ -10,7 +10,7 @@ import { configService } from '@/services/config.service';
 import { imageService } from '@/services/image.service';
 import { mailService, MailTemplate } from '@/services/mail.service';
 import { socketService } from '@/services/socket.service';
-import { profileUpdateSchema } from '@/utils/validation';
+import { formatFirstError, profileUpdateSchema } from '@/utils/validation';
 import { verifyAuth } from '@/utils/verifyToken';
 
 const router = Router();
@@ -24,7 +24,7 @@ router.get('/', verifyAuth, (_request, res) => {
 router.patch('/', verifyAuth, imageService.upload.single('avatar'), async (request, res) => {
   const { error, data } = profileUpdateSchema.safeParse(request.body);
   if (error) {
-    return res.status(400).json({ error: error.format()._errors[0] });
+    return res.status(400).json({ error: formatFirstError(error) });
   }
 
   if (data.password) {
@@ -44,7 +44,7 @@ router.patch('/', verifyAuth, imageService.upload.single('avatar'), async (reque
   if (data.name && request.query.updateStrats === 'true' && res.locals.player.team) {
     const strats = await StratModel.find({ team: res.locals.player.team });
     const promises = strats.map(async (strat) => {
-      strat.content = strat.content?.replace(res.locals.player.name, data.name);
+      strat.content = strat.content?.replace(res.locals.player.name, data.name!);
       await strat.save();
     });
     await Promise.all(promises);

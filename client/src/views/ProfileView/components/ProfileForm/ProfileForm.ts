@@ -64,4 +64,15 @@ export default class ProfileForm extends Vue {
 
     if (!isEmptyIterable(requestFormData.keys())) this.$emit('submit', requestFormData);
   }
+
+  get submitEnabled() {
+    console.log(this.formFields.email.value, this.profile.email);
+
+    return (
+      (this.formFields.name.value && this.formFields.name.value !== this.profile.name) ||
+      (this.formFields.email.value && this.formFields.email.value !== this.profile.email) ||
+      this.files.length > 0 ||
+      this.formFields.password.value.length > 0
+    );
+  }
 }

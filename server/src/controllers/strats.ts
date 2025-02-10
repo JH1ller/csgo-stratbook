@@ -38,7 +38,7 @@ export const updateStrats = async (strats: StratDocument[], stratPatches: Partia
       // check for undefined / null, but accept empty string ''
       if (value != undefined && updatableFields.has(key as keyof Strat)) {
         if (key === 'content') {
-          strat[key.toString()] = minifyHtml(sanitize(value as string));
+          strat[key.toString()] = await minifyHtml(sanitize(value as string));
         } else {
           strat[key.toString()] = value;
         }

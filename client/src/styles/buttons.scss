@@ -8,7 +8,9 @@
   background-color: var(--color-bg);
   cursor: pointer;
   box-shadow: $shadow-subtle;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease;
   border: 2px solid var(--color-border);
   color: var(--color-text);
   position: relative;
@@ -25,10 +27,10 @@
     background-color: var(--color-bg-secondary);
   }
 
-  [disabled] {
-    cursor: default;
+  &[disabled] {
+    cursor: not-allowed;
     pointer-events: none;
-    opacity: 0.7;
+    opacity: 0.5;
   }
 
   & > svg {

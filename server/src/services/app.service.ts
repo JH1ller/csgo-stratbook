@@ -107,7 +107,18 @@ class AppService {
       const refreshToken = req.cookies.refreshToken;
 
       // Allow access to /home and /static without checking for login
-      const allowedPaths = ['/home', '/static', '/api', '/login', '/register', '/js', '/css', '/auth'];
+      const allowedPaths = [
+        '/home',
+        '/static',
+        '/api',
+        '/login',
+        '/register',
+        '/js',
+        '/css',
+        '/auth',
+        '/img',
+        '/socket.io',
+      ];
       if (allowedPaths.some((path) => req.path.startsWith(path))) {
         return next();
       }

@@ -1,3 +1,4 @@
+import capitalize from 'lodash-es/capitalize';
 import { z } from 'zod';
 
 export const registerSchema = z.object({
@@ -10,14 +11,15 @@ export const registerSchema = z.object({
 });
 
 export const profileUpdateSchema = z.object({
-  name: z.string().min(2).max(20),
-  email: z.string().email(),
+  name: z.string().min(2).max(20).optional(),
+  email: z.string().email().optional(),
   password: z
     .string()
     .min(6)
-    .regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,32}$/),
-  completedTutorial: z.boolean(),
-  color: z.string().min(4).max(7),
+    .regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,32}$/)
+    .optional(),
+  completedTutorial: z.boolean().optional(),
+  color: z.string().min(4).max(7).optional(),
 });
 
 export const loginSchema = z.object({
@@ -72,3 +74,11 @@ export const parseEnvironment = () => {
 };
 
 export type Environment = z.infer<typeof envSchema>;
+
+export const formatFirstError = (error: z.ZodError) => {
+  const flattened = error.flatten();
+  console.log(flattened);
+  return Object.entries(flattened.fieldErrors)
+    .filter(([, value]) => value)
+    .map(([key, value]) => `${capitalize(key)}: ${value?.[0]}`)[0];
+};

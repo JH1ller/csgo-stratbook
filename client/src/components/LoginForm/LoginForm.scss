@@ -9,6 +9,22 @@
   border-radius: 8px;
   width: 100%;
 
+  &__separator {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    color: var(--color-text-secondary);
+
+    &::before,
+    &::after {
+      flex: 1;
+      content: '';
+      height: 1px;
+      background-color: var(--color-border);
+      margin: 5px;
+    }
+  }
+
   @include viewport_mq3 {
     width: 320px;
     padding: 24px;
@@ -111,6 +127,5 @@
     justify-content: center;
     padding-bottom: 20px;
     margin-bottom: 8px;
-    border-bottom: 1px solid var(--color-border);
   }
 }

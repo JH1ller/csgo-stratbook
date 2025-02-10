@@ -5,6 +5,7 @@
     <div v-if="steamEnabled" class="login-form__steam-container">
       <img class="login-form__steam" src="@/assets/images/steam_button.png" @click.prevent="steamLogin" />
     </div>
+    <div class="login-form__separator">or</div>
     <transition name="fade">
       <span class="login-form__error" v-if="formError">{{ formError }}</span>
     </transition>

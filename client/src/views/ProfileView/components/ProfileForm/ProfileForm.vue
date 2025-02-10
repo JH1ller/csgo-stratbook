@@ -24,7 +24,7 @@
     />
     <p class="profile-form__label">Change avatar:</p>
     <ImageUploader class="profile-form__uploader" v-model="files" :limit="1" />
-    <button type="submit" class="profile-form__btn-save">Save</button>
+    <button :disabled="!submitEnabled" type="submit" class="profile-form__btn-save">Save</button>
   </form>
 </template>
 

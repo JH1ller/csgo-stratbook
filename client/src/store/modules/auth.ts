@@ -53,11 +53,11 @@ export const authModule: Module<AuthState, RootState> = {
         return { error: res.error };
       }
     },
-    async updateProfile({ dispatch, commit }, data: FormData) {
+    async updateProfile({ dispatch, commit, rootState }, data: FormData) {
       let updateStrats = false;
-      if (data.has('name')) {
+      if (data.has('name') && data.get('name') !== rootState.auth.profile.name) {
         try {
-          await dispatch(
+          updateStrats = await dispatch(
             'app/showDialog',
             {
               key: 'auth/updateProfile',
@@ -67,7 +67,6 @@ export const authModule: Module<AuthState, RootState> = {
             },
             { root: true },
           );
-          updateStrats = true;
           // eslint-disable-next-line no-empty
         } catch (error) {}
       }

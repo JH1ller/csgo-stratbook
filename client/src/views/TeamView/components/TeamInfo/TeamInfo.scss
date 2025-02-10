@@ -56,6 +56,8 @@
     border-bottom-left-radius: 0.5rem;
     border: 2px solid var(--color-blue);
     border-right: 1px solid var(--color-blue);
+    cursor: text;
+    user-select: text;
   }
 
   &__code-icon-wrapper {
