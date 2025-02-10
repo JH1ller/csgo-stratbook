@@ -89,6 +89,7 @@ export default class StratsView extends Vue {
   currentDrawToolStrat: Strat | null = null;
   hasEditorFocus = false;
   tutorialStrat: Strat | null = null;
+  fabGroupOpen = false;
 
   Sort: typeof Sort = Sort;
 

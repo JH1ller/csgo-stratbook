@@ -38,56 +38,64 @@
     />
     <transition name="fade">
       <div class="strats-view__fab-group" v-if="!filterMenuOpen && !stratFormOpen">
-        <FloatingButton
-          class="strats-view__floating-game-mode"
-          label="Focus Mode"
-          icon="crosshairs"
-          @click="toggleGameMode"
-          v-tippy
-          content="CTRL+G"
-        />
-        <FloatingButton
-          class="strats-view__floating-sort"
-          :icon="sortBtnIcon"
-          label="Sort"
-          @click="toggleSort"
-          v-tippy
-          content="CTRL+S"
-        />
-        <FloatingButton
-          class="strats-view__floating-collapse"
-          icon="compress-alt"
-          label="Collapse All"
-          @click="collapseAll"
-          v-tippy
-          content="CTRL+E"
-        />
-        <FloatingButton
-          class="strats-view__floating-collapse"
-          icon="expand-alt"
-          label="Expand All"
-          @click="expandAll"
-          v-tippy
-          content="CTRL+Shift+E"
-        />
-        <FilterButton
-          class="strats-view__filter-button"
-          @click="filterMenuOpen = true"
-          :activeFilterCount="activeStratFilterCount"
-          v-tippy
-          content="CTRL+Shift+F"
-        />
-        <transition name="fade">
+        <div class="strats-view__fab-group-buttons" :class="{ '-open': fabGroupOpen }">
           <FloatingButton
-            v-if="!readOnly"
-            class="strats-view__floating-add"
-            label="Add Strat"
-            icon="plus"
-            @click="showStratForm"
+            class="strats-view__floating-game-mode"
+            label="Focus Mode"
+            icon="crosshairs"
+            @click="toggleGameMode"
             v-tippy
-            content="CTRL+Shift+A"
+            content="CTRL+G"
           />
-        </transition>
+          <FloatingButton
+            class="strats-view__floating-sort"
+            :icon="sortBtnIcon"
+            label="Sort"
+            @click="toggleSort"
+            v-tippy
+            content="CTRL+S"
+          />
+          <FloatingButton
+            class="strats-view__floating-collapse"
+            icon="compress-alt"
+            label="Collapse All"
+            @click="collapseAll"
+            v-tippy
+            content="CTRL+E"
+          />
+          <FloatingButton
+            class="strats-view__floating-collapse"
+            icon="expand-alt"
+            label="Expand All"
+            @click="expandAll"
+            v-tippy
+            content="CTRL+Shift+E"
+          />
+          <FilterButton
+            class="strats-view__filter-button"
+            @click="filterMenuOpen = true"
+            :activeFilterCount="activeStratFilterCount"
+            v-tippy
+            content="CTRL+Shift+F"
+          />
+          <transition name="fade">
+            <FloatingButton
+              v-if="!readOnly"
+              class="strats-view__floating-add"
+              label="Add Strat"
+              icon="plus"
+              @click="showStratForm"
+              v-tippy
+              content="CTRL+Shift+A"
+            />
+          </transition>
+        </div>
+        <FloatingButton
+          class="strats-view__floating-mobile-toggle"
+          label="Open Actions"
+          :icon="fabGroupOpen ? 'times' : 'ellipsis-v'"
+          @click="() => (fabGroupOpen = !fabGroupOpen)"
+        />
       </div>
     </transition>
 

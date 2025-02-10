@@ -5,7 +5,6 @@
   @include spacing('gap', 'sm');
 
   & > :not(:first-of-type) {
-    // @include spacing('margin-top', 'sm');
     @include spacing('padding-top', 'sm');
 
     border-top: 2px solid var(--color-border);
@@ -15,9 +14,13 @@
     @include input-default;
   }
 
-  &__label {
-    @include spacing('margin-bottom', 'xs');
+  &__filter {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
 
+  &__label {
     font-size: 1.1rem;
   }
 
@@ -34,9 +37,6 @@
 
   &__label-tag {
     @extend %label;
-
-    &:hover {
-    }
 
     &.-active {
       background: var(--color-green-80);

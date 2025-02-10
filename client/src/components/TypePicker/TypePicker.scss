@@ -1,6 +1,7 @@
 .type-picker {
   display: flex;
   justify-content: space-evenly;
+  gap: 12px;
 
   &__button {
     position: relative;
@@ -10,7 +11,11 @@
     opacity: 0.4;
     cursor: pointer;
     border-radius: 50%;
-    transition: opacity 0.3s ease, border-color 0.3s ease, filter 0.3s ease, transform 0.3s ease;
+    transition:
+      opacity 0.3s ease,
+      border-color 0.3s ease,
+      filter 0.3s ease,
+      transform 0.3s ease;
     background-color: var(--color-bg-secondary);
     filter: grayscale(80%);
 
@@ -31,10 +36,6 @@
     }
     &.--force {
       background-color: var(--color-red);
-    }
-
-    &:not(:first-of-type) {
-      margin-left: 12px;
     }
   }
 
