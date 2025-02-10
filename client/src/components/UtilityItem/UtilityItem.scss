@@ -65,6 +65,12 @@
     right: 6px;
     border-radius: 50%;
     box-shadow: 0 0 4px rgba(black, 0.6);
+    cursor: pointer;
+    transition: scale 0.3s ease;
+
+    &:hover {
+      scale: 1.1;
+    }
   }
 
   &__type {
@@ -73,6 +79,12 @@
     top: 48px;
     border-radius: 50%;
     box-shadow: 0 0 4px rgba(black, 0.6);
+    cursor: pointer;
+    transition: scale 0.3s ease;
+
+    &:hover {
+      scale: 1.1;
+    }
   }
 
   &__side {
@@ -128,6 +140,7 @@
     display: flex;
     align-items: center;
     gap: 4px;
+    flex-wrap: wrap;
   }
 
   &__label {
@@ -154,7 +167,9 @@
     }
 
     & > svg {
-      transition: opacity 0.3s ease, scale 0.3s ease;
+      transition:
+        opacity 0.3s ease,
+        scale 0.3s ease;
       width: 12px;
       height: 12px;
       scale: 0.9;
