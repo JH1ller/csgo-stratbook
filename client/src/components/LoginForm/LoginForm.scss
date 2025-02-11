@@ -14,6 +14,7 @@
     align-items: center;
     width: 100%;
     color: var(--color-text-secondary);
+    margin-bottom: 1rem;
 
     &::before,
     &::after {
@@ -106,7 +107,6 @@
 
   &__error {
     @include error-notification;
-    @include spacing('margin-bottom', 'xs');
   }
 
   &__steam {

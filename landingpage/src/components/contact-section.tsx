@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import Image from 'next/image';
+import dynamic from "next/dynamic";
+
+const BackgroundBeams = dynamic(() => import("./ui/background-beams"), { ssr: false });
+
 export function ContactSection() {
   return (
-    <section id="contact" className="w-full py-12 md:py-24 lg:py-32 bg-black/90">
+    <section id="contact" className="h-[40rem] w-full rounded-md bg-neutral-950 relative flex flex-col items-center justify-center antialiased">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center text-center gap-8">
           <div className="space-y-2">
@@ -18,6 +22,7 @@ export function ContactSection() {
           </div>
         </div>
       </div>
+      <BackgroundBeams className="pointer-events-none" />
     </section>
   )
 }

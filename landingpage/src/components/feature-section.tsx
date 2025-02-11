@@ -1,4 +1,4 @@
-import { Shield } from "lucide-react"
+import { Shield, ChevronRight } from "lucide-react"
 import Image from "next/image"
 
 export function FeatureSection({ title, description, features, image }: { title: string, description: string, features: string[], image: string }) {
@@ -14,7 +14,7 @@ export function FeatureSection({ title, description, features, image }: { title:
             </p>
             <ul className="space-y-2">
               {features.map((feature) => (
-                <li key={feature} className="flex items-center"><Shield className="mr-2 h-4 w-4" /> {feature}</li>
+                <li key={feature} className="flex items-center"><ChevronRight className="mr-2 h-4 w-4" /> {feature}</li>
               ))}
             </ul>
           </div>
