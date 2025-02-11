@@ -1,10 +1,6 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
 import { Crosshair, Users, Map, Menu } from 'lucide-react'
-import Link from "next/link"
-import { HeroHighlight } from "../ui/hero-highlight"
-import { HeroCard } from "../ui/hero-card"
 import { FeatureSection } from "../feature-section"
 import { HeroSection } from "../hero-section"
 import { ContactSection } from "../contact-section"

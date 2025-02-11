@@ -26,6 +26,9 @@
   "engines": {
     "node": "18.18.0"
   },
+  "volta": {
+    "node": "18.18.0"
+  },
   "devDependencies": {
     "concurrently": "^9.1.0"
   }

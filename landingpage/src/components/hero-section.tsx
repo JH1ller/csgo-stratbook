@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { HeroHighlight } from "./ui/hero-highlight";
 import { Button } from "./ui/button";
 import { HeroCard } from "./ui/hero-card";
@@ -18,11 +19,9 @@ export function HeroSection() {
                   Collaborate with your team, manage strategies, and perfect your game plan with our real-time tactics board.
                 </p>
               </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Link href="../"><Button size="lg">Open app</Button></Link>
-                <Link href="../register"><Button size="lg" variant="outline">
-                  Create account
-                </Button></Link>
+              <div className="flex flex-col gap-4 sm:flex-row items-stretch">
+                <Link href="../"><Button className="w-full" size="lg">Open app</Button></Link>
+                <Link href="../api/auth/steam" className="sm:hidden"><Image src="/home/steam_button.png" alt="steam login button" width="180" height="35" /></Link>
               </div>
             </div>
             <HeroCard className="sm:w-full aspect-video" containerClassName="hidden xl:block" />
