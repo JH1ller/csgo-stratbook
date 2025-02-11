@@ -4,9 +4,9 @@ import Image from "next/image";
 import React from "react";
 import { CardBody, CardContainer, CardItem } from "./3d-card";
 
-export function HeroCard({ className }: { className?: string }) {
+export function HeroCard({ className, containerClassName }: { className?: string; containerClassName?: string }) {
   return (
-    <CardContainer className={className}>
+    <CardContainer className={className} containerClassName={containerClassName}>
       <CardBody className="bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto h-auto rounded-xl p-1 border">
         <Image
           src="/home/strats_overview.webp"

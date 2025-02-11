@@ -20,7 +20,7 @@ export function FeatureSection({ title, description, features, image }: { title:
           </div>
           <Image
             alt={title}
-            className="mx-auto w-full aspect-video overflow-hidden rounded-xl object-cover object-center"
+            className="mx-auto w-full aspect-video overflow-hidden rounded-xl object-cover object-center border-4 border-emerald-900"
             height="800"
             src={imageSrc}
             width="1400"
