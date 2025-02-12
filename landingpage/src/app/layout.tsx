@@ -14,6 +14,7 @@ export const metadata: Metadata = {
       url: "/home/favicon.svg",
     },
   ],
+  keywords: ["Counterstrike", "CS2", "Esport", "Tactics", "Strategies", "Nades", "Grenade", "Lineups", "Collaboration", "Playbook", "Tactics Board", "Team", "Management", "Realtime"],
 };
 
 export default function RootLayout({

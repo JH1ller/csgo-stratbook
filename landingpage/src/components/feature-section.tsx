@@ -1,8 +1,15 @@
-import { Shield, ChevronRight } from "lucide-react"
-import Image from "next/image"
+import { ChevronRight } from "lucide-react"
+import { HeroCard } from "./ui/hero-card"
 
-export function FeatureSection({ title, description, features, image }: { title: string, description: string, features: string[], image: string }) {
-  const imageSrc = '/home/' + image + '.webp'
+export type FeatureSectionProps = {
+  title: string;
+  description: string;
+  features: string[];
+  image: string;
+  mobileImg?: string;
+};
+
+export function FeatureSection({ title, description, features, image, mobileImg }: FeatureSectionProps) {
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 even:bg-zinc-900">
       <div className="container px-4 md:px-6">
@@ -18,13 +25,7 @@ export function FeatureSection({ title, description, features, image }: { title:
               ))}
             </ul>
           </div>
-          <Image
-            alt={title}
-            className="mx-auto w-full aspect-video overflow-hidden rounded-xl object-cover object-center border-4 border-emerald-900"
-            height="800"
-            src={imageSrc}
-            width="1400"
-          />
+          <HeroCard containerClassName="aspect-w-16 aspect-h-9" image={image} mobileImg={mobileImg} />
         </div>
       </div>
     </section>

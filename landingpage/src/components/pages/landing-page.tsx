@@ -1,11 +1,11 @@
 'use client'
 
 import { Crosshair, Users, Map, Menu } from 'lucide-react'
-import { FeatureSection } from "../feature-section"
+import { FeatureSection, FeatureSectionProps } from "../feature-section"
 import { HeroSection } from "../hero-section"
 import { ContactSection } from "../contact-section"
 
-const featureSections = [
+const featureSections: FeatureSectionProps[] = [
   {
     title: 'Interactive Tactics Board',
     description: 'Plan out your strategies using our interactive map board. Place player positions, draw movement paths, and annotate key areas with ease. Collaborate in real-time with your team to perfect your tactics.',
@@ -20,6 +20,7 @@ const featureSections = [
     title: 'Strategy Management',
     description: 'Build a comprehensive library of grenade lineups for every map. Upload screenshots or videos, add step-by-step instructions, and categorize your lineups for quick access during practice or matches.',
     image: 'strats_overview',
+    mobileImg: 'strats_mobile',
     features: [
       'Upload screenshots or videos',
       'Add step-by-step instructions',
@@ -30,6 +31,7 @@ const featureSections = [
     title: 'Grenade Lineup Library',
     description: 'Build a comprehensive library of grenade lineups for every map. Upload screenshots or videos, add step-by-step instructions, and categorize your lineups for quick access during practice or matches.',
     image: 'utility_filters',
+    mobileImg: 'utility_mobile',
     features: [
       'Upload screenshots or videos',
       'Add step-by-step instructions',
