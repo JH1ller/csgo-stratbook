@@ -8,14 +8,27 @@ import { cn } from "@/lib/utils";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Stratbook",
-  description: "Collaborative Counterstrike Strategy & Nade Management Tool and realtime Tactics Board. Keep your Playbook organized with Stratbook.",
+  title: "Stratbook - Free CS2 Strats & Nade Management Tool",
+  description: "Free Counterstrike Strategy & Nade Lineup Management Tool and real-time Tactics Board. Collaborate with your team and Keep your Playbook organized with Stratbook.",
   icons: [
     {
       url: "/home/favicon.svg",
     },
   ],
   keywords: ["Counterstrike", "CS2", "Esport", "Tactics", "Strategies", "Nades", "Grenade", "Lineups", "Collaboration", "Playbook", "Tactics Board", "Team", "Management", "Realtime"],
+  openGraph: {
+    title: "Stratbook - Free CS2 Strats & Nade Management Tool",
+    description: "Free Counterstrike Strategy & Nade Management Tool and real-time Tactics Board. Collaborate with your team and Keep your Playbook organized with Stratbook.",
+    images: [
+      {
+        url: "/home/stratbook_icon.svg",
+        width: 40,
+        height: 40,
+        alt: "Stratbook Logo",
+      },
+    ],
+    siteName: "Stratbook",
+  },
 };
 
 export default function RootLayout({

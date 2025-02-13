@@ -11,6 +11,7 @@
   "dependencies": {
     "@prismicio/client": "^7.16.0",
     "@prismicio/helpers": "^2.3.9",
+    "@prismicio/react": "^3.0.0",
     "@radix-ui/react-navigation-menu": "^1.1.4",
     "@radix-ui/react-slot": "^1.1.1",
     "class-variance-authority": "^0.7.1",
