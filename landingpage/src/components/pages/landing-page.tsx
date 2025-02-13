@@ -1,6 +1,4 @@
-'use client'
 
-import { Crosshair, Users, Map, Menu } from 'lucide-react'
 import { FeatureSection, FeatureSectionProps } from "../feature-section"
 import { HeroSection } from "../hero-section"
 import { ContactSection } from "../contact-section"
@@ -54,7 +52,6 @@ export function LandingPageComponent() {
   return (
     <main className="flex-1">
       <HeroSection />
-
 
       {featureSections.map((feature) => (
         <FeatureSection key={feature.title} {...feature} />

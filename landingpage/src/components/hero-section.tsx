@@ -17,13 +17,13 @@ export function HeroSection() {
               Collaborate with your team, manage strategies, and perfect your game plan with our real-time tactics board.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
-              <Link href="../" className="flex justify-center text-center">
+              <Link href="../login" className="flex justify-center text-center">
                 <HoverBorderGradient
                   containerClassName="rounded-full"
                   as="button"
                   className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2 pl-4 pr-6"
                 >
-                  <ChevronRight className="" />
+                  <ChevronRight />
                   <span>Open App</span>
                 </HoverBorderGradient>
               </Link>
