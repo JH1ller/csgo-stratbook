@@ -120,7 +120,7 @@ class AppService {
         '/socket.io',
         '/favicon.ico',
         '/robots.txt',
-        '/sitemap.xml',
+        '/sitemap.txt',
       ];
       if (allowedPaths.some((path) => req.path.startsWith(path))) {
         return next();

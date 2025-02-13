@@ -89,7 +89,6 @@ export default class App extends Vue {
       this.checkCookies();
     }
     this.checkVersion();
-    window.twttr?.widgets.load();
 
     window.onbeforeunload = () => {
       this.wsService.disconnect();

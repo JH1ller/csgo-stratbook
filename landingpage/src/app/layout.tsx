@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     },
   ],
   keywords: ["Counterstrike", "CS2", "Esport", "Tactics", "Strategies", "Nades", "Grenade", "Lineups", "Collaboration", "Playbook", "Tactics Board", "Team", "Management", "Realtime"],
+  metadataBase: new URL("https://jstin.dev/home/"),
   openGraph: {
     title: "Stratbook - Free CS2 Strats & Nade Management Tool",
     description: "Free Counterstrike Strategy & Nade Management Tool and real-time Tactics Board. Collaborate with your team and Keep your Playbook organized with Stratbook.",

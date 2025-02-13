@@ -17,7 +17,7 @@ export function HeroSection() {
               Collaborate with your team, manage strategies, and perfect your game plan with our real-time tactics board.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
-              <Link href="../login" className="flex justify-center text-center">
+              <Link href="../login" className="flex justify-center text-center" prefetch={false}>
                 <HoverBorderGradient
                   containerClassName="rounded-full"
                   as="button"

@@ -18,7 +18,7 @@ export function Header() {
           </Link>
         </nav> */}
         <div className="flex items-center space-x-4">
-          <Link href="../api/auth/steam" className="hidden sm:block"><Image src="/home/steam_button.png" alt="steam login button" width="180" height="35" /></Link>
+          <Link href="../api/auth/steam" className="hidden sm:block" prefetch={false}><Image src="/home/steam_button.png" alt="steam login button" width="180" height="35" /></Link>
         </div>
       </div>
     </header>
