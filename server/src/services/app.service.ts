@@ -9,10 +9,11 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application } from 'express';
 import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import mongoose from 'mongoose';
 
-import { Path } from '@/constants';
+import { Path, PUBLIC_PATHS } from '@/constants';
 
 import { loggerMiddleware } from '../middleware/logger';
 import { hostRedirect, secureRedirect } from '../middleware/redirect';
@@ -34,6 +35,7 @@ class AppService {
     this.setupDbConnection();
     this.setupMiddleware();
     this.setupRoutes();
+    this.setupGracefulShutdown();
   }
 
   get httpServer() {
@@ -44,10 +46,11 @@ class AppService {
     mongoose.set('strictQuery', false);
     this.db.on('error', (error) => logger.error('mongoose:', error.message));
     this.db.once('open', () => logger.success('mongoose:', 'Connected to database'));
-    await mongoose.connect(configService.isDev ? configService.env.DATABASE_URL_DEV! : configService.env.DATABASE_URL!);
+    await mongoose.connect(configService.isDev ? configService.env.DATABASE_URL_DEV! : configService.env.DATABASE_URL);
   }
 
   private setupMiddleware() {
+    this.app.use(helmet());
     this.app.use(compression());
     this.app.use(
       cors({
@@ -77,13 +80,27 @@ class AppService {
   }
 
   private setupRoutes() {
-    if (configService.isDev) {
-      this.app.use((_, res, next) => {
-        res.setHeader('Content-Security-Policy', "script-src 'self' 'unsafe-eval'");
-        res.setHeader('Cross-Origin-Opener-Policy', 'unsafe-none');
-        next();
-      });
-    }
+    this.app.use((_, res, next) => {
+      res.setHeader(
+        'Content-Security-Policy',
+        [
+          "default-src 'self'",
+          // Allow inline scripts and eval for Next.js and Vue
+          "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+          // Allow inline styles and Google Fonts
+          "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+          // Allow font loading from Google Fonts
+          "font-src 'self' https://fonts.gstatic.com",
+          // Allow images from self and data URIs
+          "img-src 'self' data: https:",
+          // Allow WebSocket connections and API calls
+          "connect-src 'self' ws: wss: https:",
+          // Allow loading styles from Google Fonts
+          "style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com",
+        ].join('; '),
+      );
+      next();
+    });
 
     // API routes
     this.app.use('/api', apiRouter);
@@ -106,23 +123,8 @@ class AppService {
     this.app.use((req, res, next) => {
       const refreshToken = req.cookies.refreshToken;
 
-      // Allow access to /home and /static without checking for login
-      const allowedPaths = [
-        '/home',
-        '/static',
-        '/api',
-        '/login',
-        '/register',
-        '/js',
-        '/css',
-        '/auth',
-        '/img',
-        '/socket.io',
-        '/favicon.ico',
-        '/robots.txt',
-        '/sitemap.txt',
-      ];
-      if (allowedPaths.some((path) => req.path.startsWith(path))) {
+      // Allow access to public paths without checking for login
+      if (PUBLIC_PATHS.some((path) => req.path.startsWith(path))) {
         return next();
       }
 
@@ -146,6 +148,20 @@ class AppService {
         `Server started. [${green(configService.env.NODE_ENV.toUpperCase())}] ${configService.getUrl(Path.app)}`,
       ),
     );
+  }
+
+  private setupGracefulShutdown() {
+    const shutdown = async () => {
+      logger.info('Shutting down server...');
+      await mongoose.connection.close();
+      this.httpServer.close(() => {
+        logger.info('Server shut down successfully');
+        process.exit(0);
+      });
+    };
+
+    process.on('SIGTERM', shutdown);
+    process.on('SIGINT', shutdown);
   }
 }
 

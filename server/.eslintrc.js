@@ -16,6 +16,8 @@ module.exports = {
     'unicorn/no-null': 'off',
     'unicorn/filename-case': 'off',
     'unicorn/prefer-optional-catch-binding': 'off',
+    'unicorn/no-process-exit': 'off',
+    'unicorn/consistent-function-scoping': 'off',
     '@typescript-eslint/no-unnecessary-condition': ['warn', { allowConstantLoopConditions: true }],
   },
 };

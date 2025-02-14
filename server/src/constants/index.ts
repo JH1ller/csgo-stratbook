@@ -8,3 +8,19 @@ export const Path = {
 } as const;
 
 export type Path = (typeof Path)[keyof typeof Path];
+
+export const PUBLIC_PATHS = [
+  '/home',
+  '/static',
+  '/api',
+  '/login',
+  '/register',
+  '/js',
+  '/css',
+  '/auth',
+  '/img',
+  '/socket.io',
+  '/favicon.ico',
+  '/robots.txt',
+  '/sitemap.txt',
+] as const;
