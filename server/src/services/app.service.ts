@@ -13,7 +13,7 @@ import helmet from 'helmet';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import mongoose from 'mongoose';
 
-import { Path, PUBLIC_PATHS } from '@/constants';
+import { CSP_HEADER, Path, PUBLIC_PATHS } from '@/constants';
 
 import { loggerMiddleware } from '../middleware/logger';
 import { hostRedirect, secureRedirect } from '../middleware/redirect';
@@ -81,24 +81,7 @@ class AppService {
 
   private setupRoutes() {
     this.app.use((_, res, next) => {
-      res.setHeader(
-        'Content-Security-Policy',
-        [
-          "default-src 'self'",
-          // Allow inline scripts and eval for Next.js and Vue
-          "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-          // Allow inline styles and Google Fonts
-          "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-          // Allow font loading from Google Fonts
-          "font-src 'self' https://fonts.gstatic.com",
-          // Allow images from self and data URIs
-          "img-src 'self' data: https:",
-          // Allow WebSocket connections and API calls
-          "connect-src 'self' ws: wss: https:",
-          // Allow loading styles from Google Fonts
-          "style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com",
-        ].join('; '),
-      );
+      res.setHeader('Content-Security-Policy', CSP_HEADER);
       next();
     });
 
