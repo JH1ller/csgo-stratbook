@@ -1,52 +1,48 @@
-
-import { FeatureSection, FeatureSectionProps } from "../feature-section"
-import { HeroSection } from "../hero-section"
-import { ContactSection } from "../contact-section"
+import { FeatureSection, FeatureSectionProps } from '../feature-section';
+import { HeroSection } from '../hero-section';
+import { ContactSection } from '../contact-section';
 
 const featureSections: FeatureSectionProps[] = [
   {
     title: 'Interactive Tactics Board',
-    description: 'Plan out your strategies using our interactive map board. Place player positions, draw movement paths, and annotate key areas with ease. Collaborate in real-time with your team to perfect your tactics.',
+    description:
+      'Plan out your strategies using our interactive map board. Place player positions, draw movement paths, and annotate key areas with ease. Collaborate in real-time with your team to perfect your tactics.',
     image: 'map_tool',
-    features: [
-      'Drag-and-drop player positions',
-      'Draw arrows and paths',
-      'Add text annotations',
-    ],
+    features: ['Drag-and-drop player positions', 'Draw paths and place utilities', 'Add text annotations'],
   },
   {
     title: 'Strategy Management',
-    description: 'Build a comprehensive library of grenade lineups for every map. Upload screenshots or videos, add step-by-step instructions, and categorize your lineups for quick access during practice or matches.',
+    description:
+      'Create and share your strategies with your team. Keep your team on the same page and ready for match day. Use powerful quick filters to find the right strategy for the right moment.',
     image: 'strats_overview',
     mobileImg: 'strats_mobile',
     features: [
-      'Upload screenshots or videos',
-      'Add step-by-step instructions',
-      'Categorize lineups by map',
+      'Unique tactics board for each strat',
+      'Add steps for each player and reference them',
+      'Link nade lineups and videos',
+      'Add custom labels to filter by',
     ],
   },
   {
     title: 'Grenade Lineup Library',
-    description: 'Build a comprehensive library of grenade lineups for every map. Upload screenshots or videos, add step-by-step instructions, and categorize your lineups for quick access during practice or matches.',
+    description:
+      'Build a comprehensive library of grenade lineups for every map. Upload screenshots or videos, add step-by-step instructions, and categorize your lineups for quick access during practice or matches.',
     image: 'utility_filters',
     mobileImg: 'utility_mobile',
     features: [
       'Upload screenshots or videos',
-      'Add step-by-step instructions',
-      'Categorize lineups by map',
+      'Categorize lineups by map, type or side',
+      'Add custom labels for advanced filtering',
     ],
   },
   {
     title: 'Team Management Dashboard',
-    description: 'Manage your team efficiently with our comprehensive dashboard. Assign roles, track strategy familiarity, and schedule practice sessions all in one place. Keep your team organized and focused on improvement.',
+    description:
+      'Manage your team efficiently with our comprehensive dashboard. Assign roles and colors and quickly join your practice server.',
     image: 'team_page',
-    features: [
-      'Assign roles and permissions',
-      'Track strategy familiarity',
-      'Schedule practice sessions',
-    ],
+    features: ['Assign roles and permissions', 'Customize team colors', 'Quickly join practice server'],
   },
-]
+];
 
 export function LandingPageComponent() {
   return (
@@ -59,6 +55,5 @@ export function LandingPageComponent() {
 
       <ContactSection />
     </main>
-
-  )
+  );
 }
