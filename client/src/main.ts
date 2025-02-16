@@ -5,7 +5,6 @@ import store from './store';
 import '@/styles/core.scss';
 
 import VueTippy, { TippyComponent } from 'vue-tippy';
-import { isDesktop } from './utils/isDesktop';
 import StorageService from './services/storage.service';
 import { BreakpointService } from './services/breakpoint.service';
 import VueKonva from 'vue-konva';
@@ -62,7 +61,6 @@ if (process.env.NODE_ENV === 'production') {
 Vue.config.productionTip = false;
 
 window.debugMode = process.env.NODE_ENV !== 'production' || !!localStorage.getItem('debug');
-window.desktopMode = isDesktop();
 
 const storageService = StorageService.getInstance();
 
@@ -82,24 +80,15 @@ const initStore = async () => {
   }
 };
 
-(async () => {
-  if (window.desktopMode) {
-    const ipcRenderer = require('electron').ipcRenderer;
-    ipcRenderer.on('steam-auth', (_, { action, token }) => {
-      console.log('steam-auth', action, token);
-      if (action === 'token') {
-        storageService.set('refreshToken', token);
-        initStore();
-      } else if (action === 'connect') {
-        store.dispatch('app/showToast', {
-          id: 'main/steam-connected',
-          text: 'Steam account successfully connected.',
-        });
-      }
-    });
+declare global {
+  interface Window {
+    intervalActive: boolean;
   }
+}
+
+(async () => {
   await initStore();
-  (window as any).intervalActive = false;
+  window.intervalActive = false;
 
   // fade out app loader
   const loaderEl: HTMLDivElement = document.querySelector('.loader-wrapper')!;

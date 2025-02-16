@@ -95,7 +95,7 @@ class AppService {
 
     if (configService.isDev) {
       const clientProxy = createProxyMiddleware({
-        target: 'http://localhost:8080',
+        target: 'http://127.0.0.1:8080',
         changeOrigin: true,
         secure: false,
       });
@@ -126,7 +126,7 @@ class AppService {
   }
 
   start() {
-    this.httpServer.listen(configService.port, configService.isDev ? configService.origin : undefined, () =>
+    this.httpServer.listen(configService.port, undefined, () =>
       logger.success(
         `Server started. [${green(configService.env.NODE_ENV.toUpperCase())}] ${configService.getUrl(Path.app)}`,
       ),

@@ -1,6 +1,9 @@
 import capitalize from 'lodash-es/capitalize';
 import { z } from 'zod';
 
+import { Logger } from './logger';
+
+const logger = new Logger('Validation');
 export const registerSchema = z.object({
   name: z.string().min(2).max(20),
   email: z.string().email(),
@@ -61,13 +64,22 @@ export const envSchema = z.object({
   TELEGRAM_USER: z.string().optional(),
   STEAM_API_KEY: z.string(),
   PRISMIC_TOKEN: z.string(),
+}).superRefine((data, ctx) => {
+  if (data.NODE_ENV === 'development' && !data.DATABASE_URL_DEV) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'DATABASE_URL_DEV is required when NODE_ENV is "development"',
+      path: ['DATABASE_URL_DEV'],
+    });
+  }
 });
 
 export const parseEnvironment = () => {
   const { error, data } = envSchema.safeParse(process.env);
 
   if (error) {
-    throw new Error(`Config validation error: ${error.format()._errors.join(', ')}`);
+    logger.error(`Config validation error: ${error.errors.map((e) => e.path).join(', ')}`);
+    process.exit(1);
   }
 
   return data;
@@ -77,7 +89,7 @@ export type Environment = z.infer<typeof envSchema>;
 
 export const formatFirstError = (error: z.ZodError) => {
   const flattened = error.flatten();
-  console.log(flattened);
+  
   return Object.entries(flattened.fieldErrors)
     .filter(([, value]) => value)
     .map(([key, value]) => `${capitalize(key)}: ${value?.[0]}`)[0];

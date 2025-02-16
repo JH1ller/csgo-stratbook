@@ -3,7 +3,7 @@
 </p>
 
 
-__Web & Desktop application to collaboratively manage strategies & utilities in Valve's popular competitive FPS Counterstrike: Global Offensive__
+__Web application to collaboratively manage strategies & utilities in Valve's popular competitive FPS Counterstrike: Global Offensive__
 
 __Live Version [here!](https://stratbook.pro)__
 
@@ -34,7 +34,6 @@ __Live Version [here!](https://stratbook.pro)__
   - [Server + Client (Docker)](#server--client-docker)
   - [Server (Local)](#server-local)
   - [Client (Local)](#client-local)
-  - [Windows Desktop Client (Local)](#windows-desktop-client-local)
 
 ## Technologies
 
@@ -44,7 +43,6 @@ __Live Version [here!](https://stratbook.pro)__
 - Vue CLI
 - Vuex
 - Vue Class Components & Property Decorator
-- Electron
 - Typescript
 - Socket.io-Client
 - SCSS
@@ -83,13 +81,5 @@ ll dependencies
 - Navigate to the /client directory.
 - Run `npm i` to install all dependencies
 - Run `npm run serve` to serve the web client in development mode with HMR
-
-### Windows Desktop Client (Local)
-
-- Navigate to the /client directory.
-- Download [GTK](https://download.gnome.org/binaries/win64/gtk+/2.22/gtk%2B-bundle_2.22.1-20101229_win64.zip) and extract to "C:\GTK\"
-- Run `npm i` to install all dependencies
-- Run `npm run electron:serve` to start the app in development mode with HMR
-- Run `npm run electron:build` to build a windows installer
 
 

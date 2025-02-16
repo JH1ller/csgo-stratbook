@@ -76,8 +76,6 @@ router.post('/login', async (request, res) => {
   const refreshToken = nanoid(64);
   const refreshTokenExpiration = new Date(Date.now() + ms(configService.env.REFRESH_TOKEN_TTL ?? '180d'));
 
-  const electronMode = !!request.body.electronMode;
-
   const session = new SessionModel({
     refreshToken,
     player: targetUser._id,
@@ -100,7 +98,6 @@ router.post('/login', async (request, res) => {
 
   res.json({
     token,
-    refreshToken: electronMode ? refreshToken : undefined,
   });
 });
 
@@ -123,8 +120,6 @@ router.post('/refresh', cookieParser(), async (request, res) => {
     return res.status(400).json({ error: 'Refresh token expired' });
   }
 
-  const electronMode = !!request.body.electronMode;
-
   const refreshToken = nanoid(64);
   const refreshTokenExpiration = new Date(Date.now() + ms(configService.env.REFRESH_TOKEN_TTL ?? '180d'));
 
@@ -143,7 +138,6 @@ router.post('/refresh', cookieParser(), async (request, res) => {
 
   res.send({
     token,
-    refreshToken: electronMode ? refreshToken : undefined,
   });
 });
 
@@ -239,10 +233,6 @@ router.get('/steam', verifyAuthOptional, async (request, res) => {
 
   const urlQuery = new URLSearchParams();
 
-  if (request.get('user-agent')?.includes('Electron')) {
-    urlQuery.set('electronMode', 'true');
-  }
-
   if (res.locals.player) {
     console.log('player found');
     const token = jwt.sign({ _id: res.locals.player._id.toString() }, configService.env.TOKEN_SECRET, {
@@ -272,8 +262,6 @@ router.get('/steam', verifyAuthOptional, async (request, res) => {
 });
 
 router.get('/steam/authenticate', async (request, res) => {
-  const electronMode = !!request.query.electronMode;
-
   const steam = new SteamAuth({
     realm: configService.getUrl(Path.api).toString(),
     returnUrl: urljoin(configService.getUrl(Path.api).toString(), '/auth/steam/authenticate'),
@@ -281,8 +269,6 @@ router.get('/steam/authenticate', async (request, res) => {
   });
 
   const steamUser = await steam.authenticate(request);
-
-  console.log(steamUser);
 
   let user = await PlayerModel.findOne({ steamId: steamUser.steamid });
 
@@ -308,6 +294,7 @@ router.get('/steam/authenticate', async (request, res) => {
       return res.redirect(redirectUrl.toString());
     }
     if (user) {
+      logger.info(`Steam account ${steamUser.steamid} already linked to another user`);
       redirectUrl.searchParams.set('message', 'Steam account already linked to another user');
       return res.redirect(redirectUrl.toString());
     }
@@ -315,10 +302,6 @@ router.get('/steam/authenticate', async (request, res) => {
     player.steamId = steamUser.steamid;
     player.accountType = 'steam';
     await player.save();
-
-    if (electronMode) {
-      return res.redirect(`stratbook://connect`);
-    }
 
     redirectUrl.searchParams.set('message', 'Steam account successfully linked');
     return res.redirect(redirectUrl.toString());
@@ -357,12 +340,8 @@ router.get('/steam/authenticate', async (request, res) => {
   res.set('Access-Control-Expose-Headers', 'Set-Cookie');
   res.set('Access-Control-Allow-Headers', 'Set-Cookie');
 
-  if (electronMode) {
-    return res.redirect(`stratbook://token/${refreshToken}`);
-  } else {
-    res.cookie('refreshToken', refreshToken, refreshTokenConfig());
-    res.cookie('hasSession', '1', hasSessionConfig());
-  }
+  res.cookie('refreshToken', refreshToken, refreshTokenConfig());
+  res.cookie('hasSession', '1', hasSessionConfig());
 
   console.log(refreshToken);
 

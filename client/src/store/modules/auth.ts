@@ -101,10 +101,6 @@ export const authModule: Module<AuthState, RootState> = {
       if (res.success) {
         commit(SET_TOKEN, res.success.token);
 
-        if (window.desktopMode) {
-          storageService.set('refreshToken', res.success.refreshToken);
-        }
-
         await dispatch('fetchProfile');
         storageService.set('hasSession', '1');
         dispatch('app/showToast', { id: 'auth/login', text: 'Logged in successfully.' }, { root: true });
@@ -130,21 +126,10 @@ export const authModule: Module<AuthState, RootState> = {
       dispatch('app/showToast', { id: 'auth/delete', text: 'Successfully deleted account.' }, { root: true });
     },
     async refresh({ dispatch, commit }) {
-      let res;
-
-      if (window.desktopMode) {
-        const refreshToken = storageService.get('refreshToken');
-        res = await api.auth.refresh(refreshToken);
-      } else {
-        res = await api.auth.refresh();
-      }
+      const res = await api.auth.refresh();
 
       if (res.success) {
         commit(SET_TOKEN, res.success.token);
-
-        if (window.desktopMode) {
-          storageService.set('refreshToken', res.success.refreshToken);
-        }
 
         storageService.set('hasSession', '1');
         setTimeout(() => dispatch('refresh'), TOKEN_TTL - 10000);

@@ -18,7 +18,7 @@
       ></router-view>
     </transition>
     <transition name="fade">
-      <CookieBanner v-if="showCookieBanner && isDesktop === false" @close="closeCookieBanner" />
+      <CookieBanner v-if="showCookieBanner" @close="closeCookieBanner" />
     </transition>
     <transition name="fade">
       <NoticeDialog :notices="notices" v-if="showNotice" @close="showNotice = false" />
@@ -73,7 +73,6 @@ export default class App extends Vue {
   menuOpen: boolean = false;
   appVersion: string = pkg.version;
   showCookieBanner = false;
-  isDesktop = window.desktopMode;
   showNotice = false;
   notices: Notice[] = [];
 
@@ -83,11 +82,7 @@ export default class App extends Vue {
   }
 
   mounted() {
-    if (this.isDesktop) {
-      this.initTracking();
-    } else {
-      this.checkCookies();
-    }
+    this.checkCookies();
     this.checkVersion();
 
     window.onbeforeunload = () => {

@@ -11,16 +11,16 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "useUnknownInCatchVariables": false,
     "types": ["webpack-env", "@types/wicg-file-system-access"],
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./*"]
     },
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
+    "skipLibCheck": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*.ts", "tests/**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": ["./src/**/*.ts", "./src/**/*.vue"]
 }

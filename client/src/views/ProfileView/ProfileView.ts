@@ -8,7 +8,6 @@ import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { Response } from '@/store';
 import api from '@/api/base';
-import { openLink } from '@/utils/openLink';
 import StorageService from '@/services/storage.service';
 
 @Component({
@@ -62,11 +61,7 @@ export default class ProfileView extends Vue {
   async connectSteam() {
     const { success } = await api.auth.fetchSteamUrl();
     if (success) {
-      if (window.desktopMode) {
-        openLink(success);
-      } else {
-        window.location.href = success;
-      }
+      window.location.href = success;
     }
   }
 
