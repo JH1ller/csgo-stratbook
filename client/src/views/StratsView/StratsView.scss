@@ -25,6 +25,7 @@
   &__fab-group-buttons {
     display: flex;
     gap: 16px;
+    transition-behavior: allow-discrete;
 
     @include viewport_only(mq1) {
       gap: 8px;
@@ -34,9 +35,13 @@
         opacity 0.3s ease;
       opacity: 0;
       transform: translateY(100%);
+
+      display: none;
+
       &.-open {
         transform: translateY(0);
         opacity: 1;
+        display: flex;
       }
     }
   }
@@ -67,5 +72,12 @@
     &.-game-mode {
       margin-top: 0;
     }
+  }
+}
+
+@starting-style {
+  .strats-view__fab-group-buttons.-open {
+    opacity: 0;
+    transform: translateY(100%);
   }
 }
