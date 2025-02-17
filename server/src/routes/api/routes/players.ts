@@ -10,6 +10,7 @@ import { configService } from '@/services/config.service';
 import { imageService } from '@/services/image.service';
 import { mailService, MailTemplate } from '@/services/mail.service';
 import { socketService } from '@/services/socket.service';
+import { trackingService } from '@/services/tracking.service';
 import { formatFirstError, profileUpdateSchema } from '@/utils/validation';
 import { verifyAuth } from '@/utils/verifyToken';
 
@@ -74,6 +75,11 @@ router.patch('/', verifyAuth, imageService.upload.single('avatar'), async (reque
   const updatedPlayer = await res.locals.player.save();
 
   const updatedPlayerDto = toPlayerDto(updatedPlayer);
+
+  trackingService.setUser(updatedPlayer._id.toString(), {
+    name: updatedPlayer.name,
+    email: updatedPlayer.email,
+  });
 
   res.json(updatedPlayerDto);
 

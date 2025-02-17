@@ -14,6 +14,7 @@ import { configService } from '@/services/config.service';
 import { imageService } from '@/services/image.service';
 import { mailService, MailTemplate } from '@/services/mail.service';
 import { telegramService } from '@/services/telegram.service';
+import { trackingService } from '@/services/tracking.service';
 import { hasSessionConfig, refreshTokenConfig } from '@/utils/cookies';
 import UserNotFoundError from '@/utils/errors/UserNotFoundError';
 import { Logger } from '@/utils/logger';
@@ -57,6 +58,12 @@ router.post('/register', imageService.upload.single('avatar'), async (request, r
   await mailService.sendMail(user.email, token, user.name, MailTemplate.VERIFY_NEW);
 
   telegramService.send(`User ${user.name} registered.`);
+
+  trackingService.setUser(user._id.toString(), {
+    email: user.email,
+    name: user.name,
+  });
+
   res.json({ _id: user._id, email: user.email });
 });
 
@@ -103,8 +110,6 @@ router.post('/login', async (request, res) => {
 
 router.post('/refresh', cookieParser(), async (request, res) => {
   const currentRefreshToken = request.body.refreshToken ?? request.cookies.refreshToken;
-
-  console.log(currentRefreshToken);
 
   const session = await SessionModel.findOne({ refreshToken: currentRefreshToken });
   if (!session) {
@@ -226,25 +231,19 @@ router.patch('/reset', async (request, res) => {
 });
 
 router.get('/steam', verifyAuthOptional, async (request, res) => {
-  console.log(request.accepted, request.accepts('application/json'));
-
   const returnUrl = new URL(configService.getUrl(Path.api));
   returnUrl.pathname = '/api/auth/steam/authenticate';
 
   const urlQuery = new URLSearchParams();
 
   if (res.locals.player) {
-    console.log('player found');
     const token = jwt.sign({ _id: res.locals.player._id.toString() }, configService.env.TOKEN_SECRET, {
       expiresIn: '10m',
     });
-    logger.debug('token', token);
     urlQuery.set('token', token);
   }
 
   returnUrl.search = urlQuery.toString();
-
-  console.log('returnUrl', returnUrl.toString());
 
   const steam = new SteamAuth({
     realm: configService.getUrl(Path.api).toString(),
@@ -257,6 +256,8 @@ router.get('/steam', verifyAuthOptional, async (request, res) => {
   if (res.locals.player) {
     return res.send(redirectUrl);
   }
+
+  logger.info('Redirecting to Steam login');
 
   return res.redirect(redirectUrl);
 });
@@ -316,8 +317,6 @@ router.get('/steam/authenticate', async (request, res) => {
         accountType: 'steam',
       });
 
-      console.log('new user', user);
-
       await user.save();
     } catch (error) {
       logger.error('Error creating user', (error as Error).message);
@@ -342,8 +341,6 @@ router.get('/steam/authenticate', async (request, res) => {
 
   res.cookie('refreshToken', refreshToken, refreshTokenConfig());
   res.cookie('hasSession', '1', hasSessionConfig());
-
-  console.log(refreshToken);
 
   return res.redirect(redirectUrl.toString());
 });

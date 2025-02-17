@@ -9,6 +9,7 @@ import { configService } from '@/services/config.service';
 import { Logger } from '@/utils/logger';
 
 import { getErrorMessage } from '../utils/errors/parseError';
+import { trackingService } from './tracking.service';
 
 const logger = new Logger('MailService');
 
@@ -52,9 +53,11 @@ class MailService {
         },
       },
     });
+
+    this.transporter.sendMail;
   }
 
-  sendMail = async (to: string, token: string, name: string, template: MailTemplate) => {
+  async sendMail(to: string, token: string, name: string, template: MailTemplate) {
     const link =
       template === MailTemplate.RESET_PASSWORD
         ? urljoin(configService.getUrl(Path.app).toString(), `/reset?token=${token}`)
@@ -73,10 +76,11 @@ class MailService {
       });
       logger.success('Successfully sent verification mail with id: ' + res.messageId);
     } catch (error) {
-      logger.error(getErrorMessage(error));
+      const errorMessage = getErrorMessage(error);
+      trackingService.track('mail_error', { error: errorMessage });
       throw error;
     }
-  };
+  }
 }
 
 const mailService = new MailService();

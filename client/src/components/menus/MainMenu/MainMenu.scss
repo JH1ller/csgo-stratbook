@@ -173,8 +173,9 @@
   }
 
   &__logo-label {
-    color: var(--color-green);
+    color: white;
     font-weight: $weight-bold;
+    font-family: 'Inter', sans-serif;
     transform: translateX(0);
     margin-left: 16px;
     font-size: 1.1rem;

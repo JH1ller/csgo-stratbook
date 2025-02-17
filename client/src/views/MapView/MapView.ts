@@ -68,7 +68,6 @@ export default class MapView extends Vue {
           types: [StratTypes.PISTOL, StratTypes.BUYROUND, StratTypes.FORCE],
           drawData: this.sketchTool.itemState,
         });
-        console.log(result);
         this.$router.push({ path: `/strats/${result._id}` });
       }
     }

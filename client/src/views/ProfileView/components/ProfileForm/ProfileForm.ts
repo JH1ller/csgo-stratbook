@@ -66,8 +66,6 @@ export default class ProfileForm extends Vue {
   }
 
   get submitEnabled() {
-    console.log(this.formFields.email.value, this.profile.email);
-
     return (
       (this.formFields.name.value && this.formFields.name.value !== this.profile.name) ||
       (this.formFields.email.value && this.formFields.email.value !== this.profile.email) ||

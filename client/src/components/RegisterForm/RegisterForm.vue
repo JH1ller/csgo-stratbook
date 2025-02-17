@@ -1,11 +1,11 @@
 <template>
   <form class="register-form" @submit.prevent="handleSubmit" novalidate>
-    <img src="@/assets/images/new_logo_a.png" class="register-form__logo" alt="Application Logo" />
+    <img src="@/assets/icons/logo.svg" class="register-form__logo" alt="Application Logo" />
     <transition name="fade">
       <span class="register-form__error" v-if="formError">{{ formError }}</span>
     </transition>
     <TextInput class="register-form__input" v-model="formFields.name.value" :field="formFields.name" />
-    <TextInput class="register-form__input" v-model="formFields.email.value" :field="formFields.email" />
+    <TextInput class="register-form__input" type="email" v-model="formFields.email.value" :field="formFields.email" />
     <TextInput
       type="password"
       class="register-form__input"
