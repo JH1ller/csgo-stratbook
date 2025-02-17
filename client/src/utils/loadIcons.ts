@@ -64,6 +64,7 @@ import {
   faSortNumericDown,
   faSortNumericUpAlt,
   faSort,
+  faHome,
 } from '@fortawesome/free-solid-svg-icons';
 import { faDiscord, faGithub, faTwitter, faSteam, faSteamSymbol } from '@fortawesome/free-brands-svg-icons';
 import { faCircle, faEye } from '@fortawesome/free-regular-svg-icons';
@@ -144,6 +145,7 @@ export default function loadIcons() {
     faEye,
     faSteam,
     faSteamSymbol,
+    faHome,
   );
 
   Vue.component('fa-icon', FontAwesomeIcon);

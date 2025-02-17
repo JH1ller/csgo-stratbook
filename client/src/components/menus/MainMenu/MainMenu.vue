@@ -25,6 +25,7 @@
         <a class="main-menu__list-item main-menu__link --discord" @click="openDiscord"
           ><fa-icon :icon="['fab', 'discord']" />Discord</a
         >
+        <a class="main-menu__list-item main-menu__link --home" href="/home"><fa-icon icon="home" />Home</a>
       </div>
       <router-link to="/profile" class="main-menu__profile" v-if="profile._id">
         <img :src="avatarUrl" class="main-menu__avatar" alt="User Avatar" />
