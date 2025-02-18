@@ -54,8 +54,13 @@ router.post('/register', imageService.upload.single('avatar'), async (request, r
 
   const token = jwt.sign({ _id: user._id }, configService.env.EMAIL_SECRET);
 
+  try {
+    await mailService.sendMail(user.email, token, user.name, MailTemplate.VERIFY_NEW);
+  } catch (error) {
+    return res.json({ error: 'Error sending email. Please try again later.' });
+  }
+
   await user.save();
-  await mailService.sendMail(user.email, token, user.name, MailTemplate.VERIFY_NEW);
 
   telegramService.send(`User ${user.name} registered.`);
 

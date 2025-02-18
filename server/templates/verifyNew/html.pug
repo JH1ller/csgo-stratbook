@@ -1,10 +1,14 @@
 head
-    link(rel="stylesheet", href="/style.css", data-inline)
+    style
+        include ../css/style.css
 body
     .content
         h1 Hi #{name},
         p.header Welcome to Stratbook!
         p.text Click the link below to verify your email address.
-        a(href=link) verify email
+        table(width='100%' border='0' cellpadding='0' cellspacing='0')
+            tr
+                td(align='center')
+                    a.button(href=link) Verify Email
         p.link-info If the above button doesn't work, copy the link below instead.
         p.link #{link}
