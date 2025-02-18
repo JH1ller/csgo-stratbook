@@ -200,7 +200,7 @@ router.get('/confirmation/:token', async (request, res) => {
 });
 
 router.post('/forgot-password', async (request, res) => {
-  const targetUser = await PlayerModel.findOne({ email: request.body.email });
+  const targetUser = await PlayerModel.findOne({ email: request.body.email.toLowerCase() });
 
   if (!targetUser) {
     return res.status(400).json({ error: 'Could not find user with that email address.' });

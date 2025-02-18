@@ -61,7 +61,11 @@ router.patch('/', verifyAuth, imageService.upload.single('avatar'), async (reque
     if (emailExists) return res.status(400).json({ error: 'Email already exists.' });
 
     const token = jwt.sign({ _id: res.locals.player._id, email: data.email }, configService.env.EMAIL_SECRET);
-    await mailService.sendMail(data.email, token, res.locals.player.name, MailTemplate.VERIFY_CHANGE);
+    try {
+      await mailService.sendMail(data.email, token, res.locals.player.name, MailTemplate.VERIFY_CHANGE);
+    } catch (error) {
+      return res.status(500).json({ error: 'Failed to send verification email. Please try again later.' });
+    }
   }
 
   if (data.completedTutorial) {
