@@ -48,13 +48,12 @@ class MailService {
       transport: this.transporter,
       juice: true,
       juiceResources: {
+        applyStyleTags: true,
         webResources: {
           relativeTo: path.join(process.cwd(), 'templates', 'css'),
         },
       },
     });
-
-    this.transporter.sendMail;
   }
 
   async sendMail(to: string, token: string, name: string, template: MailTemplate) {
@@ -74,6 +73,8 @@ class MailService {
           link,
         },
       });
+      console.log(res);
+      console.log(res.originalMessage);
       logger.success('Successfully sent verification mail with id: ' + res.messageId);
     } catch (error) {
       const errorMessage = getErrorMessage(error);
