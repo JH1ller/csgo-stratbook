@@ -51,6 +51,7 @@ class MailService {
         applyStyleTags: true,
         webResources: {
           relativeTo: path.join(process.cwd(), 'templates', 'css'),
+          images: true,
         },
       },
     });

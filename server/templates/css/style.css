@@ -27,7 +27,7 @@ h1 {
 
 .text {
   color: white;
-  margin-bottom: 32px;
+  margin-block: 32px;
   text-align: center;
 }
 
@@ -36,6 +36,11 @@ h1 {
   color: white;
   text-align: center;
   font-size: 0.9em;
+}
+
+.link {
+  margin-inline: 24px;
+  word-break: break-all;
 }
 
 .link-info {
@@ -52,6 +57,11 @@ h1 {
   text-decoration: none;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   display: inline-block;
+}
+
+.logo {
+  width: 128px;
+  height: 128px;
 }
 
 a:visited {
