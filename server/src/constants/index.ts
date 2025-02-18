@@ -46,5 +46,5 @@ export const CSP_HEADER = [
   // Allow Web Workers
   "worker-src 'self' blob:",
   "child-src 'self' blob:",
-  "frame-src 'self'",
+  "frame-src 'self' https://www.youtube.com https://csnades.gg",
 ].join('; ');

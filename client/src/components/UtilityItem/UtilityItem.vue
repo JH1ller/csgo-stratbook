@@ -7,7 +7,7 @@
       alt="Utility thumbnail"
       @click.native="openInLightbox"
     />
-    <div v-else class="utility-item__image utility-item__copy-wrapper">
+    <div v-else class="utility-item__image utility-item__copy-wrapper" @click="openInLightbox">
       <fa-icon icon="expand" class="utility-item__icon-copy" />
     </div>
     <div class="utility-item__side-wrapper" @click="filterSide">

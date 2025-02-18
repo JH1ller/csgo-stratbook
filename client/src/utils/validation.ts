@@ -155,7 +155,7 @@ export class Validators {
   }
 
   static isYoutubeLink(): ValidatorFunction {
-    const errorMessage = `Currently only youtube is supported.`;
+    const errorMessage = `Must be Youtube or Csnades.gg`;
     return (data) => {
       const expressionResult = !!parseYoutubeUrl(data.value);
       const result = data.required ? expressionResult : data.value.length ? expressionResult : true;

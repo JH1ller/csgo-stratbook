@@ -38,7 +38,7 @@ export default class UtilityItem extends Vue {
       return resolveStaticImageUrl(this.utility.images[0]);
     }
 
-    if (this.utility.videoLink) {
+    if (this.utility.videoLink && !this.utility.videoLink.includes('csnades.gg')) {
       return getThumbnailURL(parseYoutubeUrl(this.utility.videoLink)!.id);
     }
   }

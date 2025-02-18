@@ -9,6 +9,12 @@
         :src="getEmbedURL(currentMedia.src)"
         frameborder="0"
       />
+      <iframe
+        v-else-if="currentMedia && currentMedia.type === 'csnades'"
+        class="utility-lightbox__media"
+        type="text/html"
+        :src="currentMedia.src"
+      />
       <SmartImage
         v-else-if="currentMedia"
         :src="resolveImage(currentMedia.src)"
@@ -34,7 +40,7 @@
       <SmartImage
         v-for="(item, index) in mediaList"
         :key="item.src"
-        :src="item.type === 'image' ? resolveImage(item.src) : getThumbnailURL(item.src)"
+        :src="getPreviewImageSrc(item)"
         class="utility-lightbox__preview"
         @click.native="goToIndex(index)"
         :class="{ '-active': index === currentMediaIndex }"

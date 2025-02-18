@@ -2,12 +2,12 @@
   <BackdropDialog>
     <form class="utility-form" @submit.prevent="handleSubmit" novalidate>
       <FormFieldSet>
-        <TextInput v-model="formFields.name.value" :field="formFields.name" fieldName="name" />
-        <TextInput v-model="formFields.description.value" :field="formFields.description" fieldName="description" />
         <div class="utility-form__input-wrapper">
-          <TextInput v-model="formFields.videoLink.value" :field="formFields.videoLink" fieldName="videoLink" />
+          <TextInput v-model="formFields.name.value" :field="formFields.name" fieldName="name" />
           <TextInput v-model="formFields.setpos.value" :field="formFields.setpos" fieldName="setpos" />
         </div>
+        <TextInput v-model="formFields.description.value" :field="formFields.description" fieldName="description" />
+        <TextInput v-model="formFields.videoLink.value" :field="formFields.videoLink" fieldName="videoLink" />
       </FormFieldSet>
       <div class="utility-form__horizontal-wrapper">
         <FormFieldSet>

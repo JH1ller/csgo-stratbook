@@ -18,7 +18,7 @@ import { writeToClipboard } from '@/utils/writeToClipboard';
 import { panic } from '@/utils/panic';
 
 interface LightboxMedia {
-  type: 'image' | 'video';
+  type: 'image' | 'video' | 'csnades';
   src: string;
 }
 
@@ -49,13 +49,25 @@ export default class UtilityLightbox extends Mixins(CloseOnEscape) {
 
   private get mediaList(): LightboxMedia[] {
     const media: LightboxMedia[] = this.utility.images.map((utility) => ({ type: 'image', src: utility }));
-    if (this.utility.videoLink) media.push({ type: 'video', src: this.utility.videoLink });
+
+    if (this.utility.videoLink) {
+      media.push({
+        type: this.utility.videoLink.includes('csnades.gg') ? 'csnades' : 'video',
+        src: this.utility.videoLink,
+      });
+    }
 
     return media;
   }
 
   private resolveImage(fileURL: string) {
     return resolveStaticImageUrl(fileURL);
+  }
+
+  getPreviewImageSrc(media: LightboxMedia) {
+    if (media.type === 'image') return this.resolveImage(media.src);
+    if (media.type === 'video') return this.getThumbnailURL(media.src);
+    if (media.type === 'csnades') return require('@/assets/images/csnades_logo.png');
   }
 
   private getEmbedURL(url: string): string {
@@ -72,7 +84,7 @@ export default class UtilityLightbox extends Mixins(CloseOnEscape) {
     if (isMobile() && 'requestFullscreen' in this.$el) {
       this.$el.requestFullscreen();
       if ('lock' in screen.orientation) {
-        screen.orientation.lock('landscape');
+        (screen.orientation.lock as (orientation: string) => void)('landscape');
       }
     }
   }
