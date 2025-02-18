@@ -208,7 +208,12 @@ router.post('/forgot-password', async (request, res) => {
 
   const token = jwt.sign({ _id: targetUser._id }, configService.env.EMAIL_SECRET!, { expiresIn: '2 days' });
 
-  await mailService.sendMail(targetUser.email, token, targetUser.name, MailTemplate.RESET_PASSWORD);
+  try {
+    await mailService.sendMail(targetUser.email, token, targetUser.name, MailTemplate.RESET_PASSWORD);
+  } catch (error) {
+    logger.error('Error sending email', (error as Error).message);
+    return res.json({ error: 'Error sending email. Please try again later.' });
+  }
 
   return res.json(true);
 });
