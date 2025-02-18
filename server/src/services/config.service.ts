@@ -10,6 +10,8 @@ class ConfigService {
   readonly allowedOrigins = [
     'https://stratbook.pro',
     'https://stratbook.pro',
+    'https://stratbook.app',
+    'https://stratbook.app',
     'http://localhost.pro:3000',
     'http://localhost.pro:8080',
     'http://localhost:3000',
@@ -37,7 +39,7 @@ class ConfigService {
   }
 
   get origin() {
-    return this.isDev ? 'localhost' : 'jstin.dev'; // TODO: 'stratbook.pro';
+    return this.isDev ? 'localhost' : configService.env.ORIGIN;
   }
 
   get protocol() {

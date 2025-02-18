@@ -43,6 +43,7 @@ export const teamSchema = z.object({
 export const envSchema = z
   .object({
     PORT: z.string().optional(),
+    ORIGIN: z.string(),
     NODE_ENV: z.enum(['development', 'production']),
     DATABASE_URL: z.string().regex(/mongodb(\+srv)?:\/\/.*/),
     DATABASE_URL_DEV: z

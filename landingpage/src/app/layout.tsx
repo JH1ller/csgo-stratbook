@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     'Management',
     'Real-time',
   ],
-  metadataBase: new URL('https://jstin.dev/home/'),
+  metadataBase: new URL('https://stratbook.pro/home/'),
   openGraph: {
     title: 'Stratbook - CS2 Strats & Nade Management Tool',
     description:
