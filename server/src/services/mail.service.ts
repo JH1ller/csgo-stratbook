@@ -50,7 +50,9 @@ class MailService {
       juiceResources: {
         applyStyleTags: true,
         webResources: {
-          relativeTo: path.join(process.cwd(), 'templates', 'css'),
+          relativeTo: path.join(process.cwd(), 'templates'),
+          images: true,
+          svgs: true,
         },
       },
     });
