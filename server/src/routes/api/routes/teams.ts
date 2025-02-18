@@ -159,6 +159,7 @@ router.patch('/join', verifyAuth, async (request, res) => {
   res.locals.player.role = AccessRole.VIEWER;
 
   const updatedPlayer = await res.locals.player.save();
+
   return res.json(toPlayerDto(updatedPlayer));
 });
 

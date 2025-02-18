@@ -1,14 +1,16 @@
 .notice-dialog {
-  &__window {
-    border-radius: 10px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: min(100%, 500px);
-    transform: translate(-50%, -50%);
+  border-radius: 10px;
+  padding: 12px;
+  background-color: var(--color-bg);
+  box-shadow: $shadow-soft;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  @include viewport_mq3 {
+    width: 500px;
+    max-width: 100%;
     padding: 24px;
-    background-color: var(--color-bg);
-    box-shadow: $shadow-soft;
   }
 
   &__notice {
@@ -18,15 +20,16 @@
   }
 
   &__image {
-    // border: 1px solid var(--color-yellow-dark);
     border-radius: 2px;
     background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
     background-size: 200% 200%;
     animation: gradient 10s ease infinite;
     padding: 2px;
+    aspect-ratio: 6/4;
+    object-fit: cover;
   }
 
-  &__title {
+  &__version {
     font-size: 1.5rem;
     font-weight: bold;
     background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
@@ -45,16 +48,54 @@
     justify-content: center;
   }
 
+  &__title {
+    @include typo_hl1;
+  }
+
   &__text {
     line-height: 1.4;
 
     & bold {
       font-weight: 700;
     }
+
+    & ul {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    & li {
+      list-style: disc;
+      margin-left: 16px;
+    }
+  }
+
+  &__btn {
+    @include button-default;
   }
 
   &__btn-close {
-    @include button-default;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    color: var(--color-text-contrast);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    background-color: rgba(black, 0.1);
+
+    & > svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    &:hover {
+      transform: scale(1.05);
+    }
   }
 
   & h1 {

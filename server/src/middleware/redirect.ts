@@ -14,7 +14,7 @@ export const hostRedirect: RequestHandler = (request, res, next) => {
   if (!host) return next();
 
   if (host === 'map.stratbook.pro') {
-    return res.redirect('https://app.stratbook.pro/map');
+    return res.redirect('https://stratbook.pro/map');
   }
 
   if (host.startsWith('www.')) {

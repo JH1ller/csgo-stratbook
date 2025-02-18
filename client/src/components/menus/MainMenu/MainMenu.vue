@@ -1,10 +1,14 @@
 <template>
   <div class="main-menu">
     <ul class="main-menu__list" :class="{ '-open': menuOpen }">
-      <router-link to="/" class="main-menu__logo">
-        <img src="@/assets/icons/logo_small.png" class="main-menu__icon main-menu__logo-icon" alt="Application Logo" />
+      <a href="/home" class="main-menu__logo">
+        <div
+          class="main-menu__icon main-menu__logo-icon"
+          alt="Application Logo"
+          v-html="require(`!!raw-loader!@/assets/icons/logo.svg`).default"
+        ></div>
         <span class="main-menu__label main-menu__logo-label">{{ appName }}</span>
-      </router-link>
+      </a>
 
       <router-link v-for="(item, index) in menuItems" :to="item.link" class="main-menu__list-item" :key="item.label">
         <fa-icon :icon="item.icon" class="main-menu__icon" />

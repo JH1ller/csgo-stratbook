@@ -8,7 +8,6 @@ import { Toast } from '@/components/ToastWrapper/ToastWrapper.models';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { Response } from '@/store';
 import api from '@/api/base';
-import { openLink } from '@/utils/openLink';
 import StorageService from '@/services/storage.service';
 
 @Component({
@@ -26,7 +25,7 @@ export default class ProfileView extends Vue {
   @authModule.Action deleteAccount!: () => Promise<void>;
   @stratModule.Action getStratExport!: () => Promise<Response>;
 
-  steamEnabled = false;
+  steamEnabled = true;
   exportEnabled = false;
 
   async logoutRequest() {
@@ -51,7 +50,7 @@ export default class ProfileView extends Vue {
   }
 
   mounted() {
-    this.steamEnabled = this.storageService.get('steam-enabled') === true;
+    // this.steamEnabled = this.storageService.get('steam-enabled') === true;
     this.exportEnabled = this.storageService.get('export-enabled') === true;
     const isConfirmed = !!this.$route.query.confirmed;
     if (isConfirmed) {
@@ -62,11 +61,7 @@ export default class ProfileView extends Vue {
   async connectSteam() {
     const { success } = await api.auth.fetchSteamUrl();
     if (success) {
-      if (window.desktopMode) {
-        openLink(success);
-      } else {
-        window.location.href = success;
-      }
+      window.location.href = success;
     }
   }
 

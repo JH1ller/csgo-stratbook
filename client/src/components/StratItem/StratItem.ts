@@ -40,12 +40,12 @@ export default class StratItem extends Vue {
   @stratModule.Action updateStrat!: (strat: Partial<Strat>) => Promise<void>;
 
   labelDialogOpen = false;
-  labelsEnabled = false;
+  labelsEnabled = true;
 
   editorKey = 0;
 
   mounted() {
-    this.labelsEnabled = this.storageService.get('labels-enabled') === true;
+    // this.labelsEnabled = this.storageService.get('labels-enabled') === true;
   }
 
   get isManualSort() {
@@ -83,13 +83,13 @@ export default class StratItem extends Vue {
 
   @Emit()
   filterType(type: StratTypes) {
-    this.showToast({ id: 'strat-item/filter-type', text: `Applied filter: ${titleCase(type)}` });
+    this.showToast({ id: 'strat-item/filter-type', text: `Applied Filter: ${titleCase(type)}` });
     return type;
   }
 
   @Emit()
   filterSide() {
-    this.showToast({ id: 'strat-item/filter-side', text: `Applied filter: ${this.strat.side} side` });
+    this.showToast({ id: 'strat-item/filter-side', text: `Applied Filter: ${this.strat.side} side` });
     return this.strat.side;
   }
 

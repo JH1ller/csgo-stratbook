@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 
+import { Path } from '@/constants';
 import { Environment, parseEnvironment } from '@/utils/validation';
 dotenv.config();
 
@@ -8,13 +9,20 @@ class ConfigService {
 
   readonly allowedOrigins = [
     'https://stratbook.pro',
-    'app://.',
-    'https://app.stratbook.pro',
-    'http://app.localhost.pro:8080',
-    'http://app.localhost.pro:3000',
-    'http://app.localhost:8080',
-    'http://app.localhost:3000',
+    'https://stratbook.pro',
+    'http://localhost.pro:3000',
+    'http://localhost.pro:8080',
+    'http://localhost:3000',
+    'http://localhost:8080',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:8080',
+    'https://jstin.dev',
   ];
+
+  readonly appDir = './client-build/app/';
+  readonly landingpageDir = './client-build/landingpage/';
+
+  readonly s3Url = 'https://csgo-stratbook.s3.amazonaws.com/';
 
   constructor() {
     this._env = parseEnvironment();
@@ -29,7 +37,7 @@ class ConfigService {
   }
 
   get origin() {
-    return this.isDev ? 'localhost.pro' : 'stratbook.pro';
+    return this.isDev ? 'localhost' : 'jstin.dev'; // TODO: 'stratbook.pro';
   }
 
   get protocol() {
@@ -44,14 +52,10 @@ class ConfigService {
     return !this.isDev;
   }
 
-  get urls() {
-    return {
-      baseUrl: Object.freeze(new URL(`${this.protocol}${this.origin}${this.isDev ? `:${this.port}` : ''}/`)),
-      apiUrl: Object.freeze(new URL(`${this.protocol}api.${this.origin}${this.isDev ? `:${this.port}` : ''}/`)),
-      appUrl: Object.freeze(new URL(`${this.protocol}app.${this.origin}${this.isDev ? `:${this.port}` : ''}/`)),
-      staticUrl: Object.freeze(new URL(`${this.protocol}static.${this.origin}${this.isDev ? `:${this.port}` : ''}/`)),
-      s3Url: Object.freeze(new URL('https://csgo-stratbook.s3.amazonaws.com/')),
-    };
+  getUrl(path: Path) {
+    const url = new URL(`${this.protocol}${this.origin}${this.isDev ? `:${this.port}` : ''}`);
+    url.pathname = path;
+    return url.href;
   }
 }
 

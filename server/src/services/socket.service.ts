@@ -1,7 +1,5 @@
 import { Server } from 'node:http';
 
-import { instrument } from '@socket.io/admin-ui';
-import { hashSync } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Server as SocketServer } from 'socket.io';
 
@@ -53,16 +51,6 @@ export class SocketService extends SocketServer<
     this.attach(httpServer);
 
     logger.success('Successfully attached.');
-
-    if (configService.env.SOCKET_ADMIN_UI_PW) {
-      instrument(this, {
-        auth: {
-          type: 'basic',
-          username: 'admin',
-          password: hashSync(configService.env.SOCKET_ADMIN_UI_PW, 10),
-        },
-      });
-    }
 
     this.use(async (socket, next) => {
       const token = socket.handshake.auth.token;
@@ -152,7 +140,7 @@ export class SocketService extends SocketServer<
 
   registerBoardHandler(socket: TypedSocket) {
     socket.on('join-draw-room', async ({ targetRoomId, userName, stratId, map }) => {
-      if (targetRoomId && typeof targetRoomId !== 'string') return;
+      if ((targetRoomId && typeof targetRoomId !== 'string') || !socket.data.player) return;
 
       // create room if it doesn't exist yet
       const room = this.getRoom(targetRoomId) ?? new Room({ map, stratId, roomId: targetRoomId });
@@ -165,7 +153,7 @@ export class SocketService extends SocketServer<
 
       socket.data.drawRoomId = room.id;
 
-      const client = room.addClient(socket.id, userName, socket.data.player?.color);
+      const client = room.addClient(socket.id, userName, socket.data.player.color);
 
       //* only fetch drawData from db for the first user who joins
       if (stratId && room.clients.size === 1) {
@@ -283,7 +271,7 @@ export class SocketService extends SocketServer<
   async leaveDrawRoomHandler(socket: TypedSocket) {
     const room = this.getRoom(socket.data.drawRoomId);
 
-    if (!room) return;
+    if (!room || !socket.data.player) return;
 
     socket.leave(room.id);
 
@@ -293,7 +281,7 @@ export class SocketService extends SocketServer<
 
     const player = socket.data.player;
 
-    if (stratId && player?.team) {
+    if (stratId && player.team) {
       const strat = await StratModel.findById(stratId);
       if (!strat) {
         logger.warn(`Strat ${stratId} not found.`);

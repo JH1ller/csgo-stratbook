@@ -30,7 +30,7 @@
   }
 
   &__submit {
-    @include button-primary(true, true);
+    @include button-primary(true);
 
     margin-top: 16px;
   }

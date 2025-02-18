@@ -36,7 +36,7 @@
   }
 
   &__submit {
-    @include button-primary(true, true);
+    @include button-primary(true);
   }
 
   &__register-text {

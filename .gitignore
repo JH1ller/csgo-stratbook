@@ -5,8 +5,7 @@ node_modules
 server/public/upload
 server/dist
 server/dist_server
-server/dist_landingpage
-server/dist_app
+server/client-build
 server/cert
 server/query-scripts
 server/scripts/migration/output

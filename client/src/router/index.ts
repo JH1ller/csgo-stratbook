@@ -110,9 +110,16 @@ const routes = [
     },
   },
   {
-    path: '/imprint',
-    name: RouteNames.Imprint,
-    component: () => import('@/views/ImprintView/ImprintView.vue'),
+    path: '*',
+    name: RouteNames.NotFound,
+    component: () => import('@/views/NotFound/NotFound.vue'),
+    beforeEnter: ((to, from, next) => {
+      if (store.state.auth.status === Status.NO_AUTH) {
+        next(Routes.Login);
+      } else {
+        next(Routes.Strats);
+      }
+    }) as NavigationGuard,
   },
 ];
 

@@ -7,7 +7,9 @@ import UtilityTypeDisplay from '@/components/UtilityTypeDisplay/UtilityTypeDispl
 import { parseYoutubeUrl, getThumbnailURL } from '@/utils/youtubeUtils';
 import SmartImage from '@/components/SmartImage/SmartImage.vue';
 import LabelsDialog from '@/components/LabelsDialog/LabelsDialog.vue';
-import { utilityModule } from '@/store/namespaces';
+import { appModule, filterModule, utilityModule } from '@/store/namespaces';
+import { UtilityTypes } from '@/api/models/UtilityTypes';
+import { Toast } from '../ToastWrapper/ToastWrapper.models';
 
 @Component({
   components: {
@@ -19,6 +21,10 @@ import { utilityModule } from '@/store/namespaces';
 export default class UtilityItem extends Vue {
   @utilityModule.Getter readonly allLabels!: string[];
   @utilityModule.Action readonly updateUtility!: (payload: FormData | Partial<Utility>) => Promise<void>;
+  @filterModule.Action updateUtilityTypeFilter!: (types: UtilityTypes) => Promise<void>;
+  @filterModule.Action updateUtilitySideFilter!: (side: Sides | null) => Promise<void>;
+  @appModule.Action showToast!: (toast: Toast) => void;
+
   @Prop() utility!: Utility;
   @Prop() readOnly!: boolean;
 
@@ -46,6 +52,16 @@ export default class UtilityItem extends Vue {
     if (this.readOnly) return;
     const labels = this.utility.labels.filter((str) => str !== label);
     this.updateUtility({ _id: this.utility._id, labels });
+  }
+
+  filterType() {
+    this.updateUtilityTypeFilter(this.utility.type);
+    this.showToast({ id: 'UtilityItem/appliedTypeFilter', text: `Applied Filter: ${this.utility.type}` });
+  }
+
+  filterSide() {
+    this.updateUtilitySideFilter(this.utility.side);
+    this.showToast({ id: 'UtilityItem/appliedSideFilter', text: `Applied Filter: ${this.utility.side}` });
   }
 
   @Emit()

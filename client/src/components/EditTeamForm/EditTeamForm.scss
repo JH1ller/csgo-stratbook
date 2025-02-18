@@ -1,11 +1,11 @@
 .edit-team-form {
   &__btn {
-    @include button-default(true, true);
+    @include button-default(true);
 
     flex: 1 0;
 
     &.--save {
-      @include button-primary(true, true);
+      @include button-primary(true);
     }
   }
 

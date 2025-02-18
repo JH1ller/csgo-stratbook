@@ -10,7 +10,8 @@ import { configService } from '@/services/config.service';
 import { imageService } from '@/services/image.service';
 import { mailService, MailTemplate } from '@/services/mail.service';
 import { socketService } from '@/services/socket.service';
-import { profileUpdateSchema } from '@/utils/validation';
+import { trackingService } from '@/services/tracking.service';
+import { formatFirstError, profileUpdateSchema } from '@/utils/validation';
 import { verifyAuth } from '@/utils/verifyToken';
 
 const router = Router();
@@ -24,7 +25,7 @@ router.get('/', verifyAuth, (_request, res) => {
 router.patch('/', verifyAuth, imageService.upload.single('avatar'), async (request, res) => {
   const { error, data } = profileUpdateSchema.safeParse(request.body);
   if (error) {
-    return res.status(400).json({ error: error.format()._errors[0] });
+    return res.status(400).json({ error: formatFirstError(error) });
   }
 
   if (data.password) {
@@ -44,7 +45,7 @@ router.patch('/', verifyAuth, imageService.upload.single('avatar'), async (reque
   if (data.name && request.query.updateStrats === 'true' && res.locals.player.team) {
     const strats = await StratModel.find({ team: res.locals.player.team });
     const promises = strats.map(async (strat) => {
-      strat.content = strat.content?.replace(res.locals.player.name, data.name);
+      strat.content = strat.content?.replace(res.locals.player.name, data.name!);
       await strat.save();
     });
     await Promise.all(promises);
@@ -60,7 +61,11 @@ router.patch('/', verifyAuth, imageService.upload.single('avatar'), async (reque
     if (emailExists) return res.status(400).json({ error: 'Email already exists.' });
 
     const token = jwt.sign({ _id: res.locals.player._id, email: data.email }, configService.env.EMAIL_SECRET);
-    await mailService.sendMail(data.email, token, res.locals.player.name, MailTemplate.VERIFY_CHANGE);
+    try {
+      await mailService.sendMail(data.email, token, res.locals.player.name, MailTemplate.VERIFY_CHANGE);
+    } catch (error) {
+      return res.status(500).json({ error: 'Failed to send verification email. Please try again later.' });
+    }
   }
 
   if (data.completedTutorial) {
@@ -74,6 +79,11 @@ router.patch('/', verifyAuth, imageService.upload.single('avatar'), async (reque
   const updatedPlayer = await res.locals.player.save();
 
   const updatedPlayerDto = toPlayerDto(updatedPlayer);
+
+  trackingService.setUser(updatedPlayer._id.toString(), {
+    name: updatedPlayer.name,
+    email: updatedPlayer.email,
+  });
 
   res.json(updatedPlayerDto);
 

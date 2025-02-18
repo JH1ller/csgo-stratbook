@@ -14,7 +14,7 @@ export default class LoginForm extends Vue {
   @Inject() storageService!: StorageService;
   @appModule.Action showToast!: (toast: Toast) => void;
   @Prop() formError!: string;
-  steamEnabled: boolean = false;
+  steamEnabled = true;
 
   email: FormField = new FormField('Email', true, [Validators.notEmpty(), Validators.isEmail()], 'email');
 
@@ -57,6 +57,6 @@ export default class LoginForm extends Vue {
       });
       this.email.value = email as string;
     }
-    this.steamEnabled = this.storageService.get('steam-enabled') === true;
+    // this.steamEnabled = this.storageService.get('steam-enabled') === true;
   }
 }

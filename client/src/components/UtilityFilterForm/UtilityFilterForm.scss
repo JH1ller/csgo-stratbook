@@ -5,7 +5,6 @@
   @include spacing('gap', 'sm');
 
   & > :not(:first-of-type) {
-    // @include spacing('margin-top', 'sm');
     @include spacing('padding-top', 'sm');
 
     border-top: 2px solid var(--color-border);
@@ -16,8 +15,6 @@
   }
 
   &__label {
-    @include spacing('margin-bottom', 'xs');
-
     font-size: 1.1rem;
   }
 
@@ -41,5 +38,11 @@
     &.-active {
       background: var(--color-green-80);
     }
+  }
+
+  &__filter {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 }

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -11,9 +11,8 @@
       name="keywords"
       content="stratbook, strategies, strategy, esport, csgo, counter-strike, counterstrike, global offensive, cs:go, tactics board, drawboard, collaborative, webapp, vue, free, database, manage"
     />
-    <title>Stratbook App</title>
-    <link rel="icon" href="<%= BASE_URL %>favicon.png" />
-    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <title>Stratbook</title>
+    <link rel="icon" href="<%= BASE_URL %>favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -24,6 +23,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet" />
     <link
       href="https://fonts.googleapis.com/css2?family=Old+Standard+TT&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -108,47 +113,10 @@
     </noscript>
     <div class="loader-wrapper">
       <p class="loader-title">stratbook</p>
-      <!-- <img class="loader-img" src="/stratbook.svg" /> -->
       <div class="loading-track">
         <div class="loading-indicator"></div>
       </div>
-      <!-- <p class="loader-message"></p> -->
     </div>
     <div id="app"></div>
-    <!-- built files will be auto injected -->
-
-    <!-- <script>
-      function getRandomInt(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-      }
-
-      const messages = [
-        'Preparing all your B rush strats',
-        'Warming up tactics board...',
-        'Collecting your strats...',
-        'Checking for updates...',
-        'Loading filters...',
-        // 'Did you know you can link your grenades in your strats with #nade_name ?',
-        // 'Did you know there is a stratbook discord channel where you can suggest features and discuss your strats?',
-      ];
-      const msgElement = document.querySelector('.loader-message');
-
-      msgElement.innerText = messages[getRandomInt(0, messages.length - 1)];
-
-      window.intervalActive = true;
-
-      let interval = getRandomInt(800, 2300);
-
-      function updateMessage() {
-        msgElement.innerText = messages.filter((i) => i !== msgElement.innerText)[getRandomInt(0, messages.length - 2)];
-        interval = getRandomInt(800, 2300);
-
-        if (window.intervalActive) setTimeout(updateMessage, interval);
-      }
-
-      setTimeout(updateMessage, interval);
-    </script> -->
   </body>
 </html>

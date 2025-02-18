@@ -14,7 +14,7 @@ export type NoticeDto = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const toNoticeDto = (notice: prismic.PrismicDocument<Record<string, any>, string, string>) => ({
   id: notice.id,
-  title: notice.data.title.text,
+  title: prismicH.asText(notice.data.title),
   version: notice.tags[0],
   tags: notice.tags.slice(1),
   content: prismicH.asHTML(notice.data.description),

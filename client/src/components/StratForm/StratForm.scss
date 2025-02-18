@@ -20,13 +20,13 @@
     &.--submit {
       @include button-primary;
       @include viewport_range(mq1, mq3) {
-        @include button-primary(true, true);
+        @include button-primary(true);
       }
     }
     &.--cancel {
       @include button-default;
       @include viewport_range(mq1, mq3) {
-        @include button-default(true, true);
+        @include button-default(true);
       }
     }
   }

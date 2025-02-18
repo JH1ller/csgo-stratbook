@@ -4,10 +4,12 @@ import Email from 'email-templates';
 import nodemailer from 'nodemailer';
 import urljoin from 'url-join';
 
+import { Path } from '@/constants';
 import { configService } from '@/services/config.service';
 import { Logger } from '@/utils/logger';
 
 import { getErrorMessage } from '../utils/errors/parseError';
+import { trackingService } from './tracking.service';
 
 const logger = new Logger('MailService');
 
@@ -39,25 +41,34 @@ class MailService {
     });
 
     this.email = new Email({
+      preview: false,
       message: {
         from: this.sender,
+        attachments: [
+          {
+            filename: 'logo.png',
+            cid: 'logo',
+            path: path.join(process.cwd(), 'templates', 'img', 'logo.png'),
+          },
+        ],
       },
       send: true,
       transport: this.transporter,
       juice: true,
       juiceResources: {
+        applyStyleTags: true,
         webResources: {
-          relativeTo: path.join(process.cwd(), 'templates', 'css'),
+          relativeTo: path.join(process.cwd(), 'templates'),
         },
       },
     });
   }
 
-  sendMail = async (to: string, token: string, name: string, template: MailTemplate) => {
+  async sendMail(to: string, token: string, name: string, template: MailTemplate) {
     const link =
       template === MailTemplate.RESET_PASSWORD
-        ? urljoin(configService.urls.appUrl.toString(), `/reset?token=${token}`)
-        : urljoin(configService.urls.apiUrl.toString(), `/auth/confirmation/${token}`);
+        ? urljoin(configService.getUrl(Path.app).toString(), `/reset?token=${token}`)
+        : urljoin(configService.getUrl(Path.api).toString(), `/auth/confirmation/${token}`);
 
     try {
       const res = await this.email.send({
@@ -72,10 +83,11 @@ class MailService {
       });
       logger.success('Successfully sent verification mail with id: ' + res.messageId);
     } catch (error) {
-      logger.error(getErrorMessage(error));
+      const errorMessage = getErrorMessage(error);
+      trackingService.track('mail_error', { error: errorMessage });
       throw error;
     }
-  };
+  }
 }
 
 const mailService = new MailService();

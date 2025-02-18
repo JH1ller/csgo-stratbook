@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prefer-module */
 import { createServer, Server } from 'node:http';
 
 import * as Sentry from '@sentry/node';
@@ -8,10 +9,11 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application } from 'express';
 import rateLimit from 'express-rate-limit';
-import subdomain from 'express-subdomain';
 import helmet from 'helmet';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import mongoose from 'mongoose';
+
+import { CSP_HEADER, Path, PUBLIC_PATHS } from '@/constants';
 
 import { loggerMiddleware } from '../middleware/logger';
 import { hostRedirect, secureRedirect } from '../middleware/redirect';
@@ -33,6 +35,7 @@ class AppService {
     this.setupDbConnection();
     this.setupMiddleware();
     this.setupRoutes();
+    this.setupGracefulShutdown();
   }
 
   get httpServer() {
@@ -43,7 +46,7 @@ class AppService {
     mongoose.set('strictQuery', false);
     this.db.on('error', (error) => logger.error('mongoose:', error.message));
     this.db.once('open', () => logger.success('mongoose:', 'Connected to database'));
-    await mongoose.connect(configService.isDev ? configService.env.DATABASE_URL_DEV! : configService.env.DATABASE_URL!);
+    await mongoose.connect(configService.isDev ? configService.env.DATABASE_URL_DEV! : configService.env.DATABASE_URL);
   }
 
   private setupMiddleware() {
@@ -77,44 +80,71 @@ class AppService {
   }
 
   private setupRoutes() {
-    if (configService.isDev) {
-      this.app.use((_, res, next) => {
-        res.setHeader('Content-Security-Policy', "script-src 'self' 'unsafe-eval'");
-        res.setHeader('Cross-Origin-Opener-Policy', 'unsafe-none');
-        next();
-      });
-      this.app.use(
-        subdomain(
-          'app',
-          createProxyMiddleware({
-            target: 'http://localhost:8080',
-            changeOrigin: true,
-            // logger,
-            secure: false,
-          }),
-        ),
-      );
-    } else {
-      this.app.use(subdomain('app', express.static('dist_app')));
-    }
-    this.app.use(subdomain('api', apiRouter));
-    this.app.use(subdomain('static', express.static('public')));
-    this.app.use('/', (req, res, next) => {
-      const { refreshToken, hasSession } = req.cookies;
-      if (refreshToken || hasSession) {
-        return res.redirect(configService.urls.appUrl.toString());
-      }
-      return express.static('dist_landingpage')(req, res, next);
+    this.app.use((_, res, next) => {
+      res.setHeader('Content-Security-Policy', CSP_HEADER);
+      next();
     });
-    this.app.use(history());
+
+    // API routes
+    this.app.use('/api', apiRouter);
+
+    // Serve static files for public assets
+    this.app.use('/static', express.static('public'));
+
+    this.app.use('/home', express.static('client-build/landingpage'));
+
+    if (configService.isDev) {
+      const clientProxy = createProxyMiddleware({
+        target: 'http://127.0.0.1:8080',
+        changeOrigin: true,
+        secure: false,
+      });
+      this.app.use('/', clientProxy);
+    }
+
+    // Middleware to check if the user is logged in
+    this.app.use((req, res, next) => {
+      const refreshToken = req.cookies.refreshToken;
+
+      // Allow access to public paths without checking for login
+      if (PUBLIC_PATHS.some((path) => req.path.startsWith(path))) {
+        return next();
+      }
+
+      // If the user is not logged in, redirect to /home
+      if (!refreshToken && req.headers.accept?.includes('text/html')) {
+        return res.redirect('/home');
+      }
+
+      // If the user is logged in, proceed to the next middleware
+      next();
+    });
+
+    this.app.use(history({ verbose: true }));
+
+    this.app.use('/', express.static('client-build/app'));
   }
 
   start() {
-    this.httpServer.listen(configService.port, configService.isDev ? configService.origin : undefined, () =>
+    this.httpServer.listen(configService.port, undefined, () =>
       logger.success(
-        `Server started. [${green(configService.env.NODE_ENV.toUpperCase())}] ${configService.urls.baseUrl.toString()}`,
+        `Server started. [${green(configService.env.NODE_ENV.toUpperCase())}] ${configService.getUrl(Path.app)}`,
       ),
     );
+  }
+
+  private setupGracefulShutdown() {
+    const shutdown = async () => {
+      logger.info('Shutting down server...');
+      await mongoose.connection.close();
+      this.httpServer.close(() => {
+        logger.info('Server shut down successfully');
+        process.exit(0);
+      });
+    };
+
+    process.on('SIGTERM', shutdown);
+    process.on('SIGINT', shutdown);
   }
 }
 

@@ -124,7 +124,9 @@
   &__icon {
     width: 30px;
     height: 30px;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
     opacity: 0;
     pointer-events: none;
 
@@ -142,6 +144,7 @@
   &__logo-icon {
     width: 40px;
     height: 40px;
+    min-width: 40px;
     object-fit: contain;
   }
 
@@ -152,7 +155,10 @@
     overflow: hidden;
     color: var(--color-text-contrast-70);
     transform: translateX(-20px);
-    transition: opacity 0.5s ease-out, color 0.3s ease, transform 0.5s ease-out;
+    transition:
+      opacity 0.5s ease-out,
+      color 0.3s ease,
+      transform 0.5s ease-out;
   }
 
   &__logo {
@@ -167,8 +173,9 @@
   }
 
   &__logo-label {
-    color: var(--color-yellow);
+    color: white;
     font-weight: $weight-bold;
+    font-family: 'Inter', sans-serif;
     transform: translateX(0);
     margin-left: 16px;
     font-size: 1.1rem;
@@ -190,7 +197,9 @@
     padding: 8px 24px;
     white-space: nowrap;
     overflow: hidden;
-    transition: opacity 0.3s ease, background-color 0.3s ease;
+    transition:
+      opacity 0.3s ease,
+      background-color 0.3s ease;
     display: flex;
 
     @include viewport_mq3 {

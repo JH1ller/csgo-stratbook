@@ -46,7 +46,6 @@ export default class TrackingService {
 
     window.splitbee?.track(event, {
       version: pkg.version,
-      appContext: window.desktopMode ? 'Electron' : 'Web',
       breakpoint: this.breakpoint,
       ...(this.team && { team: this.team }),
       ...data,
@@ -54,7 +53,6 @@ export default class TrackingService {
 
     mixpanel.track(event, {
       version: pkg.version,
-      appContext: window.desktopMode ? 'Electron' : 'Web',
       breakpoint: this.breakpoint,
       ...(this.team && { team: this.team }),
       ...data,
@@ -68,7 +66,6 @@ export default class TrackingService {
     window.splitbee?.user.set({
       name,
       userId: id,
-      appContext: window.desktopMode ? 'Desktop App' : 'Web App',
       breakpoint: this.breakpoint,
       ...(this.team && { team: this.team }),
       ...data,

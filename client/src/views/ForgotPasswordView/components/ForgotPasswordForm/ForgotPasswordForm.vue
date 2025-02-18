@@ -1,6 +1,6 @@
 <template>
   <form class="forgot-password-form" @submit.prevent="submitClicked" novalidate>
-    <img src="@/assets/images/new_logo_a.png" class="forgot-password-form__logo" alt="Application Logo" />
+    <img src="@/assets/icons/logo.svg" class="forgot-password-form__logo" alt="Application Logo" />
     <transition name="fade">
       <span class="forgot-password-form__error" v-if="formError">{{ formError }}</span>
     </transition>

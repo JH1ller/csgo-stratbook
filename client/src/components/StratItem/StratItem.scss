@@ -81,6 +81,7 @@
 
     &.-blinking {
       outline: 2px solid var(--color-red);
+      outline-offset: -2px;
       animation: pulse-outline 2s infinite;
     }
 
@@ -126,6 +127,7 @@
     @include spacing('margin-top', '2xs');
 
     margin-bottom: 1px;
+    margin-right: 1px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -259,7 +261,9 @@
     }
 
     & > svg {
-      transition: opacity 0.3s ease, scale 0.3s ease;
+      transition:
+        opacity 0.3s ease,
+        scale 0.3s ease;
       width: 12px;
       height: 12px;
       scale: 0.9;

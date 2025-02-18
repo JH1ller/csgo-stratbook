@@ -29,9 +29,9 @@ export default class TeamInfo extends Vue {
     openLink(this.teamInfo.website!);
   }
 
-  copyCode() {
-    writeToClipboard(this.teamInfo.code.toUpperCase());
-    this.showToast({ id: 'teamInfo/copyCode', text: 'Join code copied' });
+  async copyCode() {
+    const result = await writeToClipboard(this.teamInfo.code.toUpperCase());
+    if (result) this.showToast({ id: 'teamInfo/copyCode', text: 'Join code copied' });
   }
 
   copyServer() {

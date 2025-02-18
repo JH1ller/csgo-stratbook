@@ -6,9 +6,9 @@
       <p v-if="teamInfo.website" class="team-info__website" @click="openWebsite" v-tippy content="Visit website">
         {{ teamInfo.website }}
       </p>
-      <div class="team-info__code" @click="copyCode" content="Copy join code" v-tippy>
+      <div class="team-info__code">
         <p class="team-info__code-text">{{ teamInfo.code }}</p>
-        <span class="team-info__code-icon-wrapper">
+        <span class="team-info__code-icon-wrapper" @click="copyCode" content="Copy join code" v-tippy>
           <fa-icon class="team-info__code-icon" icon="copy" />
         </span>
       </div>

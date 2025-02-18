@@ -7,18 +7,23 @@ import { nanoid } from 'nanoid';
 import SteamAuth from 'node-steam-openid';
 import urljoin from 'url-join';
 
-import { PlayerModel } from '@/models/player';
+import { Path } from '@/constants';
+import { PlayerDocument, PlayerModel } from '@/models/player';
 import { SessionModel } from '@/models/session';
 import { configService } from '@/services/config.service';
 import { imageService } from '@/services/image.service';
 import { mailService, MailTemplate } from '@/services/mail.service';
 import { telegramService } from '@/services/telegram.service';
+import { trackingService } from '@/services/tracking.service';
 import { hasSessionConfig, refreshTokenConfig } from '@/utils/cookies';
 import UserNotFoundError from '@/utils/errors/UserNotFoundError';
+import { Logger } from '@/utils/logger';
 import { registerSchema } from '@/utils/validation';
 import { verifyAuth, verifyAuthOptional } from '@/utils/verifyToken';
 
 const router = Router();
+
+const logger = new Logger('AuthRoutes');
 
 router.post('/register', imageService.upload.single('avatar'), async (request, res) => {
   const { error, data } = registerSchema.safeParse(request.body);
@@ -49,10 +54,21 @@ router.post('/register', imageService.upload.single('avatar'), async (request, r
 
   const token = jwt.sign({ _id: user._id }, configService.env.EMAIL_SECRET);
 
+  try {
+    await mailService.sendMail(user.email, token, user.name, MailTemplate.VERIFY_NEW);
+  } catch (error) {
+    return res.json({ error: 'Error sending email. Please try again later.' });
+  }
+
   await user.save();
-  await mailService.sendMail(user.email, token, user.name, MailTemplate.VERIFY_NEW);
 
   telegramService.send(`User ${user.name} registered.`);
+
+  trackingService.setUser(user._id.toString(), {
+    email: user.email,
+    name: user.name,
+  });
+
   res.json({ _id: user._id, email: user.email });
 });
 
@@ -71,8 +87,6 @@ router.post('/login', async (request, res) => {
 
   const refreshToken = nanoid(64);
   const refreshTokenExpiration = new Date(Date.now() + ms(configService.env.REFRESH_TOKEN_TTL ?? '180d'));
-
-  const electronMode = !!request.body.electronMode;
 
   const session = new SessionModel({
     refreshToken,
@@ -96,14 +110,11 @@ router.post('/login', async (request, res) => {
 
   res.json({
     token,
-    refreshToken: electronMode ? refreshToken : undefined,
   });
 });
 
 router.post('/refresh', cookieParser(), async (request, res) => {
   const currentRefreshToken = request.body.refreshToken ?? request.cookies.refreshToken;
-
-  console.log(currentRefreshToken);
 
   const session = await SessionModel.findOne({ refreshToken: currentRefreshToken });
   if (!session) {
@@ -118,8 +129,6 @@ router.post('/refresh', cookieParser(), async (request, res) => {
     res.clearCookie('hasSession', hasSessionConfig());
     return res.status(400).json({ error: 'Refresh token expired' });
   }
-
-  const electronMode = !!request.body.electronMode;
 
   const refreshToken = nanoid(64);
   const refreshTokenExpiration = new Date(Date.now() + ms(configService.env.REFRESH_TOKEN_TTL ?? '180d'));
@@ -139,7 +148,6 @@ router.post('/refresh', cookieParser(), async (request, res) => {
 
   res.send({
     token,
-    refreshToken: electronMode ? refreshToken : undefined,
   });
 });
 
@@ -177,20 +185,22 @@ router.get('/confirmation/:token', async (request, res) => {
   if (email) {
     targetUser.email = email;
     await targetUser.save();
-    return res.redirect(urljoin(configService.urls.appUrl.toString(), `/profile?confirmed=1`));
+    return res.redirect(urljoin(configService.getUrl(Path.app).toString(), `/profile?confirmed=1`));
   }
 
   if (targetUser.confirmed) {
-    return res.redirect(urljoin(configService.urls.appUrl.toString(), `/login?already_confirmed=${targetUser.email}`));
+    return res.redirect(
+      urljoin(configService.getUrl(Path.app).toString(), `/login?already_confirmed=${targetUser.email}`),
+    );
   } else {
     targetUser.confirmed = true;
     await targetUser.save();
-    return res.redirect(urljoin(configService.urls.appUrl.toString(), `/login?confirmed=${targetUser.email}`));
+    return res.redirect(urljoin(configService.getUrl(Path.app).toString(), `/login?confirmed=${targetUser.email}`));
   }
 });
 
 router.post('/forgot-password', async (request, res) => {
-  const targetUser = await PlayerModel.findOne({ email: request.body.email });
+  const targetUser = await PlayerModel.findOne({ email: request.body.email.toLowerCase() });
 
   if (!targetUser) {
     return res.status(400).json({ error: 'Could not find user with that email address.' });
@@ -226,64 +236,71 @@ router.patch('/reset', async (request, res) => {
 });
 
 router.get('/steam', verifyAuthOptional, async (request, res) => {
-  console.log(request.accepted, request.accepts('application/json'));
-  const returnUrl = new URL(configService.urls.apiUrl);
-  returnUrl.pathname = '/auth/steam/authenticate';
+  const returnUrl = new URL(configService.getUrl(Path.api));
+  returnUrl.pathname = '/api/auth/steam/authenticate';
 
   const urlQuery = new URLSearchParams();
 
-  if (request.get('user-agent')?.includes('Electron')) {
-    urlQuery.set('electronMode', 'true');
-  }
-
   if (res.locals.player) {
-    console.log('player found');
-    urlQuery.set('playerId', res.locals.player._id.toString());
+    const token = jwt.sign({ _id: res.locals.player._id.toString() }, configService.env.TOKEN_SECRET, {
+      expiresIn: '10m',
+    });
+    urlQuery.set('token', token);
   }
 
   returnUrl.search = urlQuery.toString();
 
-  console.log('returnUrl', returnUrl.toString());
-
   const steam = new SteamAuth({
-    realm: configService.urls.apiUrl.toString(),
+    realm: configService.getUrl(Path.api).toString(),
     returnUrl: returnUrl.toString(),
     apiKey: configService.env.STEAM_API_KEY!,
   });
 
   const redirectUrl = await steam.getRedirectUrl();
-  return res.send(redirectUrl);
+
+  if (res.locals.player) {
+    return res.send(redirectUrl);
+  }
+
+  logger.info('Redirecting to Steam login');
+
+  return res.redirect(redirectUrl);
 });
 
 router.get('/steam/authenticate', async (request, res) => {
-  const electronMode = !!request.query.electronMode;
-
   const steam = new SteamAuth({
-    realm: configService.urls.apiUrl.toString(),
-    returnUrl: urljoin(configService.urls.apiUrl.toString(), '/auth/steam/authenticate'),
+    realm: configService.getUrl(Path.api).toString(),
+    returnUrl: urljoin(configService.getUrl(Path.api).toString(), '/auth/steam/authenticate'),
     apiKey: configService.env.STEAM_API_KEY!,
   });
 
   const steamUser = await steam.authenticate(request);
 
-  console.log(steamUser);
-
   let user = await PlayerModel.findOne({ steamId: steamUser.steamid });
 
-  if (request.query.playerId) {
-    console.log('playerId', request.query.playerId);
+  const redirectUrl = new URL(configService.getUrl(Path.app));
 
-    const redirectUrl = new URL(configService.urls.appUrl);
-
-    const player = await PlayerModel.findById(request.query.playerId);
-
+  if (request.query.token) {
     redirectUrl.pathname = '/profile';
+
+    let player: PlayerDocument | null = null;
+
+    try {
+      const { _id } = jwt.verify(request.query.token as string, configService.env.TOKEN_SECRET) as JwtPayload;
+
+      player = await PlayerModel.findById(_id);
+    } catch (error) {
+      logger.error('Invalid token', (error as Error).message);
+      redirectUrl.searchParams.set('message', 'Player not found');
+      return res.redirect(redirectUrl.toString());
+    }
 
     if (!player) {
       redirectUrl.searchParams.set('message', 'Player not found');
       return res.redirect(redirectUrl.toString());
     }
     if (user) {
+      logger.info(`Steam account ${steamUser.steamid} already linked to another user`);
       redirectUrl.searchParams.set('message', 'Steam account already linked to another user');
       return res.redirect(redirectUrl.toString());
     }
@@ -292,23 +309,25 @@ router.get('/steam/authenticate', async (request, res) => {
     player.accountType = 'steam';
     await player.save();
 
-    if (electronMode) {
-      return res.redirect(`stratbook://connect`);
-    }
-
     redirectUrl.searchParams.set('message', 'Steam account successfully linked');
     return res.redirect(redirectUrl.toString());
   }
 
   if (!user) {
-    user = new PlayerModel({
-      name: steamUser.username,
-      avatar: steamUser.avatar.large,
-      steamId: steamUser.steamid,
-      accountType: 'steam',
-    });
+    try {
+      user = new PlayerModel({
+        name: steamUser.username.slice(0, 20),
+        avatar: steamUser.avatar.large,
+        steamId: steamUser.steamid,
+        accountType: 'steam',
+      });
 
-    await user.save();
+      await user.save();
+    } catch (error) {
+      logger.error('Error creating user', (error as Error).message);
+      redirectUrl.searchParams.set('message', 'An error occurred while creating the user');
+      return res.redirect(redirectUrl.toString());
+    }
   }
 
   const refreshToken = nanoid(64);
@@ -325,16 +344,8 @@ router.get('/steam/authenticate', async (request, res) => {
   res.set('Access-Control-Expose-Headers', 'Set-Cookie');
   res.set('Access-Control-Allow-Headers', 'Set-Cookie');
 
-  if (electronMode) {
-    return res.redirect(`stratbook://token/${refreshToken}`);
-  } else {
-    res.cookie('refreshToken', refreshToken, refreshTokenConfig());
-    res.cookie('hasSession', '1', hasSessionConfig());
-  }
-
-  console.log(refreshToken);
-
-  const redirectUrl = new URL(configService.urls.appUrl);
+  res.cookie('refreshToken', refreshToken, refreshTokenConfig());
+  res.cookie('hasSession', '1', hasSessionConfig());
 
   return res.redirect(redirectUrl.toString());
 });
