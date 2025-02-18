@@ -64,7 +64,6 @@ import {
   faSortNumericDown,
   faSortNumericUpAlt,
   faSort,
-  faHome,
   faArrowLeft,
   faArrowRight,
 } from '@fortawesome/free-solid-svg-icons';
@@ -147,7 +146,6 @@ export default function loadIcons() {
     faEye,
     faSteam,
     faSteamSymbol,
-    faHome,
     faArrowLeft,
     faArrowRight,
   );

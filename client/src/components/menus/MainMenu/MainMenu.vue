@@ -1,14 +1,14 @@
 <template>
   <div class="main-menu">
     <ul class="main-menu__list" :class="{ '-open': menuOpen }">
-      <router-link to="/" class="main-menu__logo">
+      <a href="/home" class="main-menu__logo">
         <div
           class="main-menu__icon main-menu__logo-icon"
           alt="Application Logo"
           v-html="require(`!!raw-loader!@/assets/icons/logo.svg`).default"
         ></div>
         <span class="main-menu__label main-menu__logo-label">{{ appName }}</span>
-      </router-link>
+      </a>
 
       <router-link v-for="(item, index) in menuItems" :to="item.link" class="main-menu__list-item" :key="item.label">
         <fa-icon :icon="item.icon" class="main-menu__icon" />
@@ -25,7 +25,6 @@
         <a class="main-menu__list-item main-menu__link --discord" @click="openDiscord"
           ><fa-icon :icon="['fab', 'discord']" />Discord</a
         >
-        <a class="main-menu__list-item main-menu__link --home" href="/home"><fa-icon icon="home" />Home</a>
       </div>
       <router-link to="/profile" class="main-menu__profile" v-if="profile._id">
         <img :src="avatarUrl" class="main-menu__avatar" alt="User Avatar" />

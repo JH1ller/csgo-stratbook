@@ -8,9 +8,9 @@ import { cn } from '@/lib/utils';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Stratbook - Free CS2 Strats & Nade Management Tool',
+  title: 'Stratbook - CS2 Strats & Nade Management Tool',
   description:
-    'Free Counterstrike Strategy & Nade Lineup Management Tool and real-time Tactics Board. Collaborate with your team and Keep your Playbook organized with Stratbook.',
+    'Free CS2 Strategy Management Tool and real-time Tactics Board. Collaborate with your team and Keep your Playbook organized with Stratbook.',
   icons: [
     {
       url: '/home/favicon.svg',
@@ -40,9 +40,9 @@ export const metadata: Metadata = {
   ],
   metadataBase: new URL('https://jstin.dev/home/'),
   openGraph: {
-    title: 'Stratbook - Free CS2 Strats & Nade Management Tool',
+    title: 'Stratbook - CS2 Strats & Nade Management Tool',
     description:
-      'Free Counterstrike Strategy & Nade Management Tool and real-time Tactics Board. Collaborate with your team and Keep your Playbook organized with Stratbook.',
+      'Free CS2 Strategy Management Tool and real-time Tactics Board. Collaborate with your team and keep your Playbook organized with Stratbook.',
     images: [
       {
         url: '/home/stratbook_icon.svg',
