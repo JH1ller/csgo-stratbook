@@ -40,12 +40,12 @@
   }
 
   &__btn {
-    @include button-default(true, true);
+    @include button-default(true);
 
     flex-shrink: 0;
 
     &.--clear {
-      @include button-primary(true, true);
+      @include button-primary(true);
     }
   }
 }

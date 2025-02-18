@@ -1,4 +1,4 @@
-@mixin button-default($has-text: true, $big: false) {
+@mixin button-default($big: false) {
   @include typo_text;
 
   display: inline-flex;
@@ -15,6 +15,7 @@
   color: var(--color-text);
   position: relative;
   overflow: hidden;
+  gap: 6px;
 
   @include viewport_range(mq1, mq2) {
     @if ($big == false) {
@@ -38,12 +39,6 @@
     height: 14px;
   }
 
-  @if ($has-text == true) {
-    & > :first-child {
-      margin-right: 6px;
-    }
-  }
-
   @if ($big == true) {
     padding: 12px 6px;
     width: 100%;
@@ -52,8 +47,8 @@
   }
 }
 
-@mixin button-primary($has-text: true, $big: false) {
-  @include button-default($has-text, $big);
+@mixin button-primary($big: false) {
+  @include button-default($big);
 
   background-color: var(--color-green);
   color: var(--color-text-contrast);
@@ -65,8 +60,8 @@
   }
 }
 
-@mixin button-danger($has-text: true, $big: false) {
-  @include button-default($has-text, $big);
+@mixin button-danger($big: false) {
+  @include button-default($big);
 
   background-color: var(--color-red);
   color: var(--color-text-contrast);

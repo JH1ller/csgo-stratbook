@@ -115,9 +115,6 @@ export default class App extends Vue {
 
     this.notices = notices;
     this.showNotice = notices.length > 0;
-    this.notices.forEach((notice) => {
-      this.storageService.set('seenNotices', [...(this.storageService.get('seenNotices') || []), notice.id]);
-    });
   }
 
   checkVersion() {

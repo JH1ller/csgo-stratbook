@@ -9,7 +9,6 @@
     color: var(--color-text);
     background-color: var(--color-bg);
     font-size: 1rem;
-    line-height: 1.8rem;
 
     &:focus {
       box-shadow: $shadow-subtle, $shadow-subtle;
@@ -41,6 +40,10 @@
     transition: background-color 0.3s ease-out;
     white-space: nowrap;
     background-color: var(--color-bg-secondary);
+
+    &:not(:first-of-type) {
+      vertical-align: middle;
+    }
 
     &.--mention {
       background-color: var(--color-accent);
