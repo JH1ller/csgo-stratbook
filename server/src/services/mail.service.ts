@@ -41,8 +41,16 @@ class MailService {
     });
 
     this.email = new Email({
+      preview: false,
       message: {
         from: this.sender,
+        attachments: [
+          {
+            filename: 'logo.png',
+            cid: 'logo',
+            path: path.join(process.cwd(), 'templates', 'img', 'logo.png'),
+          },
+        ],
       },
       send: true,
       transport: this.transporter,
@@ -51,8 +59,6 @@ class MailService {
         applyStyleTags: true,
         webResources: {
           relativeTo: path.join(process.cwd(), 'templates'),
-          images: true,
-          svgs: true,
         },
       },
     });
@@ -75,8 +81,6 @@ class MailService {
           link,
         },
       });
-      console.log(res);
-      console.log(res.originalMessage);
       logger.success('Successfully sent verification mail with id: ' + res.messageId);
     } catch (error) {
       const errorMessage = getErrorMessage(error);
