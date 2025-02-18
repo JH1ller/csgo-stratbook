@@ -33,14 +33,33 @@ export class Validators {
     };
   }
 
+  static isCsnadesLink(): ValidatorFunction {
+    const errorMessage = `Not valid csnades link`;
+    return (data) => {
+      const expressionResult = data.value.includes('csnades.gg');
+      const result = data.required ? expressionResult : data.value.length ? expressionResult : true;
+      if (!result) {
+        data.errors.push(errorMessage);
+      } else {
+        data.errors = data.errors.filter((msg) => msg !== errorMessage);
+      }
+      return result;
+    };
+  }
+  static passAtLeastOne(validators: ValidatorFunction[]): ValidatorFunction {
+    return (data) => {
+      return validators.some((validator) => validator(data));
+    };
+  }
+
   static exactLength(length: number): ValidatorFunction {
     const errorMessage = `Must be at exactly ${length} characters long.`;
     return (data) => {
       const result = data.required
         ? data.value.length === length
         : data.value.length
-        ? data.value.length === length
-        : true;
+          ? data.value.length === length
+          : true;
       if (!result) {
         data.errors.push(errorMessage);
       } else {
@@ -56,8 +75,8 @@ export class Validators {
       const result = data.required
         ? data.value.length >= minLength
         : data.value.length
-        ? data.value.length >= minLength
-        : true;
+          ? data.value.length >= minLength
+          : true;
       if (!result) {
         data.errors.push(errorMessage);
       } else {
@@ -73,8 +92,8 @@ export class Validators {
       const result = data.required
         ? data.value.length <= maxLength
         : data.value.length
-        ? data.value.length <= maxLength
-        : true;
+          ? data.value.length <= maxLength
+          : true;
       if (!result) {
         data.errors.push(errorMessage);
       } else {
@@ -90,8 +109,8 @@ export class Validators {
       const result = data.required
         ? this.emailRegex.test(data.value)
         : data.value.length
-        ? this.emailRegex.test(data.value)
-        : true;
+          ? this.emailRegex.test(data.value)
+          : true;
       if (!result) {
         data.errors.push(errorMessage);
       } else {
@@ -107,8 +126,8 @@ export class Validators {
       const result = data.required
         ? this.urlRegex.test(data.value)
         : data.value.length
-        ? this.urlRegex.test(data.value)
-        : true;
+          ? this.urlRegex.test(data.value)
+          : true;
       if (!result) {
         data.errors.push(errorMessage);
       } else {
@@ -124,8 +143,8 @@ export class Validators {
       const result = data.required
         ? this.pwRegex.test(data.value)
         : data.value.length
-        ? this.pwRegex.test(data.value)
-        : true;
+          ? this.pwRegex.test(data.value)
+          : true;
       if (!result) {
         data.errors.push(errorMessage);
       } else {
@@ -155,8 +174,8 @@ export class Validators {
       const result = data.required
         ? this.numberRegex.test(data.value)
         : data.value.length
-        ? this.numberRegex.test(data.value)
-        : true;
+          ? this.numberRegex.test(data.value)
+          : true;
       if (!result) {
         data.errors.push(errorMessage);
       } else {
@@ -185,8 +204,8 @@ export class Validators {
       const result = data.required
         ? data.value === fieldRef.value
         : data.value.length
-        ? data.value === fieldRef.value
-        : true;
+          ? data.value === fieldRef.value
+          : true;
       if (!result) {
         data.errors.push(errorMessage);
       } else {

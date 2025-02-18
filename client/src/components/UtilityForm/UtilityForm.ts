@@ -38,8 +38,10 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
   formFields: Record<string, FormField> = {
     name: new FormField('Name', true, [Validators.notEmpty(), Validators.maxLength(50)]),
     description: new FormField('Description', false, [Validators.maxLength(200)]),
-    videoLink: new FormField('Video Link', false, [Validators.isYoutubeLink()]),
     setpos: new FormField('Setpos Command', false, [Validators.maxLength(200)]),
+    videoLink: new FormField('Video Link', false, [
+      Validators.passAtLeastOne([Validators.isYoutubeLink(), Validators.isCsnadesLink()]),
+    ]),
   };
 
   type: UtilityTypes = UtilityTypes.SMOKE;
