@@ -59,7 +59,7 @@ export default class MainMenu extends Vue {
 
   openTwitter() {
     this.trackingService.track('Click: Open Twitter');
-    openLink('https://twitter.com/csgostratbook');
+    openLink('https://x.com/stratbook_app');
   }
 
   openDiscord() {
