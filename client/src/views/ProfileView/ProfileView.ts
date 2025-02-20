@@ -9,6 +9,7 @@ import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import { Response } from '@/store';
 import api from '@/api/base';
 import StorageService from '@/services/storage.service';
+import TrackingService from '@/services/tracking.service';
 
 @Component({
   components: {
@@ -17,6 +18,7 @@ import StorageService from '@/services/storage.service';
 })
 export default class ProfileView extends Vue {
   @Inject() storageService!: StorageService;
+  @Inject() trackingService!: TrackingService;
   @appModule.Action showToast!: (toast: Toast) => void;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
   @authModule.State profile!: Player;
@@ -61,6 +63,7 @@ export default class ProfileView extends Vue {
   async connectSteam() {
     const { success } = await api.auth.fetchSteamUrl();
     if (success) {
+      this.trackingService.track('connect-steam', { id: this.profile._id, name: this.profile.name });
       window.location.href = success;
     }
   }

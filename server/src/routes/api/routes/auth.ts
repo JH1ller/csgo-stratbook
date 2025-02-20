@@ -16,6 +16,7 @@ import { mailService, MailTemplate } from '@/services/mail.service';
 import { telegramService } from '@/services/telegram.service';
 import { trackingService } from '@/services/tracking.service';
 import { hasSessionConfig, refreshTokenConfig } from '@/utils/cookies';
+import { getErrorMessage } from '@/utils/errors/parseError';
 import UserNotFoundError from '@/utils/errors/UserNotFoundError';
 import { Logger } from '@/utils/logger';
 import { registerSchema } from '@/utils/validation';
@@ -244,6 +245,8 @@ router.get('/steam', verifyAuthOptional, async (request, res) => {
   const returnUrl = new URL(configService.getUrl(Path.api));
   returnUrl.pathname = '/api/auth/steam/authenticate';
 
+  trackingService.track('steam-login', res.locals.player?._id.toString());
+
   const urlQuery = new URLSearchParams();
 
   if (res.locals.player) {
@@ -295,7 +298,7 @@ router.get('/steam/authenticate', async (request, res) => {
 
       player = await PlayerModel.findById(_id);
     } catch (error) {
-      logger.error('Invalid token', (error as Error).message);
+      logger.error('Invalid token', getErrorMessage(error));
       redirectUrl.searchParams.set('message', 'Player not found');
       return res.redirect(redirectUrl.toString());
     }
@@ -306,6 +309,10 @@ router.get('/steam/authenticate', async (request, res) => {
     }
     if (user) {
       logger.info(`Steam account ${steamUser.steamid} already linked to another user`);
+      trackingService.track('steam-login-already-linked', {
+        player: player._id.toString(),
+        steamId: steamUser.steamid,
+      });
       redirectUrl.searchParams.set('message', 'Steam account already linked to another user');
       return res.redirect(redirectUrl.toString());
     }
@@ -315,6 +322,8 @@ router.get('/steam/authenticate', async (request, res) => {
     await player.save();
 
     redirectUrl.searchParams.set('message', 'Steam account successfully linked');
+
+    trackingService.track('steam-login-linked', { player: player._id.toString(), steamId: steamUser.steamid });
     return res.redirect(redirectUrl.toString());
   }
 
@@ -329,7 +338,7 @@ router.get('/steam/authenticate', async (request, res) => {
 
       await user.save();
     } catch (error) {
-      logger.error('Error creating user', (error as Error).message);
+      logger.error('Error creating user', getErrorMessage(error));
       redirectUrl.searchParams.set('message', 'An error occurred while creating the user');
       return res.redirect(redirectUrl.toString());
     }

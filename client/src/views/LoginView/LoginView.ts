@@ -5,6 +5,7 @@ import { appModule, authModule } from '@/store/namespaces';
 import { Routes } from '@/router/router.models';
 import { Dialog } from '@/components/DialogWrapper/DialogWrapper.models';
 import StorageService from '@/services/storage.service';
+import TrackingService from '@/services/tracking.service';
 
 @Component({
   components: {
@@ -13,6 +14,7 @@ import StorageService from '@/services/storage.service';
 })
 export default class LoginView extends Vue {
   @Inject() storageService!: StorageService;
+  @Inject() trackingService!: TrackingService;
   @authModule.Action login!: (credentials: { email: string; password: string }) => Promise<Response>;
   @appModule.Action showDialog!: (dialog: Partial<Dialog>) => Promise<boolean>;
   formError: string = '';
@@ -48,6 +50,8 @@ export default class LoginView extends Vue {
     }
 
     const steamPath = '/api/auth/steam';
+
+    this.trackingService.track('steam-login', { source: 'login-view' });
 
     window.location.href = steamPath;
   }

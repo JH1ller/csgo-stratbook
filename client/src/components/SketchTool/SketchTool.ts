@@ -117,7 +117,7 @@ export default class SketchTool extends Mixins(CloseOnEscape) {
   readonly imageSize = 50;
   readonly cursorSize = 25;
   readonly backgroundSize = 1024;
-  readonly swatches = COLORS;
+  readonly swatches = [...COLORS, '#ffffff'];
 
   //* Enum redeclaration for template exposure
   UtilityTypes: typeof UtilityTypes = UtilityTypes;

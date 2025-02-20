@@ -57,6 +57,5 @@ export default class LoginForm extends Vue {
       });
       this.email.value = email as string;
     }
-    // this.steamEnabled = this.storageService.get('steam-enabled') === true;
   }
 }
