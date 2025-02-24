@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   applicationName: 'Stratbook',
   authors: [{ name: 'Justin Hiller' }],
   creator: 'Justin Hiller',
-  alternates: { canonical: 'https://stratbook.pro' },
+  alternates: { canonical: 'https://stratbook.pro/home' },
   keywords: [
     'Stratbook',
     'Counterstrike',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     'Management',
     'Real-time',
   ],
-  metadataBase: new URL('https://stratbook.pro/home/'),
+  metadataBase: new URL('https://stratbook.pro/home'),
   openGraph: {
     title: 'Stratbook - CS2 Strats & Nade Management Tool',
     description:
