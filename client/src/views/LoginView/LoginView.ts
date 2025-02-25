@@ -40,7 +40,7 @@ export default class LoginView extends Vue {
     if (!this.storageService.get('steam-disclaimer')) {
       const dialogResult = await this.showDialog({
         key: 'login-view/steam-login',
-        text: `Hey there! If your Steam account is not linked to a Stratbook account yet, click okay and you will be redirected to the Steam login.<br><br><bold>Important:</bold> If you previously created an account without Steam, please regularly log in with your email and password and then link your Steam account on your profile page. Once your accounts are linked, you can log in with Steam.`,
+        text: `Hey there! If your Steam account is not linked to a Stratbook account yet, click okay and you will be redirected to the Steam login.<br><br><bold>Note:</bold> If you previously created an account without Steam, please log in with your email and password and then link your Steam account on your profile page. Once your accounts are linked, you can log in with Steam.`,
         resolveBtn: 'OK',
         rejectBtn: 'Cancel',
         htmlMode: true,

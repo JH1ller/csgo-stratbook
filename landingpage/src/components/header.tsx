@@ -1,5 +1,18 @@
-import Link from "next/link";
-import Image from "next/image";
+import Link from 'next/link';
+import Image from 'next/image';
+
+import {
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from './ui/alert-dialog';
+import { SteamButton } from './steam-button';
 
 export function Header() {
   return (
@@ -9,18 +22,10 @@ export function Header() {
           <Image className="h-10 w-10" src="/home/stratbook_icon.svg" alt="logo" width="40" height="40" />
           <span className="font-bold text-xl">Stratbook</span>
         </Link>
-        {/* <nav className="hidden md:flex items-center space-x-6">
-          <Link href="#features" className="text-sm font-medium hover:underline underline-offset-4">
-            Features
-          </Link>
-          <Link href="#contact" className="text-sm font-medium hover:underline underline-offset-4">
-            Contact
-          </Link>
-        </nav> */}
         <div className="flex items-center space-x-4">
-          <Link href="../api/auth/steam" className="hidden sm:block" prefetch={false}><Image src="/home/steam_button.png" alt="steam login button" width="180" height="35" /></Link>
+          <SteamButton className="hidden sm:block" />
         </div>
       </div>
     </header>
-  )
+  );
 }

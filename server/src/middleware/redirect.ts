@@ -13,15 +13,11 @@ export const hostRedirect: RequestHandler = (request, res, next) => {
   // shouldn't happen, but still check to prevent DOS
   if (!host) return next();
 
-  if (host === 'map.stratbook.pro') {
-    return res.redirect('https://stratbook.pro/map');
-  }
-
   if (host.startsWith('www.')) {
     return res.redirect(301, 'https://stratbook.pro');
   }
 
-  const redirectTlds = ['.live', '.app'];
+  const redirectTlds = ['.app'];
 
   const matchingTld = redirectTlds.find((tld) => request.headers.host?.endsWith(tld));
   if (!matchingTld) return next();

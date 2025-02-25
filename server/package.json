@@ -7,8 +7,6 @@
     "dev": "tsx watch src/index.ts ",
     "debug": "tsx --inspect-brk src/index.ts ",
     "lint": "eslint . --fix",
-    "deploy": "zx scripts/deploy.mjs",
-    "deploy:prod": "zx scripts/deploy.mjs --prod",
     "showlogs": "heroku logs --remote prod --tail",
     "type-check": "tsc --noEmit"
   },

@@ -33,7 +33,7 @@ export const PUBLIC_PATHS = [
   '/auth',
   '/img',
   '/socket.io',
-  '/favicon.ico',
+  '/favicon.svg',
   '/robots.txt',
   '/sitemap.txt',
 ] as const;

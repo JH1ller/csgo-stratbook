@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { HeroHighlight } from './ui/hero-highlight';
 import { HoverBorderGradient } from './ui/hover-border-gradient';
 import { ChevronRight } from 'lucide-react';
+import { SteamButton } from './steam-button';
 
 export function HeroSection() {
   return (
@@ -33,9 +33,10 @@ export function HeroSection() {
                   <span>Open App</span>
                 </HoverBorderGradient>
               </Link>
-              <Link href="../api/auth/steam" className="sm:hidden" prefetch={false}>
+              {/* <Link href="../api/auth/steam" className="sm:hidden" prefetch={false}>
                 <Image src="/home/steam_button.png" alt="steam login button" width="180" height="35" />
-              </Link>
+              </Link> */}
+              <SteamButton className="sm:hidden" />
             </div>
           </div>
         </div>
