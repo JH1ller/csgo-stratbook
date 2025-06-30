@@ -18,6 +18,7 @@ export interface Client {
     x: number;
     y: number;
   };
+  lastActive: number;
 }
 
 export interface DrawBoardState {

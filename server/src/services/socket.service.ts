@@ -21,6 +21,10 @@ import { configService } from './config.service';
 
 const logger = new Logger('SocketService');
 
+const CLIENT_INACTIVITY_THRESHOLD = 15 * 60 * 1000; // 15 minutes
+const ROOM_INACTIVITY_THRESHOLD = 60 * 60 * 1000; // 60 minutes
+const CLEANUP_INTERVAL = 10 * 60 * 1000; // 10 minutes
+
 export class SocketService extends SocketServer<
   ClientToServerEvents,
   ServerToClientEvents,
@@ -28,6 +32,7 @@ export class SocketService extends SocketServer<
   SocketData
 > {
   private rooms: Map<string, Room>;
+  private cleanupInterval?: NodeJS.Timeout;
 
   constructor() {
     super({
@@ -40,6 +45,7 @@ export class SocketService extends SocketServer<
     });
 
     this.rooms = new Map();
+    this.startCleanup();
   }
 
   getRoom(roomId?: string) {
@@ -138,9 +144,25 @@ export class SocketService extends SocketServer<
     }
   }
 
+  startCleanup() {
+    this.cleanupInterval = setInterval(() => {
+      for (const [roomId, room] of this.rooms.entries()) {
+        room.removeInactiveClients(CLIENT_INACTIVITY_THRESHOLD);
+        if (room.isInactive(ROOM_INACTIVITY_THRESHOLD)) {
+          this.rooms.delete(roomId);
+          logger.info(`Room ${roomId} deleted due to inactivity.`);
+        }
+      }
+    }, CLEANUP_INTERVAL);
+  }
+
+  stopCleanup() {
+    if (this.cleanupInterval) clearInterval(this.cleanupInterval);
+  }
+
   registerBoardHandler(socket: TypedSocket) {
     socket.on('join-draw-room', async ({ targetRoomId, userName, stratId, map }) => {
-      if ((targetRoomId && typeof targetRoomId !== 'string') || !socket.data.player) return;
+      if (targetRoomId && typeof targetRoomId !== 'string') return;
 
       // create room if it doesn't exist yet
       const room = this.getRoom(targetRoomId) ?? new Room({ map, stratId, roomId: targetRoomId });
@@ -153,7 +175,7 @@ export class SocketService extends SocketServer<
 
       socket.data.drawRoomId = room.id;
 
-      const client = room.addClient(socket.id, userName, socket.data.player.color);
+      const client = room.addClient(socket.id, userName, socket.data.player?.color);
 
       //* only fetch drawData from db for the first user who joins
       if (stratId && room.clients.size === 1) {
@@ -200,11 +222,11 @@ export class SocketService extends SocketServer<
       if (!room) return;
 
       const client = room.getClient(socket.id);
-
       if (!client) return;
 
       client.position.x = x;
       client.position.y = y;
+      room.touch(socket.id);
 
       //TODO: replace pointer-data event with client-updated
       this.to(room.id).emit('pointer-data', {
@@ -221,7 +243,7 @@ export class SocketService extends SocketServer<
       // don't allow non-editors to update data
       if (socket.data.player && socket.data.player.role !== AccessRole.EDITOR) return;
 
-      room.mapData.data = boardData;
+      room.updateData(room.currentMap, boardData, socket.id);
 
       this.to(room.id).emit('data-updated', { ...boardData, id: socket.id });
     });
@@ -229,11 +251,10 @@ export class SocketService extends SocketServer<
     socket.on('update-username', (userName) => {
       const room = this.getRoom(socket.data.drawRoomId);
       if (!room) return;
-
       const client = room.getClient(socket.id);
-
       if (!client) return;
       client.userName = userName;
+      room.touch(socket.id);
 
       logger.info(`Updated username of player ${socket.id} to ${userName}`);
 
@@ -243,8 +264,8 @@ export class SocketService extends SocketServer<
     socket.on('update-stratname', (stratName) => {
       const room = this.getRoom(socket.data.drawRoomId);
       if (!room || !stratName) return;
-
       room.mapData.stratName = stratName;
+      room.touch(socket.id);
 
       logger.info(`Updated stratname of room ${room.id} to ${stratName}`);
 
@@ -254,8 +275,8 @@ export class SocketService extends SocketServer<
     socket.on('update-map', (map) => {
       const room = this.getRoom(socket.data.drawRoomId);
       if (!room) return;
-
       room.currentMap = map;
+      room.touch(socket.id);
 
       logger.info(`Updated map of room ${room.id} to ${map}`);
 
