@@ -21,7 +21,7 @@ import { configService } from './config.service';
 
 const logger = new Logger('SocketService');
 
-const CLIENT_INACTIVITY_THRESHOLD = 60 * 60 * 1000; // 60 minutes
+const CLIENT_INACTIVITY_THRESHOLD = 15 * 60 * 1000; // 15 minutes
 const ROOM_INACTIVITY_THRESHOLD = 60 * 60 * 1000; // 60 minutes
 const CLEANUP_INTERVAL = 10 * 60 * 1000; // 10 minutes
 
@@ -162,7 +162,7 @@ export class SocketService extends SocketServer<
 
   registerBoardHandler(socket: TypedSocket) {
     socket.on('join-draw-room', async ({ targetRoomId, userName, stratId, map }) => {
-      if ((targetRoomId && typeof targetRoomId !== 'string') || !socket.data.player) return;
+      if (targetRoomId && typeof targetRoomId !== 'string') return;
 
       // create room if it doesn't exist yet
       const room = this.getRoom(targetRoomId) ?? new Room({ map, stratId, roomId: targetRoomId });
@@ -175,7 +175,7 @@ export class SocketService extends SocketServer<
 
       socket.data.drawRoomId = room.id;
 
-      const client = room.addClient(socket.id, userName, socket.data.player.color);
+      const client = room.addClient(socket.id, userName, socket.data.player?.color);
 
       //* only fetch drawData from db for the first user who joins
       if (stratId && room.clients.size === 1) {
