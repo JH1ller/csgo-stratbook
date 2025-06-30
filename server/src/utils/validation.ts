@@ -21,7 +21,10 @@ export const profileUpdateSchema = z.object({
     .min(6)
     .regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,32}$/)
     .optional(),
-  completedTutorial: z.boolean().optional(),
+  completedTutorial: z
+    .enum(['true', 'false'])
+    .transform((value) => value === 'true')
+    .optional(),
   color: z.string().min(4).max(7).optional(),
 });
 

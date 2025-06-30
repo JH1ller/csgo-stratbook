@@ -12,7 +12,7 @@
       <strat-item
         :strat="strat"
         :completedTutorial="completedTutorial"
-        :isTutorial="strat._id === (tutorialStrat && tutorialStrat._id)"
+        :isTutorial="tutorialStrat && strat._id === tutorialStrat._id"
         :collapsed="isCollapsed(strat)"
         :editMode="isEdited(strat)"
         :readOnly="readOnly"
