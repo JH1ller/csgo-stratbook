@@ -56,7 +56,7 @@
     "sharp": "^0.33.5",
     "socket.io": "^4.7.5",
     "url-join": "^4.0.1",
-    "zod": "^3.23.6"
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",

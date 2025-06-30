@@ -150,10 +150,17 @@ export default class StratsView extends Vue {
       this.updateStrat(data);
     } else {
       const newStrat = await this.createStrat(data);
+      this.hideStratForm();
+
       if (!this.profile.completedTutorial) {
         this.tutorialStrat = newStrat;
 
-        const dialogResult = await this.showDialog({
+        const formData = new FormData();
+        formData.append('completedTutorial', 'false');
+        this.updateProfile(formData);
+        this.trackingService.track('Action: Completed Tutorial');
+
+        await this.showDialog({
           key: 'strats-view/confirm-tutorial',
           text: `Hey there! Looks like you just created your first strat.<br>You can now edit the content of the strat by clicking the blinking box.<br>
               You can mention teammates with "<b>@</b>".<br>You can link utility from the nadebook with "<b>#</b>"<br>You can
@@ -162,16 +169,9 @@ export default class StratsView extends Vue {
           confirmOnly: true,
           htmlMode: true,
         });
-
-        if (dialogResult) {
-          const formData = new FormData();
-          formData.append('completedTutorial', 'true');
-          this.updateProfile(formData);
-          this.trackingService.track('Action: Completed Tutorial');
-        }
+        this.tutorialStrat = null;
       }
     }
-    this.hideStratForm();
   }
 
   showStratForm(strat?: Strat) {
