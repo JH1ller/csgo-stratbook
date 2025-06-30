@@ -239,8 +239,12 @@ export class SocketService extends SocketServer<
     socket.on('update-data', (boardData) => {
       const room = this.getRoom(socket.data.drawRoomId);
       if (!room) return;
+
+      // don't allow non-editors to update data
       if (socket.data.player && socket.data.player.role !== AccessRole.EDITOR) return;
+
       room.updateData(room.currentMap, boardData, socket.id);
+
       this.to(room.id).emit('data-updated', { ...boardData, id: socket.id });
     });
 
