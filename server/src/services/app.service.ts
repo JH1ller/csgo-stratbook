@@ -120,7 +120,7 @@ class AppService {
       next();
     });
 
-    this.app.use(history({ verbose: true }));
+    this.app.use(history({ verbose: false }));
 
     this.app.use('/', express.static('client-build/app'));
   }
