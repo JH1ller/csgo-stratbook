@@ -148,6 +148,7 @@ export default class StratsView extends Vue {
   async stratFormSubmitted(data: Partial<Strat>) {
     if (data._id) {
       this.updateStrat(data);
+      this.hideStratForm();
     } else {
       const newStrat = await this.createStrat(data);
       this.hideStratForm();
@@ -156,7 +157,7 @@ export default class StratsView extends Vue {
         this.tutorialStrat = newStrat;
 
         const formData = new FormData();
-        formData.append('completedTutorial', 'false');
+        formData.append('completedTutorial', 'true');
         this.updateProfile(formData);
         this.trackingService.track('Action: Completed Tutorial');
 

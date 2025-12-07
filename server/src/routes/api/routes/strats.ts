@@ -31,8 +31,12 @@ router.post('/', verifyAuth, async (request, res) => {
     return res.status(400).json({ error: "Authenticated user doesn't have a team" });
   }
 
-  if (res.locals.player.role !== AccessRole.EDITOR) {
-    return res.status(403).json({ error: 'Only editors can create strats' });
+  const team = await TeamModel.findById(res.locals.player.team);
+
+  if (!team) return res.status(400).json({ error: 'Could not find team with the provided ID.' });
+
+  if (res.locals.player.role !== AccessRole.EDITOR && !team.manager.equals(res.locals.player._id)) {
+    return res.status(403).json({ error: 'Only editors and team managers can create strats' });
   }
 
   const strat = new StratModel({

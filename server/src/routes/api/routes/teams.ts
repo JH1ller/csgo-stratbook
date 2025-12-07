@@ -77,6 +77,7 @@ router.post('/', verifyAuth, imageService.upload.single('avatar'), async (reques
 
   res.locals.player.color = COLORS[0];
   res.locals.player.team = newTeam._id;
+  res.locals.player.role = AccessRole.EDITOR;
   const updatedPlayer = await res.locals.player.save();
 
   telegramService.send(`Team ${newTeam.name} created.`);
@@ -210,7 +211,13 @@ router.patch('/transfer', verifyAuth, async (request, res) => {
     return res.status(400).json({ error: 'Selected player is already team manager.' });
   }
 
+  const targetPlayer = await PlayerModel.findById(request.body._id);
+  if (!targetPlayer) return res.status(400).json({ error: 'Could not find target with the provided ID.' });
+
   team.manager = request.body._id;
+  targetPlayer.role = AccessRole.EDITOR;
+
+  await targetPlayer.save();
 
   const updatedTeam = await team.save();
   return res.json(toTeamDto(updatedTeam));
