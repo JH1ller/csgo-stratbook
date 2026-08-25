@@ -33,6 +33,7 @@ export type MouseButton = (typeof MouseButton)[keyof typeof MouseButton];
 export const Movement = {
   STILL: 'STILL',
   WALK: 'WALK',
+  DOUBLEU: 'DOUBLEU',
   RUN: 'RUN',
 } as const;
 

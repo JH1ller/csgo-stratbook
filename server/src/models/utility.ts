@@ -65,7 +65,7 @@ const utilitySchema = new Schema<Utility>({
 
   movement: {
     type: String,
-    enum: ['STILL', 'WALK', 'RUN'],
+    enum: ['STILL', 'WALK', 'DOUBLEU', 'RUN'],
     required: true,
   },
 

@@ -7,6 +7,7 @@
         id="ytplayer"
         type="text/html"
         :src="getEmbedURL(currentMedia.src)"
+        referrerpolicy="strict-origin-when-cross-origin"
         frameborder="0"
       />
       <iframe
@@ -87,7 +88,17 @@
     </div>
     <span class="utility-lightbox__description" v-if="utility.description">{{ utility.description }}</span>
     <span class="utility-lightbox__info">
-      <span class="utility-lightbox__name">{{ utility.name }}</span>
+      <span class="utility-lightbox__meta">
+        <span class="utility-lightbox__name">{{ utility.name }}</span>
+        <span class="utility-lightbox__labels">
+          <span
+            class="utility-lightbox__label -readonly"
+            v-for="label in utility.labels"
+            :key="label" :title="'Label \'' + label + '\''">
+            {{ label }}
+          </span>
+        </span>
+      </span>
       <div class="utility-lightbox__icon-wrapper">
         <MouseButtonPicker class="utility-lightbox__mouse-button" :value="utility.mouseButton" :readonly="true" />
         <PosePicker :readonly="true" :crouch="utility.crouch" :jump="utility.jump" :movement="utility.movement" />

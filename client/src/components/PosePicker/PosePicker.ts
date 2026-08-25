@@ -24,4 +24,27 @@ export default class PosePicker extends Vue {
   private toggleMovement() {
     return;
   }
+
+  private crouchTitle(): string {
+    return this.crouch ? "Crouching": "Standing";
+  }
+
+  private jumpTitle(): string {
+    return this.jump ? "Jump": "Don´t jump";
+  }
+
+  private movementTitle(): string {
+    switch (this.movement) {
+      case UtilityMovement.STILL:
+        return "Still";
+      case UtilityMovement.WALK:
+        return "Walking";
+      case UtilityMovement.DOUBLEU:
+        return "Simul-press W";
+      case UtilityMovement.RUN:
+        return "Running";
+    }
+
+    return "";
+  }
 }

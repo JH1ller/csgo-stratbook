@@ -1,5 +1,6 @@
 export enum UtilityMovement {
   STILL = 'STILL',
   WALK = 'WALK',
-  RUN = 'RUN',
+  DOUBLEU = 'DOUBLEU',
+  RUN = 'RUN' 
 }

@@ -54,17 +54,36 @@
     padding: 4px;
   }
 
+  &__meta {
+    display: flex;
+    max-width: calc(100% - 210px);
+    margin-right: auto;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
   &__name {
     @include spacing('margin-left', '2xs');
     @include spacing('margin-bottom', '2xs');
 
     font-weight: $weight-bold;
     font-size: 1.2rem;
-    margin-right: auto;
-    max-width: calc(100% - 95px);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
+  }
+
+  &__labels {
+    margin-left: 1em;
+    display: flex;
+    gap: 4px;
+  }
+
+  &__label {
+    @extend %label;
+
+    box-shadow: 0 0 4px rgba(black, 0.6);
+    height: 24px;
+    flex-shrink: 0;
+    cursor: default !important;
   }
 
   &__pose-wrapper {

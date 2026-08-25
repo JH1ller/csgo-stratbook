@@ -137,6 +137,9 @@ export default class UtilityForm extends Mixins(CloseOnEscape) {
         this.movement = UtilityMovement.WALK;
         break;
       case UtilityMovement.WALK:
+        this.movement = UtilityMovement.DOUBLEU;
+        break;
+      case UtilityMovement.DOUBLEU:
         this.movement = UtilityMovement.RUN;
         break;
       case UtilityMovement.RUN:
